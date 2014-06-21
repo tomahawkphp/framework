@@ -17,6 +17,7 @@
     },
     "require": {
         "php": ">=5.3.0",
+        "illuminate/database": "4.1.*",
         "classpreloader/classpreloader": "1.0.*",
         "doctrine/dbal": "2.4.*",
         "doctrine/cache": "1.*",
