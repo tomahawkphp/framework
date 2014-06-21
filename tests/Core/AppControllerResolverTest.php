@@ -81,6 +81,7 @@ class AppControllerResolverTest extends PHPUnit_Framework_TestCase
         $controllerResolver = new ControllerResolver($this->container);
 
         $routeCollection = new RouteCollection();
+
         $router = new Router();
         $router->setRoutes($routeCollection);
         $router->get('/', 'home', 'TestController::get_index');
