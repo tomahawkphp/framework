@@ -1,0 +1,62 @@
+{
+    "name": "tomahawk/framework",
+    "description": "The Tomahawk PHP Framework.",
+    "keywords": ["framework", "tomahawk"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tom Ellis",
+            "email": "tellishtc@gmail.com"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "bin-dir": "bin",
+        "process-timeout": 10000,
+        "github-protocols": ["https"]
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "classpreloader/classpreloader": "1.0.*",
+        "doctrine/dbal": "2.4.*",
+        "doctrine/cache": "1.*",
+        "ircmaxell/password-compat": "1.0.*",
+        "filp/whoops": "1.0.7",
+        "jeremeamia/superclosure": "1.0.*",
+        "monolog/monolog": "1.*",
+        "nesbot/carbon": "1.*",
+        "patchwork/utf8": "1.1.*",
+        "swiftmailer/swiftmailer": "5.0.*",
+        "symfony/browser-kit": "2.4.*",
+        "symfony/console": "2.4.*",
+        "symfony/css-selector": "2.4.*",
+        "symfony/debug": "2.4.*",
+        "symfony/dom-crawler": "2.4.*",
+        "symfony/event-dispatcher": "2.4.*",
+        "symfony/finder": "2.4.*",
+        "symfony/http-foundation": "2.4.*",
+        "symfony/http-kernel": "2.4.*",
+        "symfony/process": "2.4.*",
+        "symfony/routing": "2.4.*",
+        "symfony/translation": "2.4.*",
+        "symfony/templating": "2.4.*",
+        "pimple/pimple": "2.*",
+        "phpseclib/phpseclib" : "0.3"
+    },
+    "require-dev": {
+        "mockery/mockery": "0.8.0",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "classmap": [
+
+        ],
+        "files": [
+
+        ],
+        "psr-4": {
+            "Tomahawk\\": "src/Tomahawk/"
+        }
+    },
+    "minimum-stability": "stable"
+}
