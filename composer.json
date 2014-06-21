@@ -59,5 +59,10 @@
             "Tomahawk\\": "src/Tomahawk/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.0"
+        }
+    }
 }
