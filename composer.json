@@ -38,6 +38,7 @@
         "symfony/http-kernel": "2.4.*",
         "symfony/process": "2.4.*",
         "symfony/routing": "2.4.*",
+        "symfony/security-core": "2.5.*",
         "symfony/translation": "2.4.*",
         "symfony/templating": "2.4.*",
         "pimple/pimple": "2.*",
