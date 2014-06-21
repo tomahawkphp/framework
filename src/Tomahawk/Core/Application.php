@@ -2,7 +2,6 @@
 
 namespace Tomahawk\Core;
 
-//use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,7 +28,7 @@ use Symfony\Component\Routing;
 class Application extends HttpKernel implements AppKernelInterface
 {
 
-    const VERSION = '1.0.0';
+    const VERSION = '0.1.0';
 
     protected $booted = false;
 
@@ -71,7 +70,7 @@ class Application extends HttpKernel implements AppKernelInterface
     protected $context;
 
     /**
-     * @var \Tomahawk\Core\Container
+     * @var \Tomahawk\DI\DIContainer
      */
     protected $container;
 
@@ -178,7 +177,7 @@ class Application extends HttpKernel implements AppKernelInterface
     }
 
     /**
-     * @param \Tomahawk\Core\Container $container
+     * @param \Tomahawk\DI\DIContainer $container
      */
     public function setContainer($container)
     {
@@ -186,7 +185,7 @@ class Application extends HttpKernel implements AppKernelInterface
     }
 
     /**
-     * @return \Tomahawk\Core\Container
+     * @return \Tomahawk\DI\DIContainer
      */
     public function getContainer()
     {
