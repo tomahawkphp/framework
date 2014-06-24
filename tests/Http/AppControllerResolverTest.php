@@ -7,7 +7,7 @@ use Tomahawk\Database\DatabaseManager;
 use Tomahawk\Session\SessionManager;
 use Tomahawk\Html\HtmlBuilder;
 use Tomahawk\Assets\AssetManager;
-use Tomahawk\Core\Application;
+use Tomahawk\Http\HttpKernel;
 use Tomahawk\DI\DIContainer;
 use Tomahawk\Routing\Router;
 use Tomahawk\Routing\Controller\ControllerResolver;
@@ -74,10 +74,7 @@ class AppControllerResolverTest extends PHPUnit_Framework_TestCase
         $this->container['Tomahawk\Cache\CacheInterface'] = new CacheManager(array(
             'driver' => 'array'
         ));
-    }
 
-    public function testAppKernel()
-    {
         $controllerResolver = new ControllerResolver($this->container);
 
         $routeCollection = new RouteCollection();
@@ -88,10 +85,16 @@ class AppControllerResolverTest extends PHPUnit_Framework_TestCase
         $router->get('/thing', 'thing', 'TestController::get_thing');
 
         $matcher = new UrlMatcher($router->getRoutes(), $this->context);
-        $app = new Application($this->eventDispatcher, $matcher, $controllerResolver);
 
-        $app->setRoutes($router->getRoutes());
-        $app->setContext($this->context);
+        $this->container['http_kernel'] = new HttpKernel($this->eventDispatcher, $matcher, $controllerResolver);
+    }
+
+    public function testAppKernel()
+    {
+
+        $app = new TestApp('prod', false);
+
+        $app->setContainer($this->container);
 
         $response = $app->handle($this->request);
 
@@ -99,13 +102,17 @@ class AppControllerResolverTest extends PHPUnit_Framework_TestCase
 
         $this->context->fromRequest($this->request);
         $this->request = Request::create('/thing/', 'GET');
-        $app->setContext($this->context);
+        //$app->setContext($this->context);
 
         $response = $app->handle($this->request);
 
         $this->assertEquals('Test2', $response->getContent());
-
     }
+
+}
+
+class TestApp extends \Tomahawk\Http\Kernel
+{
 
 }
 

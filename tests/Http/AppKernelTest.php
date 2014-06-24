@@ -1,7 +1,6 @@
 <?php
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Tomahawk\Core\Application;
 use Tomahawk\DI\DIContainer;
 use Tomahawk\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +13,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Tomahawk\Http\HttpKernel;
 
 class AppKernelTest extends PHPUnit_Framework_TestCase
 {
@@ -33,9 +33,16 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
     protected $eventDispatcher;
 
     /**
-     * @var \Tomahawk\Core\Container
+     * @var \Tomahawk\DI\DIContainerInterface
      */
     protected $container;
+
+    /**
+     * @var
+     */
+    protected $matcher;
+
+    protected $controllerResolver;
 
     public function setup()
     {
@@ -49,8 +56,6 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
 
     public function testAppKernel()
     {
-        $controllerResolver = new ControllerResolver($this->container);
-
         $routeCollection = new RouteCollection();
         $router = new Router();
         $router->setRoutes($routeCollection);
@@ -59,45 +64,43 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
             return new Response('Test');
         });
 
-        $matcher = new UrlMatcher($router->getRoutes(), $this->context);
-        $app = new Application($this->eventDispatcher, $matcher, $controllerResolver);
+        $router->get('/user/{username}', 'user', function(Request $request) {
+            return new Response($request->get('username'));
+        });
 
-        $app->setRoutes($router->getRoutes());
-        $app->setContext($this->context);
+        $this->controllerResolver = new ControllerResolver($this->container);
+        $this->matcher = new UrlMatcher($router->getRoutes(), $this->context);
+        $this->container['http_kernel'] = new HttpKernel($this->eventDispatcher, $this->matcher, $this->controllerResolver);
 
+        $app = new TestAppKernel('prod', false);
+        $app->setContainer($this->container);
         $response = $app->handle($this->request);
-
         $this->assertEquals('Test', $response->getContent());
 
     }
 
     public function testAppKernelRouteParams()
     {
-        $this->request = Request::create('/user/tomgrohl', 'GET');
-        $this->context = new RequestContext();
-        $this->context->fromRequest($this->request);
-
-        $controllerResolver = new ControllerResolver($this->container);
-
         $routeCollection = new RouteCollection();
         $router = new Router();
         $router->setRoutes($routeCollection);
-
-
         $router->get('/user/{username}', 'user', function(Request $request) {
             return new Response($request->get('username'));
         });
 
+        $this->request = Request::create('/user/tomgrohl', 'GET');
+        $this->context = new RequestContext();
+        $this->context->fromRequest($this->request);
+        $this->controllerResolver = new ControllerResolver($this->container);
+        $this->matcher = new UrlMatcher($router->getRoutes(), $this->context);
+        $this->container['http_kernel'] = new HttpKernel($this->eventDispatcher, $this->matcher, $this->controllerResolver);
 
-        $matcher = new UrlMatcher($router->getRoutes(), $this->context);
-        $app = new Application($this->eventDispatcher, $matcher, $controllerResolver);
-
-        $app->setRoutes($router->getRoutes());
-        $app->setContext($this->context);
-
+        $app = new TestAppKernel('prod', false);
+        $app->setContainer($this->container);
         $response = $app->handle($this->request);
         $this->assertEquals('tomgrohl', $response->getContent());
     }
+
 
     public function testAppKernelRouteParamsEndSlash()
     {
@@ -105,32 +108,31 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
         $this->context = new RequestContext();
         $this->context->fromRequest($this->request);
 
-        $controllerResolver = new ControllerResolver($this->container);
-
         $routeCollection = new RouteCollection();
         $router = new Router();
         $router->setRoutes($routeCollection);
-
 
         $router->get('/user/{username}', 'user', function(Request $request) {
             return new Response($request->get('username'));
         });
 
+        $this->controllerResolver = new ControllerResolver($this->container);
 
-        $matcher = new UrlMatcher($router->getRoutes(), $this->context);
-        $app = new Application($this->eventDispatcher, $matcher, $controllerResolver);
+        $this->request = Request::create('/user/tomgrohl', 'GET');
+        $this->context = new RequestContext();
+        $this->context->fromRequest($this->request);
+        $this->controllerResolver = new ControllerResolver($this->container);
+        $this->matcher = new UrlMatcher($router->getRoutes(), $this->context);
+        $this->container['http_kernel'] = new HttpKernel($this->eventDispatcher, $this->matcher, $this->controllerResolver);
 
-        $app->setRoutes($router->getRoutes());
-        $app->setContext($this->context);
-
+        $app = new TestAppKernel('prod', false);
+        $app->setContainer($this->container);
         $response = $app->handle($this->request);
         $this->assertEquals('tomgrohl', $response->getContent());
     }
 
     public function testAppKernelWithEvents()
     {
-        $controllerResolver = new ControllerResolver($this->container);
-
         $routeCollection = new RouteCollection();
         $router = new Router();
         $router->setRoutes($routeCollection);
@@ -138,8 +140,15 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
             return 'Test';
         });
 
-        $matcher = new UrlMatcher($router->getRoutes(), $this->context);
-        $app = new Application($this->eventDispatcher, $matcher, $controllerResolver);
+        $this->request = Request::create('/', 'GET');
+        $this->context = new RequestContext();
+        $this->context->fromRequest($this->request);
+        $this->controllerResolver = new ControllerResolver($this->container);
+        $this->matcher = new UrlMatcher($router->getRoutes(), $this->context);
+        $this->container['http_kernel'] = new HttpKernel($this->eventDispatcher, $this->matcher, $this->controllerResolver);
+
+        $app = new TestAppKernel('prod', false);
+        $app->setContainer($this->container);
 
         $this->eventDispatcher->addListener(KernelEvents::VIEW, function(GetResponseForControllerResultEvent $event) {
             if (is_string($event->getControllerResult()))
@@ -157,12 +166,14 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
             }
         });
 
-        $app->setRoutes($router->getRoutes());
-        $app->setContext($this->context);
-
         $response = $app->handle($this->request);
 
         $this->assertEquals('changed', $response->getContent());
     }
+
+}
+
+class TestAppKernel extends \Tomahawk\Http\Kernel
+{
 
 }

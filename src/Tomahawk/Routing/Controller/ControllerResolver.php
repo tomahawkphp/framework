@@ -139,6 +139,7 @@ class ControllerResolver implements ControllerResolverInterface
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
+        // Is controller in the DI Container
         $class = $this->container->get($class);
 
         return array($class, $method);
