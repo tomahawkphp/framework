@@ -1,6 +1,7 @@
 <?php
 
 use Tomahawk\DI\DIContainer;
+use Tomahawk\DI\ServiceProviderInterface;
 
 class DIContainerTest extends PHPUnit_Framework_TestCase
 {
@@ -33,7 +34,7 @@ class DIContainerTest extends PHPUnit_Framework_TestCase
 
     public function testClassMake()
     {
-        $this->container->register('PersonInterface', new Person());
+        $this->container->set('PersonInterface', new Person());
 
         $person = $this->container->get('PersonInterface');
 
@@ -42,21 +43,43 @@ class DIContainerTest extends PHPUnit_Framework_TestCase
 
     public function testClassBuildable()
     {
-        $this->container->register('PersonInterface', new Person());
+        $this->container->set('PersonInterface', new Person());
 
-        $this->assertTrue($this->container->registered('PersonInterface'));
-        $this->assertFalse($this->container->registered('NotExistentInterface'));
+        $this->assertTrue($this->container->has('PersonInterface'));
+        $this->assertFalse($this->container->has('NotExistentInterface'));
     }
 
     public function testClassBuildableNonRegistered()
     {
-        $this->container->register('Thing', new Thing());
+        $this->container->set('Thing', new Thing());
 
         $person = $this->container->get('Person2');
 
         $this->assertInstanceOf('Person2', $person);
         $this->assertEquals('sfds', $person->thing->blah);
     }
+
+    public function testProvider()
+    {
+        $this->container->register(new PersonProvider());
+
+        $this->assertTrue($this->container->has('test'));
+    }
+
+    public function testFactory()
+    {
+        $this->container['test'] = $this->container->factory(function(){
+            return 'BOOM!';
+        });
+
+        $this->container['test2'] = $this->container->factory(function($container) {
+            return $container;
+        });
+
+        $this->assertEquals('BOOM!', $this->container['test']);
+        $this->assertInstanceOf('Tomahawk\DI\DIContainer', $this->container['test2']);
+    }
+
 }
 
 class Thing {
@@ -76,4 +99,12 @@ class Person2 {
 class Person
 {
     public $name;
+}
+
+class PersonProvider implements ServiceProviderInterface
+{
+    public function register(\Pimple\Container $container)
+    {
+        $container['test'] = 'Tom';
+    }
 }

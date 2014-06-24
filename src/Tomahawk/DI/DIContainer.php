@@ -2,7 +2,7 @@
 
 namespace Tomahawk\DI;
 
-use Pimple;
+use Pimple\Container;
 use Closure;
 use ReflectionClass;
 use ReflectionParameter;
@@ -12,7 +12,7 @@ class InstantiateException extends \Exception {}
 class ClassDefaultValueException extends \Exception {}
 class ParameterDefaultValueException extends \Exception {}
 
-class DIContainer extends Pimple implements DIContainerInterface
+class DIContainer extends Container implements DIContainerInterface
 {
     /**
      * @param $id
@@ -20,7 +20,7 @@ class DIContainer extends Pimple implements DIContainerInterface
      */
     public function get($id)
     {
-        if (!$this->registered($id) && class_exists($id))
+        if (!$this->has($id) && class_exists($id))
         {
             return $this->build($id);
         }
@@ -139,7 +139,7 @@ class DIContainer extends Pimple implements DIContainerInterface
      * @param $id
      * @return bool
      */
-    public function registered($id)
+    public function has($id)
     {
         return isset($this[$id]);
     }
@@ -149,7 +149,7 @@ class DIContainer extends Pimple implements DIContainerInterface
      * @param $value
      * @return $this
      */
-    public function register($id, $value)
+    public function set($id, $value)
     {
         $this[$id] = $value;
 

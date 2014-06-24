@@ -1,7 +1,8 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
     "hash": "aaf3066d02175ee2dd7fe487f57d0a08",
     "packages": [
@@ -1150,16 +1151,16 @@
         },
         {
             "name": "pimple/pimple",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Pimple.git",
-                "reference": "f99b3df12991c22463927aa6a18fd9b2212917f2"
+                "reference": "90b4710f115766d12e1a579b816c0974887b87a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/f99b3df12991c22463927aa6a18fd9b2212917f2",
-                "reference": "f99b3df12991c22463927aa6a18fd9b2212917f2",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/90b4710f115766d12e1a579b816c0974887b87a7",
+                "reference": "90b4710f115766d12e1a579b816c0974887b87a7",
                 "shasum": ""
             },
             "require": {
@@ -1168,12 +1169,12 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "Pimple": "lib/"
+                    "Pimple": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1194,7 +1195,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2014-02-10 08:05:32"
+            "time": "2014-05-01 10:34:00"
         },
         {
             "name": "psr/log",

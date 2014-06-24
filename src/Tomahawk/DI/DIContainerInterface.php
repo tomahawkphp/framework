@@ -14,14 +14,14 @@ interface DIContainerInterface extends \ArrayAccess
      * @param $id
      * @return bool
      */
-    public function registered($id);
+    public function has($id);
 
     /**
      * @param $id
      * @param $value
      * @return $this
      */
-    public function register($id, $value);
+    public function set($id, $value);
 
     /**
      * @param $id
