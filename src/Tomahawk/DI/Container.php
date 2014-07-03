@@ -2,7 +2,7 @@
 
 namespace Tomahawk\DI;
 
-use Pimple\Container;
+use Pimple\Container as BaseContainer;
 use Closure;
 use ReflectionClass;
 use ReflectionParameter;
@@ -12,8 +12,13 @@ class InstantiateException extends \Exception {}
 class ClassDefaultValueException extends \Exception {}
 class ParameterDefaultValueException extends \Exception {}
 
-class DIContainer extends Container implements DIContainerInterface
+class Container extends BaseContainer implements ContainerInterface
 {
+    /**
+     * @var array Aliases of something in the DIC
+     */
+    protected $aliases = array();
+
     /**
      * @param $id
      * @return mixed
@@ -153,6 +158,27 @@ class DIContainer extends Container implements DIContainerInterface
     {
         $this[$id] = $value;
 
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @param $id
+     * @return $this
+     */
+    public function addAlias($name, $id)
+    {
+        $this->aliases[$name] = $id;
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function removeAlias($name)
+    {
+        unset($this->aliases[$name]);
         return $this;
     }
 

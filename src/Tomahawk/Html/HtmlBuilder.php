@@ -12,7 +12,7 @@ class HtmlBuilder implements HtmlBuilderInterface
 
     public function script($url, array $attributes = array())
     {
-        return sprintf('<script url="%s"%s></script>', $url, $this->attributes($attributes));
+        return sprintf('<script src="%s"%s></script>', $url, $this->attributes($attributes));
     }
 
     public function style($url, array $attributes = array())

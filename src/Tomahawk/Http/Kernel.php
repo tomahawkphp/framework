@@ -7,12 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Tomahawk\DI\DIContainer;
+use Tomahawk\DI\Container;
 
-abstract class Kernel
+abstract class Kernel implements KernelInterface, TerminableInterface
 {
     /**
-     * @var DIContainer
+     * @var Container
      */
     protected $container;
     protected $rootDir;
@@ -218,7 +218,7 @@ abstract class Kernel
     }
 
     /**
-     * @param \Tomahawk\DI\DIContainerInterface $container
+     * @param \Tomahawk\DI\ContainerInterface $container
      */
     public function setContainer($container)
     {
@@ -283,7 +283,7 @@ abstract class Kernel
      */
     protected function initializeContainer()
     {
-        //$this->container = new DIContainer();
+        //$this->container = new Container();
     }
 
     public function setPaths($paths)

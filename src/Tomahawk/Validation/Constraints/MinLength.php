@@ -2,18 +2,29 @@
 
 namespace Tomahawk\Validation\Constraints;
 
+use Tomahawk\Validation\Message;
 use Tomahawk\Validation\Validator;
 
 class MinLength extends Constraint
 {
-    protected $message = 'The min length is {{ min_length }}';
+    protected $message = 'The minimum length is %min_length%';
 
     protected $min_length = 1;
 
-    public function validate(Validator $validator, $attribute)
+    public function validate(Validator $validator, $attribute, $value)
     {
-        if (strlen($attribute) <= $this->min_length)
+        if (strlen($value) < $this->min_length)
         {
+            if ($trans = $validator->getTranslator())
+            {
+                $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
+            }
+            else
+            {
+                $this->mergeMessageData();
+            }
+
+            $validator->addMessage($attribute, new Message($this->getMessage(), $this->getData()));
             return false;
         }
 
@@ -23,7 +34,7 @@ class MinLength extends Constraint
     public function getData()
     {
         return array(
-            '{{ min_length }}' => $this->min_length
+            '%min_length%' => $this->min_length
         );
     }
 }

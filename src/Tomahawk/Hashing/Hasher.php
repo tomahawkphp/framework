@@ -24,7 +24,7 @@ class Hasher
     {
         $cost = isset($options['rounds']) ? $options['rounds'] : $this->rounds;
 
-        $hash = password_hash($value, PASSWORD_BCRYPT, array('cost' => $cost));
+        $hash = $this->doHash($value, PASSWORD_BCRYPT, array('cost' => $cost));
 
         if ($hash === false) {
             throw new \RuntimeException("Bcrypt hashing not supported.");
@@ -57,6 +57,11 @@ class Hasher
     {
         $cost = isset($options['rounds']) ? $options['rounds'] : $this->rounds;
         return password_needs_rehash($hashedValue, PASSWORD_BCRYPT, array('cost' => $cost));
+    }
+
+    protected function doHash($value, $algo, array $options = array())
+    {
+        return password_hash($value, $algo, $options);
     }
 
 }

@@ -21,6 +21,6 @@ class TextArea extends Element
 
         $attributes = array_merge($current_attributes, $attributes);
 
-        return sprintf('<textarea%s>%s</textarea', $this->attributes($attributes), $this->entities($this->getValue()));
+        return sprintf('<textarea%s>%s</textarea>', $this->attributes($attributes), $this->entities($this->getValue()));
     }
 }

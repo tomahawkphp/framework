@@ -14,7 +14,7 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
     /**
      * @var bool
      */
-    protected $sslOn;
+    protected $sslOn = true;
 
     protected $validUrlStartChars = array(
         '#',
@@ -52,7 +52,7 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
      */
     public function getCurrentUrl()
     {
-        return $this->to($this->context->getPathInfo(), 'https' === $this->context->getScheme());
+        return $this->to($this->context->getPathInfo(), array(), 'https' === $this->context->getScheme());
     }
 
     /**
@@ -134,4 +134,19 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
         return $this->generate($name, $data);
     }
 
+    /**
+     * @param boolean $sslOn
+     */
+    public function setSslOn($sslOn)
+    {
+        $this->sslOn = $sslOn;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSslOn()
+    {
+        return $this->sslOn;
+    }
 }

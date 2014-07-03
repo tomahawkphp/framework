@@ -15,6 +15,10 @@ class Message
      */
     protected $data;
 
+    /**
+     * @param $message
+     * @param array $data
+     */
     public function __construct($message, array $data = array())
     {
         $this->message = $message;
@@ -22,15 +26,19 @@ class Message
     }
 
 
+    /**
+     * @return mixed
+     */
     public function getMessage()
     {
-        $message = $this->message;
+        return $this->message;
+    }
 
-        foreach ($this->data as $key => $value)
-        {
-            $message = str_replace($key, $value, $message);
-        }
-
-        return $message;
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

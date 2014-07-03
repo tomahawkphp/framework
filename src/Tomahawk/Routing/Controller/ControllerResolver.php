@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Tomahawk\Core\Application;
-use Tomahawk\DI\DIContainerInterface;
+use Tomahawk\DI\ContainerInterface;
 
 class ControllerResolver implements ControllerResolverInterface
 {
@@ -24,10 +24,10 @@ class ControllerResolver implements ControllerResolverInterface
     /**
      * Constructor.
      *
-     * @param \Tomahawk\DI\DIContainerInterface $container
+     * @param \Tomahawk\DI\ContainerInterface $container
      * @param LoggerInterface $logger A LoggerInterface instance
      */
-    public function __construct(DIContainerInterface $container, LoggerInterface $logger = null)
+    public function __construct(ContainerInterface $container, LoggerInterface $logger = null)
     {
         $this->container = $container;
         $this->logger = $logger;

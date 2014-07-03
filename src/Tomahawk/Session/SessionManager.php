@@ -69,24 +69,43 @@ class SessionManager implements SessionInterface
         return $this->session->get($name, $default);
     }
 
+    public function has($name)
+    {
+        return $this->session->has($name);
+    }
+
+    public function remove($name)
+    {
+        $this->session->remove($name);
+    }
+
+    public function hasFlash($name)
+    {
+        return $this->getFlashBag()->has($name);
+    }
+
     public function getFlash($name)
     {
-        $this->session->getFlashBag()->get($name);
+        return $this->getFlashBag()->get($name);
     }
 
     public function setFlash($name, $value)
     {
-        $this->session->getFlashBag()->set($name, $value);
+        $this->getFlashBag()->set($name, $value);
+
+        return $this;
     }
 
     public function getFlashBag()
     {
-        $this->session->getFlashBag();
+        return $this->session->getFlashBag();
     }
 
     public function save()
     {
         $this->session->save();
+
+        return $this;
     }
 
     protected function setupDatabase($config)

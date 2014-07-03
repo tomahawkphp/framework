@@ -4,7 +4,23 @@ use Tomahawk\Cache\CacheManager;
 
 class CacheTest extends PHPUnit_Framework_TestCase
 {
-    public function testArrayCache()
+    public function testArrayCacheExistence()
+    {
+        $config = array(
+            'driver' => 'array'
+        );
+
+        $cache = new CacheManager($config);
+
+        $cache->save('name', 'Tom');
+
+        $this->assertTrue($cache->contains('name'));
+        $this->assertFalse($cache->contains('foo'));
+
+        $this->assertEquals('Tom', $cache->fetch('name'));
+    }
+
+    public function testArrayCacheDeleteSingle()
     {
         $config = array(
             'driver' => 'array'
@@ -15,6 +31,30 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $cache->save('name', 'Tom');
 
         $this->assertEquals('Tom', $cache->fetch('name'));
+
+        $cache->delete('name');
+
+        $this->assertFalse($cache->contains('name'));
+    }
+
+    public function testArrayCacheDeleteAll()
+    {
+        $config = array(
+            'driver' => 'array'
+        );
+
+        $cache = new CacheManager($config);
+
+        $cache->save('name', 'Tom');
+        $cache->save('age', 27);
+
+        $this->assertEquals('Tom', $cache->fetch('name'));
+        $this->assertEquals(27, $cache->fetch('age'));
+
+        $cache->flush();
+
+        $this->assertFalse($cache->contains('name'));
+        $this->assertFalse($cache->contains('age'));
     }
 
     public function testMemcacheCache()

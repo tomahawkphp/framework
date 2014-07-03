@@ -19,6 +19,11 @@ interface FormsManagerInterface
     public function get($name);
 
     /**
+     * @return array
+     */
+    public function getAll();
+
+    /**
      * @param $name
      * @return bool
      */

@@ -2,7 +2,7 @@
 
 namespace Tomahawk\DI;
 
-interface DIContainerInterface extends \ArrayAccess
+interface ContainerInterface extends \ArrayAccess
 {
     /**
      * @param $id
@@ -47,4 +47,17 @@ interface DIContainerInterface extends \ArrayAccess
      * @return mixed
      */
     public function protect($callable);
+
+    /**
+     * @param $name
+     * @param $id
+     * @return $this
+     */
+    public function addAlias($name, $id);
+
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function removeAlias($name);
 }

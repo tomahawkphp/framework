@@ -43,4 +43,9 @@ interface FormInterface
      * @return boolean
      */
     public function isValid();
+
+    /**
+     * @return Element[]
+     */
+    public function getElements();
 }

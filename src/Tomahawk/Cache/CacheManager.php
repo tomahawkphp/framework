@@ -72,7 +72,7 @@ class CacheManager implements CacheInterface
      */
     public function contains($id)
     {
-        return $this->contains($id);
+        return $this->driver->contains($id);
     }
 
     /**
@@ -87,7 +87,7 @@ class CacheManager implements CacheInterface
     /**
      * @return bool
      */
-    public function deleteAll()
+    public function flush()
     {
         return $this->driver->flushAll();
     }

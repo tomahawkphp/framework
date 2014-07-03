@@ -48,6 +48,11 @@ class ViewGeneratorTest extends PHPUnit_Framework_TestCase
     public function testViewWithSharedVariables()
     {
         $this->view->share('name', 'Tomgrohl');
+        $this->view->share('age', 27);
+
+        $this->assertCount(2, $this->view->getShared());
+        $this->assertEquals(27, $this->view->getShared('age'));
+        $this->assertEquals('Tomgrohl', $this->view->getShared('name'));
 
         $this->view->render('user');
     }
@@ -84,5 +89,4 @@ class ViewGeneratorTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('hello tom from mobile', $viewString);
     }
-
 }

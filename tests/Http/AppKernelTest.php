@@ -1,7 +1,7 @@
 <?php
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Tomahawk\DI\DIContainer;
+use Tomahawk\DI\Container;
 use Tomahawk\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
@@ -33,7 +33,7 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
     protected $eventDispatcher;
 
     /**
-     * @var \Tomahawk\DI\DIContainerInterface
+     * @var \Tomahawk\DI\ContainerInterface
      */
     protected $container;
 
@@ -51,7 +51,7 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
         $this->context->fromRequest($this->request);
 
         $this->eventDispatcher = new EventDispatcher();
-        $this->container = new DIContainer();
+        $this->container = new Container();
     }
 
     public function testAppKernel()

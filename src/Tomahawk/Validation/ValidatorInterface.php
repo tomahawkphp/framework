@@ -26,10 +26,10 @@ interface ValidatorInterface
      * Add message
      *
      * @param $field
-     * @param $message
+     * @param Message $message
      * @return $this
      */
-    public function addMessage($field, $message);
+    public function addMessage($field, Message $message);
 
     /**
      * Get All Validation Messages
@@ -50,4 +50,14 @@ interface ValidatorInterface
      * @return null
      */
     public function getInput($name);
+
+    /**
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     */
+    public function setTranslator($translator);
+
+    /**
+     * @return \Symfony\Component\Translation\TranslatorInterface
+     */
+    public function getTranslator();
 }

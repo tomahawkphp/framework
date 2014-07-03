@@ -4,7 +4,7 @@ use Tomahawk\Forms\Form;
 
 use Tomahawk\Forms\Element\Checkbox;
 
-class FormCheckboxTest extends PHPUnit_Framework_TestCase
+class CheckboxTest extends PHPUnit_Framework_TestCase
 {
 
     public function testCheckbox()

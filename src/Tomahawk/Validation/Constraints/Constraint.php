@@ -4,7 +4,7 @@ namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
 
-abstract class Constraint
+abstract class Constraint implements ConstraintInterface
 {
     /**
      * @var
@@ -32,8 +32,30 @@ abstract class Constraint
         return $this->message;
     }
 
+    public function setMessage($message)
+    {
+        $this->message = $message;
+        return $this;
+    }
+
     public function getData()
     {
         return array();
+    }
+
+    /**
+     * @return $this
+     */
+    public function mergeMessageData()
+    {
+
+        foreach ($this->getData() as $key => $value)
+        {
+            $this->message = str_replace($key, $value, $this->message);
+        }
+
+        //$this->setMessage($this->message);
+
+        return $this;
     }
 }

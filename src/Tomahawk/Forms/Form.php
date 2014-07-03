@@ -82,10 +82,17 @@ class Form implements FormInterface
     {
         $this->input = $input;
 
+        if (!$this->model)
+        {
+            return $this;
+        }
+
         foreach ($this->input as $name => $value)
         {
             $this->setValue($name, $value);
         }
+
+        return $this;
     }
 
     public function isValid()
@@ -95,33 +102,26 @@ class Form implements FormInterface
             throw new \Exception('Validator not present on');
         }
 
-        if ($valid = $this->getValidator()->validate($this->input))
-        {
-            /*foreach ($this->elements as $name => $element)
-            {
-                $value = $this->getValidator()->getInput($name);
-                $this->setValue($name, $value);
-            }*/
-            return true;
-        }
+        return $this->getValidator()->validate($this->input);
+    }
 
-        return false;
+    /**
+     * @return Element[]
+     */
+    public function getElements()
+    {
+        return $this->elements;
     }
 
     protected function getValue($element)
     {
-        if (!$this->model)
-        {
-            return null;
-        }
-
         $method = $this->getElementGetMethod($element);
 
-        if (method_exists($this->model, $method))
+        if ($this->model && method_exists($this->model, $method))
         {
             return $this->model->$method();
         }
-        else if (property_exists($this->model, $element))
+        else if ($this->model && property_exists($this->model, $element))
         {
             return $this->model->$element;
         }
@@ -131,18 +131,13 @@ class Form implements FormInterface
 
     protected function setValue($element, $value)
     {
-        if (!$this->model)
-        {
-            return null;
-        }
-
         $method = $this->getElementSetMethod($element);
 
-        if (method_exists($this->model, $method))
+        if ($this->model && method_exists($this->model, $method))
         {
             $this->model->$method($value);
         }
-        else if (property_exists($this->model, $element))
+        else if ($this->model && property_exists($this->model, $element))
         {
             $this->model->$element = $value;
         }

@@ -4,6 +4,10 @@ namespace Tomahawk\Session;
 
 interface SessionInterface
 {
+    public function has($name);
+
+    public function remove($name);
+
     public function getOldBag();
 
     public function setOld($name, $value);

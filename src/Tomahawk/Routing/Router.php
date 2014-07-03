@@ -141,11 +141,6 @@ class Router {
      */
     public function formatPath( $path )
     {
-        if( $path === '/' )
-        {
-            return $path;
-        }
-
         $path = trim($path, '/') . '/';
 
         return $path;

@@ -10,7 +10,7 @@ use Tomahawk\Forms\Element\Hidden;
 class FormTest extends PHPUnit_Framework_TestCase
 {
 
-    public function testThing()
+    public function testAddingElements()
     {
         $form = new Form();
 
@@ -20,76 +20,21 @@ class FormTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('<input type="text" name="first_name">', $html);
 
-        $html = $form->render('first_name', array('class' => 'input-field'));
+        $html = $form->render('first_name', array('class' => 'input-field', 'disabled'));
 
-        $this->assertEquals('<input type="text" name="first_name" class="input-field">', $html);
+        $this->assertEquals('<input type="text" name="first_name" class="input-field" disabled="disabled">', $html);
+
+        $this->assertCount(1, $form->getElements());
     }
 
-    public function testSelectNotSelected()
+    public function testChangingElementName()
     {
-        $form = new Form();
+        $text = new Text('first_name');
 
-        $form->add(new Select('question1', array(
-            'yes' => 'Yes',
-            'no'  => 'No'
-        )), 'yes');
+        $this->assertEquals('first_name', $text->getName());
 
-        $html = $form->render('question1');
+        $text->setName('full_name');
 
-        $this->assertEquals('<select name="question1"><option value="yes">Yes</option><option value="no">No</option></select>', $html);
-    }
-
-    public function testSelectSelected()
-    {
-        $form = new Form();
-
-        $form->add(new Select('question1', array(
-            'yes' => 'Yes',
-            'no'  => 'No'
-        ), 'yes'));
-
-        $html = $form->render('question1');
-
-        $this->assertEquals('<select name="question1"><option value="yes" selected="selected">Yes</option><option value="no">No</option></select>', $html);
-    }
-
-    public function testSelectGroup()
-    {
-        $form = new Form();
-
-        $form->add(new Select('question1', array(
-            'group1' => array(
-                '1' => 'One',
-                '2' => 'Two'
-            ),
-            'group2' => array(
-                '3' => 'Three',
-                '4' => 'Four'
-            )
-        )));
-
-        $html = $form->render('question1');
-
-        $this->assertEquals('<select name="question1"><optgroup label="group1"><option value="1">One</option><option value="2">Two</option></optgroup><optgroup label="group2"><option value="3">Three</option><option value="4">Four</option></optgroup></select>', $html);
-    }
-
-    public function testSelectGroupSelected()
-    {
-        $form = new Form();
-
-        $form->add(new Select('question1', array(
-            'group1' => array(
-                '1' => 'One',
-                '2' => 'Two'
-            ),
-            'group2' => array(
-                '3' => 'Three',
-                '4' => 'Four'
-            )
-        ), '1'));
-
-        $html = $form->render('question1');
-
-        $this->assertEquals('<select name="question1"><optgroup label="group1"><option value="1" selected="selected">One</option><option value="2">Two</option></optgroup><optgroup label="group2"><option value="3">Three</option><option value="4">Four</option></optgroup></select>', $html);
+        $this->assertEquals('full_name', $text->getName());
     }
 }

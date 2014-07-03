@@ -33,34 +33,30 @@ class InputManager implements InputInterface
      * @param null $default
      * @return array|mixed|null
      */
-    public function get( $key = null, $default = null )
+    public function get($key = null, $default = null)
     {
-        if( is_null($key) )
+        if (is_null($key))
         {
             return $this->request->query->all();
         }
-        return $this->request->query->has( $key ) ? $this->request->query->get($key) : $default;
+        return $this->request->query->get($key, $default);
     }
 
-    /**
-     * @param null $key
-     * @param null $default
-     * @return array|mixed|null
-     */
-    public function post( $key = null, $default = null )
+    public function getHas($key)
     {
-        if (is_null($key)) {
-            return $this->request->request->all();
-        }
-        return $this->request->request->has( $key ) ? $this->request->request->get($key) : $default;
+        return $this->request->query->has($key);
     }
 
     /**
      * @param $values
      * @return array
      */
-    public function getExcept( $values )
+    public function getExcept($values)
     {
+        if (!is_array($values)) {
+            $values = array($values);
+        }
+
         $all = $this->request->query->all();
 
         $get = array();
@@ -79,14 +75,34 @@ class InputManager implements InputInterface
      */
     public function getOnly( $values )
     {
-        $all = $this->request->query->all();
+        if (!is_array($values)) {
+            $values = array($values);
+        }
 
         $get = array();
 
-        foreach ($values as $key => $value) {
-            $get[] = $this->get( $value );
+        foreach ($values as $value) {
+            $get[] = $this->get($value);
         }
         return $get;
+    }
+
+    /**
+     * @param null $key
+     * @param null $default
+     * @return array|mixed|null
+     */
+    public function post( $key = null, $default = null )
+    {
+        if (is_null($key)) {
+            return $this->request->request->all();
+        }
+        return $this->request->request->get($key, $default);
+    }
+
+    public function postHas($key)
+    {
+        return $this->request->request->has($key);
     }
 
     /**
@@ -95,6 +111,10 @@ class InputManager implements InputInterface
      */
     public function postExcept( $values )
     {
+        if (!is_array($values)) {
+            $values = array($values);
+        }
+
         $all = $this->request->request->all();
 
         $post = array();
@@ -113,14 +133,21 @@ class InputManager implements InputInterface
      */
     public function postOnly( $values )
     {
-        $all = $this->request->request->all();
+        if (!is_array($values)) {
+            $values = array($values);
+        }
 
         $post = array();
 
-        foreach ($values as $key => $value) {
+        foreach ($values as $value) {
             $post[] = $this->get( $value );
         }
         return $post;
+    }
+
+    public function hasOld($name)
+    {
+        return $this->session->getOldBag()->has($name);
     }
 
     public function old($name = null, $default = null)
@@ -136,38 +163,6 @@ class InputManager implements InputInterface
         foreach ($data as $key => $item) {
             $this->session->setOld($key, $item);
         }
-    }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param $session
-     */
-    public function setSession($session)
-    {
-        $this->session = $session;
-    }
-
-    /**
-     * @return SessionManager
-     */
-    public function getSession()
-    {
-        return $this->session;
     }
 
 }

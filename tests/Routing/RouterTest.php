@@ -22,15 +22,38 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $routeCollection = new RouteCollection();
         $router = new Router();
         $router->setRoutes($routeCollection);
-        $router->get('/', 'home', function() {
+        $router->any('/', 'home', function() {
             return 'Home';
         });
 
-        $router->get('/blog', 'blog', function() {
-            return 'Blog';
+        $router->get('user/{user_id}', 'user', function() {
+            return 'User';
         });
 
-        $this->assertCount(2, $router->getRoutes()->getIterator());
+        $router->post('user', 'user_post', function() {
+            return 'User Post';
+        });
+
+        $this->assertCount(3, $router->getRoutes()->getIterator());
+    }
+
+    public function testInSection()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+
+        $test = $this;
+
+        $router->section('admin', array(), function(Router $router) use ($test) {
+
+            $test->assertTrue($router->getInSection());
+
+            $router->any('/', 'admin_home', function() {
+                return 'Home';
+            });
+        });
+
     }
 
 }

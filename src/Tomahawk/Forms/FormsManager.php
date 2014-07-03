@@ -48,4 +48,13 @@ class FormsManager implements FormsManagerInterface
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getAll()
+    {
+        return $this->forms;
+    }
+
 }

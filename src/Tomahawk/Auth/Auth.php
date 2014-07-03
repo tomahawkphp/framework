@@ -68,6 +68,7 @@ class Auth implements AuthInterface
         $id = $user->getAuthIdentifier();
 
         $this->session->set($name, $id);
+        $this->setUser($user);
     }
 
     public function logout()
@@ -117,6 +118,20 @@ class Auth implements AuthInterface
      */
     public function getUser()
     {
-        return $this->user;
+
+        if ($this->loggedOut) {
+            return;
+        }
+
+        $user = null;
+
+        if (!$id = $this->session->get($this->getName()))
+        {
+            return null;
+        }
+
+        $user = $this->handler->retrieveById($id);
+
+        return $this->user = $user;
     }
 }

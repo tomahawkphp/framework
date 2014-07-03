@@ -33,5 +33,5 @@ interface CacheInterface
     /**
      * @return bool
      */
-    public function deleteAll();
+    public function flush();
 }

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\Forms\FormsManagerInterface;
 use Tomahawk\Assets\AssetManagerInterface;
 use Tomahawk\Encryption\CryptInterface;
-use Tomahawk\DI\DIContainerInterface;
+use Tomahawk\DI\ContainerInterface;
 use Tomahawk\Session\SessionInterface;
 use Tomahawk\Http\Response\CookiesInterface;
 use Tomahawk\Cache\CacheInterface;
@@ -22,7 +22,7 @@ class Controller
     protected $forms;
 
     /**
-     * @var \Tomahawk\DI\DIContainerInterface
+     * @var \Tomahawk\DI\ContainerInterface
      */
     protected $di;
 
@@ -68,7 +68,7 @@ class Controller
 
     public function __construct(
         FormsManagerInterface $forms,
-        DIContainerInterface $di,
+        ContainerInterface $di,
         CookiesInterface $cookies,
         AssetManagerInterface $assets,
         Request $request,

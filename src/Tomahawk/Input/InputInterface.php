@@ -49,24 +49,4 @@ interface InputInterface
 
     public function flash(array $data);
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
-    public function setRequest($request);
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    public function getRequest();
-
-    /**
-     * @param $session
-     */
-    public function setSession($session);
-
-    /**
-     * @return SessionManager
-     */
-    public function getSession();
-
 }

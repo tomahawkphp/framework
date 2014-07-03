@@ -8,7 +8,7 @@ use Tomahawk\Session\SessionManager;
 use Tomahawk\Html\HtmlBuilder;
 use Tomahawk\Assets\AssetManager;
 use Tomahawk\Http\HttpKernel;
-use Tomahawk\DI\DIContainer;
+use Tomahawk\DI\Container;
 use Tomahawk\Routing\Router;
 use Tomahawk\Routing\Controller\ControllerResolver;
 use Tomahawk\Routing\Controller;
@@ -40,7 +40,7 @@ class AppControllerResolverTest extends PHPUnit_Framework_TestCase
     protected $eventDispatcher;
 
     /**
-     * @var \Tomahawk\DI\DIContainer
+     * @var \Tomahawk\DI\Container
      */
     protected $container;
 
@@ -52,13 +52,13 @@ class AppControllerResolverTest extends PHPUnit_Framework_TestCase
         $htmlBuilder = new HtmlBuilder();
 
         $this->eventDispatcher = new EventDispatcher();
-        $this->container = new DIContainer();
+        $this->container = new Container();
 
         $this->container['Tomahawk\View\ViewGeneratorInterface'] = new ViewGenerator(array(
             __DIR__.'/views/%name%.php'
         ));
         $this->container['Tomahawk\Http\ResponseBuilderInterface'] = new ResponseBuilder();
-        $this->container['Tomahawk\DI\DIContainerInterface'] = $this->container;
+        $this->container['Tomahawk\DI\ContainerInterface'] = $this->container;
         $this->container['Tomahawk\Encryption\CryptInterface'] = new Crypt(str_repeat('a', 32));
         $this->container['Tomahawk\Forms\FormsManagerInterface'] = new FormsManager();
         $this->container['Tomahawk\Http\Response\CookiesInterface'] = new Cookies($this->request, array());
@@ -69,7 +69,8 @@ class AppControllerResolverTest extends PHPUnit_Framework_TestCase
             'session_name' => 'tomahawk_session'
         ));
 
-        $this->container['Tomahawk\Database\DatabaseManager'] = new DatabaseManager();
+        $resolver = Mockery::mock('Illuminate\Database\ConnectionResolverInterface');
+        $this->container['Tomahawk\Database\DatabaseManager'] = new DatabaseManager($resolver);
 
         $this->container['Tomahawk\Cache\CacheInterface'] = new CacheManager(array(
             'driver' => 'array'

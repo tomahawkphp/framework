@@ -29,6 +29,23 @@ class FormModelBindingTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public function testBindNoGetSetMethods()
+    {
+        $peep = new Peep2Stub();
+
+        $peep->name = 'Tom Ellis';
+        $peep->age = 27;
+
+        $form = new Form($peep);
+
+        $form->add(new Text('name'));
+
+        $html = $form->render('name');
+
+        $this->assertEquals('<input type="text" name="name" value="Tom Ellis">', $html);
+
+    }
+
     public function testBindWithFailedValidation()
     {
         $input = array();
@@ -74,6 +91,72 @@ class FormModelBindingTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Tommy Ellis', $peep->getName());
     }
 
+    public function testLateBinding()
+    {
+        $input = array(
+            'name' => 'Tommy Ellis'
+        );
+
+        $validator = new Validator();
+        $validator->add('name', array(
+            new Required()
+        ));
+
+        $peep = new PeepStub();
+
+        $peep->setName('Tom Ellis');
+        $peep->setAge(27);
+
+        $form = new Form();
+        $form->setModel($peep);
+        $form->setValidator($validator);
+        $form->add(new Text('name'));
+        $form->bind($input);
+
+
+        $this->assertInstanceOf('PeepStub', $form->getModel());
+        $this->assertTrue($form->isValid());
+        $this->assertEquals('Tommy Ellis', $peep->getName());
+    }
+
+    public function testBindWithValidValidationNoSetter()
+    {
+        $input = array(
+            'name' => 'Tommy Ellis'
+        );
+
+        $validator = new Validator();
+        $validator->add('name', array(
+            new Required()
+        ));
+
+        $peep = new Peep2Stub();
+
+        $peep->name = 'Tom Ellis';
+        $peep->age =27;
+
+        $form = new Form($peep);
+        $form->setValidator($validator);
+        $form->add(new Text('name'));
+        $form->bind($input);
+        $this->assertTrue($form->isValid());
+        $this->assertEquals('Tommy Ellis', $peep->name);
+    }
+
+    public function testException()
+    {
+        $this->setExpectedException('Exception');
+
+        $input = array(
+            'name' => 'Tommy Ellis'
+        );
+
+        $form = new Form();
+        $form->bind($input);
+
+        $form->isValid();
+    }
+
 }
 
 class PeepStub
@@ -113,5 +196,13 @@ class PeepStub
     {
         return $this->name;
     }
+
+}
+
+class Peep2Stub
+{
+    public $name;
+
+    public $age;
 
 }

@@ -1,18 +1,18 @@
 <?php
 
-use Tomahawk\DI\DIContainer;
+use Tomahawk\DI\Container;
 use Tomahawk\DI\ServiceProviderInterface;
 
-class DIContainerTest extends PHPUnit_Framework_TestCase
+class ContainerTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var DIContainer
+     * @var Container
      */
     protected $container;
 
     public function setUp()
     {
-        $this->container = new DIContainer();
+        $this->container = new Container();
         parent::setUp();
     }
 
@@ -77,7 +77,40 @@ class DIContainerTest extends PHPUnit_Framework_TestCase
         });
 
         $this->assertEquals('BOOM!', $this->container['test']);
-        $this->assertInstanceOf('Tomahawk\DI\DIContainer', $this->container['test2']);
+        $this->assertInstanceOf('Tomahawk\DI\Container', $this->container['test2']);
+    }
+
+    public function testNonInstantiable()
+    {
+        $this->setExpectedException('Tomahawk\DI\InstantiateException');
+        $this->container->get('PersonStub');
+    }
+
+    public function testNoConstructor()
+    {
+        $this->container->get('Person3Stub');
+    }
+
+    public function testDefaultValue()
+    {
+        $this->container->get('Person4Stub');
+    }
+
+    public function testNoDefaultValue()
+    {
+        $this->setExpectedException('Tomahawk\DI\BindingResolutionException');
+        $this->container->get('Person5Stub');
+    }
+
+    public function testClassDefaultValue()
+    {
+        $this->container->get('People2Collection');
+    }
+
+    public function testClassNoDefaultValue()
+    {
+        $this->setExpectedException('Tomahawk\DI\BindingResolutionException');
+        $this->container->get('PeopleCollection');
     }
 
 }
@@ -106,5 +139,44 @@ class PersonProvider implements ServiceProviderInterface
     public function register(\Pimple\Container $container)
     {
         $container['test'] = 'Tom';
+    }
+}
+
+abstract class PersonStub
+{
+
+}
+
+class Person3Stub {}
+
+class Person4Stub {
+
+    public function __construct($thing = 'test')
+    {
+
+    }
+}
+
+class Person5Stub {
+
+    public function __construct($thing)
+    {
+
+    }
+}
+
+class PeopleCollection {
+
+    public function __construct(Person5Stub $person)
+    {
+
+    }
+}
+
+class People2Collection {
+
+    public function __construct(Person5Stub $person = null)
+    {
+
     }
 }

@@ -2,17 +2,27 @@
 
 namespace Tomahawk\Database;
 
-use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\ConnectionResolverInterface;
 
 class DatabaseManager
 {
+    /**
+     * @var \Illuminate\Database\ConnectionResolverInterface
+     */
+    protected $database;
+
+    public function __construct(ConnectionResolverInterface $database)
+    {
+        $this->database = $database;
+    }
+
     /**
      * @param null $connection
      * @return \Illuminate\Database\Connection
      */
     public function connection($connection = null)
     {
-        return DB::connection($connection);
+        return $this->database->connection($connection);
     }
 
     /**
@@ -22,7 +32,7 @@ class DatabaseManager
      */
     public function table($table, $connection = null)
     {
-        return DB::connection($connection)->table($table);
+        return $this->connection($connection)->table($table);
     }
 
     /**
@@ -31,6 +41,6 @@ class DatabaseManager
      */
     public function schema($connection = null)
     {
-        return DB::schema($connection);
+        return $this->database->connection($connection)->getSchemaBuilder();
     }
 }

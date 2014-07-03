@@ -83,6 +83,47 @@ class BlocksHelper extends Helper
 
         $this->blockDefaults[$name] = ob_get_clean();
     }
+    /**
+     * Returns true if the block exists.
+     *
+     * @param string $name The block name
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function hasDefault($name)
+    {
+        return isset($this->blockDefaults[$name]);
+    }
+
+    /**
+     * Gets the block value.
+     *
+     * @param string         $name    The block name
+     * @param Boolean|string $default The default block content
+     *
+     * @return string The block content
+     *
+     * @api
+     */
+    public function getDefault($name, $default = false)
+    {
+        return isset($this->blockDefaults[$name]) ? $this->blockDefaults[$name] : $default;
+    }
+
+    /**
+     * Sets a block value.
+     *
+     * @param string $name    The block name
+     * @param string $content The block content
+     *
+     * @api
+     */
+    public function setDefault($name, $content)
+    {
+        $this->blockDefaults[$name] = $content;
+    }
 
     /**
      * Returns true if the block exists.
@@ -131,11 +172,12 @@ class BlocksHelper extends Helper
      *
      * @param string $name The block name
      *
+     * @param bool $default
      * @return Boolean true if the block is defined or if a default content has been provided, false otherwise
      *
      * @api
      */
-    public function output($name)
+    public function output($name, $default = false)
     {
         if (isset($this->blocks[$name])) {
 
@@ -151,6 +193,13 @@ class BlocksHelper extends Helper
             return true;
         }
 
+        if (false !== $default) {
+            echo $default;
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

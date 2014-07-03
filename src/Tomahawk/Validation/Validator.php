@@ -3,6 +3,7 @@
 namespace Tomahawk\Validation;
 
 use Tomahawk\Validation\Constraints\ConstraintInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class Validator implements ValidatorInterface
 {
@@ -11,9 +12,28 @@ class Validator implements ValidatorInterface
      */
     protected $constraints = array();
 
+    /**
+     * @var
+     */
     protected $input;
 
+    /**
+     * @var array
+     */
     protected $messages = array();
+
+    /**
+     * @var TranslatorInterface $translator
+     */
+    protected $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator = null)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * Add a constraint to the validator
@@ -50,6 +70,7 @@ class Validator implements ValidatorInterface
      */
     public function validate($input)
     {
+        $this->messages = array();
         $this->input = $input;
 
         /**
@@ -59,10 +80,7 @@ class Validator implements ValidatorInterface
         {
             foreach ($constraints as $constraint)
             {
-                if (!$constraint->validate($this, $this->getInput($field)))
-                {
-                    $this->addMessage($field, new Message($constraint->getMessage(), $constraint->getData()));
-                }
+                $constraint->validate($this, $field, $this->getInput($field));
             }
 
         }
@@ -74,10 +92,10 @@ class Validator implements ValidatorInterface
      * Add message
      *
      * @param $field
-     * @param $message
+     * @param Message $message
      * @return $this
      */
-    public function addMessage($field, $message)
+    public function addMessage($field, Message $message)
     {
         if (!isset($this->messages[$field]))
         {
@@ -119,4 +137,19 @@ class Validator implements ValidatorInterface
         return isset($this->input[$name]) ? $this->input[$name] : null;
     }
 
+    /**
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     */
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * @return \Symfony\Component\Translation\TranslatorInterface
+     */
+    public function getTranslator()
+    {
+        return $this->translator;
+    }
 }

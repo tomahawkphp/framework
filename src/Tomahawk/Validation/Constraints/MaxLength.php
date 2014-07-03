@@ -3,17 +3,28 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
+use Tomahawk\Validation\Message;
 
 class MaxLength extends Constraint
 {
-    protected $message = 'The max length is {{ max_length }}';
+    protected $message = 'The maximum length is %max_length%';
 
     protected $max_length = 100;
 
-    public function validate(Validator $validator, $attribute)
+    public function validate(Validator $validator, $attribute, $value)
     {
-        if (strlen($attribute) >= $this->max_length)
+        if (strlen($value) > $this->max_length)
         {
+            if ($trans = $validator->getTranslator())
+            {
+                $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
+            }
+            else
+            {
+                $this->mergeMessageData();
+            }
+
+            $validator->addMessage($attribute, new Message($this->getMessage(), $this->getData()));
             return false;
         }
 
@@ -23,7 +34,7 @@ class MaxLength extends Constraint
     public function getData()
     {
         return array(
-            '{{ max_length }}' => $this->max_length
+            '%max_length%' => $this->max_length
         );
     }
 }
