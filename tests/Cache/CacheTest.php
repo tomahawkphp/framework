@@ -57,22 +57,45 @@ class CacheTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($cache->contains('age'));
     }
 
-    public function testMemcacheCache()
+    public function testFilesystemCache()
     {
-        /*$config = array(
-            'driver' => 'memcache',
-
-            'memcache' => array(
-                'host' => 'localhost',
-                'port' => 11211
-            )
+        $config = array(
+            'driver' => 'filesystem',
+            'save_path' => __DIR__ .'/cache'
         );
 
         $cache = new CacheManager($config);
 
         $cache->save('name', 'Tom');
+        $cache->save('age', 27);
 
-        $this->assertEquals('Tom', $cache->fetch('name'));*/
+        $this->assertEquals('Tom', $cache->fetch('name'));
+        $this->assertEquals(27, $cache->fetch('age'));
+
+        $cache->flush();
+
+        $this->assertFalse($cache->contains('name'));
+        $this->assertFalse($cache->contains('age'));
     }
+
+    /*public function testApcCache()
+    {
+        $config = array(
+            'driver' => 'apc'
+        );
+
+        $cache = new CacheManager($config);
+
+        $cache->save('name', 'Tom');
+        $cache->save('age', 27);
+
+        $this->assertEquals('Tom', $cache->fetch('name'));
+        $this->assertEquals(27, $cache->fetch('age'));
+
+        $cache->flush();
+
+        $this->assertFalse($cache->contains('name'));
+        $this->assertFalse($cache->contains('age'));
+    }*/
 
 }

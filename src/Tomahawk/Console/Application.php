@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Console;
 
+use Tomahawk\HttpKernel\KernelInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
@@ -10,7 +11,6 @@ use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class Application extends BaseApplication
@@ -83,11 +83,12 @@ class Application extends BaseApplication
                 $this->add($container->get($id));
             }
         }
+        */
 
         foreach ($this->kernel->getBundles() as $bundle) {
             if ($bundle instanceof Bundle) {
                 $bundle->registerCommands($this);
             }
-        }*/
+        }
     }
 }

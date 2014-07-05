@@ -9,9 +9,9 @@ use Tomahawk\Assets\AssetManagerInterface;
 use Tomahawk\Encryption\CryptInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\Session\SessionInterface;
-use Tomahawk\Http\Response\CookiesInterface;
+use Tomahawk\HttpCore\Response\CookiesInterface;
 use Tomahawk\Cache\CacheInterface;
-use Tomahawk\Http\ResponseBuilderInterface;
+use Tomahawk\HttpCore\ResponseBuilderInterface;
 use Tomahawk\View\ViewGeneratorInterface;
 
 class Controller
@@ -52,7 +52,7 @@ class Controller
     protected $database;
 
     /**
-     * @var \Tomahawk\Http\Response\CookiesInterface
+     * @var \Tomahawk\HttpCore\Response\CookiesInterface
      */
     protected $cookies;
 
@@ -62,7 +62,7 @@ class Controller
     protected $cache;
 
     /**
-     * @var \Tomahawk\Http\ResponseBuilderInterface
+     * @var \Tomahawk\HttpCore\ResponseBuilderInterface
      */
     protected $response;
 

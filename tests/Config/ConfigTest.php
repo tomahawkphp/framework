@@ -89,11 +89,46 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('cookie', $config->get('session.driver'));
     }
 
-    /**
+   /* public function testSetGetConfig()
+    {
+        $configDirectories = array(
+            __DIR__ .'/configs',
+            __DIR__ .'/configs/develop'
+        );
+
+        $locator = new FileLocator($configDirectories);
+
+        $loaderResolver = new LoaderResolver(
+            array(
+                new YamlConfigLoader($locator),
+                new PhpConfigLoader($locator)
+            )
+        );
+
+        $delegatingLoader = new DelegatingLoader($loaderResolver);
+
+        $config = new ConfigManager($delegatingLoader, $configDirectories);
+    }*/
+
+
     public function testChangeTheThings()
     {
-        $dirs = array(__DIR__ .'/configs');
-        $config = new ConfigManager($dirs);
+        $configDirectories = array(
+            __DIR__ .'/configs'
+        );
+
+        $locator = new FileLocator($configDirectories);
+
+        $loaderResolver = new LoaderResolver(
+            array(
+                new YamlConfigLoader($locator),
+                new PhpConfigLoader($locator)
+            )
+        );
+
+        $delegatingLoader = new DelegatingLoader($loaderResolver);
+
+        $config = new ConfigManager($delegatingLoader, $configDirectories);
 
         $config->load();
 
@@ -107,9 +142,23 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     public function testSetNewValue()
     {
-        $dirs = array(__DIR__ .'/configs');
-        $config = new ConfigManager($dirs);
+        $configDirectories = array(
+            __DIR__ .'/configs',
+            __DIR__ .'/configs/develop'
+        );
 
+        $locator = new FileLocator($configDirectories);
+
+        $loaderResolver = new LoaderResolver(
+            array(
+                new YamlConfigLoader($locator),
+                new PhpConfigLoader($locator)
+            )
+        );
+
+        $delegatingLoader = new DelegatingLoader($loaderResolver);
+
+        $config = new ConfigManager($delegatingLoader, $configDirectories);
         $config->load();
 
         $config->set('new.foo', 'bar');
@@ -120,14 +169,55 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     public function testgetNonExistantValue()
     {
-        $dirs = array(__DIR__ .'/configs');
-        $config = new ConfigManager($dirs);
+        $configDirectories = array(
+            __DIR__ .'/configs'
+        );
+
+        $locator = new FileLocator($configDirectories);
+
+        $loaderResolver = new LoaderResolver(
+            array(
+                new YamlConfigLoader($locator),
+                new PhpConfigLoader($locator)
+            )
+        );
+
+        $delegatingLoader = new DelegatingLoader($loaderResolver);
+
+        $config = new ConfigManager($delegatingLoader, $configDirectories);
+        $config->load();
 
         $config->load();
 
         $this->assertEquals(null, $config->get('new'));
 
-    }*/
+    }
+
+    public function testOverrideConfig()
+    {
+        $configDirectories = array(
+            __DIR__ .'/configs'
+        );
+
+        $locator = new FileLocator($configDirectories);
+
+        $loaderResolver = new LoaderResolver(
+            array(
+                new YamlConfigLoader($locator),
+                new PhpConfigLoader($locator)
+            )
+        );
+
+        $delegatingLoader = new DelegatingLoader($loaderResolver);
+
+        $config = new ConfigManager($delegatingLoader, $configDirectories);
+        $config->load();
+
+        $config->load();
+
+        $this->assertEquals(null, $config->get('new'));
+
+    }
 
 
 }

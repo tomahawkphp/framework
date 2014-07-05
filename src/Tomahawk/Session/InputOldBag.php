@@ -132,7 +132,7 @@ class InputOldBag implements AttributeBagInterface, \IteratorAggregate, \Countab
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->attributes);
+        return new \ArrayIterator($this->all());
     }
 
     /**
@@ -144,4 +144,5 @@ class InputOldBag implements AttributeBagInterface, \IteratorAggregate, \Countab
     {
         return count($this->attributes);
     }
+
 }

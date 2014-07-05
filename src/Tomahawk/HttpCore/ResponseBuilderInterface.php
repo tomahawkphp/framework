@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Http;
+namespace Tomahawk\HttpCore;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;

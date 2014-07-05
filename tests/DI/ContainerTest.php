@@ -113,6 +113,20 @@ class ContainerTest extends PHPUnit_Framework_TestCase
         $this->container->get('PeopleCollection');
     }
 
+    public function testAlias()
+    {
+        $this->container['PersonInterface'] = new Person();
+
+        $this->container->addAlias('person', 'PersonInterface');
+
+        $person = $this->container->get('person');
+
+        $this->assertInstanceOf('Person', $person);
+
+        $this->container->removeAlias('person');
+        $this->assertFalse($this->container->hasAlias('person'));
+    }
+
 }
 
 class Thing {

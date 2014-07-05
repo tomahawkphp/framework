@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Http;
+namespace Tomahawk\HttpCore;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -69,7 +69,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param bool $autoLastModified
      * @return BinaryFileResponse
      */
-    public function download($file, $status = 302, $headers = array(), $public = true, $contentDisposition, $autoEtag = false, $autoLastModified = true)
+    public function download($file, $status = 302, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
     {
         $response = new BinaryFileResponse($file, $status, $headers, $public, $contentDisposition, $autoEtag, $autoLastModified);
         return $response;

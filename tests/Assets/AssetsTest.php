@@ -6,11 +6,6 @@ use Tomahawk\Assets\AssetContainer;
 
 class AssetsTest extends PHPUnit_Framework_TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
     public function testName()
     {
         $head = new AssetContainer('head');

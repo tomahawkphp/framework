@@ -65,7 +65,10 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
     {
         // Check if valid URL
         if ($this->validateURL($path)) {
-            return $path;
+
+            $extra = implode('/', array_map('rawurlencode', $extra));
+
+            return rtrim($path, '/') . $extra;
         }
 
         $scheme = $this->context->getScheme();

@@ -55,6 +55,21 @@ class SessionManagerTest extends PHPUnit_Framework_TestCase
 
         $this->session->getOldBag()->remove('name');
         $this->assertFalse($this->session->getOldBag()->has('name'));
+
+        $new_input = array(
+            'place' => 'stamford'
+        );
+
+        $this->session->getOldBag()->replace($new_input);
+
+        $this->assertCount(1, $this->session->getOldBag()->all());
+
+        $this->assertEquals('stamford', $this->session->getOldBag()->get('place'));
+
+        $this->session->getOldBag()->clear();
+        $this->assertCount(0, $this->session->getOldBag()->all());
+        $this->assertEquals(0, $this->session->getOldBag()->count());
+
     }
 
     public function testHasSetGetFlash()
@@ -69,6 +84,31 @@ class SessionManagerTest extends PHPUnit_Framework_TestCase
         $flash = $this->session->getFlash('name');
 
         $this->assertCount(0, $this->session->getFlash('name'));
+    }
+
+    /**
+     * @covers \Tomahawk\Session\InputOldBag::getIterator
+     */
+    public function testGetIterator()
+    {
+
+        $flashes = array('hello' => 'world', 'beep' => 'boop', 'notice' => 'nope');
+        foreach ($flashes as $key => $val) {
+            $this->session->getOldBag()->set($key, $val);
+        }
+
+        $i = 0;
+        foreach ($this->session->getOldBag() as $key => $val) {
+            $this->assertEquals($flashes[$key], $val);
+            $i++;
+        }
+
+        $this->assertEquals(count($flashes), $i);
+    }
+
+    public function testDatabase()
+    {
+        $session = Mockery::mock('Tomahawk\Session\SessionManager');
     }
 
 }

@@ -88,38 +88,6 @@ class ConfigManager implements ConfigInterface
     }
 
     /**
-     * @param array $config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return array
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param mixed $configDirectories
-     */
-    public function setConfigDirectories(array $configDirectories)
-    {
-        $this->configDirectories = $configDirectories;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConfigDirectories()
-    {
-        return $this->configDirectories;
-    }
-
-    /**
      * Set an array item to a given value using "dot" notation.
      *
      * If no key is given to the method, the entire array will be replaced.

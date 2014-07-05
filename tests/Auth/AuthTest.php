@@ -6,8 +6,14 @@ use Tomahawk\Auth\Handlers\PdoAuthHandler;
 use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 class AuthTest extends PHPUnit_Framework_TestCase
 {
+    public function tearDown()
+    {
+        Mockery::close();
+    }
+
     public function testAuthNoUser()
     {
         $sessionStorage = new MockArraySessionStorage();
@@ -141,5 +147,55 @@ class AuthTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Tomahawk\Auth\AuthHandlerInterface', $auth->getHandler());
     }
+
+    /*public function testPdoHandler()
+    {
+        $sessionStorage = new MockArraySessionStorage();
+        $session = new Session($sessionStorage);
+
+        $pdoAuthHandler = $this->getPDOProviderMock();
+        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
+        $auth = new Auth($session, $pdoAuthHandler);
+
+        $auth->attempt(array(
+            'username' => 'tomgrohl',
+            'password' => 'password'
+        ));
+
+        $pdoAuthHandler->shouldReceive('retrieveByCredentials')->andReturn($user);
+
+        $pdoAuthHandler->shouldReceive('validateCredentials')->andReturn(true);
+
+        $pdoAuthHandler->shouldReceive('retrieveById')->andReturn(1);
+
+        $this->assertInstanceOf('\Tomahawk\Auth\AuthHandlerInterface', $auth->getHandler());
+    }*/
+
+    /*public function testEloquentHandler()
+    {
+        $sessionStorage = new MockArraySessionStorage();
+        $session = new Session($sessionStorage);
+        $authHandlerInterface = Mockery::mock('\Tomahawk\Auth\Handlers\EloquentAuthHandler');
+
+        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
+        $auth = new Auth($session, $authHandlerInterface);
+
+        $this->assertInstanceOf('\Tomahawk\Auth\AuthHandlerInterface', $auth->getHandler());
+    }*/
+
+    /*protected function getPDOProviderMock()
+    {
+        $pdo = Mockery::mock('MockPDO');
+        $hasher = Mockery::mock('Tomahawk\Hashing\HasherInterface');
+        $pdoAuthHandler = Mockery::mock('Tomahawk\Auth\Handlers\PdoAuthHandler', array('retrieveById', 'retrieveByCredentials', 'validateCredentials'), array($hasher, $pdo, 'users', 'id'));
+    }*/
+
+}
+
+
+class MockPDO extends \PDO
+{
+    public function __construct ()
+    {}
 
 }

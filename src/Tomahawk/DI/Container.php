@@ -25,6 +25,11 @@ class Container extends BaseContainer implements ContainerInterface
      */
     public function get($id)
     {
+        if ($this->hasAlias($id))
+        {
+            $id = $this->getAlias($id);
+        }
+
         if (!$this->has($id) && class_exists($id))
         {
             return $this->build($id);
@@ -170,6 +175,20 @@ class Container extends BaseContainer implements ContainerInterface
     {
         $this->aliases[$name] = $id;
         return $this;
+    }
+
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function getAlias($name)
+    {
+        return $this->aliases[$name];
+    }
+
+    public function hasAlias($name)
+    {
+        return isset($this->aliases[$name]);
     }
 
     /**

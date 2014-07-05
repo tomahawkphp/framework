@@ -123,7 +123,7 @@ class CacheManager implements CacheInterface
         $this->driver = new ApcCache();
     }
 
-    /*
+
     protected function setMemcacheCache(array $config)
     {
         $memcache = new Memcache();
@@ -131,5 +131,5 @@ class CacheManager implements CacheInterface
 
         $this->driver = new MemcacheCache();
         $this->driver->setMemcache($memcache);
-    }*/
+    }
 }

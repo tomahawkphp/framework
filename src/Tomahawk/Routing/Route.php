@@ -18,22 +18,25 @@ class Route extends BaseRoute {
         return $this;
     }
 
-    public function controller($callback)
-    {
-        $this->setDefault('_controller', $callback);
-        return $this;
-    }
-
-
-    public function beforeFilters($name)
+    public function setBeforeFilters($name)
     {
         $this->setDefault('_beforeFilters', $name);
         return $this;
     }
 
-    public function afterFilters($name)
+    public function getBeforeFilters()
+    {
+        return $this->getDefault('_beforeFilters');
+    }
+
+    public function setAfterFilters($name)
     {
         $this->setDefault('_afterFilters', $name);
         return $this;
+    }
+
+    public function getAfterFilters()
+    {
+        return $this->getDefault('_afterFilters');
     }
 }

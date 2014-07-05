@@ -2,27 +2,41 @@
 
 namespace Tomahawk\Bundles\WebProfilerBundle;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
+use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Templating\PhpEngine;
 
-class WebProfilerBundle extends Bundle implements ContainerAwareInterface
+class WebProfilerBundle extends Bundle
 {
 
     public function boot()
     {
-        //$this->getEventDispatcher()->
+        $this->container->set('web_profiler', 'yay!');
+
+        $this->getEventDispatcher()->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) {
+
+            if ($response = $event->getResponse())
+            {
+                $content = $response->getContent();
+
+                $content .= 'profiler';
+
+                $response->setContent($content);
+                $event->setResponse($response);
+            }
+
+        });
     }
 
     public function shutdown()
     {
-
-    }
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
+        $this->container->set('web_profiler', null);
     }
 
     /**
@@ -32,4 +46,5 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
     {
         return $this->container->get('event_dispatcher');
     }
+
 }

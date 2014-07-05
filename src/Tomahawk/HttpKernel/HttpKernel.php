@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Http;
+namespace Tomahawk\HttpKernel;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing;
 
-class HttpKernel extends BaseHttpKernel
+class HttpKernel extends BaseHttpKernel implements TerminableInterface
 {
     /**
      * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface
@@ -44,34 +44,11 @@ class HttpKernel extends BaseHttpKernel
      * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request;
-    /**
-     * @var
-     */
-    protected $templating;
-
-    /**
-     * @var array
-     */
-    protected $environments = array();
-
-    /**
-     * @var
-     */
-    protected $environment;
 
     /**
      * @var \Symfony\Component\Routing\RequestContext
      */
     protected $context;
-
-    protected $paths;
-
-    /**
-     * @var \Tomahawk\Routing\Router
-     */
-    protected $router;
-
-    public static $instance;
 
     public function __construct(EventDispatcherInterface $dispatcher = null, UrlMatcherInterface $matcher = null, ControllerResolverInterface $resolver = null, RequestStack $requestStack = null)
     {
@@ -80,73 +57,6 @@ class HttpKernel extends BaseHttpKernel
         $this->dispatcher = $dispatcher;
         $this->requestStack = $requestStack ?: new RequestStack();
     }
-
-    /**
-     * @return \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    public function getDispatcher()
-    {
-        return $this->dispatcher;
-    }
-
-    /**
-     * @param \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
-     */
-    public function setDispatcher($dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
-
-    /**
-     * @param \Symfony\Component\Routing\RequestContext $context
-     */
-    public function setContext($context)
-    {
-        $this->context = $context;
-    }
-
-    /**
-     * @return \Symfony\Component\Routing\RequestContext
-     */
-    public function getContext()
-    {
-        return $this->context;
-    }
-
-    /**
-     * @return $this
-     */
-    /*public function boot()
-    {
-        if (true === $this->booted) {
-            return $this;
-        }
-        /**
-         * Check if we have a matcher set
-
-        if (!$this->matcher) {
-            $matcher = new Routing\Matcher\UrlMatcher($this->getRoutes(), $this->context);
-            $this->setMatcher($matcher);
-            $this->setContext($this->context);
-            $this->setResolver($this->resolver);
-        }
-
-        $this->booted = true;
-
-        return $this;
-    }*/
-
-    /**
-     * @return Response
-     */
-    /*public function run()
-    {
-        if (false === $this->booted) {
-            $this->boot();
-        }
-
-        return $this->handle(Request::createFromGlobals());
-    }*/
 
     /**
      * @param Request $request
@@ -207,11 +117,13 @@ class HttpKernel extends BaseHttpKernel
 
         $response = call_user_func_array($controller, $arguments);
 
-        $before_events = explode('|', $request->get('before'));
+
 
         //var_dump($request->attributes->get('_beforeFilters'));
         //exit;
 
+        /*
+        $before_events = explode('|', $request->get('before'));
         $before_event = null;
 
         $before_events = array();
@@ -224,14 +136,14 @@ class HttpKernel extends BaseHttpKernel
         foreach ($before_events as $event) {
             $this->dispatcher->dispatch($event, $before_event);
 
-            /**
-             * If event has a response
-             */
+            //If event has a response
+
             if ($before_event->getResponse() && $before_event->isPropagationStopped()) {
                 $response = $before_event->getResponse();
                 break;
             }
         }
+        */
 
         // view
         if (!$response instanceof Response) {

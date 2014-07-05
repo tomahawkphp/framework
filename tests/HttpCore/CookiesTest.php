@@ -1,6 +1,6 @@
 <?php
 
-use Tomahawk\Http\Response\Cookies;
+use Tomahawk\HttpCore\Response\Cookies;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,6 +44,16 @@ class CookiesTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($cookies->has('name'));
         $this->assertEquals(null, $cookies->get('name'));
         $this->assertEquals('default', $cookies->get('name', 'default'));
+    }
+
+    public function testExpire()
+    {
+        $request = new Request(array(), array(), array(), array('name' => 'Tom'));
+        $cookies = new Cookies($request, array());
+
+        $this->assertTrue($cookies->has('name'));
+        $cookies->expire('name');
+        $this->assertFalse($cookies->has('name'));
     }
 
 }

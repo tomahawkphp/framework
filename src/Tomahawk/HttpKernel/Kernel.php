@@ -1,7 +1,8 @@
 <?php
 
-namespace Tomahawk\Http;
+namespace Tomahawk\HttpKernel;
 
+use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -11,6 +12,12 @@ use Tomahawk\DI\Container;
 
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
+    /**
+     * @var BundleInterface[]
+     */
+    protected $bundles = array();
+
+    protected $bundleMap;
     /**
      * @var Container
      */
@@ -22,10 +29,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $name;
     protected $startTime;
     protected $paths = array();
-    /**
-     * @var
-     */
-    protected $routes;
 
     const VERSION         = '0.2.1';
     const VERSION_ID      = '00201';
@@ -79,20 +82,22 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         $this->initializeContainer();
 
 
-        /*if ($this->loadClassCache) {
-            $this->doLoadClassCache($this->loadClassCache[0], $this->loadClassCache[1]);
-        }
-
         // init bundles
         $this->initializeBundles();
 
+        /*if ($this->loadClassCache) {
+            $this->doLoadClassCache($this->loadClassCache[0], $this->loadClassCache[1]);
+        }
+        */
+
+
         // init container
-        $this->initializeContainer();
+        //$this->initializeContainer();
 
         foreach ($this->getBundles() as $bundle) {
             $bundle->setContainer($this->container);
             $bundle->boot();
-        }*/
+        }
 
         $this->booted = true;
     }
@@ -126,10 +131,10 @@ abstract class Kernel implements KernelInterface, TerminableInterface
 
         $this->booted = false;
 
-        /*foreach ($this->getBundles() as $bundle) {
+        foreach ($this->getBundles() as $bundle) {
             $bundle->shutdown();
             $bundle->setContainer(null);
-        }*/
+        }
 
         $this->container = null;
     }
@@ -302,20 +307,133 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         return array_get($this->paths, $path);
     }
 
-    /**
-     * @param mixed $routes
-     */
-    public function setRoutes($routes)
+    public function getBundles()
     {
-        $this->routes = $routes;
+        return $this->bundles;
+    }
+
+    public function getBundle($name, $first = true)
+    {
+        if (!isset($this->bundleMap[$name])) {
+            throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist or it is not enabled. Maybe you forgot to add it in the registerBundles() method of your %s.php file?', $name, get_class($this)));
+        }
+
+        if (true === $first) {
+            return $this->bundleMap[$name][0];
+        }
+
+        return $this->bundleMap[$name];
     }
 
     /**
-     * @return \Symfony\Component\Routing\RouteCollection
+     * Initializes the data structures related to the bundle management.
+     *
+     *  - the bundles property maps a bundle name to the bundle instance,
+     *  - the bundleMap property maps a bundle name to the bundle inheritance hierarchy (most derived bundle first).
+     *
+     * @throws \LogicException if two bundles share a common name
+     * @throws \LogicException if a bundle tries to extend a non-registered bundle
+     * @throws \LogicException if a bundle tries to extend itself
+     * @throws \LogicException if two bundles extend the same ancestor
      */
-    public function getRoutes()
+    protected function initializeBundles()
     {
-        return $this->routes;
+        // init bundles
+        $this->bundles = array();
+        $topMostBundles = array();
+        $directChildren = array();
+
+        foreach ($this->registerBundles() as $bundle) {
+            $name = $bundle->getName();
+            if (isset($this->bundles[$name])) {
+                throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s"', $name));
+            }
+            $this->bundles[$name] = $bundle;
+
+            if ($parentName = $bundle->getParent()) {
+                if (isset($directChildren[$parentName])) {
+                    throw new \LogicException(sprintf('Bundle "%s" is directly extended by two bundles "%s" and "%s".', $parentName, $name, $directChildren[$parentName]));
+                }
+                if ($parentName == $name) {
+                    throw new \LogicException(sprintf('Bundle "%s" can not extend itself.', $name));
+                }
+                $directChildren[$parentName] = $name;
+            } else {
+                $topMostBundles[$name] = $bundle;
+            }
+        }
+
+        // look for orphans
+        if (!empty($directChildren) && count($diff = array_diff_key($directChildren, $this->bundles))) {
+            $diff = array_keys($diff);
+
+            throw new \LogicException(sprintf('Bundle "%s" extends bundle "%s", which is not registered.', $directChildren[$diff[0]], $diff[0]));
+        }
+
+        // inheritance
+        $this->bundleMap = array();
+        foreach ($topMostBundles as $name => $bundle) {
+            $bundleMap = array($bundle);
+            $hierarchy = array($name);
+
+            while (isset($directChildren[$name])) {
+                $name = $directChildren[$name];
+                array_unshift($bundleMap, $this->bundles[$name]);
+                $hierarchy[] = $name;
+            }
+
+            foreach ($hierarchy as $bundle) {
+                $this->bundleMap[$bundle] = $bundleMap;
+                array_pop($bundleMap);
+            }
+        }
+
+    }
+
+    /**
+     * Returns the kernel parameters.
+     *
+     * @return array An array of kernel parameters
+     */
+    protected function getKernelParameters()
+    {
+        $bundles = array();
+        foreach ($this->bundles as $name => $bundle) {
+            $bundles[$name] = get_class($bundle);
+        }
+
+        return array_merge(
+            array(
+                'kernel.root_dir'        => $this->rootDir,
+                'kernel.environment'     => $this->environment,
+                'kernel.debug'           => $this->debug,
+                'kernel.name'            => $this->name,
+                'kernel.cache_dir'       => $this->getCacheDir(),
+                'kernel.logs_dir'        => $this->getLogDir(),
+                'kernel.bundles'         => $bundles,
+                'kernel.charset'         => $this->getCharset()
+            ),
+            $this->getEnvParameters()
+        );
+    }
+
+    /**
+     * Gets the environment parameters.
+     *
+     * Only the parameters starting with "SYMFONY__" are considered.
+     *
+     * @return array An array of parameters
+     */
+    protected function getEnvParameters()
+    {
+        $parameters = array();
+        foreach ($_SERVER as $key => $value) {
+            if (0 === strpos($key, 'TOMAHAWK_')) {
+                $parameters[strtolower(str_replace('__', '.', substr($key, 9)))] = $value;
+            }
+        }
+
+        return $parameters;
     }
 
 }

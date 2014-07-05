@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Http\Response;
+namespace Tomahawk\HttpCore\Response;
 
 interface CookiesInterface
 {

@@ -2,16 +2,13 @@
 
 namespace Tomahawk\Routing;
 
+use Symfony\Component\HttpFoundation\Response;
 use Tomahawk\Routing\Route;
-#use Hawk\Response;
-#use Hawk\Controller\Inspector;
-
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route as BaseRoute;
-//use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
@@ -26,19 +23,26 @@ class Router {
      * @var RouteCollection
      */
     protected $routes;
+
     /**
      * @var array
      */
-    public $filters = array();
+    protected $beforeFilters = array();
 
-    public $verbs = array(
+    /**
+     * @var array
+     */
+    protected $afterFilters = array();
+
+
+    protected $verbs = array(
         'put',
         'get',
         'post',
         'delete'
     );
 
-    public $regex = '([\w-_]+)';
+    protected $regex = '([\w-_]+)';
 
     /**
      * @param RouteCollection $routes
@@ -173,25 +177,80 @@ class Router {
      * @param $name
      * @param $callback
      */
-    public function filter( $name, $callback )
+    public function beforeFilter( $name, $callback )
     {
-        $this->filters[$name] = $callback;
+        $this->beforeFilters[$name] = $callback;
     }
 
     /**
-     * Call Filter
+     * Filter
      *
      * @param $name
+     * @param $callback
+     */
+    public function afterFilter( $name, $callback )
+    {
+        $this->afterFilters[$name] = $callback;
+    }
+
+    /**
+     * Call Before Filter
+     *
+     * @param $name
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Response $response
      * @return mixed
      */
-    public function callFilter($name)
+    public function callBeforeFilter($name, Request $request, Response $response)
     {
-        if (!$this->filters[$name])
+        if (!isset($this->beforeFilters[$name]))
         {
             return false;
         }
 
-        return call_user_func($this->filters[$name]);
+        $arguments = func_get_args();
+
+        $arguments = array_slice($arguments, 1);
+
+
+        array_unshift($arguments, $response);
+        array_unshift($arguments, $request);
+
+        return call_user_func_array($this->beforeFilters[$name], $arguments);
+    }
+
+    /**
+     * Call Before Filter
+     *
+     * @param $name
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return mixed
+     */
+    public function callAfterFilter($name, Request $request)
+    {
+        if (!isset($this->afterFilters[$name]))
+        {
+            return false;
+        }
+
+        $arguments = func_get_args();
+
+        $arguments = array_slice($arguments, 1);
+
+        array_unshift($arguments, $request);
+
+        return call_user_func_array($this->afterFilters[$name], $arguments);
+    }
+
+    public function getBeforeFilters()
+    {
+        return $this->beforeFilters;
+    }
+
+
+    public function getAfterFilters()
+    {
+        return $this->afterFilters;
     }
 
     /**

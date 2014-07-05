@@ -1,23 +1,14 @@
 <?php
 
-/*
- * This file is part of the Tomahawk package.
- *
- * (c) Tom Ellis <tellishtc@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Tomahawk\Http;
+namespace Tomahawk\HttpKernel;
 
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\Container;
 use Tomahawk\DI\ContainerInterface;
-use  Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-interface KernelInterface  extends HttpKernelInterface, \Serializable
+interface KernelInterface extends HttpKernelInterface, \Serializable
 {
     /**
      * Returns an array of bundles to register.

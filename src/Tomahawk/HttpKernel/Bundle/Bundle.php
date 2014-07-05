@@ -4,31 +4,14 @@ namespace Tomahawk\HttpKernel\Bundle;
 
 use Tomahawk\Console\Application;
 use Symfony\Component\Finder\Finder;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DI\ContainerAware;
 
-abstract class Bundle implements BundleInterface
+abstract class Bundle extends ContainerAware implements BundleInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+
     protected $name;
     protected $extension;
     protected $path;
-
-    /**
-     * Boots the Bundle.
-     */
-    public function boot()
-    {
-    }
-
-    /**
-     * Shutdowns the Bundle.
-     */
-    public function shutdown()
-    {
-    }
 
     /**
      * Gets the Bundle namespace.
@@ -59,6 +42,22 @@ abstract class Bundle implements BundleInterface
         }
 
         return $this->path;
+    }
+
+    /**
+     * Returns the bundle name that this bundle overrides.
+     *
+     * Despite its name, this method does not imply any parent/child relationship
+     * between the bundles, just a way to extend and override an existing
+     * bundle.
+     *
+     * @return string The Bundle name it overrides or null if no parent
+     *
+     * @api
+     */
+    public function getParent()
+    {
+
     }
 
     /**

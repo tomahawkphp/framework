@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Http\Response;
+namespace Tomahawk\HttpCore\Response;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
