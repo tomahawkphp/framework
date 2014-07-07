@@ -73,9 +73,8 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
 
             return $this->handleRaw($request, $type);
 
-        } catch (ResourceNotFoundException $e) {
-            $response = new Response('Not Found', 404);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
 
             // Check if we are showing detailed errors
 
@@ -87,8 +86,6 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
 
             return $this->handleException($e, $request, $type);
         }
-
-        return $this->filterResponse($response, $request, $type);
     }
 
     private function handleRaw(Request $request, $type = self::MASTER_REQUEST)
@@ -116,8 +113,6 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
         $route = $request->get('_route');
 
         $response = call_user_func_array($controller, $arguments);
-
-
 
         //var_dump($request->attributes->get('_beforeFilters'));
         //exit;

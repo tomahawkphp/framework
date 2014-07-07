@@ -6,8 +6,9 @@ class TestKernel extends Kernel
 {
     public function registerBundles()
     {
-        $bundles = array();
-        $bundles[] = new \Tomahawk\Bundles\WebProfilerBundle\WebProfilerBundle();
+        $bundles = array(
+            new \Tomahawk\HttpKernel\Tests\Bundles\FooBundle\FooBundle(),
+        );
 
         return $bundles;
     }

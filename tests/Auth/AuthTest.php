@@ -2,7 +2,6 @@
 
 use Tomahawk\Auth\Auth;
 use Tomahawk\Auth\AuthHandlerInterface;
-use Tomahawk\Auth\Handlers\PdoAuthHandler;
 use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;

@@ -9,13 +9,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Tomahawk\Routing\Controller\ControllerResolver;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelEvents;
-
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Tomahawk\HttpKernel\HttpKernel;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Tomahawk\Console\Application;
 
@@ -72,10 +66,9 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         $commands = $application->all();
         $this->assertEquals(array($foo, $foo1), array($commands['foo:bar'], $commands['foo:bar1']), '->addCommands() registers an array of commands');
 
-
         $tester->run(array('command' => 'foo:bar'));
 
+        //$tester->run(array('command' => 'foo:bar'), array('--shell' => true));
 
-        //$tester->run(array('command' => 'foo:bar', '--shell' => true));
     }
 }

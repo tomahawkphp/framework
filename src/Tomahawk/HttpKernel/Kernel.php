@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Tomahawk\DI\Container;
+use Tomahawk\DI\ContainerAwareInterface;
 
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
@@ -95,7 +96,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         //$this->initializeContainer();
 
         foreach ($this->getBundles() as $bundle) {
-            $bundle->setContainer($this->container);
+            if ($bundle instanceof ContainerAwareInterface)
+            {
+                $bundle->setContainer($this->container);
+            }
+
             $bundle->boot();
         }
 
@@ -289,6 +294,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected function initializeContainer()
     {
         //$this->container = new Container();
+
+        //$this->getKernelParameters();
     }
 
     public function setPaths($paths)

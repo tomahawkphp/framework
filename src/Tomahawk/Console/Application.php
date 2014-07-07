@@ -49,7 +49,6 @@ class Application extends BaseApplication
 
         if (!$this->commandsRegistered) {
             $this->registerCommands();
-
             $this->commandsRegistered = true;
         }
 
@@ -64,11 +63,13 @@ class Application extends BaseApplication
         $this->setDispatcher($container->get('event_dispatcher'));
 
         if (true === $input->hasParameterOption(array('--shell', '-s'))) {
+            // @codeCoverageIgnoreStart
             $shell = new Shell($this);
             $shell->setProcessIsolation($input->hasParameterOption(array('--process-isolation')));
             $shell->run();
 
             return 0;
+            // @codeCoverageIgnoreEnd
         }
 
         return parent::doRun($input, $output);
@@ -76,15 +77,6 @@ class Application extends BaseApplication
 
     protected function registerCommands()
     {
-        $container = $this->kernel->getContainer();
-
-        /*if ($container->hasParameter('console.command.ids')) {
-            foreach ($container->getParameter('console.command.ids') as $id) {
-                $this->add($container->get($id));
-            }
-        }
-        */
-
         foreach ($this->kernel->getBundles() as $bundle) {
             if ($bundle instanceof Bundle) {
                 $bundle->registerCommands($this);

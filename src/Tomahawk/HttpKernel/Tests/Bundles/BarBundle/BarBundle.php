@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundles\WebProfilerBundle;
+namespace Tomahawk\HttpKernel\Tests\Bundles\BarBundle;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -12,12 +12,12 @@ use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\PhpEngine;
 
-class WebProfilerBundle extends Bundle
+class BarBundle extends Bundle
 {
 
     public function boot()
     {
-        $this->container->set('web_profiler', 'yay!');
+        $this->container->set('bar_bundle', 'yay!');
 
         $this->getEventDispatcher()->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) {
 
@@ -25,7 +25,7 @@ class WebProfilerBundle extends Bundle
             {
                 $content = $response->getContent();
 
-                $content .= 'profiler2';
+                $content .= 'barbundle';
 
                 $response->setContent($content);
                 $event->setResponse($response);
@@ -36,7 +36,7 @@ class WebProfilerBundle extends Bundle
 
     public function shutdown()
     {
-        $this->container->set('web_profiler', null);
+        $this->container->set('bar_bundle', null);
     }
 
     /**

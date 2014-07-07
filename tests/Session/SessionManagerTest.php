@@ -28,6 +28,8 @@ class SessionManagerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->session->has('name'));
         $this->assertEquals('Tom', $this->session->get('name'));
         $this->assertEquals('Fred', $this->session->get('username', 'Fred'));
+
+        $this->session->save();
     }
 
     public function testDelete()
@@ -104,6 +106,22 @@ class SessionManagerTest extends PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals(count($flashes), $i);
+    }
+
+    public function testCookie()
+    {
+        $config = array(
+            'session_type'      => 'cookie',
+            'session_name'      => 'tomahawk_session',
+            'cookie_name'       => 'tomahawk',
+            'cookie_lifetime'   => '',
+            'cookie_path'       => '/',
+            'cookie_domain'     => '',
+            'cookie_secure'     => true,
+            'cookie_http_only'  => true
+        );
+
+        //$sessionManager = new SessionManager($config);
     }
 
     public function testDatabase()

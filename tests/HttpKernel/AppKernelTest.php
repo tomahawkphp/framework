@@ -17,6 +17,7 @@ use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\HttpKernel\Kernel;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 
+
 class AppKernelTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -69,6 +70,18 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
         $this->assertNull($kernel->getContainer());
     }
 
+    public function testGetKernelParameters()
+    {
+        $kernel = new KernelStub('prod', false);
+        $kernel->boot();
+
+        $_SERVER['TOMAHAWK_THING'] = 'foonbar';
+
+        $parameters = $kernel->getParameters();
+
+        $this->assertCount(9, $parameters);
+    }
+
     public function testBootSetsTheContainerToTheBundles()
     {
         $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\Bundle');
@@ -108,7 +121,7 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
         $app = $this->getApplication('dev', true);
 
         $response = $app->handle($this->request);
-        $this->assertEquals('Testprofiler', $response->getContent());
+        $this->assertEquals('Testbarbundle', $response->getContent());
 
         $clone = clone($app);
         $this->assertNotNull($clone->getStartTime());
@@ -164,9 +177,9 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
 
         $response = $app->handle($this->request);
 
-        $this->assertEquals('changedprofiler', $response->getContent());
-        $this->assertCount(1, $app->getBundles());
-        $this->assertEquals('yay!', $app->getContainer()->get('web_profiler'));
+        $this->assertEquals('changedbarbundle', $response->getContent());
+        $this->assertCount(2, $app->getBundles());
+        $this->assertEquals('yay!', $app->getContainer()->get('bar_bundle'));
 
         $app->terminate($this->request, $response);
         $app->shutdown();
@@ -262,14 +275,27 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
 
         $app->boot();
 
-        $bundle = $app->getBundle('WebProfilerBundle', false);
+        $bundle = $app->getBundle('BarBundle', false);
         $this->assertTrue(is_array($bundle));
 
-        $bundle2 = $app->getBundle('WebProfilerBundle', true);
-        $this->assertInstanceOf('Tomahawk\Bundles\WebProfilerBundle\WebProfilerBundle', $bundle2);
+        $bundle2 = $app->getBundle('BarBundle', true);
+        $this->assertInstanceOf('Tomahawk\HttpKernel\Tests\Bundles\BarBundle\BarBundle', $bundle2);
     }
 
-    /*public function testInitializeBundles()
+    public function testBarBundle()
+    {
+        $app = $this->getApplication('dev', false);
+
+        $app->boot();
+
+        $bundle = $app->getBundle('BarBundle', false);
+        $this->assertTrue(is_array($bundle));
+
+        $bundle2 = $app->getBundle('BarBundle', true);
+        $this->assertInstanceOf('Tomahawk\HttpKernel\Tests\Bundles\BarBundle\BarBundle', $bundle2);
+    }
+
+    public function testInitializeBundles()
     {
         $parent = $this->getBundle(null, null, 'ParentABundle');
         $child = $this->getBundle(null, 'ParentABundle', 'ChildABundle');
@@ -285,9 +311,9 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
 
         $map = $kernel->getBundleMap();
         $this->assertEquals(array($child, $parent), $map['ParentABundle']);
-    }*/
+    }
 
-    /*public function testInitializeBundlesSupportInheritanceCascade()
+    public function testInitializeBundlesSupportInheritanceCascade()
     {
         $grandparent = $this->getBundle(null, null, 'GrandParentBBundle');
         $parent = $this->getBundle(null, 'GrandParentBBundle', 'ParentBBundle');
@@ -306,7 +332,7 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array($child, $parent, $grandparent), $map['GrandParentBBundle']);
         $this->assertEquals(array($child, $parent), $map['ParentBBundle']);
         $this->assertEquals(array($child), $map['ChildBBundle']);
-    }*/
+    }
 
     /**
      * @expectedException \LogicException
@@ -359,6 +385,26 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
         $kernel->boot();
     }
 
+    public function testEnvParameters()
+    {
+        $methods = array(
+            'getKernelParameters'
+        );
+
+        $kernel = $this
+            ->getMockBuilder('Tomahawk\HttpKernel\Kernel')
+            ->setMethods($methods)
+            ->setConstructorArgs(array('test', false))
+            ->getMockForAbstractClass()
+        ;
+
+        $p = new \ReflectionProperty($kernel, 'rootDir');
+        $p->setAccessible(true);
+        $p->setValue($kernel, __DIR__.'/Fixtures');
+
+        return $kernel;
+    }
+
     /**
      * Returns a mock for the BundleInterface
      *
@@ -368,7 +414,7 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
     {
         $bundle = $this
             ->getMockBuilder('Tomahawk\HttpKernel\Bundle\BundleInterface')
-            ->setMethods(array('getPath', 'getParent', 'getName', 'setContainer'))
+            ->setMethods(array('getPath', 'getParent', 'getName'))
             ->disableOriginalConstructor()
         ;
 
@@ -395,7 +441,6 @@ class AppKernelTest extends PHPUnit_Framework_TestCase
             ->method('getParent')
             ->will($this->returnValue($parent))
         ;
-
         return $bundle;
     }
 
@@ -451,7 +496,8 @@ class TestAppKernel extends Kernel
 
         if ($this->getEnvironment() == 'dev')
         {
-            $bundles[] = new \Tomahawk\Bundles\WebProfilerBundle\WebProfilerBundle();
+            $bundles[] = new \Tomahawk\HttpKernel\Tests\Bundles\BarBundle\BarBundle();
+            $bundles[] = new \Tomahawk\HttpKernel\Tests\Bundles\FooBundle\FooBundle();
         }
 
         return $bundles;
@@ -468,13 +514,30 @@ class TestAppKernel2 extends Kernel
 
         if ($this->getEnvironment() == 'dev')
         {
-            $bundles[] = new \Tomahawk\Bundles\WebProfilerBundle\WebProfilerBundle();
-            $bundles[] = new \Tomahawk\Bundles\WebProfilerBundle\WebProfilerBundle();
+            $bundles[] = new \Tomahawk\HttpKernel\Tests\Bundles\BarBundle\BarBundle();
+            $bundles[] = new \Tomahawk\HttpKernel\Tests\Bundles\BarBundle\BarBundle();
         }
 
         return $bundles;
     }
 
+}
+
+class KernelStub extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            new \Tomahawk\HttpKernel\Tests\Bundles\FooBundle\FooBundle(),
+        );
+
+        return $bundles;
+    }
+
+    public function getParameters()
+    {
+        return $this->getKernelParameters();
+    }
 }
 
 class KernelForTest extends Kernel

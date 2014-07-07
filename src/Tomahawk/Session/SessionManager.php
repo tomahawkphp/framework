@@ -108,6 +108,9 @@ class SessionManager implements SessionInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function setupDatabase($config)
     {
 
@@ -136,6 +139,9 @@ class SessionManager implements SessionInterface
         $this->session = $session;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function setupFile($config)
     {
         $nativeFileSessionHandler = new NativeFileSessionHandler($config['save_path']);
@@ -146,6 +152,9 @@ class SessionManager implements SessionInterface
         $this->session = $session;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function setupCookie($config)
     {
         $session_settings = array(
