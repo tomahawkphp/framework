@@ -44,7 +44,7 @@
         "symfony/security-core": "2.5.*",
         "symfony/translation": "2.5.*",
         "symfony/templating": "2.5.*",
-
+        "twig/twig": "1.*",
         "pimple/pimple": "2.*",
         "phpseclib/phpseclib" : "0.3"
     },

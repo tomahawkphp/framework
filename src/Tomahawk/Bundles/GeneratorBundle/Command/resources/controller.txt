@@ -1,0 +1,10 @@
+<?php
+
+namespace %namespace%;
+
+use Tomahawk\Routing\Controller;
+
+class %name% extends Controller
+{
+
+}

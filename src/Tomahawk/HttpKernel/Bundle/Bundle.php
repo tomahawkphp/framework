@@ -44,6 +44,16 @@ abstract class Bundle extends ContainerAware implements BundleInterface
         return $this->path;
     }
 
+    public function boot()
+    {
+
+    }
+
+    public function shutdown()
+    {
+
+    }
+
     /**
      * Returns the bundle name that this bundle overrides.
      *
