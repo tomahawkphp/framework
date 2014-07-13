@@ -7,7 +7,7 @@ use Tomahawk\Encryption\Crypt;
 use Tomahawk\Database\DatabaseManager;
 use Tomahawk\Session\SessionManager;
 use Tomahawk\Html\HtmlBuilder;
-use Tomahawk\Assets\AssetManager;
+use Tomahawk\Asset\AssetManager;
 use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\HttpKernel\Kernel;
 use Tomahawk\DI\Container;
@@ -64,7 +64,7 @@ class ControllerResolverTest extends PHPUnit_Framework_TestCase
         $this->container['Tomahawk\Encryption\CryptInterface'] = new Crypt(str_repeat('a', 32));
         $this->container['Tomahawk\Forms\FormsManagerInterface'] = new FormsManager();
         $this->container['Tomahawk\HttpCore\Response\CookiesInterface'] = new Cookies($this->request, array());
-        $this->container['Tomahawk\Assets\AssetManagerInterface'] = new AssetManager($htmlBuilder);
+        $this->container['Tomahawk\Asset\AssetManagerInterface'] = new AssetManager($htmlBuilder);
         $this->container['Symfony\Component\HttpFoundation\Request'] = $this->request;
         $this->container['Tomahawk\Session\SessionInterface'] = new SessionManager(array(
             'session_type' => 'array',

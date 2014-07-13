@@ -1,7 +1,7 @@
 <?php
 
+use Tomahawk\Templating\Helper\BlocksHelper;
 use Tomahawk\View\ViewGenerator;
-use Tomahawk\Templating\BlocksHelper;
 use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\Templating\Loader\FilesystemLoader;
 use Symfony\Component\Templating\PhpEngine;

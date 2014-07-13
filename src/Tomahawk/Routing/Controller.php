@@ -5,7 +5,7 @@ namespace Tomahawk\Routing;
 use Tomahawk\Database\DatabaseManager;
 use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\Forms\FormsManagerInterface;
-use Tomahawk\Assets\AssetManagerInterface;
+use Tomahawk\Asset\AssetManagerInterface;
 use Tomahawk\Encryption\CryptInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\Session\SessionInterface;
@@ -32,7 +32,7 @@ class Controller
     protected $crypt;
 
     /**
-     * @var \Tomahawk\Assets\AssetManagerInterface
+     * @var \Tomahawk\Asset\AssetManagerInterface
      */
     protected $assets;
 

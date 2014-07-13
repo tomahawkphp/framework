@@ -2,10 +2,12 @@
 
 namespace Tomahawk\View;
 
-use \Symfony\Component\Templating\PhpEngine;
+use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Templating\Loader\FilesystemLoader;
 use Symfony\Component\Templating\TemplateNameParser;
+//use Tomahawk\Templating\TemplateNameParser;
+use Tomahawk\Templating\TemplateFileNameParser;
 
 class ViewGenerator implements ViewGeneratorInterface
 {
