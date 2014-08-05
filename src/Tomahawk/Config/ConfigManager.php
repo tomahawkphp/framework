@@ -3,7 +3,6 @@
 namespace Tomahawk\Config;
 
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class ConfigManager implements ConfigInterface
