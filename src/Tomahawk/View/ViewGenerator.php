@@ -4,40 +4,40 @@ namespace Tomahawk\View;
 
 use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Templating\Loader\FilesystemLoader;
-use Symfony\Component\Templating\TemplateNameParser;
-//use Tomahawk\Templating\TemplateNameParser;
-use Tomahawk\Templating\TemplateFileNameParser;
+use Tomahawk\Templating\Loader\TemplateLocator;
+use Tomahawk\Templating\TemplateNameParser;
+use Tomahawk\Templating\Loader\FilesystemLoader;
+use Tomahawk\HttpKernel\Config\FileLocator;
+use Tomahawk\DI\ContainerInterface;
 
 class ViewGenerator implements ViewGeneratorInterface
 {
     /**
-     * @var \Symfony\Component\Templating\PhpEngine
+     * @var \Symfony\Component\Templating\EngineInterface
      */
-    public $templating;
+    public $engine;
 
     public $shared = array();
 
-    public static $instance;
-
-    protected $directoryPathPatterns = array();
+    /**
+     * @var \Tomahawk\DI\ContainerInterface
+     */
+    protected $container;
 
     /**
      * @var array
      */
     protected $helpers = array();
 
-    public function __construct($directoryPathPatterns, array $helpers = array())
+    public function __construct(EngineInterface $engine, ContainerInterface $container)
     {
-        $this->directoryPathPatterns = $directoryPathPatterns;
-        $this->helpers = $helpers;
-        $this->setup();
+        $this->engine = $engine;
+        $this->container = $container;
     }
 
     public function render($view, array $data = array())
     {
-        $data = array_merge($this->getShared(), $data);
-        return $this->templating->render($view, $data);
+        return $this->engine->render($view, $data);
     }
 
     public function share($name, $value)
@@ -54,32 +54,19 @@ class ViewGenerator implements ViewGeneratorInterface
         return $this->shared[$name];
     }
 
-    /**
-     * @param array $directoryPathPatterns
-     * @return $this
-     */
-    public function setDirectoryPathPatterns($directoryPathPatterns)
-    {
-        $this->directoryPathPatterns = $directoryPathPatterns;
-        $this->setup();
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDirectoryPathPatterns()
-    {
-        return $this->directoryPathPatterns;
-    }
 
     /**
      * Setup the View templating
      */
     protected function setup()
     {
-        $loader = new FilesystemLoader($this->directoryPathPatterns);
-        $this->templating = new PhpEngine(new TemplateNameParser(), $loader);
+        $locator = new FileLocator($this->container->get('kernel'));
+        $templateLocator = new TemplateLocator($locator);
+
+        $loader = new FilesystemLoader($templateLocator);
+        //$loader = new FilesystemLoader($this->directoryPathPatterns);
+
+        $this->templating = new PhpEngine(new TemplateNameParser($this->container->get('kernel')), $loader);
         $this->templating->addHelpers($this->helpers);
     }
 

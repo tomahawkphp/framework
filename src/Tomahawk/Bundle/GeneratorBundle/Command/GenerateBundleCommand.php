@@ -15,8 +15,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Tomahawk\Bundle\GeneratorBundle\Generator\BundleGenerator;
+use Tomahawk\Bundle\GeneratorBundle\Command\Validators;
 
 /**
  * Generates bundles.
@@ -27,8 +27,9 @@ use Tomahawk\Bundle\GeneratorBundle\Generator\BundleGenerator;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class GenerateBundleCommand extends GeneratorCommand
+class GenerateBundleCommand extends GenerateCommand
 {
+
     /**
      * @see Command
      */
@@ -41,28 +42,7 @@ class GenerateBundleCommand extends GeneratorCommand
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
             ))
             ->setDescription('Generates a bundle')
-            ->setHelp(<<<EOT
-The <info>generate:bundle</info> command helps you generates new bundles.
-
-By default, the command interacts with the developer to tweak the generation.
-Any passed option will be used as a default value for the interaction
-(<comment>--namespace</comment> is the only one needed if you follow the
-conventions):
-
-<info>php app/console generate:bundle --namespace=Acme/BlogBundle</info>
-
-Note that you can use <comment>/</comment> instead of <comment>\\ </comment>for the namespace delimiter to avoid any
-problem.
-
-If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
-
-<info>php app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
-
-Note that the bundle namespace must end with "Bundle".
-EOT
-            )
-            ->setName('generate:bundle')
-        ;
+            ->setName('generate:bundle');
     }
 
     /**
@@ -73,8 +53,6 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dialog = $this->getQuestionHelper();
-
         foreach (array('namespace', 'dir', 'bundle-name') as $option) {
             if (null === $input->getOption($option)) {
                 throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
@@ -82,27 +60,26 @@ EOT
         }
 
         $namespace = Validators::validateBundleNamespace($input->getOption('namespace'));
+
         if (!$bundle = $input->getOption('bundle-name')) {
             $bundle = strtr($namespace, array('\\' => ''));
         }
+
         $bundle = Validators::validateBundleName($bundle);
         $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
 
-        $dialog->writeSection($output, 'Bundle generation');
+        $output->writeln('Bundle generation');
 
-        if (!$this->getContainer()->get('filesystem')->isAbsolutePath($dir)) {
+        if (!$this->container->get('filesystem')->isAbsolutePath($dir)) {
             $dir = getcwd().'/'.$dir;
         }
 
-        //$generator = $this->getGenerator();
-        //$generator->generate($namespace, $bundle, $dir);
+        $generator = $this->getGenerator();
+        $generator->generate($namespace, $bundle, $dir);
 
         $output->writeln('Generating the bundle code: <info>OK</info>');
-    }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-
+        $this->checkAutoloader($output, $namespace, $bundle, $dir);
     }
 
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
@@ -117,8 +94,11 @@ EOT
         }
     }
 
-    protected function createGenerator()
+    /**
+     * @return BundleGenerator
+     */
+    public function getGenerator()
     {
-        return new BundleGenerator($this->getContainer()->get('filesystem'));
+        return $this->container->get('bundle_generator');
     }
 }

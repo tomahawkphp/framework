@@ -1,18 +1,21 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * This file is part of the Tomahawk package.
  *
- * (c) Fabien Potencier <fabien@symfony.com>
+ * (c) Tom Ellis
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Tomahawk\Bundles\GeneratorBundle\Command;
+namespace Tomahawk\Bundle\GeneratorBundle\Command;
 
 /**
  * Validator functions.
+ *
+ * @author Tom Ellis
+ *
+ * Based on the Sensio Labs - Validator
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

@@ -1,52 +1,41 @@
 <?php
 
-namespace Migrations\Console;
+namespace Tomahawk\Bundle\MigrationsBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Tomahawk\Bundle\MigrationsBundle\Migration\Migrator;
 
-use Migrations\Migrator;
-use Migrations\MigrationRepo;
-use Symfony\Component\Finder\Finder;
-use Illuminate\Database\Capsule\Manager as DB;
-
-class RebuildCommand extends BaseCommand
+class RebuildCommand extends Command
 {
-    protected $migrator;
-
-    protected $repository;
-
-    public function __construct($name = null)
-    {
-        $finder = new Finder();
-
-        $this->repository = new MigrationRepo(DB::schema()->getConnection(), 'laravel_migrations');
-        $this->migrator = new Migrator($this->repository, $finder);
-
-        parent::__construct($name);
-    }
-
     protected function configure()
     {
         $this
-            ->setName('migrations:rebuild')
-            ->setDescription('Rebuild migrations.');
+            ->setName('migration:rebuild')
+            ->setDescription('Rerun migrations from scratch.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->migrator->reset();
+        $migrator = $this->getMigrator();
 
-        $output->writeln($this->migrator->getNotes());
+        $migrator->reset();
 
-        $path = path('migrations');
+        $output->writeln($migrator->getNotes());
 
-        $this->migrator->run($path);
+        $migrator->run();
 
-        $output->writeln($this->migrator->getNotes());
+        $output->writeln($migrator->getNotes());
     }
 
+    /**
+     * @return Migrator
+     */
+    protected function getMigrator()
+    {
+        return $this->container->get('migrator');
+    }
 
 }

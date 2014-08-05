@@ -1,63 +1,72 @@
 <?php
 
-namespace Tomahawk\Bundles\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migration;
 
+use Tomahawk\HttpKernel\Kernel;
+use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationReference;
 
 class Migrator
 {
+    /**
+     * @var MigrationRepo
+     */
     protected $repository;
 
+    /**
+     * @var \Symfony\Component\Finder\Finder
+     */
     protected $finder;
 
-    protected $notes;
+    /**
+     * @var Kernel
+     */
+    protected $kernel;
 
-    public function __construct(MigrationRepo $repository, Finder $finder)
-    {
-        $this->repository = $repository;
-        $this->finder = $finder;
-    }
+    /**
+     * @var array
+     */
+    protected $notes = array();
 
     /**
      * @param MigrationRepo $repository
+     * @param Finder $finder
+     * @param Kernel $kernel
      */
-    public function setRepository($repository)
+    public function __construct(MigrationRepo $repository, Finder $finder, Kernel $kernel)
     {
         $this->repository = $repository;
+        $this->finder = $finder;
+        $this->kernel = $kernel;
     }
 
     /**
-     * @return MigrationRepo
-     */
-    public function getRepository()
-    {
-        return $this->repository;
-    }
-
-    /**
-     * @param mixed $notes
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-    }
-
-    /**
-     * @return mixed
+     * @return array
      */
     public function getNotes()
     {
         return $this->notes;
     }
 
+    public function run()
+    {
+        $this->notes = array();
+
+        $ran = $this->repository->getRan();
+
+        $files = $this->getMigrationFiles();
+
+        $migrations = array_diff($files, $ran);
+
+        $this->runMigrationList($migrations);
+    }
+
     public function rollback()
     {
         $this->notes = array();
 
-        // We want to pull in the last batch of migrations that ran on the previous
-        // migration operation. We'll then reverse those migrations and run each
-        // of them "down" to reverse the last migration "operation" which ran.
         $migrations = $this->repository->getLast();
 
         if (count($migrations) == 0)
@@ -67,12 +76,15 @@ class Migrator
             return count($migrations);
         }
 
-        // We need to reverse these migrations so that they are "downed" in reverse
-        // to what they run on "up". It lets us backtrack through the migrations
-        // and properly reverse the entire database schema operation that ran.
         foreach ($migrations as $migration)
         {
-            $this->runDown((object) $migration);
+            $bundle = $this->kernel->getBundle($migration->bundle);
+
+            $migrationPath = $bundle->getPath() .'/Migration/' . $migration->migration . '.php';
+
+            $migrationReference = new MigrationReference($bundle, $migrationPath);
+
+            $this->runDown($migrationReference, $migration);
         }
 
         return count($migrations);
@@ -82,9 +94,6 @@ class Migrator
     {
         $this->notes = array();
 
-        // We want to pull in the last batch of migrations that ran on the previous
-        // migration operation. We'll then reverse those migrations and run each
-        // of them "down" to reverse the last migration "operation" which ran.
         $migrations = $this->repository->getAll();
 
         if (count($migrations) == 0)
@@ -94,72 +103,58 @@ class Migrator
             return count($migrations);
         }
 
-        // We need to reverse these migrations so that they are "downed" in reverse
-        // to what they run on "up". It lets us backtrack through the migrations
-        // and properly reverse the entire database schema operation that ran.
         foreach ($migrations as $migration)
         {
-            $this->runDown((object) $migration);
+            $bundle = $this->kernel->getBundle($migration->bundle);
+
+            $migrationPath = $bundle->getPath() .'/Migration/' . $migration->migration . '.php';
+
+            $migrationReference = new MigrationReference($bundle, $migrationPath);
+
+            $this->runDown($migrationReference, $migration);
         }
 
         return count($migrations);
     }
 
-    public function run($path)
+    protected function runUp(MigrationReference $migrationReference, $batch)
     {
-        $this->notes = array();
-
-        $ran = $this->repository->getRan();
-
-        $files = $this->getMigrationFiles($path);
-
-        $migrations = array_diff($files, $ran);
-
-        $this->runMigrationList($migrations);
-    }
-
-    protected function runUp($file, $batch)
-    {
-        // First we will resolve a "real" instance of the migration class from this
-        // migration file name. Once we have the instances we can run the actual
-        // command such as "up" or "down", or we can just simulate the action.
-        //$migration = $this->resolve($file);
-
         /**
          * @var MigrationInterface $migration
          */
-        $migration = new $file();
-        $migration->up($this->getRepository()->getConnectionResolver()->connection()->getSchemaBuilder());
+        require_once($migrationReference->getPath());
+        $class = $migrationReference->getClass();
+        $migration = new $class();
+        $migration->up($this->getSchemaBuilder());
 
         // Once we have run a migrations class, we will log that it was run in this
         // repository so that we don't try to run it next time we do a migration
         // in the application. A migration repository keeps the migrate order.
-        $this->repository->log($file, $batch);
+        $this->repository->log($migrationReference, $batch);
 
-        $this->note("<info>Migrated:</info> $file");
+        $this->note(sprintf('<info>Migrated:</info> %s', $migrationReference->getName()));
 
     }
 
     /**
      * Run "down" a migration instance.
      *
-     * @param  object  $migration
+     * @param  MigrationReference $migrationReference
+     * @param $migration
      * @return void
      */
-    protected function runDown($migration)
+    protected function runDown(MigrationReference $migrationReference, $migration)
     {
+        /**
+         * @var MigrationInterface $migrationClass
+         */
+        require_once($migrationReference->getPath());
+        $class = $migrationReference->getClass();
+        $migrationClass = new $class();
+        $migrationClass->down($this->getSchemaBuilder());
+
         $file = $migration->migration;
 
-        /**
-         * @var MigrationInterface $migration
-         */
-        $migration = new $file();
-
-        $migration->down($this->getRepository()->getConnectionResolver()->connection()->getSchemaBuilder());
-
-        // Once we have successfully run the migration "down" we will remove it from
-        // the migration repository so it will be considered to have not been run
-        // by the application then will be able to fire by any later operation.
         $this->repository->delete($migration);
 
         $this->note("<info>Rolled back:</info> $file");
@@ -174,7 +169,6 @@ class Migrator
             return;
         }
 
-
         $batch = $this->repository->getNextBatchNumber();
 
         // Once we have the array of migrations, we will spin through them and run the
@@ -186,23 +180,22 @@ class Migrator
         }
     }
 
-    public function getMigrationFiles($path)
+    public function getMigrationFiles()
     {
-
-        $finder = $this->finder->files()->in($path)->name('*.php')->sortByName();
-
-        if (!$finder) {
-            return array();
-        }
-
         $files = array();
 
-        foreach ($finder as $file) {
+        foreach ($this->kernel->getBundles() as $bundle)
+        {
+            $directory = $bundle->getPath() . '/Migration';
+            $finder = $this->finder->files()->in($directory)->name('*.php')->sortByName();
 
-            /**
-             * @var SplFileInfo $file
-             */
-            $files[] = str_replace('.php', '', basename($file->getFilename()));
+            foreach ($finder as $file) {
+
+                /**
+                 * @var SplFileInfo $file
+                 */
+                $files[] = new MigrationReference($bundle, $file->getRealPath());
+            }
         }
 
         return $files;
@@ -220,28 +213,10 @@ class Migrator
     }
 
     /**
-     * @param $file
-     * @return mixed
+     * @return \Illuminate\Database\Schema\Builder
      */
-    public function resolve($file)
+    protected function getSchemaBuilder()
     {
-        $file = implode('_', array_slice(explode('_', $file), 4));
-
-        $class = $this->studly($file);
-
-        return new $class;
-    }
-
-    /**
-     * Convert a value to studly caps case.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function studly($value)
-    {
-        $value = ucwords(str_replace(array('-', '_'), ' ', $value));
-
-        return str_replace(' ', '', $value);
+        return $this->repository->getConnectionResolver()->connection()->getSchemaBuilder();
     }
 }

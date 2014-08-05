@@ -6,6 +6,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -28,10 +29,6 @@ use Symfony\Component\Routing;
 class HttpKernel extends BaseHttpKernel implements TerminableInterface
 {
     /**
-     * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface
-     */
-    protected $matcher;
-    /**
      * @var \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
      */
     protected $resolver;
@@ -50,9 +47,17 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
      */
     protected $context;
 
-    public function __construct(EventDispatcherInterface $dispatcher = null, UrlMatcherInterface $matcher = null, ControllerResolverInterface $resolver = null, RequestStack $requestStack = null)
+    /**
+     * Constructor
+     *
+     * @param EventDispatcherInterface    $dispatcher   An EventDispatcherInterface instance
+     * @param ControllerResolverInterface $resolver     A ControllerResolverInterface instance
+     * @param RequestStack                $requestStack A stack for master/sub requests
+     *
+     * @api
+     */
+    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver, RequestStack $requestStack = null)
     {
-        $this->matcher = $matcher;
         $this->resolver = $resolver;
         $this->dispatcher = $dispatcher;
         $this->requestStack = $requestStack ?: new RequestStack();
@@ -98,11 +103,10 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
             return $this->filterResponse($event->getResponse(), $request, $type);
         }
 
-        $path = $this->formatPath($request->getPathInfo());
-
-        $request->attributes->add($this->matcher->match($path));
-
-        $controller = $this->resolver->getController($request);
+        // load controller
+        if (false === $controller = $this->resolver->getController($request)) {
+            throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getPathInfo()));
+        }
 
         $event = new FilterControllerEvent($this, $controller, $request, $type);
         $this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);

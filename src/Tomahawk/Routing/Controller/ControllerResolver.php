@@ -6,7 +6,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Tomahawk\Core\Application;
 use Tomahawk\DI\ContainerInterface;
 
 class ControllerResolver implements ControllerResolverInterface
@@ -17,7 +16,7 @@ class ControllerResolver implements ControllerResolverInterface
     private $logger;
 
     /**
-     * @var \Tomahawk\Core\ContainerInterface
+     * @var \Tomahawk\DI\ContainerInterface
      */
     private $container;
 

@@ -32,6 +32,13 @@ class TemplateNameParser implements TemplateNameParserInterface
             return $this->cache[$name];
         }
 
+        // No extension? Default to php
+        $ext = pathinfo($name, PATHINFO_EXTENSION);
+
+        if (!$ext) {
+            $name .= '.php';
+        }
+
         // normalize name
         $name = str_replace(':/', ':', preg_replace('#/{2,}#', '/', strtr($name, '\\', '/')));
 

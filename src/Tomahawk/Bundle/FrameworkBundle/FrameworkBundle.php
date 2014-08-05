@@ -12,12 +12,15 @@ use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\HttpFoundation\Request;
+use Tomahawk\Bundle\FrameworkBundle\Resources\Services\FrameworkProvider;
 
 class FrameworkBundle extends Bundle
 {
 
     public function boot()
     {
+        $this->container->register(new FrameworkProvider());
+
         /*if ($trustedProxies = $this->container->getParameter('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);
         }
@@ -29,19 +32,6 @@ class FrameworkBundle extends Bundle
         if ($trustedHosts = $this->container->getParameter('kernel.trusted_hosts')) {
             Request::setTrustedHosts($trustedHosts);
         }*/
-    }
-
-    public function shutdown()
-    {
-
-    }
-
-    /**
-     * @return EventDispatcherInterface
-     */
-    public function getEventDispatcher()
-    {
-        return $this->container->get('event_dispatcher');
     }
 
 }

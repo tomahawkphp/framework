@@ -36,6 +36,14 @@ class Application extends BaseApplication
     }
 
     /**
+     * @return KernelInterface
+     */
+    public function getKernel()
+    {
+        return $this->kernel;
+    }
+
+    /**
      * Runs the current application.
      *
      * @param InputInterface  $input  An Input instance
@@ -62,15 +70,16 @@ class Application extends BaseApplication
 
         $this->setDispatcher($container->get('event_dispatcher'));
 
+        // @codeCoverageIgnoreStart
         if (true === $input->hasParameterOption(array('--shell', '-s'))) {
-            // @codeCoverageIgnoreStart
+
             $shell = new Shell($this);
             $shell->setProcessIsolation($input->hasParameterOption(array('--process-isolation')));
             $shell->run();
 
             return 0;
-            // @codeCoverageIgnoreEnd
         }
+        // @codeCoverageIgnoreEnd
 
         return parent::doRun($input, $output);
     }

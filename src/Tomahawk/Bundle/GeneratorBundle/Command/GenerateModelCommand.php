@@ -1,22 +1,15 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Command;
+namespace Tomahawk\Bundle\GeneratorBundle\Command;
 
-use Tomahawk\HttpKernel\KernelInterface;
-use Symfony\Component\Console\Command\Command;
+use Tomahawk\Bundle\GeneratorBundle\Generator\ModelGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
 
-class GenerateModelCommand extends Command implements ContainerAwareInterface
+class GenerateModelCommand extends GenerateCommand
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     protected $resourcesDirectory;
 
@@ -24,76 +17,31 @@ class GenerateModelCommand extends Command implements ContainerAwareInterface
     {
         $this->setName('generate:model')
             ->setDescription('Generate Model.')
-            ->addArgument(
-                'model',
-                InputArgument::REQUIRED,
-                'Name of model to create'
-            );
+            ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
+            ->addArgument('model', InputArgument::REQUIRED, 'Name of model to create');
 
         $this->resourcesDirectory = __DIR__ . '/resources/';
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $modelGenerator = $this->getGenerator();
+
         $model = $input->getArgument('model');
+        $bundleName = $input->getArgument('bundle');
 
-        $modelTemplate = $this->getModelTemplate();
+        $bundle = $this->getKernel()->getBundle($bundleName);
 
-        if ($this->createModel($modelTemplate, $model))
-        {
-            $output->write('');
-        }
+        $modelGenerator->generate($bundle, $model);
 
     }
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
+     * @return ModelGenerator
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function getGenerator()
     {
-        $this->container = $container;
-    }
-
-    /**
-     * @return KernelInterface
-     */
-    protected function getAppKernel()
-    {
-        return $this->container->get('kernel');
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelTemplate()
-    {
-        if (file_exists($this->resourcesDirectory . 'model.txt'))
-        {
-            return file_get_contents($this->resourcesDirectory . 'model.txt');
-        }
-    }
-
-    /**
-     * @param $modelTemplate
-     * @param $name
-     * @return mixed
-     */
-    protected function createModel($modelTemplate, $name)
-    {
-        $modelTemplate = str_replace('%name%', $name, $modelTemplate);
-
-        $directory = $this->getAppKernel()->getRootDir();
-
-        if (file_put_contents($directory . '/resources/'.$name . '.php', $modelTemplate))
-        {
-            return true;
-        }
-
-        return false;
+        return $this->container->get('model_generator');
     }
 
 }

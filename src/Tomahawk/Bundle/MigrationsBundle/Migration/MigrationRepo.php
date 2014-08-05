@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundles\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migration;
 
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,18 +14,14 @@ class MigrationRepo
 
     protected $table;
 
+    /**
+     * @param ConnectionResolverInterface $connectionResolver
+     * @param $table
+     */
     public function __construct(ConnectionResolverInterface $connectionResolver, $table)
     {
         $this->connectionResolver = $connectionResolver;
         $this->table = $table;
-    }
-
-    /**
-     * @param ConnectionResolverInterface $connectionResolver
-     */
-    public function setConnectionResolver($connectionResolver)
-    {
-        $this->connectionResolver = $connectionResolver;
     }
 
     /**
@@ -43,7 +39,7 @@ class MigrationRepo
      */
     public function repositoryExists()
     {
-        $schema = $this->getConnectionResolver()->connection()->getSchemaBuilder();
+        $schema = $this->connectionResolver->connection()->getSchemaBuilder();
 
         return $schema->hasTable($this->table);
     }
@@ -51,21 +47,27 @@ class MigrationRepo
     /**
      * Create the migration repository data store.
      *
-     * @return void
+     * @param \Illuminate\Database\Schema\Blueprint $blueprint
+     * @return bool
      */
-    public function createRepository()
+    public function createRepository(Blueprint $blueprint)
     {
-        $schema = $this->getConnectionResolver()->connection()->getSchemaBuilder();
+        $grammar = $this->connectionResolver->connection()->getSchemaGrammar();
 
-        $schema->create($this->table, function(Blueprint $table)
+        try
         {
-            // The migrations table is responsible for keeping track of which of the
-            // migrations have actually run for the application. We'll create the
-            // table to hold the migration file's path as well as the batch ID.
-            $table->string('migration');
+            $blueprint->string('bundle');
+            $blueprint->string('migration');
+            $blueprint->integer('batch');
+            $blueprint->build($this->connectionResolver->connection(), $grammar);
 
-            $table->integer('batch');
-        });
+        }
+        catch(\Exception $e)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -100,7 +102,7 @@ class MigrationRepo
      */
     public function delete($migration)
     {
-        $query = $this->table()->where('migration', $migration->migration)->delete();
+        $this->table()->where('migration', $migration->migration)->delete();
     }
 
     /**
@@ -135,10 +137,23 @@ class MigrationRepo
         return $query->orderBy('migration', 'desc')->get();
     }
 
+    /**
+     * Get all migrations
+     *
+     * @return array
+     */
     public function getAll()
     {
         $query = $this->table();
         return $query->orderBy('migration', 'desc')->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTableName()
+    {
+        return $this->table;
     }
 
     /**
@@ -148,6 +163,7 @@ class MigrationRepo
      */
     protected function table()
     {
-        return $this->getConnectionResolver()->connection()->table($this->table);
+        return $this->connectionResolver->connection()->table($this->table);
     }
+
 }

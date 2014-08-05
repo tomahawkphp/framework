@@ -1,82 +1,82 @@
 <?php
 
-namespace Migrations\Console;
+namespace Tomahawk\Bundle\MigrationsBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationGenerator;
+use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DI\ContainerInterface;
+use Tomahawk\HttpKernel\Test\Kernel;
 
-class GenerateCommand extends Command
+class GenerateCommand extends Command implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface|null
+     */
+    private $container;
+
     protected function configure()
     {
-        $this
-            ->setName('migrations:generate')
+        $this->setName('migration:generate')
             ->setDescription('Generate a blank migration class.')
-            ->addArgument('name', InputArgument::OPTIONAL, 'Name of migration', 'Version');
-            //->addOption('editor-cmd', null, InputOption::VALUE_OPTIONAL, 'Open file with this command upon creation.')
-            /*->setHelp(<<<EOT
-The <info>%command.name%</info> command generates a blank migration class:
-
-    <info>%command.full_name%</info>
-
-You can optionally specify a <comment>--editor-cmd</comment> option to open the generated file in your favorite editor:
-
-    <info>%command.full_name% --editor-cmd=mate</info>
-EOT
-            );*/
+            ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
+            ->addArgument('name', InputArgument::REQUIRED, 'Name of migration');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        //$configuration = $this->getMigrationConfiguration($input, $output);
+        $migrationGenerator = $this->getGenerator();
 
+        $bundleName = $input->getArgument('bundle');
+        $name = $input->getArgument('name');
         $version = date('YmdHis');
-        $path = $this->generateMigration($input, $version);
+        $migrationName = sprintf('M%s%dMigration', $version, $name);
 
-        $output->writeln(sprintf('Generated new migration class to "<info>%s</info>"', $path));
+        $bundle = $this->getKernel()->getBundle($bundleName);
 
-        if ($editorCmd = $input->getOption('editor-cmd')) {
-            shell_exec($editorCmd . ' ' . escapeshellarg($path));
+        $migrationGenerator->setSkeletonDirs(__DIR__ .'/../Resources');
+
+        try
+        {
+            $this->getGenerator()->generate($bundle, $migrationName);
         }
+        catch(IOException $e)
+        {
+            $output->writeln(sprintf('Error writing to "<info>%s</info>"', $bundle->getPath() .'/Migration'));
+        }
+        catch(\RuntimeException $e)
+        {
+            $output->writeln($e->getMessage());
+        }
+
+        //$output->writeln(sprintf('Generated new migration class to "<info>%s</info>"', $path));
+
     }
 
-    protected function generateMigration(InputInterface $input, $version, $up = null, $down = null)
+    public function setContainer(ContainerInterface $container = null)
     {
-        $name = $input->getArgument('name');
+        $this->container = $container;
+    }
 
+    /**
+     * @return Kernel
+     */
+    public function getKernel()
+    {
+        return $this->container->get('kernel');
+    }
 
-        if ( ! file_exists($dir)) {
-            throw new \InvalidArgumentException(sprintf('Migrations directory "%s" does not exist.', $dir));
-        }
-
-        $placeHolders = array(
-            '<name>',
-            '<version>',
-            '<up>',
-            '<down>'
-        );
-        $replacements = array(
-            $name,
-            $version,
-            $up ? "        " . implode("\n        ", explode("\n", $up)) : null,
-            $down ? "        " . implode("\n        ", explode("\n", $down)) : null
-        );
-
-        $dir = path('migrations');
-
-
-
-        $dir = rtrim($dir, '/');
-
-        $path = $dir . '/M' . $version . $name . '.php';
-
-        $code = str_replace($placeHolders, $replacements, static::$template);
-
-        file_put_contents($path, $code);
-
-        return $path;
+    /**
+     * @return MigrationGenerator
+     */
+    public function getGenerator()
+    {
+        return $this->container->get('migration_generator');
     }
 }

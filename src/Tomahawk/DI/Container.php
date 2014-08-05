@@ -20,6 +20,25 @@ class Container extends BaseContainer implements ContainerInterface
     protected $aliases = array();
 
     /**
+     * Registers a service provider.
+     *
+     * @param ServiceProviderInterface $provider A ServiceProviderInterface instance
+     * @param array                    $values   An array of values that customizes the provider
+     *
+     * @return static
+     */
+    public function register(ServiceProviderInterface $provider, array $values = array())
+    {
+        $provider->register($this);
+
+        foreach ($values as $key => $value) {
+            $this[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param $id
      * @return mixed
      */

@@ -1,0 +1,26 @@
+<?php
+
+namespace {{ namespace }}\Controller;
+
+{% block use_statements %}
+use Tomahawk\Routing\Controller;
+{% endblock use_statements %}
+
+{% block class_definition %}
+class {{ controller }}Controller extends Controller
+{% endblock class_definition %}
+{
+{% block class_body %}
+{% for action in actions %}
+
+    public function {{ action.name }}(
+        {%- if action.placeholders|length > 0 -%}
+            ${{- action.placeholders|join(', $') -}}
+        {%- endif -%})
+    {
+
+    }
+
+{% endfor -%}
+{% endblock class_body %}
+}

@@ -34,4 +34,5 @@ interface CacheInterface
      * @return bool
      */
     public function flush();
+
 }

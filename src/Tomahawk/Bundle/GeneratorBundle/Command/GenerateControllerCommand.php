@@ -1,22 +1,15 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Command;
+namespace Tomahawk\Bundle\GeneratorBundle\Command;
 
-use Tomahawk\HttpKernel\KernelInterface;
-use Symfony\Component\Console\Command\Command;
+use Tomahawk\Bundle\GeneratorBundle\Generator\ControllerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
 
-class GenerateControllerCommand extends Command implements ContainerAwareInterface
+class GenerateControllerCommand extends GenerateCommand
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     protected $resourcesDirectory;
 
@@ -24,11 +17,8 @@ class GenerateControllerCommand extends Command implements ContainerAwareInterfa
     {
         $this->setName('generate:controller')
             ->setDescription('Generate Controller.')
-            ->addArgument(
-                'controller',
-                InputArgument::REQUIRED,
-                'Name of controller to create'
-            );
+            ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
+            ->addArgument('controller', InputArgument::REQUIRED, 'Name of controller to create');
 
         $this->resourcesDirectory = __DIR__ . '/resources/';
     }
@@ -36,64 +26,21 @@ class GenerateControllerCommand extends Command implements ContainerAwareInterfa
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $controller = $input->getArgument('controller');
+        $bundleName = $input->getArgument('bundle');
 
-        $controllerTemplate = $this->getControllerTemplate();
+        $bundle = $this->getKernel()->getBundle($bundleName);
 
-        if ($this->createController($controllerTemplate, $controller))
-        {
-            $output->write('');
-        }
+        $generator = $this->getGenerator();
+
+        $generator->generate($bundle, $controller);
 
     }
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
+     * @return ControllerGenerator
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function getGenerator()
     {
-        $this->container = $container;
+        return $this->container->get('controller_generator');
     }
-
-    /**
-     * @return KernelInterface
-     */
-    protected function getAppKernel()
-    {
-        return $this->container->get('kernel');
-    }
-
-    /**
-     * @return string
-     */
-    protected function getControllerTemplate()
-    {
-        if (file_exists($this->resourcesDirectory . 'controller.txt'))
-        {
-            return file_get_contents($this->resourcesDirectory . 'controller.txt');
-        }
-    }
-
-    /**
-     * @param $controllerTemplate
-     * @param $name
-     * @return mixed
-     */
-    protected function createController($controllerTemplate, $name)
-    {
-        $controllerTemplate = str_replace('%name%', $name, $controllerTemplate);
-
-        $directory = $this->getAppKernel()->getRootDir();
-
-        if (file_put_contents($directory . '/resources/'.$name . '.php', $controllerTemplate))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
 }

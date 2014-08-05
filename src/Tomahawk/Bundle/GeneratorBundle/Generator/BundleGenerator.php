@@ -13,6 +13,7 @@ namespace Tomahawk\Bundle\GeneratorBundle\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Tomahawk\DI\Container;
+use Tomahawk\Generator\Generator;
 
 /**
  * Generates a bundle.
@@ -21,16 +22,25 @@ use Tomahawk\DI\Container;
  */
 class BundleGenerator extends Generator
 {
-    private $filesystem;
+    /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $filesystem;
 
+    /**
+     * Constructor.
+     *
+     * @param Filesystem $filesystem A Filesystem instance
+     */
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
     }
 
-    public function generate($namespace, $bundle, $dir, $format, $structure)
+    public function generate($namespace, $bundle, $dir/*, $format, $structure*/)
     {
         $dir .= '/'.strtr($namespace, '\\', '/');
+
         if (file_exists($dir)) {
             if (!is_dir($dir)) {
                 throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', realpath($dir)));
@@ -48,18 +58,18 @@ class BundleGenerator extends Generator
         $parameters = array(
             'namespace' => $namespace,
             'bundle'    => $bundle,
-            'format'    => $format,
+            //'format'    => $format,
             'bundle_basename' => $basename,
-            'extension_alias' => Container::underscore($basename),
         );
 
         $this->renderFile('bundle/Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
-        $this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
-        $this->renderFile('bundle/Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
-        $this->renderFile('bundle/DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
-        $this->renderFile('bundle/DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
-        $this->renderFile('bundle/index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
+        //$this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
+        //$this->renderFile('bundle/Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
+        //$this->renderFile('bundle/DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
+        //$this->renderFile('bundle/DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
+        //$this->renderFile('bundle/index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
 
+        /*
         if ('xml' === $format || 'annotation' === $format) {
             $this->renderFile('bundle/services.xml.twig', $dir.'/Resources/config/services.xml', $parameters);
         } else {
@@ -79,6 +89,6 @@ class BundleGenerator extends Generator
             $this->filesystem->mkdir($dir.'/Resources/public/css');
             $this->filesystem->mkdir($dir.'/Resources/public/images');
             $this->filesystem->mkdir($dir.'/Resources/public/js');
-        }
+        }*/
     }
 }

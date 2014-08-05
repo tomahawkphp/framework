@@ -1,46 +1,37 @@
 <?php
 
-namespace Migrations\Console;
+namespace Tomahawk\Bundle\MigrationsBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Tomahawk\Bundle\MigrationsBundle\Migration\Migrator;
 
-use Migrations\Migrator;
-use Migrations\MigrationRepo;
-use Symfony\Component\Finder\Finder;
-use Illuminate\Database\Capsule\Manager as DB;
-
-class RollbackCommand extends BaseCommand
+class RollbackCommand extends Command
 {
-    protected $migrator;
-
-    protected $repository;
-
-    public function __construct($name = null)
-    {
-        $finder = new Finder();
-
-        $this->repository = new MigrationRepo(DB::schema()->getConnection(), 'laravel_migrations');
-        $this->migrator = new Migrator($this->repository, $finder);
-
-        parent::__construct($name);
-    }
-
     protected function configure()
     {
         $this
-            ->setName('migrations:rollback')
-            ->setDescription('Run migrations.');
+            ->setName('migration:rollback')
+            ->setDescription('Rollback last batch of migrations.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->migrator->rollback();
+        $migrator = $this->getMigrator();
 
-        $output->writeln($this->migrator->getNotes());
+        $migrator->rollback();
+
+        $output->writeln($migrator->getNotes());
     }
 
+    /**
+     * @return Migrator
+     */
+    protected function getMigrator()
+    {
+        return $this->container->get('migrator');
+    }
 
 }

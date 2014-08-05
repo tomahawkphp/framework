@@ -6,7 +6,7 @@ namespace Tomahawk\Templating\Loader;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
-class TemplateLocator
+class TemplateLocator implements FileLocatorInterface
 {
     protected $locator;
     protected $cache;
@@ -61,6 +61,9 @@ class TemplateLocator
         if (isset($this->cache[$key])) {
             return $this->cache[$key];
         }
+
+        //var_dump($template->getPath());
+        //exit;
 
         try {
             return $this->cache[$key] = $this->locator->locate($template->getPath(), $currentPath);

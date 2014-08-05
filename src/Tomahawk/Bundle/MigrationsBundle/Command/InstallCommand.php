@@ -1,45 +1,62 @@
 <?php
 
-namespace Migrations\Console;
+namespace Tomahawk\Bundle\MigrationsBundle\Command;
 
+use Illuminate\Database\Schema\Blueprint;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Migrations\MigrationRepo;
-
+use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationRepo;
 use Illuminate\Database\Capsule\Manager as DB;
+use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DI\ContainerInterface;
 
-class InstallCommand extends BaseCommand
+class InstallCommand extends Command implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface|null
+     */
+    private $container;
 
     protected function configure()
     {
-        $this
-            ->setName('migrations:install')
+        $this->setName('migration:install')
             ->setDescription('Install migrations table.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = 'laravel_migrations';
+        $repo = $this->getMigrationRepo();
 
-        $connection = DB::schema()->getConnection();
+        $blueprint = new Blueprint($repo->getTableName());
 
-        $repo = new MigrationRepo($connection, $table);
-
-        // Check if table exists
-        if ($repo->repositoryExists()) {
-            $output->writeln('<info>already exists</info>');
-            return;
+        if ($repo->createRepository($blueprint))
+        {
+            $output->writeln('Migration table created');
         }
-
-        $repo->createRepository();
-
-        // If not create table
-        $output->writeln('Created migration table <info>'.$table.'</info>');
+        else
+        {
+            $output->writeln('Failed to create migration table');
+        }
 
     }
 
+    /**
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @return MigrationRepo
+     */
+    protected function getMigrationRepo()
+    {
+        return $this->container->get('migration_repo');
+    }
 
 }

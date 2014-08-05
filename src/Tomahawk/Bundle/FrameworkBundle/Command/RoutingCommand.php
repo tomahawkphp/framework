@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
-
+use Symfony\Component\Routing\RouteCollection;
 
 class RoutingCommand extends Command implements ContainerAwareInterface
 {
@@ -23,7 +23,9 @@ class RoutingCommand extends Command implements ContainerAwareInterface
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $table = new Table($output);
+        $routes = $this->getRouteCollection()->all();
+
+        /*$table = new Table($output);
         $table
             ->setHeaders(array('ISBN', 'Title', 'Author'))
             ->setRows(array(
@@ -33,7 +35,7 @@ class RoutingCommand extends Command implements ContainerAwareInterface
                 array('80-902734-1-6', 'And Then There Were None', 'Agatha Christie'),
             ))
         ;
-        $table->render();
+        $table->render();*/
 
     }
 
@@ -47,6 +49,14 @@ class RoutingCommand extends Command implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    /**
+     * @return RouteCollection
+     */
+    protected function getRouteCollection()
+    {
+        return $this->container->get('route_collection');
     }
 
 }

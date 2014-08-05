@@ -2,48 +2,18 @@
 
 namespace Tomahawk\Cache;
 
-use Memcache;
-use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\FilesystemCache;
-use Doctrine\Common\Cache\ApcCache;
-use Doctrine\Common\Cache\XcacheCache;
-use Doctrine\Common\Cache\MemcacheCache;
-use Doctrine\Common\Cache\RedisCache;
+use Tomahawk\Cache\Provider\CacheProviderInterface;
 
 class CacheManager implements CacheInterface
 {
     /**
-     * @var \Doctrine\Common\Cache\CacheProvider
+     * @var CacheProviderInterface
      */
-    protected $driver;
+    protected $cacheProvider;
 
-    public function __construct(array $config)
+    public function __construct(CacheProviderInterface $cacheProvider)
     {
-        switch($config['driver'])
-        {
-            case 'filesystem':
-                $this->setupFileSystem($config);
-                break;
-            case 'apc':
-                $this->setupApcCache($config);
-                break;
-            case 'xcache':
-                $this->setupXCache($config);
-                break;
-            case 'redis':
-                $this->setupRedis($config);
-                break;
-            case 'array':
-                $this->setupArray($config);
-                break;
-            case 'memcache':
-                $this->setMemcacheCache($config);
-                break;
-            default:
-                $this->setupArray($config);
-                break;
-        }
+        $this->cacheProvider = $cacheProvider;
     }
 
     /**
@@ -52,7 +22,7 @@ class CacheManager implements CacheInterface
      */
     public function fetch($id)
     {
-        return $this->driver->fetch($id);
+        return $this->cacheProvider->fetch($id);
     }
 
     /**
@@ -63,7 +33,7 @@ class CacheManager implements CacheInterface
      */
     public function save($id, $value, $lifetime = false)
     {
-        return $this->driver->save($id, $value, $lifetime);
+        $this->cacheProvider->save($id, $value, $lifetime);
     }
 
     /**
@@ -72,7 +42,7 @@ class CacheManager implements CacheInterface
      */
     public function contains($id)
     {
-        return $this->driver->contains($id);
+        return $this->cacheProvider->contains($id);
     }
 
     /**
@@ -81,7 +51,7 @@ class CacheManager implements CacheInterface
      */
     public function delete($id)
     {
-        return $this->driver->delete($id);
+        $this->cacheProvider->delete($id);
     }
 
     /**
@@ -89,47 +59,15 @@ class CacheManager implements CacheInterface
      */
     public function flush()
     {
-        return $this->driver->flushAll();
+        $this->cacheProvider->flush();
     }
-
 
     /**
-     * @param array $config
+     * @return CacheProviderInterface
      */
-    protected function setupFileSystem(array $config)
+    public function getProvider()
     {
-        $this->driver = new FilesystemCache($config['save_path']);
+        return $this->cacheProvider;
     }
 
-    protected function setupArray(array $config)
-    {
-        $this->driver = new ArrayCache();
-    }
-
-    protected function setupRedis(array $config)
-    {
-        //$redis = new Redis;
-        $this->driver = new RedisCache();
-        //$this->driver->setRedis($redis);
-    }
-
-    protected function setupXCache(array $config)
-    {
-        $this->driver = new XcacheCache();
-    }
-
-    protected function setupApcCache(array $config)
-    {
-        $this->driver = new ApcCache();
-    }
-
-
-    protected function setMemcacheCache(array $config)
-    {
-        $memcache = new Memcache();
-        $memcache->connect($config['memcache']['host'], $config['memcache']['port']);
-
-        $this->driver = new MemcacheCache();
-        $this->driver->setMemcache($memcache);
-    }
 }

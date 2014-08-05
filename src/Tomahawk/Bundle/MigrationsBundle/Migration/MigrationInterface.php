@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundles\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migration;
 
 use Illuminate\Database\Schema\Builder;
 

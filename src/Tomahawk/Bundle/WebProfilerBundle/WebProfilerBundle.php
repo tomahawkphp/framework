@@ -18,14 +18,13 @@ class WebProfilerBundle extends Bundle
 
     public function boot()
     {
-        $this->container->set('web_profiler', 'yay!');
+        $this->setUpProfiler();
 
         // Add new profiler to container
 
         $this->getEventDispatcher()->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) {
 
-            if ($response = $event->getResponse())
-            {
+            if ($response = $event->getResponse()) {
                 $content = $response->getContent();
 
                 $content .= 'profiler2';
@@ -57,7 +56,14 @@ class WebProfilerBundle extends Bundle
 
     protected function getProfiler()
     {
-        return $this->container->get('webprofiler');
+        return $this->container->get('web_profiler');
+    }
+
+    protected function setUpProfiler()
+    {
+        $this->container->set('web_profiler', function(ContainerInterface $c) {
+            return new Profiler($c['templating_engine']);
+        });
     }
 
 }

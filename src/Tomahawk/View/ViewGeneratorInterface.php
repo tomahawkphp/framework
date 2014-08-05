@@ -13,15 +13,4 @@ interface ViewGeneratorInterface
     public function share($name, $value);
 
     public function getShared($name = null);
-
-    /**
-     * @param array $directoryPathPatterns
-     * @return $this
-     */
-    public function setDirectoryPathPatterns($directoryPathPatterns);
-
-    /**
-     * @return array
-     */
-    public function getDirectoryPathPatterns();
 }

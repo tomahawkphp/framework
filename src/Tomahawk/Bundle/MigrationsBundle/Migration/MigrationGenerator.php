@@ -1,52 +1,46 @@
 <?php
 
-namespace Tomahawk\Bundles\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migration;
 
+use Tomahawk\HttpKernel\Bundle\BundleInterface;
+use Tomahawk\Generator\Generator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
-class MigrationGenerator
+class MigrationGenerator extends Generator
 {
     /**
      * @var \Symfony\Component\Filesystem\Filesystem
      */
     protected $filesystem;
 
-    /**
-     * @var array
-     */
-    protected $directories;
-
-    public function __construct(Filesystem $filesystem, array $directories)
+    public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->directories = $directories;
     }
 
-    public function generate()
+    public function generate(BundleInterface $bundle = null, $name)
     {
+        $dir = $bundle->getPath();
 
-    }
+        $migrationFolder = $dir .'/Migration/';
 
-    protected function render($template, $parameters)
-    {
-        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->directories), array(
-            'debug'            => true,
-            'cache'            => false,
-            'strict_variables' => true,
-            'autoescape'       => false,
-        ));
-
-        return $twig->render($template, $parameters);
-    }
-
-    protected function renderFile($template, $target, $parameters)
-    {
-        if (!is_dir(dirname($target))) {
-            mkdir(dirname($target), 0777, true);
+        if (!file_exists($migrationFolder)) {
+            $this->filesystem->mkdir($migrationFolder);
         }
 
-        return file_put_contents($target, $this->render($template, $parameters));
+        $migrationFile = $migrationFolder.$name.'.php';
+
+        if (file_exists($migrationFile)) {
+            throw new \RuntimeException(sprintf('Migration "%s" already exists', $name));
+        }
+
+        $parameters = array(
+            'namespace'  => $bundle->getNamespace(),
+            'bundle'     => $bundle->getName(),
+            'name'       => $name,
+        );
+
+        $this->renderFile('Migration.php.twig', $migrationFile, $parameters);
     }
 }
