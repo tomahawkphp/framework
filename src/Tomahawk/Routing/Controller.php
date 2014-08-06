@@ -12,7 +12,7 @@ use Tomahawk\Session\SessionInterface;
 use Tomahawk\HttpCore\Response\CookiesInterface;
 use Tomahawk\Cache\CacheInterface;
 use Tomahawk\HttpCore\ResponseBuilderInterface;
-use Tomahawk\View\ViewGeneratorInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 class Controller
 {
@@ -66,6 +66,11 @@ class Controller
      */
     protected $response;
 
+    /**
+     * @var \Symfony\Component\Templating\EngineInterface
+     */
+    protected $templating;
+
     public function __construct(
         FormsManagerInterface $forms,
         ContainerInterface $di,
@@ -77,7 +82,7 @@ class Controller
         CryptInterface $crypt,
         CacheInterface $cache,
         ResponseBuilderInterface $response,
-        ViewGeneratorInterface $view
+        EngineInterface $templating
     )
     {
         $this->di = $di;
@@ -90,6 +95,6 @@ class Controller
         $this->crypt = $crypt;
         $this->cache = $cache;
         $this->response = $response;
-        $this->view = $view;
+        $this->templating = $templating;
     }
 }

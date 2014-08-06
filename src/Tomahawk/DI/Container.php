@@ -27,7 +27,7 @@ class Container extends BaseContainer implements ContainerInterface
      *
      * @return static
      */
-    public function register(ServiceProviderInterface $provider, array $values = array())
+    public function registerProvider(ServiceProviderInterface $provider, array $values = array())
     {
         $provider->register($this);
 
@@ -55,6 +55,25 @@ class Container extends BaseContainer implements ContainerInterface
         }
 
         return $this[$id];
+    }
+
+    /**
+     * Gets a parameter or an object.
+     *
+     * @param string $id The unique identifier for the parameter or object
+     *
+     * @return mixed The value of the parameter or an object
+     *
+     * @throws \InvalidArgumentException if the identifier is not defined
+     */
+    public function offsetGet($id)
+    {
+        if ($this->hasAlias($id))
+        {
+            $id = $this->getAlias($id);
+        }
+
+        return parent::offsetGet($id);
     }
 
     public function build($class, $parameters = array())

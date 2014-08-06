@@ -19,7 +19,7 @@ class FrameworkBundle extends Bundle
 
     public function boot()
     {
-        $this->container->register(new FrameworkProvider());
+        $this->container->registerProvider(new FrameworkProvider());
 
         /*if ($trustedProxies = $this->container->getParameter('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);

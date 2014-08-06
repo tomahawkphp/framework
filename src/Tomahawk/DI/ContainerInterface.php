@@ -12,7 +12,7 @@ interface ContainerInterface extends \ArrayAccess
      *
      * @return static
      */
-    public function register(ServiceProviderInterface $provider, array $values = array());
+    public function registerProvider(ServiceProviderInterface $provider, array $values = array());
 
     /**
      * @param $id

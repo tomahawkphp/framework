@@ -33,7 +33,7 @@ class ServiceProviderInterfaceTest extends TestCase
     {
         $container = new Container();
 
-        $container->register(new ServiceProvider(), array(
+        $container->registerProvider(new ServiceProvider(), array(
             'anotherParameter' => 'anotherValue'
         ));
 

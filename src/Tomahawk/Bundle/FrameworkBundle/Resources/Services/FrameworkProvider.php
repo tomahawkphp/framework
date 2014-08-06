@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Resources\Services;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -11,6 +12,9 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\Loader\PhpFileLoader;
+use Symfony\Component\Templating\DelegatingEngine;
+use Symfony\Component\Templating\PhpEngine;
+use Tomahawk\Cache\Provider\ArrayProvider;
 use Tomahawk\Config\Loader\PhpConfigLoader;
 use Tomahawk\Config\Loader\YamlConfigLoader;
 use Tomahawk\DI\ServiceProviderInterface;
@@ -37,6 +41,10 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Response;
+use Tomahawk\Templating\Loader\FilesystemLoader;
+use Tomahawk\Templating\Loader\TemplateLocator;
+use Tomahawk\Templating\TemplateNameParser;
+use Tomahawk\Templating\Twig\TwigEngine;
 use Tomahawk\View\ViewGenerator;
 use Tomahawk\Config\ConfigInterface;
 
@@ -80,6 +88,8 @@ class FrameworkProvider implements ServiceProviderInterface
             return $manager;
         });
 
+        $container->addAlias('event_dispatcher', 'Symfony\Component\EventDispatcherInterface');
+
         $container->set('Symfony\Component\EventDispatcherInterface', new EventDispatcher());
 
         $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $container) {
@@ -89,7 +99,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Symfony\Component\Config\Loader\LoaderInterface', function(ContainerInterface $c) {
 
             $kernel = $c['kernel'];
-            $defaultPath = $c['kernel']->getRootPath() .'/Resources/config';
+            $defaultPath = $c['kernel']->getRootDir() .'/Resources/config';
 
             $locator = new FileLocator($kernel, $defaultPath);
 
@@ -113,14 +123,22 @@ class FrameworkProvider implements ServiceProviderInterface
             return $config;
         });
 
+        $container->set('Tomahawk\DI\ContainerInterface', function(ContainerInterface $c) {
+            return $c;
+        });
+
+        $container->set('cache.providers.array', function() {
+            return new ArrayProvider(new ArrayCache());
+        });
+
         $container->set('Tomahawk\Cache\CacheInterface', function(ContainerInterface $c) {
 
-            $provider = $c['config']->get('cache.driver');
+            $provider = $c['config']->get('cache.driver', 'array');
             return new CacheManager($c['cache.providers.' .$provider]);
         });
 
         $container->set('Tomahawk\Database\DatabaseManager', function(ContainerInterface $c) {
-            new DatabaseManager($c['illuminate_database']->getDatabaseManager());
+            return new DatabaseManager($c['illuminate_database']->getDatabaseManager());
         });
 
         $container->set('Tomahawk\Encryption\CryptInterface', new Crypt(str_repeat('a', 32)));
@@ -135,7 +153,23 @@ class FrameworkProvider implements ServiceProviderInterface
             return new Cookies($c['request'], array());
         }));
 
-        $container->set('Tomahawk\View\ViewGeneratorInterface', $container->factory(function(ContainerInterface $c) {
+        $container->set('Symfony\Component\Templating\EngineInterface', $container->factory(function(ContainerInterface $c) {
+
+            $kernel = $c->get('kernel');
+            $locator = new FileLocator($kernel);
+            $templateLocator = new TemplateLocator($locator);
+
+            $loader = new FilesystemLoader($templateLocator);
+
+            $parser = new TemplateNameParser($kernel);
+
+            $phpEngine = new PhpEngine($parser, $loader);
+            //$environment = new \Twig_Environment()
+            //$twigEngine = new TwigEngine(, $parser);
+
+            return new DelegatingEngine(array(
+                $phpEngine
+            ));
 
         }));
 
@@ -148,17 +182,27 @@ class FrameworkProvider implements ServiceProviderInterface
         });
 
         $container->set('route_locator', $container->factory(function(ContainerInterface $c) {
-            return new FileLocator(array(__DIR__ .'/../app/Resources/'));
+
+            $kernel = $c['kernel'];
+
+            $defaultPath = $kernel->getRootDir() .'/Resources';
+
+            $locator = new FileLocator($kernel, $defaultPath);
+
+            return $locator;
+            //return new FileLocator(array(__DIR__ .'/../app/Resources/'));
         }));
 
         $container->set('route_loader', $container->factory(function(ContainerInterface $c) {
             return new PhpFileLoader($c['route_locator']);
         }));
 
-        $container->set('route_collection', $container->factory(function(ContainerInterface $c) {
+        $container->set('route_collection', function(ContainerInterface $c) {
             $routes = new RouteCollection();
             $routes->addCollection($c['route_loader']->load('routes.php'));
-        }));
+
+            return $routes;
+        });
 
         $container->set('controller_resolver', $container->factory(function(ContainerInterface $c) {
             return new ControllerResolver($c);
@@ -167,12 +211,15 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('request_context', $container->factory(function(ContainerInterface $c) {
             $context = new RequestContext();
             $context->fromRequest($c['request']);
+
+            return $context;
         }));
 
         $container->set('request_stack', new RequestStack());
 
-        $container->set('request', function(ContainerInterface $c) {
-            return $c->get('request_stack')->getCurrentRequest();
+
+        $container->set('Symfony\Component\HttpFoundation\Request', function(ContainerInterface $c) {
+            return $c->get('request_stack')->getCurrentRequest() ?: Request::createFromGlobals();
         });
 
         $container->set('url_matcher', $container->factory(function(ContainerInterface $c) {
@@ -181,7 +228,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
 
         $container->set('Tomahawk\HttpKernel\HttpKernelInterface', $container->factory(function(ContainerInterface $c) {
-            return new HttpKernel($c['event_dispatcher'], $c['url_Matcher'], $c['controller_resolver']);
+            return new HttpKernel($c['event_dispatcher'], $c['controller_resolver'], $c['request_stack']);
         }));
 
         $container->set('session.storage.file', function(ContainerInterface $c) {
@@ -241,7 +288,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('Tomahawk\Session\SessionInterface', function(ContainerInterface $c) {
 
-            $session = $c['config']->get('session.storage');
+            $session = $c['config']->get('session.storage','array');
 
             return new Session($c['session.storage.' .$session]);
         });
@@ -259,7 +306,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->addAlias('database', 'Tomahawk\Database\DatabaseManager');
         $container->addAlias('encrypter', 'Tomahawk\Encryption\CryptInterface');
-        $container->addAlias('event_dispatcher', 'Symfony\Component\EventDispatcherInterface');
+
         $container->addAlias('cookies', 'Tomahawk\HttpCore\Response\CookiesInterface');
         $container->addAlias('form_manager', 'Tomahawk\Forms\FormsManagerInterface');
         $container->addAlias('html_builder', 'Tomahawk\Html\HtmlBuilderInterface');
@@ -268,7 +315,7 @@ class FrameworkProvider implements ServiceProviderInterface
         // Request might not be needed....
         $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
         $container->addAlias('session', 'Tomahawk\Session\SessionInterface');
-        $container->addAlias('view_generator', 'Tomahawk\View\ViewGeneratorInterface');
+        $container->addAlias('templating', 'Symfony\Component\Templating\EngineInterface');
 
     }
 
