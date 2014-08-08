@@ -43,9 +43,6 @@ class ConfigTest extends TestCase
 
     public function testGetAll()
     {
-        //$dirs = array(__DIR__ .'/configs');
-        //$config = new ConfigManager($dirs);
-
         $this->config->load();
 
         $this->assertCount(2, $this->config->get());

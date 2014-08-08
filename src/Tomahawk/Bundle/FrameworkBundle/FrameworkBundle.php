@@ -3,16 +3,12 @@
 namespace Tomahawk\Bundle\FrameworkBundle;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
 use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\Bundle\FrameworkBundle\Resources\Services\FrameworkProvider;
+use Tomahawk\Config\ConfigInterface;
 
 class FrameworkBundle extends Bundle
 {
@@ -21,17 +17,31 @@ class FrameworkBundle extends Bundle
     {
         $this->container->registerProvider(new FrameworkProvider());
 
-        /*if ($trustedProxies = $this->container->getParameter('kernel.trusted_proxies')) {
+        $c = $this->container;
+
+        $eventDispatcher = $c->get('event_dispatcher');
+
+        $eventDispatcher->addSubscriber($c->get('route_listener'));
+
+        if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);
         }
 
-        if ($this->container->getParameter('kernel.http_method_override')) {
+        if ($this->getConfig()->get('kernel.http_method_override')) {
             Request::enableHttpMethodParameterOverride();
         }
 
-        if ($trustedHosts = $this->container->getParameter('kernel.trusted_hosts')) {
+        if ($trustedHosts = $this->getConfig()->get('kernel.trusted_hosts')) {
             Request::setTrustedHosts($trustedHosts);
-        }*/
+        }
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    protected function getConfig()
+    {
+        return $this->container->get('config');
     }
 
 }

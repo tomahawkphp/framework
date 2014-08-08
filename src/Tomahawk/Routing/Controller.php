@@ -2,6 +2,8 @@
 
 namespace Tomahawk\Routing;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Tomahawk\Database\DatabaseManager;
 use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\Forms\FormsManagerInterface;
@@ -13,6 +15,7 @@ use Tomahawk\HttpCore\Response\CookiesInterface;
 use Tomahawk\Cache\CacheInterface;
 use Tomahawk\HttpCore\ResponseBuilderInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Tomahawk\Config\ConfigInterface;
 
 class Controller
 {
@@ -71,6 +74,16 @@ class Controller
      */
     protected $templating;
 
+    /**
+     * @var \Tomahawk\Config\ConfigInterface
+     */
+    protected $config;
+
+    /**
+     * @var \Tomahawk\DI\ContainerInterface
+     */
+    protected $container;
+
     public function __construct(
         FormsManagerInterface $forms,
         ContainerInterface $di,
@@ -82,7 +95,9 @@ class Controller
         CryptInterface $crypt,
         CacheInterface $cache,
         ResponseBuilderInterface $response,
-        EngineInterface $templating
+        EngineInterface $templating,
+        ConfigInterface $config,
+        ContainerInterface $container
     )
     {
         $this->di = $di;
@@ -96,5 +111,67 @@ class Controller
         $this->cache = $cache;
         $this->response = $response;
         $this->templating = $templating;
+        $this->config = $config;
+        $this->container = $container;
+    }
+
+
+    public function forward($controller, array $path = array(), array $query = array())
+    {
+        $path['_controller'] = $controller;
+        $subRequest = $this->container->get('http_kernel')->getCurrentRequest()->duplicate($query, null, $path);
+
+        return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+    }
+
+    /**
+     * Returns a rendered view.
+     *
+     * @param string $view       The view name
+     * @param array  $parameters An array of parameters to pass to the view
+     *
+     * @return string The rendered view
+     */
+    public function renderView($view, array $parameters = array())
+    {
+        return $this->container->get('templating')->render($view, $parameters);
+    }
+
+    public function render($view, array $parameters = array(), Response $response = null)
+    {
+        $content = $this->renderView($view, $parameters);
+
+        if (null === $response)
+        {
+            $response = new Response();
+        }
+
+        $response->setContent($content);
+
+        return $response;
+    }
+
+    /**
+     * Returns true if the service id is defined.
+     *
+     * @param string $id The service id
+     *
+     * @return bool    true if the service id is defined, false otherwise
+     */
+    public function has($id)
+    {
+        return $this->container->has($id);
+    }
+
+    /**
+     * Gets a service by id.
+     *
+     * @param string $id The service id
+     *
+     * @return object The service
+     */
+    public function get($id)
+    {
+        return $this->container->get($id);
     }
 }

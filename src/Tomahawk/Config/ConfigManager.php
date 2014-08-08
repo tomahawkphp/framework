@@ -58,7 +58,7 @@ class ConfigManager implements ConfigInterface
     public function set($key, $value)
     {
         $this->arraySet($this->config, $key, $value);
-        
+
         return $this;
     }
 
@@ -71,6 +71,8 @@ class ConfigManager implements ConfigInterface
 
             $finder = new Finder();
             $finder->in($configDirectory)->depth('== 0')->files()->name('*.php');
+
+            //->name('*.yml');
 
             foreach ($finder as $file) {
                 /**

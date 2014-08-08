@@ -4,7 +4,7 @@ namespace Tomahawk\Cache\Provider;
 
 use Doctrine\Common\Cache\FilesystemCache;
 
-class FilesystemProvider extends CacheProvider
+class FilesystemProvider implements CacheProviderInterface
 {
     /**
      * @var \Doctrine\Common\Cache\FilesystemCache

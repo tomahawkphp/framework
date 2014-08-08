@@ -5,7 +5,7 @@ namespace Tomahawk\Cache\Provider;
 use Doctrine\Common\Cache\RedisCache;
 use Tomahawk\Cache\Provider\CacheProviderInterface;
 
-class RedisProvider extends CacheProvider
+class RedisProvider implements CacheProviderInterface
 {
     /**
      * @var \Doctrine\Common\Cache\RedisCache

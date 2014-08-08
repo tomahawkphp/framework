@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Bundle\GeneratorBundle\Command;
 
+use Symfony\Component\Console\Input\InputOption;
 use Tomahawk\Bundle\GeneratorBundle\Generator\ControllerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +19,8 @@ class GenerateControllerCommand extends GenerateCommand
         $this->setName('generate:controller')
             ->setDescription('Generate Controller.')
             ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
-            ->addArgument('controller', InputArgument::REQUIRED, 'Name of controller to create');
+            ->addArgument('controller', InputArgument::REQUIRED, 'Name of controller to create')
+            ->addOption('actions', '', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller');
 
         $this->resourcesDirectory = __DIR__ . '/resources/';
     }
@@ -32,7 +34,11 @@ class GenerateControllerCommand extends GenerateCommand
 
         $generator = $this->getGenerator();
 
-        $generator->generate($bundle, $controller);
+        $actions = $input->getOption('actions');
+
+        $actions = $this->parseActions($actions);
+
+        $generator->generate($bundle, $controller, $actions);
 
     }
 
@@ -42,5 +48,45 @@ class GenerateControllerCommand extends GenerateCommand
     public function getGenerator()
     {
         return $this->container->get('controller_generator');
+    }
+
+    public function getPlaceholdersFromRoute($route)
+    {
+        preg_match_all('/{(.*?)}/', $route, $placeholders);
+        $placeholders = $placeholders[1];
+
+        return $placeholders;
+    }
+
+    public function parseActions($actions)
+    {
+        $newActions = array();
+
+        foreach ($actions as $l => $action) {
+
+            $data = explode(':', $action);
+
+            // name
+            if (!isset($data[0])) {
+                throw new \InvalidArgumentException('An action must have a name');
+            }
+            $name = array_shift($data);
+
+            // route
+            $route = (isset($data[0]) && '' != $data[0]) ? array_shift($data) : '/'.substr($name, 0, -6);
+            if ($route) {
+                $placeholders = $this->getPlaceholdersFromRoute($route);
+            } else {
+                $placeholders = array();
+            }
+
+            $newActions[$name] = array(
+                'name'         => $name,
+                'route'        => $route,
+                'placeholders' => $placeholders,
+            );
+        }
+
+        return $newActions;
     }
 }

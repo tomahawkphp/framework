@@ -2,7 +2,10 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Resources\Services;
 
+use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\RedisCache;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -14,7 +17,11 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\PhpEngine;
+use Tomahawk\Auth\Handlers\EloquentAuthHandler;
+use Tomahawk\Cache\Provider\ApcProvider;
 use Tomahawk\Cache\Provider\ArrayProvider;
+use Tomahawk\Cache\Provider\FilesystemProvider;
+use Tomahawk\Cache\Provider\RedisProvider;
 use Tomahawk\Config\Loader\PhpConfigLoader;
 use Tomahawk\Config\Loader\YamlConfigLoader;
 use Tomahawk\DI\ServiceProviderInterface;
@@ -44,9 +51,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Tomahawk\Templating\Loader\FilesystemLoader;
 use Tomahawk\Templating\Loader\TemplateLocator;
 use Tomahawk\Templating\TemplateNameParser;
-use Tomahawk\Templating\Twig\TwigEngine;
-use Tomahawk\View\ViewGenerator;
 use Tomahawk\Config\ConfigInterface;
+use Tomahawk\Auth\Auth;
 
 class FrameworkProvider implements ServiceProviderInterface
 {
@@ -59,6 +65,14 @@ class FrameworkProvider implements ServiceProviderInterface
     protected function registerServices(ContainerInterface $container)
     {
 
+        $container->set('Tomahawk\Auth\AuthHandlerInterface', function(ContainerInterface $c) {
+            return new EloquentAuthHandler($c['hasher'], $c['config']->get('security.model'));
+        });
+
+        $container->set('Tomahawk\Auth\AuthInterface', function(ContainerInterface $c) {
+            return new Auth($c['session'], $c['auth_handler']);
+        });
+
         $container->set('illuminate_database', function(ContainerInterface $c) {
 
             /**
@@ -70,17 +84,10 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $connections = $config->get('database.connections');
 
-            $manager->addConnection(array(
-                'driver'    => 'mysql',
-                'host'      => 'localhost',
-                'port'      => '3306',
-                'database'  => 'test',
-                'username'  => 'root',
-                'password'  => '',
-                'charset'   => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix'    => '',
-            ));
+            foreach ($connections as $name => $connection)
+            {
+                $manager->addConnection($connection, $name);
+            }
 
             $manager->bootEloquent();
             $manager->setAsGlobal();
@@ -99,9 +106,9 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Symfony\Component\Config\Loader\LoaderInterface', function(ContainerInterface $c) {
 
             $kernel = $c['kernel'];
-            $defaultPath = $c['kernel']->getRootDir() .'/Resources/config';
+            $defaultPath = $kernel->getRootDir() .'/Resources/config';
 
-            $locator = new FileLocator($kernel, $defaultPath);
+            $locator = new \Symfony\Component\Config\FileLocator(array($defaultPath));
 
             $loaderResolver = new LoaderResolver(
                 array(
@@ -115,9 +122,9 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('Tomahawk\Config\ConfigInterface', function(ContainerInterface $c) {
 
-            $defaultPath = $c['kernel']->getRootPath() .'/Resources/config';
+            $defaultPath = $c['kernel']->getRootDir() .'/config';
 
-            $config = new ConfigManager($c['config_loader'], $defaultPath);
+            $config = new ConfigManager($c['config_loader'], array($defaultPath));
             $config->load();
 
             return $config;
@@ -131,6 +138,25 @@ class FrameworkProvider implements ServiceProviderInterface
             return new ArrayProvider(new ArrayCache());
         });
 
+        $container->set('cache.providers.filesystem', function(ContainerInterface $c) {
+            $config = $c['config'];
+
+            return new FilesystemProvider(new FilesystemCache($config->get('cache.directory')));
+        });
+
+        $container->set('cache.providers.apc', function(ContainerInterface $c) {
+            $config = $c['config'];
+            return new ApcProvider(new ApcCache());
+        });
+
+        $container->set('cache.providers.redis', function(ContainerInterface $c) {
+            $config = $c['config'];
+
+            $redisCache = new RedisCache();
+            $redisCache->setRedis(new \Redis());
+            return new RedisProvider($redisCache);
+        });
+
         $container->set('Tomahawk\Cache\CacheInterface', function(ContainerInterface $c) {
 
             $provider = $c['config']->get('cache.driver', 'array');
@@ -141,7 +167,9 @@ class FrameworkProvider implements ServiceProviderInterface
             return new DatabaseManager($c['illuminate_database']->getDatabaseManager());
         });
 
-        $container->set('Tomahawk\Encryption\CryptInterface', new Crypt(str_repeat('a', 32)));
+        $container->set('Tomahawk\Encryption\CryptInterface', function(ContainerInterface $c) {
+            return new Crypt($c['config']->get('security.key'));
+        });
 
         $container->set('Tomahawk\Forms\FormsManagerInterface', new FormsManager());
 
@@ -261,7 +289,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('session.storage.database', function(ContainerInterface $c) {
 
             // @TODO Add session db config
-            $pdo = null;
+            $pdo = $c['database']->connection()->getPdo();
 
             $config = $c['config']->get('session');
 
@@ -297,16 +325,15 @@ class FrameworkProvider implements ServiceProviderInterface
 
     protected function registerAliases(ContainerInterface $container)
     {
+
+        $container->addAlias('auth', 'Tomahawk\Auth\AuthInterface');
+        $container->addAlias('auth_handler', 'Tomahawk\Auth\AuthHandlerInterface');
         $container->addAlias('asset_manager', 'Tomahawk\Asset\AssetManagerInterface');
-
-
         $container->addAlias('cache', 'Tomahawk\Cache\CacheInterface');
-
         $container->addAlias('config_loader', 'Symfony\Component\Config\Loader\LoaderInterface');
-
+        $container->addAlias('config', 'Tomahawk\Config\ConfigInterface');
         $container->addAlias('database', 'Tomahawk\Database\DatabaseManager');
         $container->addAlias('encrypter', 'Tomahawk\Encryption\CryptInterface');
-
         $container->addAlias('cookies', 'Tomahawk\HttpCore\Response\CookiesInterface');
         $container->addAlias('form_manager', 'Tomahawk\Forms\FormsManagerInterface');
         $container->addAlias('html_builder', 'Tomahawk\Html\HtmlBuilderInterface');

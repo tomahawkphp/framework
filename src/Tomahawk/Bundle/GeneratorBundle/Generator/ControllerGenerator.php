@@ -46,32 +46,9 @@ class ControllerGenerator extends Generator
             'namespace'  => $bundle->getNamespace(),
             'bundle'     => $bundle->getName(),
             'controller' => $controller,
+            'actions'    => $actions
         );
 
-        /*foreach ($actions as $i => $action) {
-
-            // get the actioname without the sufix Action (for the template logical name)
-            $actions[$i]['basename'] = substr($action['name'], 0, -6);
-            $params = $parameters;
-            $params['action'] = $actions[$i];
-
-            // create a template
-            $template = $actions[$i]['template'];
-            if ('default' == $template) {
-                $template = $bundle->getName().':'.$controller.':'.substr($action['name'], 0, -6).'.html.'.$templateFormat;
-            }
-
-            if ('twig' == $templateFormat) {
-                $this->renderFile('controller/Template.html.twig.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
-            } else {
-                $this->renderFile('controller/Template.html.php.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
-            }
-
-        }*/
-
-        $parameters['actions'] = $actions;
-
         $this->renderFile('controller/Controller.php.twig', $controllerFile, $parameters);
-        //$this->renderFile('controller/ControllerTest.php.twig', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
     }
 }

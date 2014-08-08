@@ -5,7 +5,7 @@ namespace Tomahawk\Cache\Provider;
 use Doctrine\Common\Cache\XcacheCache;
 use Tomahawk\Cache\Provider\CacheProviderInterface;
 
-class XcacheProvider extends CacheProvider
+class XcacheProvider implements CacheProviderInterface
 {
     /**
      * @var \Doctrine\Common\Cache\XcacheCache

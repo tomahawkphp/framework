@@ -4,7 +4,7 @@ namespace Tomahawk\Cache\Provider;
 
 use Doctrine\Common\Cache\ApcCache;
 
-class ApcProvider extends CacheProvider
+class ApcProvider implements CacheProviderInterface
 {
     /**
      * @var \Doctrine\Common\Cache\ApcCache

@@ -5,7 +5,7 @@ namespace Tomahawk\Cache\Provider;
 use Doctrine\Common\Cache\ArrayCache;
 use Tomahawk\Cache\Provider\CacheProviderInterface;
 
-class ArrayProvider extends CacheProvider
+class ArrayProvider implements CacheProviderInterface
 {
     /**
      * @var \Doctrine\Common\Cache\ArrayCache

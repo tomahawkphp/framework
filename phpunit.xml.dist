@@ -29,8 +29,6 @@
                 <directory>./src/Tomahawk/DI/Test</directory>
                 <directory>./src/Tomahawk/Forms/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Test</directory>
-
-                <directory>./src/Tomahawk/View</directory>
                 <directory>./src/Tomahawk/Cache/Old</directory>
             </exclude>
         </whitelist>
