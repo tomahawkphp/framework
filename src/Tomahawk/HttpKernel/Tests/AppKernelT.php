@@ -504,6 +504,11 @@ class TestAppKernel extends Kernel
         return $bundles;
     }
 
+    public function registerMiddleware()
+    {
+        return array();
+    }
+
 }
 
 
@@ -520,6 +525,11 @@ class TestAppKernel2 extends Kernel
         }
 
         return $bundles;
+    }
+
+    public function registerMiddleware()
+    {
+        return array();
     }
 
 }
@@ -539,6 +549,11 @@ class KernelStub extends Kernel
     {
         return $this->getKernelParameters();
     }
+
+    public function registerMiddleware()
+    {
+        return array();
+    }
 }
 
 class KernelForTest extends Kernel
@@ -556,5 +571,10 @@ class KernelForTest extends Kernel
     public function isBooted()
     {
         return $this->booted;
+    }
+
+    public function registerMiddleware()
+    {
+        return array();
     }
 }

@@ -2,9 +2,8 @@
 
 namespace Tomahawk\HttpKernel;
 
+use Tomahawk\Middleware\Middleware;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\Container;
 use Tomahawk\DI\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -18,6 +17,13 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
      * @api
      */
     public function registerBundles();
+
+    /**
+     * Returns an array of middleware to register
+     *
+     * @return Middleware[] An array of middleware instances
+     */
+    public function registerMiddleware();
 
     /**
      * Boots the current kernel.

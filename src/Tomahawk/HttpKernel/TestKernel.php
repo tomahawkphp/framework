@@ -15,4 +15,9 @@ class TestKernel extends Kernel
         return $bundles;
     }
 
+    public function registerMiddleware()
+    {
+        return array();
+    }
+
 }

@@ -105,6 +105,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         }
 
         $this->booted = true;
+
+        $this->initializeMiddleware();
     }
 
     /**
@@ -297,6 +299,14 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         $this->container['kernel'] = $this;
 
         $this->getKernelParameters();
+    }
+
+    public function initializeMiddleware()
+    {
+        foreach ($this->registerMiddleware() as $middleware) {
+            $middleware->setContainer($this->container);
+            $middleware->boot();
+        }
     }
 
     public function setPaths($paths)

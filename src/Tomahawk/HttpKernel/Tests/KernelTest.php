@@ -78,11 +78,13 @@ class KernelTest extends TestCase
 
     public function testBootInitializesBundlesAndContainer()
     {
-        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer'));
+        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'initializeMiddleware'));
         $kernel->expects($this->once())
             ->method('initializeBundles');
         $kernel->expects($this->once())
             ->method('initializeContainer');
+        $kernel->expects($this->once())
+            ->method('initializeMiddleware');
 
         $kernel->boot();
     }
@@ -92,7 +94,7 @@ class KernelTest extends TestCase
         $bundle->expects($this->once())
             ->method('setContainer');
 
-        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'getBundles'));
+        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'initializeMiddleware', 'getBundles'));
         $kernel->expects($this->once())
             ->method('getBundles')
             ->will($this->returnValue(array($bundle)));
@@ -103,7 +105,7 @@ class KernelTest extends TestCase
     public function testBootSetsTheBootedFlagToTrue()
     {
         // use test kernel to access isBooted()
-        $kernel = $this->getKernelForTest(array('initializeBundles', 'initializeContainer'));
+        $kernel = $this->getKernelForTest(array('initializeBundles', 'initializeContainer', 'initializeMiddleware'));
         $kernel->boot();
 
         $this->assertTrue($kernel->isBooted());
@@ -111,7 +113,7 @@ class KernelTest extends TestCase
 
     public function testBootKernelSeveralTimesOnlyInitializesBundlesOnce()
     {
-        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer'));
+        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'initializeMiddleware'));
         $kernel->expects($this->once())
             ->method('initializeBundles');
 
@@ -125,7 +127,7 @@ class KernelTest extends TestCase
         $bundle->expects($this->once())
             ->method('shutdown');
 
-        $kernel = $this->getKernel(array(), array($bundle));
+        $kernel = $this->getKernel(array('initializeMiddleware'), array($bundle));
 
         $kernel->boot();
         $kernel->shutdown();
@@ -141,7 +143,7 @@ class KernelTest extends TestCase
             ->method('setContainer')
             ->with(null);
 
-        $kernel = $this->getKernel(array('getBundles'));
+        $kernel = $this->getKernel(array('initializeMiddleware', 'getBundles'));
         $kernel->expects($this->any())
             ->method('getBundles')
             ->will($this->returnValue(array($bundle)));
@@ -164,7 +166,7 @@ class KernelTest extends TestCase
             ->method('handle')
             ->with($request, $type, $catch);
 
-        $kernel = $this->getKernel(array('getHttpKernel'));
+        $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
         $kernel->expects($this->once())
             ->method('getHttpKernel')
             ->will($this->returnValue($httpKernelMock));
@@ -378,7 +380,7 @@ class KernelTest extends TestCase
             ->expects($this->never())
             ->method('terminate');
 
-        $kernel = $this->getKernel(array('getHttpKernel'));
+        $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
         $kernel->expects($this->once())
             ->method('getHttpKernel')
             ->will($this->returnValue($httpKernelMock));
@@ -396,7 +398,7 @@ class KernelTest extends TestCase
             ->expects($this->once())
             ->method('terminate');
 
-        $kernel = $this->getKernel(array('getHttpKernel'));
+        $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
         $kernel->expects($this->exactly(2))
             ->method('getHttpKernel')
             ->will($this->returnValue($httpKernelMock));

@@ -126,4 +126,9 @@ class TestAppKernel extends Kernel
         return $bundles;
     }
 
+    public function registerMiddleware()
+    {
+        return array();
+    }
+
 }
