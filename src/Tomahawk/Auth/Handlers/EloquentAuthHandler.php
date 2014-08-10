@@ -78,4 +78,12 @@ class EloquentAuthHandler implements AuthHandlerInterface
 
         return new $class;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getModelName()
+    {
+        return $this->model;
+    }
 }

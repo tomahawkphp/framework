@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Hashing;
 
-class Hasher
+class Hasher implements HasherInterface
 {
 
     /**

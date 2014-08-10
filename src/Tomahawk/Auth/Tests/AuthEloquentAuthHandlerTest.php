@@ -68,6 +68,7 @@ class AuthEloquentAuthHandlerTest extends PHPUnit_Framework_TestCase
         $provider = new EloquentAuthHandler($hasher, 'UserStub');
         $model = $provider->createModel();
 
+        $this->assertEquals('UserStub', $provider->getModelName());
         $this->assertInstanceOf('UserStub', $model);
     }
 

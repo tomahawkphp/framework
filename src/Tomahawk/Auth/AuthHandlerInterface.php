@@ -28,4 +28,9 @@ interface AuthHandlerInterface
      * @return bool
      */
     public function validateCredentials(UserInterface $user, array $credentials);
+
+    /**
+     * @return mixed
+     */
+    public function getModelName();
 }

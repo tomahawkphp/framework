@@ -127,6 +127,10 @@ class ContainerTest extends TestCase
 
         $this->assertInstanceOf('Tomahawk\DI\Test\Service', $service);
 
+        $service = $this->container['my_service'];
+
+        $this->assertInstanceOf('Tomahawk\DI\Test\Service', $service);
+
         $this->container->removeAlias('my_service');
         $this->assertFalse($this->container->hasAlias('my_service'));
     }

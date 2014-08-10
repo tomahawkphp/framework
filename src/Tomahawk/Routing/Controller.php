@@ -2,9 +2,11 @@
 
 namespace Tomahawk\Routing;
 
+use Tomahawk\Auth\AuthInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Tomahawk\Database\DatabaseManager;
+use Tomahawk\Hashing\HasherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\Forms\FormsManagerInterface;
 use Tomahawk\Asset\AssetManagerInterface;
@@ -20,9 +22,19 @@ use Tomahawk\Config\ConfigInterface;
 class Controller
 {
     /**
+     * @var \Tomahawk\Auth\AuthInterface
+     */
+    protected $auth;
+
+    /**
      * @var \Tomahawk\Forms\FormsManagerInterface
      */
     protected $forms;
+
+    /**
+     * @var \Tomahawk\Hashing\HasherInterface
+     */
+    protected $hasher;
 
     /**
      * @var \Tomahawk\DI\ContainerInterface
@@ -85,25 +97,29 @@ class Controller
     protected $container;
 
     public function __construct(
+        AuthInterface $auth,
         FormsManagerInterface $forms,
         ContainerInterface $di,
         CookiesInterface $cookies,
         AssetManagerInterface $assets,
+        HasherInterface $hasher,
         Request $request,
         SessionInterface $session,
-        DatabaseManager $database,
         CryptInterface $crypt,
         CacheInterface $cache,
         ResponseBuilderInterface $response,
         EngineInterface $templating,
         ConfigInterface $config,
-        ContainerInterface $container
+        ContainerInterface $container,
+        DatabaseManager $database = null
     )
     {
+        $this->auth = $auth;
         $this->di = $di;
         $this->forms = $forms;
         $this->cookies = $cookies;
         $this->assets = $assets;
+        $this->hasher = $hasher;
         $this->request = $request;
         $this->session = $session;
         $this->database = $database;

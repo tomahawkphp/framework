@@ -8,7 +8,7 @@ use Tomahawk\Auth\Auth;
 use Tomahawk\Auth\AuthHandlerInterface;
 use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpFoundation\Session\Session;
+use \Tomahawk\Session\Session;
 
 class AuthTest extends TestCase
 {
@@ -192,13 +192,5 @@ class AuthTest extends TestCase
         $hasher = Mockery::mock('Tomahawk\Hashing\HasherInterface');
         $pdoAuthHandler = Mockery::mock('Tomahawk\Auth\Handlers\PdoAuthHandler', array('retrieveById', 'retrieveByCredentials', 'validateCredentials'), array($hasher, $pdo, 'users', 'id'));
     }*/
-
-}
-
-
-class MockPDO extends \PDO
-{
-    public function __construct ()
-    {}
 
 }

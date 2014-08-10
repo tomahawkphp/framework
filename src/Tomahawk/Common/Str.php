@@ -5,6 +5,7 @@ namespace Tomahawk\Common;
 
 class Str
 {
+    public static $random = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     /**
      * Convert the given string to lower-case.
      *
@@ -39,7 +40,7 @@ class Str
     }
 
     /**
-     *
+     * Check if string starts with passed search string(s)
      *
      * @param $string
      * @param $search
@@ -61,27 +62,42 @@ class Str
     }
 
     /**
+     * Check if string ends with passed search string(s)
+     *
+     * @param $string
+     * @param $search
+     * @return bool
+     */
+    public static function endsWith($string, $search)
+    {
+        if (!is_array($search)) {
+            $search = array($search);
+        }
+
+        foreach ($search as $item) {
+            if ((string) $item === substr($string, -strlen($item))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Generate a more truly "random" alpha-numeric string.
      *
-     * @param  int     $length
+     * @param  int $length
      * @return string
-     *
-     * @throws \RuntimeException
      */
     public static function random($length = 16)
     {
-        if (function_exists('openssl_random_pseudo_bytes'))
-        {
+        if (function_exists('openssl_random_pseudo_bytes')) {
             $bytes = openssl_random_pseudo_bytes($length * 2);
 
-            if ($bytes === false)
-            {
-                throw new \RuntimeException('Unable to generate random string.');
+            if (false !== $bytes) {
+                return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
             }
-
-            return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
         }
-
         return static::quickRandom($length);
     }
 
@@ -90,13 +106,11 @@ class Str
      *
      * Should not be considered sufficient for cryptography, etc.
      *
-     * @param  int     $length
+     * @param  int  $length
      * @return string
      */
     public static function quickRandom($length = 16)
     {
-        $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+        return substr(str_shuffle(str_repeat(static::$random, 5)), 0, $length);
     }
 }

@@ -3,7 +3,7 @@
 namespace Tomahawk\Auth;
 
 use Closure;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Tomahawk\Session\SessionInterface;
 use Tomahawk\Auth\AuthHandlerInterface;
 
 class Auth implements AuthInterface

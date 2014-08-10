@@ -5,7 +5,9 @@ namespace Tomahawk\Bundle\FrameworkBundle\Resources\Services;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\RedisCache;
+use Doctrine\Common\Cache\XcacheCache;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -21,7 +23,9 @@ use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Tomahawk\Cache\Provider\ApcProvider;
 use Tomahawk\Cache\Provider\ArrayProvider;
 use Tomahawk\Cache\Provider\FilesystemProvider;
+use Tomahawk\Cache\Provider\MemcacheProvider;
 use Tomahawk\Cache\Provider\RedisProvider;
+use Tomahawk\Cache\Provider\XcacheProvider;
 use Tomahawk\Config\Loader\PhpConfigLoader;
 use Tomahawk\Config\Loader\YamlConfigLoader;
 use Tomahawk\DI\ServiceProviderInterface;
@@ -53,6 +57,7 @@ use Tomahawk\Templating\Loader\TemplateLocator;
 use Tomahawk\Templating\TemplateNameParser;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Auth\Auth;
+use Tomahawk\Hashing\Hasher;
 
 class FrameworkProvider implements ServiceProviderInterface
 {
@@ -88,6 +93,8 @@ class FrameworkProvider implements ServiceProviderInterface
             {
                 $manager->addConnection($connection, $name);
             }
+
+            $manager->getDatabaseManager()->setDefaultConnection($config->get('database.default'));
 
             $manager->bootEloquent();
             $manager->setAsGlobal();
@@ -157,6 +164,16 @@ class FrameworkProvider implements ServiceProviderInterface
             return new RedisProvider($redisCache);
         });
 
+        $container->set('cache.providers.memcache', function(ContainerInterface $c) {
+            $memcache = new MemcacheCache();
+            $memcache->setMemcache(new \Memcache());
+            return new MemcacheProvider($memcache);
+        });
+
+        $container->set('cache.providers.xcache', function(ContainerInterface $c) {
+            return new XcacheProvider(new XcacheCache());
+        });
+
         $container->set('Tomahawk\Cache\CacheInterface', function(ContainerInterface $c) {
 
             $provider = $c['config']->get('cache.driver', 'array');
@@ -174,6 +191,10 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Tomahawk\Forms\FormsManagerInterface', new FormsManager());
 
         $container->set('Tomahawk\Html\HtmlBuilderInterface', new HtmlBuilder());
+
+        $container->set('Tomahawk\Hashing\HasherInterface', function(ContainerInterface $c) {
+            return new Hasher();
+        });
 
         $container->set('Tomahawk\HttpCore\ResponseBuilderInterface', new ResponseBuilder());
 
@@ -332,6 +353,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('cache', 'Tomahawk\Cache\CacheInterface');
         $container->addAlias('config_loader', 'Symfony\Component\Config\Loader\LoaderInterface');
         $container->addAlias('config', 'Tomahawk\Config\ConfigInterface');
+        $container->addAlias('hasher', 'Tomahawk\Hashing\HasherInterface');
         $container->addAlias('database', 'Tomahawk\Database\DatabaseManager');
         $container->addAlias('encrypter', 'Tomahawk\Encryption\CryptInterface');
         $container->addAlias('cookies', 'Tomahawk\HttpCore\Response\CookiesInterface');

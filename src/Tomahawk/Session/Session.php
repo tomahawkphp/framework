@@ -18,6 +18,8 @@ class Session implements SessionInterface
      */
     protected $storage;
 
+    protected $dirty = false;
+
     public function __construct(SessionStorageInterface $storage)
     {
         $this->storage = $storage;
@@ -56,6 +58,10 @@ class Session implements SessionInterface
 
     public function set($name, $value)
     {
+        // If value is different, then the session is dirty
+        if ($this->session->get($name) !== $value) {
+            $this->dirty = true;
+        }
         $this->session->set($name, $value);
     }
 
@@ -72,6 +78,7 @@ class Session implements SessionInterface
     public function remove($name)
     {
         $this->session->remove($name);
+        $this->dirty = true;
     }
 
     public function hasFlash($name)
@@ -100,6 +107,11 @@ class Session implements SessionInterface
         return $this->session->getFlashBag();
     }
 
+    public function isDirty()
+    {
+        return true === $this->dirty;
+    }
+
     /**
      * Save Session
      *
@@ -107,7 +119,11 @@ class Session implements SessionInterface
      */
     public function save()
     {
-        $this->session->save();
+        // We only update the session if the session data has changed
+        if ($this->isDirty()) {
+            $this->session->save();
+            $this->dirty = false;
+        }
         return $this;
     }
 }
