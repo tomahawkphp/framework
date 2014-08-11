@@ -493,7 +493,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     public function locateResource($name, $dir = null, $first = true)
     {
-
         if ('@' !== $name[0]) {
             throw new \InvalidArgumentException(sprintf('A resource name must start with @ ("%s" given).', $name));
         }

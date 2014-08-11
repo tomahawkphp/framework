@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tomahawk\DI\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Bundle\FrameworkBundle\FrameworkBundle;
@@ -23,23 +24,60 @@ class FrameworkBundleTest extends TestCase
 
     public function testBundle()
     {
-        /*$container = new Container();
-        $container->set('kernel', $this->getKernelMock());
-        $container->set('route_listener', $this->getRouteListener());
+        $container = $this->getContainerMock();
+
+        $eventDispatcher = $this->getEventDispatcherMock();
+        $eventDispatcher->expects($this->once())->method('addSubscriber');
+
+        $config = $this->getConfigMock();
+        $config->expects($this->at(0))->method('get')->will($this->returnValue(array(
+            '127.0.0.0'
+        )));
+
+        $config->expects($this->at(1))->method('get')->will($this->returnValue(true));
+
+        $config->expects($this->at(2))->method('get')->will($this->returnValue(array(
+            'example.com'
+        )));
+
+        $container->expects($this->at(0))->method('registerProvider');
+        $container->expects($this->at(1))->method('get')->will($this->returnValue($eventDispatcher));
+        $container->expects($this->at(2))->method('get')->will($this->returnValue($this->getRouteListener()));
+        $container->expects($this->at(3))->method('get')->will($this->returnValue($config));
+        $container->expects($this->at(4))->method('get')->will($this->returnValue($config));
+        $container->expects($this->at(5))->method('get')->will($this->returnValue($config));
+
         $frameworkBundle = new FrameworkBundle();
         $frameworkBundle->setContainer($container);
         $frameworkBundle->boot();
 
-        $this->assertTrue($container->has('route_listener'));*/
+    }
+
+    public function getEventDispatcherMock()
+    {
+        $eventDispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $eventDispatcher;
+    }
+
+    public function getContainerMock()
+    {
+        $container = $this->getMockBuilder('Tomahawk\DI\Container')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $container;
     }
 
     public function getConfigMock()
     {
-        $kernel = $this->getMockBuilder('Tomahawk\Config\ConfigManager')
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        return $kernel;
+        return $config;
     }
 
     public function getKernelMock()

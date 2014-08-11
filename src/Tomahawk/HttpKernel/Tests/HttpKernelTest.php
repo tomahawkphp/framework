@@ -2,6 +2,7 @@
 
 namespace Tomahawk\HttpKernel\Tests;
 
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -94,112 +95,63 @@ class HttpKernelTest extends TestCase
         $this->assertEquals('foobar', $response->getContent());
     }
 
-    /*
-    public function testResponseNotReturnedViewEvent()
+    public function testHandleHttpException()
     {
-        $httpRequest = $this->getHttpKernel();
-
-
-        $eventDispatcher = $this->container['event_dispatcher'];
-
-        $eventDispatcher->addListener(KernelEvents::VIEW, function(GetResponseForControllerResultEvent $event) {
-
-            if (is_string($event->getControllerResult()))
-            {
-                $event->setResponse(new Response($event->getControllerResult()));
-            }
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(KernelEvents::EXCEPTION, function ($event) {
+            $event->setResponse(new Response($event->getException()->getMessage()));
         });
 
-        $request = Request::create('/test', 'GET');
-        $response = $httpRequest->handle($request);
+        $kernel = new HttpKernel($dispatcher, $this->getResolver(function () { throw new MethodNotAllowedHttpException(array('POST')); }));
+        $response = $kernel->handle(new Request());
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals('baz', $response->getContent());
+        $this->assertEquals('405', $response->getStatusCode());
+        $this->assertEquals('POST', $response->headers->get('Allow'));
     }
 
-    public function testResponseNotReturnedResponseThrowsException()
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function testHandleWhenNoControllerIsFound()
     {
-        $this->setExpectedException('LogicException');
-        $httpRequest = $this->getHttpKernel();
+        $dispatcher = new EventDispatcher();
+        $kernel = new HttpKernel($dispatcher, $this->getResolver(false));
 
-        $request = Request::create('/test', 'GET');
-        $httpRequest->handle($request);
-
+        $kernel->handle(new Request());
     }
 
-    public function testResponseNullResponseThrowsException()
+    public function testHandleWhenTheControllerDoesNotReturnAResponseButAViewIsRegistered()
     {
-        $this->setExpectedException('LogicException', 'The controller must return a response (null given). Did you forget to add a return statement somewhere in your controller?');
-        $httpRequest = $this->getHttpKernel();
-
-        $request = Request::create('/null', 'GET');
-        $httpRequest->handle($request);
-
-    }
-
-    public function testResponseTrueResponseThrowsException()
-    {
-        $this->setExpectedException('LogicException', 'The controller must return a response (true given).');
-        $httpRequest = $this->getHttpKernel();
-
-        $request = Request::create('/true', 'GET');
-        $httpRequest->handle($request);
-
-    }
-
-    public function testResponseFalseResponseThrowsException()
-    {
-        $this->setExpectedException('LogicException', 'The controller must return a response (false given).');
-        $httpRequest = $this->getHttpKernel();
-
-        $request = Request::create('/false', 'GET');
-        $httpRequest->handle($request);
-
-    }
-
-    public function testResponseArrayResponseThrowsException()
-    {
-        $this->setExpectedException('LogicException', 'The controller must return a response (Array(0 => 1) given).');
-        $httpRequest = $this->getHttpKernel();
-
-        $request = Request::create('/array', 'GET');
-        $httpRequest->handle($request);
-
-    }
-
-    public function testResponseObjectResponseThrowsException()
-    {
-        $this->setExpectedException('LogicException', 'The controller must return a response (Object(stdClass) given).');
-        $httpRequest = $this->getHttpKernel();
-
-        $request = Request::create('/object', 'GET');
-        $httpRequest->handle($request);
-    }
-
-    public function testResponseHandleExceptionWithStatusCode()
-    {
-        $httpRequest = $this->getHttpKernel();
-
-        $eventDispatcher = $this->container['event_dispatcher'];
-
-        $eventDispatcher->addListener(KernelEvents::EXCEPTION, function(GetResponseForExceptionEvent $event) {
-
-            $exception = $event->getException();
-
-            if ($exception instanceof \LogicException)
-            {
-                $response = new Response('logic exception');
-                $response->headers->set('X-Status-Code', 500);
-                $event->setResponse($response);
-            }
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(KernelEvents::VIEW, function ($event) {
+            $event->setResponse(new Response($event->getControllerResult()));
         });
+        $kernel = new HttpKernel($dispatcher, $this->getResolver(function () { return 'foo'; }));
 
-        $request = Request::create('/test', 'GET');
-        $response = $httpRequest->handle($request);
+        $this->assertEquals('foo', $kernel->handle(new Request())->getContent());
+    }
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals('logic exception', $response->getContent());
-    }*/
+    /**
+     * @expectedException \LogicException
+     */
+    public function testHandleWhenTheControllerIsNotACallable()
+    {
+        $dispatcher = new EventDispatcher();
+        $kernel = new HttpKernel($dispatcher, $this->getResolver('foobar'));
+
+        $kernel->handle(new Request());
+    }
+
+    public function testHandleWithAResponseListener()
+    {
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(KernelEvents::RESPONSE, function ($event) {
+            $event->setResponse(new Response('foo'));
+        });
+        $kernel = new HttpKernel($dispatcher, $this->getResolver());
+
+        $this->assertEquals('foo', $kernel->handle(new Request())->getContent());
+    }
 
     public function testResponseHandleExceptionWithoutStatusCode()
     {

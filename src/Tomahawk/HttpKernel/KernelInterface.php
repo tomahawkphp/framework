@@ -144,4 +144,6 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
      * @api
      */
     public function getCharset();
+
+    public function locateResource($name, $dir = null, $first = true);
 }
