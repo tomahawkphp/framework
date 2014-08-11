@@ -37,11 +37,6 @@ class Controller
     protected $hasher;
 
     /**
-     * @var \Tomahawk\DI\ContainerInterface
-     */
-    protected $di;
-
-    /**
      * @var \Tomahawk\Encryption\CryptInterface
      */
     protected $crypt;
@@ -99,12 +94,10 @@ class Controller
     public function __construct(
         AuthInterface $auth,
         FormsManagerInterface $forms,
-        ContainerInterface $di,
         CookiesInterface $cookies,
         AssetManagerInterface $assets,
         HasherInterface $hasher,
-        Request $request,
-        SessionInterface $session,
+        SessionInterface $session = null,
         CryptInterface $crypt,
         CacheInterface $cache,
         ResponseBuilderInterface $response,
@@ -115,12 +108,10 @@ class Controller
     )
     {
         $this->auth = $auth;
-        $this->di = $di;
         $this->forms = $forms;
         $this->cookies = $cookies;
         $this->assets = $assets;
         $this->hasher = $hasher;
-        $this->request = $request;
         $this->session = $session;
         $this->database = $database;
         $this->crypt = $crypt;

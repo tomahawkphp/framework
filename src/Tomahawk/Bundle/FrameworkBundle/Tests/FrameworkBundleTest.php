@@ -11,6 +11,16 @@ class FrameworkBundleTest extends TestCase
 {
     protected $container;
 
+    public function testBundleReturnsConfig()
+    {
+        $container = new Container();
+        $container->set('config', $this->getConfigMock());
+        $bundle = new FrameworkBundle();
+        $bundle->setContainer($container);
+
+        $this->assertInstanceOf('Tomahawk\Config\ConfigManager', $bundle->getConfig());
+    }
+
     public function testBundle()
     {
         /*$container = new Container();
@@ -21,6 +31,15 @@ class FrameworkBundleTest extends TestCase
         $frameworkBundle->boot();
 
         $this->assertTrue($container->has('route_listener'));*/
+    }
+
+    public function getConfigMock()
+    {
+        $kernel = $this->getMockBuilder('Tomahawk\Config\ConfigManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $kernel;
     }
 
     public function getKernelMock()

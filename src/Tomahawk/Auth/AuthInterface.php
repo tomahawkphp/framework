@@ -6,28 +6,41 @@ use Tomahawk\Auth\AuthHandlerInterface;
 
 interface AuthInterface
 {
-    /**
-     * @param AuthHandlerInterface $handler
-     * @return $this;
-     */
-    function setHandler(AuthHandlerInterface $handler);
+    public function isGuest();
+
+    public function loggedIn();
+
+    public function attempt(array $credentials);
+
+    public function login(UserInterface $user);
+
+    public function logout();
 
     /**
-     * @return AuthHandlerInterface|null
+     * Get a unique identifier for the auth session value.
+     *
+     * @return string
      */
-    function getHandler();
+    public function getName();
 
     /**
-     * @return bool
+     * @param \Tomahawk\Auth\AuthHandlerInterface $handler
+     * @return $this
      */
-    function isGuest();
+    public function setHandler(AuthHandlerInterface $handler);
 
     /**
-     * @return bool
+     * @return \Tomahawk\Auth\AuthHandlerInterface
      */
-    function loggedIn();
+    public function getHandler();
 
-    function getUser();
+    /**
+     * @param UserInterface $user
+     */
+    public function setUser(UserInterface $user);
 
-    function attempt(array $credentials);
+    /**
+     * @return UserInterface
+     */
+    public function getUser();
 }

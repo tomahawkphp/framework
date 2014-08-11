@@ -39,7 +39,7 @@ class FrameworkBundle extends Bundle
     /**
      * @return ConfigInterface
      */
-    protected function getConfig()
+    public function getConfig()
     {
         return $this->container->get('config');
     }
