@@ -2,15 +2,11 @@
 
 namespace Tomahawk\Bundle\WebProfilerBundle;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
-use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Templating\PhpEngine;
 use Tomahawk\Bundle\WebProfilerBundle\Profiler;
 
 class WebProfilerBundle extends Bundle

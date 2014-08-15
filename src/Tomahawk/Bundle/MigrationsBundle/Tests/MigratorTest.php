@@ -248,13 +248,8 @@ class MigratorTest extends TestCase
 
     public function getSplFileInfo()
     {
-        $file = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $file->expects($this->any())
-            ->method('getRealPath')
-            ->will($this->returnValue($this->migrationFile));
+        $file = \Mockery::mock('stdClass');
+        $file->shouldReceive('getRealPath')->once()->andReturn($this->migrationFile);
 
         return $file;
     }

@@ -130,7 +130,6 @@ class Migrator
         /**
          * @var MigrationInterface $migration
          */
-        require_once($migrationReference->getPath());
         $class = $migrationReference->getClass();
         $migration = new $class();
         $migration->up($this->getSchemaBuilder());
@@ -156,7 +155,6 @@ class Migrator
         /**
          * @var MigrationInterface $migrationClass
          */
-        require_once($migrationReference->getPath());
         $class = $migrationReference->getClass();
         $migrationClass = new $class();
         $migrationClass->down($this->getSchemaBuilder());
