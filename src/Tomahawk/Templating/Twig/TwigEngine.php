@@ -48,8 +48,6 @@ class TwigEngine implements EngineInterface
 
         $loader = $this->environment->getLoader();
 
-        //return $loader->exists((string) $name);
-
         if ($loader instanceof \Twig_ExistsLoaderInterface) {
             return $loader->exists((string) $name);
         }

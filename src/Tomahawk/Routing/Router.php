@@ -111,9 +111,13 @@ class Router {
             $path = $this->formatPath($path); //Symfony always stores with a starting slash
         }
 
-        /*if ($this->getInSection()) {
-            $path = trim($path,'/');
-        }*/
+        $schemes = array(
+            'http'
+        );
+
+        if ($https) {
+            $schemes[] = 'https';
+        }
 
         $route = new Route($path,
             array(
@@ -123,7 +127,7 @@ class Router {
             array(), // requirements
             array(), // options
             '', // host
-            array(), // schemes
+            $schemes, // schemes
             $methods // methods
         );
 
@@ -142,8 +146,6 @@ class Router {
     {
         $path = trim($path, '/');
 
-        //$path = trim($path, '/') . '/';
-
         return $path;
     }
 
@@ -160,10 +162,6 @@ class Router {
 
         $sub_collection->addPrefix($name);
         $sub_collection->addDefaults($options);
-
-        /*$sub_collection->addRequirements(array(
-            $name => '^(.*)$'
-        ));*/
 
         $this->getRoutes()->addCollection($sub_collection);
     }

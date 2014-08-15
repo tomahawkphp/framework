@@ -86,15 +86,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         // init bundles
         $this->initializeBundles();
 
-        /*if ($this->loadClassCache) {
-            $this->doLoadClassCache($this->loadClassCache[0], $this->loadClassCache[1]);
-        }
-        */
-
-
-        // init container
-        //$this->initializeContainer();
-
         foreach ($this->getBundles() as $bundle) {
             if ($bundle instanceof ContainerAwareInterface)
             {
