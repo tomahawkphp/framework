@@ -103,35 +103,7 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
 
         $arguments = $this->resolver->getArguments($request, $controller);
 
-        $route = $request->get('_route');
-
         $response = call_user_func_array($controller, $arguments);
-
-        //var_dump($request->attributes->get('_beforeFilters'));
-        //exit;
-
-        /*
-        $before_events = explode('|', $request->get('before'));
-        $before_event = null;
-
-        $before_events = array();
-
-        if ($before_events) {
-            //$before_event = new \BeforeEvent($this, $request, $type, $response);
-        }
-
-        // Fire all Before events - if any are set
-        foreach ($before_events as $event) {
-            $this->dispatcher->dispatch($event, $before_event);
-
-            //If event has a response
-
-            if ($before_event->getResponse() && $before_event->isPropagationStopped()) {
-                $response = $before_event->getResponse();
-                break;
-            }
-        }
-        */
 
         // view
         if (!$response instanceof Response) {
@@ -225,22 +197,6 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
 
         $this->finishRequest($request, $type);
 
-
-        /*$after_events = explode('|', $request->get('after'));
-
-        $after_event = null;
-
-        dd($after_events);
-
-        if ($after_events) {
-            $after_event = new \BeforeEvent($this, $request, $type, $response);
-        }
-
-        // Fire all $after_events events - if any are set
-        foreach ($after_events as $event) {
-            $this->dispatcher->dispatch($event, $after_event);
-        }*/
-
         return $event->getResponse();
     }
 
@@ -311,6 +267,4 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
 
         return $path;
     }
-
-
 }
