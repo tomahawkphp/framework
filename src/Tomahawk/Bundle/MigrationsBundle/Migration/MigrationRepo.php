@@ -106,12 +106,12 @@ class MigrationRepo
     /**
      * Remove a migration from the log.
      *
-     * @param  object  $migration
+     * @param string $migration
      * @return void
      */
     public function delete($migration)
     {
-        $this->table()->where('migration', $migration->migration)->delete();
+        $this->table()->where('migration', $migration)->delete();
     }
 
     /**

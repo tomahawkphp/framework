@@ -92,7 +92,7 @@ class Migrator
 
             $migrationReference = new MigrationReference($bundle, $migrationPath);
 
-            $this->runDown($migrationReference, $migration);
+            $this->runDown($migrationReference);
         }
 
         return count($migrations);
@@ -119,7 +119,7 @@ class Migrator
 
             $migrationReference = new MigrationReference($bundle, $migrationPath);
 
-            $this->runDown($migrationReference, $migration);
+            $this->runDown($migrationReference);
         }
 
         return count($migrations);
@@ -147,10 +147,9 @@ class Migrator
      * Run "down" a migration instance.
      *
      * @param  MigrationReference $migrationReference
-     * @param $migration
      * @return void
      */
-    protected function runDown(MigrationReference $migrationReference, $migration)
+    protected function runDown(MigrationReference $migrationReference)
     {
         /**
          * @var MigrationInterface $migrationClass
@@ -159,9 +158,9 @@ class Migrator
         $migrationClass = new $class();
         $migrationClass->down($this->getSchemaBuilder());
 
-        $file = $migration->migration;
+        $file = $migrationReference->getClass();
 
-        $this->repository->delete($migration);
+        $this->repository->delete($migrationReference->getClass());
 
         $this->note("<info>Rolled back:</info> $file");
     }
