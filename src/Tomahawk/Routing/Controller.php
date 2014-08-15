@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Tomahawk\Database\DatabaseManager;
 use Tomahawk\Hashing\HasherInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\Forms\FormsManagerInterface;
 use Tomahawk\Asset\AssetManagerInterface;
 use Tomahawk\Encryption\CryptInterface;
@@ -46,11 +45,6 @@ class Controller
      * @var \Tomahawk\Asset\AssetManagerInterface
      */
     protected $assets;
-
-    /**
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
 
     /**
      * @var \Tomahawk\Session\SessionInterface

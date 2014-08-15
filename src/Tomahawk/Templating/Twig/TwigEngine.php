@@ -3,7 +3,6 @@
 namespace Tomahawk\Templating\Twig;
 
 use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Templating\StreamingEngineInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 

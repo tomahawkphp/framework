@@ -2,11 +2,8 @@
 
 namespace Tomahawk\HttpKernel\Test\Bundles\BarBundle;
 
-use Symfony\Component\HttpFoundation\Response;
-use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Templating\PhpEngine;
 
 class BarBundle extends Bundle
 {

@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\HttpKernel as BaseHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -20,7 +19,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing;
 
 class HttpKernel extends BaseHttpKernel implements TerminableInterface
 {
@@ -37,11 +35,6 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
      * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request;
-
-    /**
-     * @var \Symfony\Component\Routing\RequestContext
-     */
-    protected $context;
 
     /**
      * Constructor

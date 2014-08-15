@@ -13,8 +13,6 @@ namespace Tomahawk\Asset;
 
 use Tomahawk\Html\HtmlBuilderInterface;
 use Tomahawk\Url\UrlGeneratorInterface;
-use Tomahawk\Asset\Exception\InvalidDependencyException;
-use Tomahawk\Asset\Exception\SelfDependencyException;
 use Tomahawk\Asset\Exception\CircularDependencyException;
 
 /**

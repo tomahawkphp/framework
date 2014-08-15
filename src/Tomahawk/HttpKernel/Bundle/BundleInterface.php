@@ -3,7 +3,6 @@
 namespace Tomahawk\HttpKernel\Bundle;
 
 use Tomahawk\Console\Application;
-use Symfony\Component\Finder\Finder;
 
 interface BundleInterface
 {

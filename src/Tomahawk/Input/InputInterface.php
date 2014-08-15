@@ -2,8 +2,6 @@
 
 namespace Tomahawk\Input;
 
-use Symfony\Component\HttpFoundation\Request;
-
 interface InputInterface
 {
 

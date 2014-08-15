@@ -14,7 +14,6 @@ namespace Tomahawk\Bundle\GeneratorBundle\Generator;
 use Tomahawk\Generator\Generator;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Tomahawk\DI\Container;
 
 /**
  * Generates a Controller inside a bundle.
