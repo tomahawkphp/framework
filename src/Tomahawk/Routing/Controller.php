@@ -18,6 +18,7 @@ use Tomahawk\Cache\CacheInterface;
 use Tomahawk\HttpCore\ResponseBuilderInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Tomahawk\Config\ConfigInterface;
+use Tomahawk\Url\UrlGeneratorInterface;
 
 class Controller
 {
@@ -91,6 +92,11 @@ class Controller
      */
     protected $container;
 
+    /**
+     * @var
+     */
+    protected $url;
+
     public function __construct(
         AuthInterface $auth,
         FormsManagerInterface $forms,
@@ -104,7 +110,8 @@ class Controller
         EngineInterface $templating,
         ConfigInterface $config,
         ContainerInterface $container,
-        DatabaseManager $database = null
+        DatabaseManager $database = null,
+        UrlGeneratorInterface $url
     )
     {
         $this->auth = $auth;
@@ -120,6 +127,7 @@ class Controller
         $this->templating = $templating;
         $this->config = $config;
         $this->container = $container;
+        $this->url = $url;
     }
 
 

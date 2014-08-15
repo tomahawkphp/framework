@@ -2,7 +2,6 @@
 
 namespace Tomahawk\Url;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
@@ -82,6 +81,8 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
 
         $host = $this->context->getHost();
 
+        $base = $this->context->getBaseUrl();
+
         $port = '';
 
         if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
@@ -94,7 +95,7 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
 
         $path = trim($path . '/' . $extra, '/');
 
-        $url = rtrim(sprintf('%s://%s%s/%s', $scheme, $host, $port, $path, '/'));
+        $url = rtrim(sprintf('%s://%s%s%s/%s', $scheme, $host, $port, $base, $path), '/');
 
         return $url;
     }
@@ -134,7 +135,7 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
      */
     public function route($name, $data = array())
     {
-        return $this->generate($name, $data);
+        return $this->generate($name, $data, self::ABSOLUTE_URL);
     }
 
     /**

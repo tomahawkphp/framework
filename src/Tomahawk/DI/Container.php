@@ -3,14 +3,10 @@
 namespace Tomahawk\DI;
 
 use Pimple\Container as BaseContainer;
-use Closure;
 use ReflectionClass;
 use ReflectionParameter;
-
-class BindingResolutionException extends \Exception {}
-class InstantiateException extends \Exception {}
-class ClassDefaultValueException extends \Exception {}
-class ParameterDefaultValueException extends \Exception {}
+use Tomahawk\DI\Exception\BindingResolutionException;
+use Tomahawk\DI\Exception\InstantiateException;
 
 class Container extends BaseContainer implements ContainerInterface
 {

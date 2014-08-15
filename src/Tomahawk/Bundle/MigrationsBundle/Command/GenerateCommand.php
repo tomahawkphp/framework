@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Bundle\MigrationsBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -8,7 +17,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
 use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationGenerator;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
@@ -55,7 +63,7 @@ class GenerateCommand extends Command implements ContainerAwareInterface
             $output->writeln($e->getMessage());
         }
 
-        //$output->writeln(sprintf('Generated new migration class to "<info>%s</info>"', $path));
+        $output->writeln(sprintf('Generated new migration class to "<info>%s</info>"', $bundle->getPath() . '/Migration/' . $migrationName . '.php'));
 
     }
 

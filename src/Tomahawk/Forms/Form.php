@@ -63,11 +63,21 @@ class Form implements FormInterface
         return $this->model;
     }
 
+    /**
+     * @param Element $element
+     * @return $this
+     */
     public function add(Element $element)
     {
         $this->elements[$element->getName()] = $element;
+        return $this;
     }
 
+    /**
+     * @param $name
+     * @param array $attributes
+     * @return mixed
+     */
     public function render($name, array $attributes = array())
     {
         $element = $this->elements[$name];
@@ -78,6 +88,10 @@ class Form implements FormInterface
         return $element->render($attributes);
     }
 
+    /**
+     * @param $input
+     * @return $this
+     */
     public function bind($input)
     {
         $this->input = $input;
@@ -95,11 +109,15 @@ class Form implements FormInterface
         return $this;
     }
 
+    /**
+     * @return bool
+     * @throws \Exception
+     */
     public function isValid()
     {
         if (!$this->getValidator())
         {
-            throw new \Exception('Validator not present on');
+            throw new \Exception('Validator not present on Form');
         }
 
         return $this->getValidator()->validate($this->input);

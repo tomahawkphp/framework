@@ -30,7 +30,6 @@ class UrlGeneratorTest extends TestCase
         $this->request = Request::create('http://symfony.devbox.com:8182/', 'GET');
         $this->context = new RequestContext();
         $this->context->fromRequest($this->request);
-        $this->context->setBaseUrl('http://symfony.devbox.com:8182/');
         $this->url = new UrlGenerator(new RouteCollection(), $this->context);
     }
 
@@ -52,14 +51,13 @@ class UrlGeneratorTest extends TestCase
     public function testExternalUrl()
     {
         $url = $this->url->to('http://google.com');
-
         $this->assertEquals('http://google.com', $url);
     }
 
     public function testGetBaseURL()
     {
-        $this->assertEquals('http://symfony.devbox.com:8182/', $this->url->getBaseUrl());
-        $this->assertEquals('http://symfony.devbox.com:8182/', $this->url->getCurrentUrl());
+        $this->assertEquals('', $this->url->getBaseUrl());
+        $this->assertEquals('http://symfony.devbox.com:8182', $this->url->getCurrentUrl());
     }
 
     public function testSSLOff()
@@ -85,7 +83,6 @@ class UrlGeneratorTest extends TestCase
         $this->context = new RequestContext();
         $this->context->setHttpsPort(456);
         $this->context->fromRequest($this->request);
-        $this->context->setBaseUrl('http://symfony.devbox.com:8182/');
         $this->url = new UrlGenerator(new RouteCollection(), $this->context);
         $this->url->setSslOn(true);
 

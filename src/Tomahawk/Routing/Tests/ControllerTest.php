@@ -116,11 +116,10 @@ class ControllerTest extends TestCase
             $this->getMock('Symfony\Component\Templating\EngineInterface'),
             $this->getMock('Tomahawk\Config\ConfigInterface'),
             $container,
-            $this->getMock('Tomahawk\Database\DatabaseManager', array(), array(), '', false)
+            $this->getMock('Tomahawk\Database\DatabaseManager', array(), array(), '', false),
+            $this->getMock('Tomahawk\Url\UrlGeneratorInterface')
         );
 
-
         return $controller;
-        
     }
 }

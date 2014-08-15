@@ -9,17 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Auth;
+namespace Tomahawk\Asset\Exception;
 
-interface UserInterface
+class InvalidDependencyException extends \Exception
 {
-    /**
-     * @return mixed
-     */
-    public function getAuthIdentifier();
 
-    /**
-     * @return mixed
-     */
-    public function getAuthPassword();
 }

@@ -9,20 +9,29 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Cache;
+namespace Tomahawk\Cache\Provider;
 
+use Doctrine\Common\Cache\MemcachedCache;
 use Tomahawk\Cache\Provider\CacheProviderInterface;
 
-class CacheManager implements CacheInterface
+class MemcachedProvider implements CacheProviderInterface
 {
     /**
-     * @var CacheProviderInterface
+     * @var \Doctrine\Common\Cache\MemcachedCache
      */
-    protected $cacheProvider;
+    protected $memcacheCached;
 
-    public function __construct(CacheProviderInterface $cacheProvider)
+    public function __construct(MemcachedCache $memcacheCached)
     {
-        $this->cacheProvider = $cacheProvider;
+        $this->memcacheCached = $memcacheCached;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'memcached';
     }
 
     /**
@@ -31,7 +40,7 @@ class CacheManager implements CacheInterface
      */
     public function fetch($id)
     {
-        return $this->cacheProvider->fetch($id);
+        return $this->memcacheCached->fetch($id);
     }
 
     /**
@@ -42,7 +51,7 @@ class CacheManager implements CacheInterface
      */
     public function save($id, $value, $lifetime = false)
     {
-        $this->cacheProvider->save($id, $value, $lifetime);
+        return $this->memcacheCached->save($id, $value, $lifetime);
     }
 
     /**
@@ -51,7 +60,7 @@ class CacheManager implements CacheInterface
      */
     public function contains($id)
     {
-        return $this->cacheProvider->contains($id);
+        return $this->memcacheCached->contains($id);
     }
 
     /**
@@ -60,7 +69,7 @@ class CacheManager implements CacheInterface
      */
     public function delete($id)
     {
-        $this->cacheProvider->delete($id);
+        return $this->memcacheCached->delete($id);
     }
 
     /**
@@ -68,15 +77,6 @@ class CacheManager implements CacheInterface
      */
     public function flush()
     {
-        $this->cacheProvider->flush();
+        return $this->memcacheCached->flushAll();
     }
-
-    /**
-     * @return CacheProviderInterface
-     */
-    public function getProvider()
-    {
-        return $this->cacheProvider;
-    }
-
 }

@@ -5,7 +5,6 @@ namespace Tomahawk\Routing\Controller;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Tomahawk\DI\ContainerInterface;
 
 class ControllerResolver implements ControllerResolverInterface

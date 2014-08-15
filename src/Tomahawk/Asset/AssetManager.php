@@ -1,4 +1,22 @@
 <?php
+
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Tomahawk\Asset;
+
+use Tomahawk\Html\HtmlBuilderInterface;
+use Tomahawk\Url\UrlGeneratorInterface;
+use Tomahawk\Asset\Exception\InvalidDependencyException;
+use Tomahawk\Asset\Exception\SelfDependencyException;
+use Tomahawk\Asset\Exception\CircularDependencyException;
+
 /**
  * Asset Manager
  *
@@ -7,15 +25,6 @@
  * @version 1.0
  * @since 1.0
  */
-
-namespace Tomahawk\Asset;
-
-use Tomahawk\Html\HtmlBuilderInterface;
-use Tomahawk\Url\UrlGeneratorInterface;
-
-class InvalidDependencyException extends \Exception{}
-class SelfDependencyException extends \Exception{}
-class CircularDependencyException extends \Exception{}
 
 class AssetManager implements AssetManagerInterface
 {
@@ -135,7 +144,7 @@ class AssetManager implements AssetManagerInterface
 
         $container = $this->containers[$container];
 
-        if ( ! isset($container->assets[$type]) or count($container->assets[$type]) == 0)
+        if ( ! isset($container->assets[$type]) || count($container->assets[$type]) == 0)
         {
             return array();
         }
@@ -234,7 +243,7 @@ class AssetManager implements AssetManagerInterface
         {
             throw new \Exception("Asset [$asset] is dependent on itself.");
         }
-        elseif (isset($assets[$dependency]) and in_array($asset, $assets[$dependency]['dependencies']))
+        elseif (isset($assets[$dependency]) && in_array($asset, $assets[$dependency]['dependencies']))
         {
             throw new CircularDependencyException(sprintf('Assets %s and %s have a circular dependency.', $asset, $dependency));
         }

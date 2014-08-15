@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Bundle\GeneratorBundle\Command;
 
 use Symfony\Component\Console\Input\InputOption;
@@ -39,6 +48,8 @@ class GenerateControllerCommand extends GenerateCommand
         $actions = $this->parseActions($actions);
 
         $generator->generate($bundle, $controller, $actions);
+
+        $output->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . '.php'));
 
     }
 

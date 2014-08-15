@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Bundle\FrameworkBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -16,26 +25,31 @@ class RoutingCommand extends Command implements ContainerAwareInterface
 
     protected function configure()
     {
-        $this->setName('routing:view')
-            ->setDescription('View routes.');
+        $this->setName('routing:view')->setDescription('View routes.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $routeCollection = $this->getRouteCollection();
 
-        $routes = $this->getRouteCollection()->all();
+        $routes = array();
 
-        /*$table = new Table($output);
+        foreach ($routeCollection->all() as $name => $route)
+        {
+            $routes[] = array(
+                $name,
+                implode(',', $route->getMethods()),
+                $route->getPath(),
+            );
+        }
+
+        $table = new Table($output);
+
         $table
-            ->setHeaders(array('ISBN', 'Title', 'Author'))
-            ->setRows(array(
-                array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'),
-                array('9971-5-0210-0', 'A Tale of Two Cities', 'Charles Dickens'),
-                array('960-425-059-0', 'The Lord of the Rings', 'J. R. R. Tolkien'),
-                array('80-902734-1-6', 'And Then There Were None', 'Agatha Christie'),
-            ))
-        ;
-        $table->render();*/
+            ->setHeaders(array('Name', 'Method', 'Path'))
+            ->setRows($routes);
+
+        $table->render();
 
     }
 

@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * This file is part of the TomahawkPHP package.
  *
- * (c) Fabien Potencier <fabien@symfony.com>
+ * (c) Tom Ellis
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +12,6 @@
 namespace Tomahawk\Bundle\GeneratorBundle\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Tomahawk\DI\Container;
 use Tomahawk\Generator\Generator;
 
 /**

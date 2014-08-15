@@ -1,12 +1,14 @@
 <?php
-/**
- * Asset Container
+
+/*
+ * This file is part of the TomahawkPHP package.
  *
- * @package Tomahawk
- * @author Tom Ellis
- * @version 1.0
- * @since 1.0
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace Tomahawk\Asset;
 
 interface AssetContainerInterface

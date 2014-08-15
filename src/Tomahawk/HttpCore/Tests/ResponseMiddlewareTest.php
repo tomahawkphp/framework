@@ -69,7 +69,7 @@ class ResponseMiddlewareTest extends TestCase
     {
         $container = new Container();
         $container->set('event_dispatcher', new EventDispatcher());
-        $container->set('cookies', new Cookies(new Request(), array()));
+        $container->set('cookies', new Cookies(new Request(), str_repeat('a', 32)));
         return $container;
     }
 

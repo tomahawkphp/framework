@@ -1,13 +1,19 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Bundle\FrameworkBundle;
 
-use Symfony\Component\HttpFoundation\Response;
-use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\HttpFoundation\Request;
-use Tomahawk\Bundle\FrameworkBundle\Resources\Services\FrameworkProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
 use Tomahawk\Config\ConfigInterface;
 
 class FrameworkBundle extends Bundle

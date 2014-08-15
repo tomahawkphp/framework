@@ -34,12 +34,8 @@ class UrlGeneratorRoutesTest extends TestCase
     {
         $this->request = Request::create('http://symfony.devbox.com:8182/', 'GET');
 
-
-
         $this->context = new RequestContext();
         $this->context->fromRequest($this->request);
-        $this->context->setBaseUrl('http://symfony.devbox.com:8182');
-
 
         $routeCollection = new RouteCollection();
         $this->router = new Router();

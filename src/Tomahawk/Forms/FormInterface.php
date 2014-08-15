@@ -28,7 +28,7 @@ interface FormInterface
     public function getModel();
     /**
      * @param Element $element
-     * @return mixed
+     * @return $this
      */
     public function add(Element $element);
 

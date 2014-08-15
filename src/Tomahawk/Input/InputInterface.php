@@ -2,9 +2,7 @@
 
 namespace Tomahawk\Input;
 
-use Tomahawk\Session\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 interface InputInterface
 {

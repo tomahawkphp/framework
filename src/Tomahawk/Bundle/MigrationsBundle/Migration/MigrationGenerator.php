@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Bundle\MigrationsBundle\Migration;
 
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\Generator\Generator;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 
 class MigrationGenerator extends Generator
 {

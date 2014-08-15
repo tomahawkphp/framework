@@ -9,17 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Auth;
+namespace Tomahawk\DI\Exception;
 
-interface UserInterface
+class InstantiateException extends \Exception
 {
-    /**
-     * @return mixed
-     */
-    public function getAuthIdentifier();
 
-    /**
-     * @return mixed
-     */
-    public function getAuthPassword();
 }

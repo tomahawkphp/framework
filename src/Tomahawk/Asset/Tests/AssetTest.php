@@ -124,7 +124,7 @@ class AssetsTest extends TestCase
 
     public function testCircularDependency()
     {
-        $this->setExpectedException('\Tomahawk\Asset\CircularDependencyException');
+        $this->setExpectedException('\Tomahawk\Asset\Exception\CircularDependencyException');
 
         $html = new HtmlBuilder();
 

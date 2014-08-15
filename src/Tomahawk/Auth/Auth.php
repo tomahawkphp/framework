@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Auth;
 
-use Closure;
 use Tomahawk\Session\SessionInterface;
 use Tomahawk\Auth\AuthHandlerInterface;
 
@@ -118,15 +126,13 @@ class Auth implements AuthInterface
      */
     public function getUser()
     {
-
         if ($this->loggedOut) {
             return;
         }
 
         $user = null;
 
-        if (!$id = $this->session->get($this->getName()))
-        {
+        if (!$id = $this->session->get($this->getName())) {
             return null;
         }
 

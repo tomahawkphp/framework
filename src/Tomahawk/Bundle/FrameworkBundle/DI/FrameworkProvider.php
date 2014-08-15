@@ -1,11 +1,21 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Resources\Services;
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Tomahawk\Bundle\FrameworkBundle\DI;
 
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\MemcacheCache;
+use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -23,6 +33,7 @@ use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Tomahawk\Cache\Provider\ApcProvider;
 use Tomahawk\Cache\Provider\ArrayProvider;
 use Tomahawk\Cache\Provider\FilesystemProvider;
+use Tomahawk\Cache\Provider\MemcachedProvider;
 use Tomahawk\Cache\Provider\MemcacheProvider;
 use Tomahawk\Cache\Provider\RedisProvider;
 use Tomahawk\Cache\Provider\XcacheProvider;
@@ -58,6 +69,7 @@ use Tomahawk\Templating\TemplateNameParser;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Auth\Auth;
 use Tomahawk\Hashing\Hasher;
+use Tomahawk\Url\UrlGenerator;
 
 class FrameworkProvider implements ServiceProviderInterface
 {
@@ -102,8 +114,6 @@ class FrameworkProvider implements ServiceProviderInterface
             return $manager;
         });
 
-        $container->addAlias('event_dispatcher', 'Symfony\Component\EventDispatcherInterface');
-
         $container->set('Symfony\Component\EventDispatcherInterface', new EventDispatcher());
 
         $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $container) {
@@ -129,9 +139,18 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('Tomahawk\Config\ConfigInterface', function(ContainerInterface $c) {
 
-            $defaultPath = $c['kernel']->getRootDir() .'/config';
+            $kernel = $c['kernel'];
 
-            $config = new ConfigManager($c['config_loader'], array($defaultPath));
+            $paths = array(
+                $kernel->getRootDir() .'/config',
+            );
+
+            // Check if we have an environment config
+            if (file_exists($kernel->getRootDir() .'/config/' . $kernel->getEnvironment())) {
+                $paths[] = $kernel->getRootDir() .'/config/' . $kernel->getEnvironment();
+            }
+
+            $config = new ConfigManager($c['config_loader'], $paths);
             $config->load();
 
             return $config;
@@ -141,42 +160,56 @@ class FrameworkProvider implements ServiceProviderInterface
             return $c;
         });
 
-        $container->set('cache.providers.array', function() {
-            return new ArrayProvider(new ArrayCache());
+        $container->set('cache.providers.apc', function(ContainerInterface $c) {
+            $cache = new ApcCache();
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            return new ApcProvider($cache);
+        });
+
+        $container->set('cache.providers.array', function(ContainerInterface $c) {
+            $cache = new ArrayCache();
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            return new ArrayProvider($cache);
         });
 
         $container->set('cache.providers.filesystem', function(ContainerInterface $c) {
-            $config = $c['config'];
-
-            return new FilesystemProvider(new FilesystemCache($config->get('cache.directory')));
+            $cache = new FilesystemCache($c['config']->get('cache.directory'));
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            return new FilesystemProvider($cache);
         });
 
-        $container->set('cache.providers.apc', function(ContainerInterface $c) {
-            $config = $c['config'];
-            return new ApcProvider(new ApcCache());
-        });
-
-        $container->set('cache.providers.redis', function(ContainerInterface $c) {
-            $config = $c['config'];
-
-            $redisCache = new RedisCache();
-            $redisCache->setRedis(new \Redis());
-            return new RedisProvider($redisCache);
+        $container->set('cache.providers.memcached', function(ContainerInterface $c) {
+            $cache = new MemcachedCache();
+            $cache->setMemcached(new \Memcached());
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            return new MemcachedProvider($cache);
         });
 
         $container->set('cache.providers.memcache', function(ContainerInterface $c) {
-            $memcache = new MemcacheCache();
-            $memcache->setMemcache(new \Memcache());
-            return new MemcacheProvider($memcache);
+            $cache = new MemcacheCache();
+            $cache->setMemcache(new \Memcache());
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            return new MemcacheProvider($cache);
+        });
+
+        $container->set('cache.providers.redis', function(ContainerInterface $c) {
+            $cache = new RedisCache();
+            $cache->setRedis(new \Redis());
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            return new RedisProvider($cache);
         });
 
         $container->set('cache.providers.xcache', function(ContainerInterface $c) {
-            return new XcacheProvider(new XcacheCache());
+            $cache = new XcacheCache();
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            return new XcacheProvider($cache);
         });
 
         $container->set('Tomahawk\Cache\CacheInterface', function(ContainerInterface $c) {
-
             $provider = $c['config']->get('cache.driver', 'array');
+            if (!$c->has('cache.providers.' .$provider)) {
+                throw new \Exception(sprintf('Cache provider %d does not exist or has not been set.', $provider));
+            }
             return new CacheManager($c['cache.providers.' .$provider]);
         });
 
@@ -239,7 +272,6 @@ class FrameworkProvider implements ServiceProviderInterface
             $locator = new FileLocator($kernel, $defaultPath);
 
             return $locator;
-            //return new FileLocator(array(__DIR__ .'/../app/Resources/'));
         }));
 
         $container->set('route_loader', $container->factory(function(ContainerInterface $c) {
@@ -249,7 +281,6 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('route_collection', function(ContainerInterface $c) {
             $routes = new RouteCollection();
             $routes->addCollection($c['route_loader']->load('routes.php'));
-
             return $routes;
         });
 
@@ -258,14 +289,21 @@ class FrameworkProvider implements ServiceProviderInterface
         }));
 
         $container->set('request_context', $container->factory(function(ContainerInterface $c) {
-            $context = new RequestContext();
-            $context->fromRequest($c['request']);
+            $config = $c['config'];
+
+            $context = new RequestContext(
+                $config->get('request.base_url', ''),
+                'GET',
+                $config->get('request.host', 'localhost'),
+                $config->get('request.scheme', 'http'),
+                $config->get('request.http_port', 80),
+                $config->get('request.https_port', 443)
+            );
 
             return $context;
         }));
 
         $container->set('request_stack', new RequestStack());
-
 
         $container->set('Symfony\Component\HttpFoundation\Request', function(ContainerInterface $c) {
             return $c->get('request_stack')->getCurrentRequest() ?: Request::createFromGlobals();
@@ -275,6 +313,11 @@ class FrameworkProvider implements ServiceProviderInterface
             return new UrlMatcher($c['route_collection'], $c['request_context']);
         }));
 
+        $container->set('Tomahawk\Url\UrlGeneratorInterface', function(ContainerInterface $c) {
+            $urlGenerator  = new UrlGenerator($c['route_collection'], $c['request_context']);
+            $urlGenerator->setSslOn($c['config']->get('request.ssl', true));
+            return $urlGenerator;
+        });
 
         $container->set('Tomahawk\HttpKernel\HttpKernelInterface', $container->factory(function(ContainerInterface $c) {
             return new HttpKernel($c['event_dispatcher'], $c['controller_resolver'], $c['request_stack']);
@@ -309,16 +352,15 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('session.storage.database', function(ContainerInterface $c) {
 
-            // @TODO Add session db config
             $pdo = $c['database']->connection()->getPdo();
 
             $config = $c['config']->get('session');
 
             $pdoSessionHandler = new PdoSessionHandler($pdo, array(
-                'db_table'    => 'tbl_session',
-                'db_id_col'   => 'session_id',
-                'db_data_col' => 'session_data',
-                'db_time_col' => 'session_timestamp',
+                'db_table'    => $config['tomahawk_sessions'],
+                'db_id_col'   => $config['id'],
+                'db_data_col' => $config['data'],
+                'db_time_col' => $config['date'],
             ));
 
             $session_settings = array(
@@ -332,21 +374,19 @@ class FrameworkProvider implements ServiceProviderInterface
             );
 
             return new NativeSessionStorage($session_settings, $pdoSessionHandler);
-
         });
 
         $container->set('Tomahawk\Session\SessionInterface', function(ContainerInterface $c) {
-
-            $session = $c['config']->get('session.storage','array');
-
+            $session = $c['config']->get('session.driver','array');
+            if (!$c->has('session.storage.' .$session)) {
+                throw new \Exception(sprintf('Session storage %d does not exist or has not been set.', $session));
+            }
             return new Session($c['session.storage.' .$session]);
         });
-
     }
 
     protected function registerAliases(ContainerInterface $container)
     {
-
         $container->addAlias('auth', 'Tomahawk\Auth\AuthInterface');
         $container->addAlias('auth_handler', 'Tomahawk\Auth\AuthHandlerInterface');
         $container->addAlias('asset_manager', 'Tomahawk\Asset\AssetManagerInterface');
@@ -356,6 +396,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('hasher', 'Tomahawk\Hashing\HasherInterface');
         $container->addAlias('database', 'Tomahawk\Database\DatabaseManager');
         $container->addAlias('encrypter', 'Tomahawk\Encryption\CryptInterface');
+        $container->addAlias('event_dispatcher', 'Symfony\Component\EventDispatcherInterface');
         $container->addAlias('cookies', 'Tomahawk\HttpCore\Response\CookiesInterface');
         $container->addAlias('form_manager', 'Tomahawk\Forms\FormsManagerInterface');
         $container->addAlias('html_builder', 'Tomahawk\Html\HtmlBuilderInterface');
@@ -365,7 +406,6 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
         $container->addAlias('session', 'Tomahawk\Session\SessionInterface');
         $container->addAlias('templating', 'Symfony\Component\Templating\EngineInterface');
-
+        $container->addAlias('url_generator', 'Tomahawk\Url\UrlGeneratorInterface');
     }
-
 }

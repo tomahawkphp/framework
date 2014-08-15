@@ -78,7 +78,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Tomahawk\DI\InstantiateException
+     * @expectedException \Tomahawk\DI\Exception\InstantiateException
      */
     public function testNonInstantiable()
     {
@@ -97,7 +97,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Tomahawk\DI\BindingResolutionException
+     * @expectedException \Tomahawk\DI\Exception\BindingResolutionException
      */
     public function testNoDefaultValue()
     {
@@ -110,7 +110,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Tomahawk\DI\BindingResolutionException
+     * @expectedException \Tomahawk\DI\Exception\BindingResolutionException
      */
     public function testClassNoDefaultValue()
     {
