@@ -4,26 +4,31 @@ namespace Tomahawk\Bundle\WebProfilerBundle;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Tomahawk\Bundle\WebProfilerBundle\Profiler;
 
-class WebProfilerBundle extends Bundle
+class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 {
 
     public function boot()
     {
         $this->setUpProfiler();
 
-        // Add new profiler to container
+        $c = $this->container;
 
-        $this->getEventDispatcher()->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) {
+        $this->getEventDispatcher()->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) use($c) {
 
             if ($response = $event->getResponse()) {
                 $content = $response->getContent();
+                $manager = $c->get('illuminate_database')->getDatabaseManager()->connection();
+                $queryLog = $manager->getQueryLog();
 
-                $content .= 'profiler2';
+                $c['web_profiler']->addQueries($queryLog);
+
+                $content .= $c['web_profiler']->render();
 
                 $response->setContent($content);
                 $event->setResponse($response);
@@ -34,7 +39,7 @@ class WebProfilerBundle extends Bundle
 
     public function shutdown()
     {
-        $this->container->set('web_profiler', null);
+        //$this->container->set('web_profiler', null);
     }
 
     /**
@@ -45,11 +50,6 @@ class WebProfilerBundle extends Bundle
         return $this->container->get('event_dispatcher');
     }
 
-    protected function renderProfiler()
-    {
-
-    }
-
     protected function getProfiler()
     {
         return $this->container->get('web_profiler');
@@ -57,8 +57,10 @@ class WebProfilerBundle extends Bundle
 
     protected function setUpProfiler()
     {
-        $this->container->set('web_profiler', function(ContainerInterface $c) {
-            return new Profiler($c['templating_engine']);
+        $assetsPath = $this->getPath() .'/Resources/assets/';
+
+        $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
+            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath);
         });
     }
 

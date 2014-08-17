@@ -99,8 +99,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $connections = $config->get('database.connections');
 
-            foreach ($connections as $name => $connection)
-            {
+            foreach ($connections as $name => $connection) {
                 $manager->addConnection($connection, $name);
             }
 

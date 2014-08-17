@@ -11,11 +11,16 @@ class ProfilerTest extends TestCase
 {
     protected $container;
 
+    public static function setUpBeforeClass()
+    {
+        define('TOMAHAWKPHP_START', time());
+    }
+
     public function testBundleEnabled()
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine);
+        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
 
         $profiler->enable();
 
@@ -26,7 +31,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine);
+        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
 
         $profiler->disable();
 
@@ -43,7 +48,7 @@ class ProfilerTest extends TestCase
             ->method('render')
             ->will($this->returnValue($response));
 
-        $profiler = new Profiler($engine);
+        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $profiler->render());
     }
@@ -55,6 +60,15 @@ class ProfilerTest extends TestCase
             ->getMock();
 
         return $engine;
+    }
+
+    protected function getDatabaseManagerMock()
+    {
+        $manager = $this->getMockBuilder('Illuminate\Database\DatabaseManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $manager;
     }
 
 }

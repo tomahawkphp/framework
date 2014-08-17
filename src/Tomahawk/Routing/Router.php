@@ -5,6 +5,7 @@ namespace Tomahawk\Routing;
 use Symfony\Component\HttpFoundation\Response;
 use Tomahawk\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+//use Tomahawk\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -162,6 +163,8 @@ class Router {
 
         $sub_collection->addPrefix($name);
         $sub_collection->addDefaults($options);
+
+        //$sub_collection->set
 
         $this->getRoutes()->addCollection($sub_collection);
     }

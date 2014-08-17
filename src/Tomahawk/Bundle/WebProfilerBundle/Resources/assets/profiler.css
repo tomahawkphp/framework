@@ -1,13 +1,13 @@
-.anbu * {
+.axe-profiler * {
 	color: black;
 	border: 0 !important;
 }
 
-.anbu
+.axe-profiler
 {
 	font-family:Helvetica, "Helvetica Neue", Arial, sans-serif !important;
 	font-size:14px !important;
-	background-color:#222 !important;
+	background-color:#c41930 !important;
 	position:fixed !important;
 	bottom:0 !important;
 	right:0 !important;
@@ -15,9 +15,10 @@
 	z-index: 9999 !important;
 	color: #000;
     text-align: left;
+    border-top: 2px solid #222;
 }
 
-.anbu-tabs
+.axe-profiler-tabs
 {
 	margin:0 !important;
 	padding:0 !important;
@@ -27,29 +28,29 @@
     background-position:5px -8px;
 }
 
-.anbu-tab {
+.axe-profiler-tab {
 	cursor: pointer;
 }
 
-.anbu-hidden .anbu-tabs
+.axe-profiler-hidden .axe-profiler-tabs
 {
 	background-image:none;
 }
 
-#anbu-open-tabs li:first-child
+#axe-profiler-open-tabs li:first-child
 {
 	margin-left:6em;
 }
 
-.anbu-tabs li
+.axe-profiler-tabs li
 {
 	display:inline;
 	line-height:1em !important;
 }
 
-.anbu-tabs a, .anbu-tabs a:visited
+.axe-profiler-tabs a, .axe-profiler-tabs a:visited
 {
-	color:#aaa !important;
+	color:#FFFFFF !important;
 	text-transform:uppercase !important;
 	font-weight:bold !important;
 	display:inline-block;
@@ -73,55 +74,55 @@
 	transition-timing-function: ease-in, ease-in;
 }
 
-#anbu-closed-tabs a, #anbu-closed-tabs a:visited
+#axe-profiler-closed-tabs a, #axe-profiler-closed-tabs a:visited
 {
 	padding: 0.85em 1.2em 0.85em 1.2em !important;
 }
 
-.anbu-tabs a:hover
+.axe-profiler-tabs a:hover
 {
 	background-color:#333 !important;
 	color:#fff !important;
 }
 
-.anbu-tabs a.anbu-active-tab
+.axe-profiler-tabs a.axe-profiler-active-tab
 {
 	color:#fff !important;
 	background-color:#333 !important;
 }
 
-.anbu a:focus
+.axe-profiler a:focus
 {
 	outline:none !important;
 }
 
-.anbu-tabs a:active
+.axe-profiler-tabs a:active
 {
 	background-color:#111 !important;
 }
 
-.anbu-tabs li.anbu-tab-right
+.axe-profiler-tabs li.axe-profiler-tab-right
 {
 	float:right !important;
 }
 
-.anbu-tabs li.anbu-tab-right a, .anbu-tabs li.anbu-tab-right a:visited
+.axe-profiler-tabs li.axe-profiler-tab-right a, .axe-profiler-tabs li.axe-profiler-tab-right a:visited
 {
 	padding: 0.86em 2em 0.7em 2em !important;
 }
 
-#anbu-closed-tabs
+#axe-profiler-closed-tabs
 {
 	display:none;
 }
 
 
-.anbu-window
+.axe-profiler-window
 {
 	display:none;
 }
 
-.anbu-content-area
+.axe-profiler-content-area
 {
 	background-color: #fff !important;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#ffffff));
@@ -136,7 +137,7 @@
 	overflow-y:auto !important;
 }
 
-.anbu-table table
+.axe-profiler-table table
 {
 	margin:0 !important;
 	padding:0 !important;
@@ -147,48 +148,48 @@
 	background-color:#fff !important;
 }
 
-.anbu-table pre
+.axe-profiler-table pre
 {
 	margin:0 !important;
 }
 
-.anbu-table tr
+.axe-profiler-table tr
 {
 	border-bottom:1px solid #ccc !important;
 }
 
-.anbu-table tr:first-child
+.axe-profiler-table tr:first-child
 {
 	border:0 !important;
 }
 
-.anbu-table th
+.axe-profiler-table th
 {
 	background-color:#555 !important;
 	color:#fff !important;
 	text-transform:uppercase !important;
 }
 
-.anbu-table th, .anbu-table td
+.axe-profiler-table th, .axe-profiler-table td
 {
 	text-align:left !important;
 	padding:0.4em 1em !important;
 	margin:0 !important;
 }
 
-.anbu-table td
+.axe-profiler-table td
 {
 	vertical-align:top !important;
 }
 
-.anbu-table-first
+.axe-profiler-table-first
 {
 	background-color:#eee !important;
 	border-right:1px solid #ccc !important;
 	width:10% !important;
 }
 
-span.anbu-count
+span.axe-profiler-count
 {
 	text-transform: none !important;
 	margin-left:0.5em !important;
@@ -196,7 +197,6 @@ span.anbu-count
 	display:inline-block !important;
 	padding:0.1em 0.5em 0.2em 0.5em !important;
 	color:#eee !important;
-	text-shadow:0 0 4px #000 !important;
 	-webkit-border-radius: 1px;
 	-moz-border-radius: 1px;
 	border-radius: 1px;
@@ -204,7 +204,7 @@ span.anbu-count
 
 }
 
-.anbu-empty
+.axe-profiler-empty
 {
 	display:block !important;
 	padding:1em !important;
@@ -215,7 +215,7 @@ span.anbu-count
 	text-shadow:0 1px 0px #fff !important;
 }
 
-.anbu pre
+.axe-profiler pre
 {
     width: 70% !important; /** Daze fix, so you can copy queries a LOT easier */
 	overflow-x: auto;
@@ -226,8 +226,8 @@ span.anbu-count
 	word-wrap: break-word;
 }
 
-/* hide panel-open elements, will become visible through anbu.start() */
+/* hide panel-open elements, will become visible through axe-profiler.start() */
 
-#anbu-close, #anbu-zoom, .anbu-tab-pane {
+#axe-profiler-close, #axe-profiler-zoom, .axe-profiler-tab-pane {
 	visibility: hidden;
 }
