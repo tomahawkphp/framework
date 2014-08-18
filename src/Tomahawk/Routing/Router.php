@@ -2,11 +2,8 @@
 
 namespace Tomahawk\Routing;
 
-use Symfony\Component\HttpFoundation\Response;
 use Tomahawk\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-//use Tomahawk\Routing\RouteCollection;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class Router
