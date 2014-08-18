@@ -20,17 +20,6 @@ class Router {
      */
     protected $routes;
 
-    /**
-     * @var array
-     */
-    protected $beforeFilters = array();
-
-    /**
-     * @var array
-     */
-    protected $afterFilters = array();
-
-
     protected $verbs = array(
         'put',
         'get',
@@ -145,8 +134,7 @@ class Router {
      */
     public function formatPath( $path )
     {
-        $path = trim($path, '/');
-
+        $path = '/' .trim(trim($path), '/');
         return $path;
     }
 
@@ -164,91 +152,7 @@ class Router {
         $sub_collection->addPrefix($name);
         $sub_collection->addDefaults($options);
 
-        //$sub_collection->set
-
         $this->getRoutes()->addCollection($sub_collection);
-    }
-
-    /**
-     * Filter
-     *
-     * @param $name
-     * @param $callback
-     */
-    public function beforeFilter( $name, $callback )
-    {
-        $this->beforeFilters[$name] = $callback;
-    }
-
-    /**
-     * Filter
-     *
-     * @param $name
-     * @param $callback
-     */
-    public function afterFilter( $name, $callback )
-    {
-        $this->afterFilters[$name] = $callback;
-    }
-
-    /**
-     * Call Before Filter
-     *
-     * @param $name
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     * @return mixed
-     */
-    public function callBeforeFilter($name, Request $request, Response $response)
-    {
-        if (!isset($this->beforeFilters[$name]))
-        {
-            return false;
-        }
-
-        $arguments = func_get_args();
-
-        $arguments = array_slice($arguments, 1);
-
-
-        array_unshift($arguments, $response);
-        array_unshift($arguments, $request);
-
-        return call_user_func_array($this->beforeFilters[$name], $arguments);
-    }
-
-    /**
-     * Call Before Filter
-     *
-     * @param $name
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return mixed
-     */
-    public function callAfterFilter($name, Request $request)
-    {
-        if (!isset($this->afterFilters[$name]))
-        {
-            return false;
-        }
-
-        $arguments = func_get_args();
-
-        $arguments = array_slice($arguments, 1);
-
-        array_unshift($arguments, $request);
-
-        return call_user_func_array($this->afterFilters[$name], $arguments);
-    }
-
-    public function getBeforeFilters()
-    {
-        return $this->beforeFilters;
-    }
-
-
-    public function getAfterFilters()
-    {
-        return $this->afterFilters;
     }
 
     /**
@@ -266,6 +170,5 @@ class Router {
     {
         return $this->in_section;
     }
-
 
 }
