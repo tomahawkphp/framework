@@ -235,4 +235,14 @@ class Container extends BaseContainer implements ContainerInterface
         return $this;
     }
 
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function remove($name)
+    {
+        unset($this[$name]);
+        return $this;
+    }
+
 }

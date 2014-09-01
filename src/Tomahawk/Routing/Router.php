@@ -9,7 +9,8 @@ use Symfony\Component\Routing\RouteCollection;
  * Class Router
  * @package Hawk
  */
-class Router {
+class Router
+{
 
     protected $in_section = false;
     /**
@@ -17,6 +18,9 @@ class Router {
      */
     protected $routes;
 
+    /**
+     * @var array
+     */
     protected $verbs = array(
         'put',
         'get',
@@ -24,6 +28,9 @@ class Router {
         'delete'
     );
 
+    /**
+     * @var string
+     */
     protected $regex = '([\w-_]+)';
 
     /**
@@ -52,7 +59,7 @@ class Router {
      */
     public function get( $path, $name, $callback = null )
     {
-        return $this->createRoute( 'GET', $path, $name, $callback );
+        return $this->createRoute('GET', $path, $name, $callback);
     }
 
     /**
@@ -65,7 +72,7 @@ class Router {
      */
     public function post( $path, $name, $callback = null )
     {
-        return $this->createRoute( 'POST', $path, $name, $callback );
+        return $this->createRoute('POST', $path, $name, $callback);
     }
 
     /**
@@ -76,9 +83,9 @@ class Router {
      * @param null $callback
      * @return Route
      */
-    public function any( $path, $name, $callback = null )
+    public function any($path, $name, $callback = null)
     {
-        return $this->createRoute( array(), $path, $name, $callback );
+        return $this->createRoute(array(), $path, $name, $callback);
     }
 
     /**
@@ -89,9 +96,9 @@ class Router {
      * @param bool $https
      * @return Route
      */
-    public function createRoute( $method, $path, $name, $callback, $https = false )
+    public function createRoute($method, $path, $name, $callback, $https = false)
     {
-        $methods = is_array( $method ) ? $method : explode('|', $method);
+        $methods = is_array($method) ? $method : explode('|', $method);
 
         if( $path !== '/' )
         {

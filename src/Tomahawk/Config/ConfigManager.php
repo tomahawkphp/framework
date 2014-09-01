@@ -62,7 +62,7 @@ class ConfigManager implements ConfigInterface
         return $this;
     }
 
-    public function load()
+    public function zxcload()
     {
         $this->config = array();
 

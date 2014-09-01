@@ -45,6 +45,18 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf('Tomahawk\DI\Test\Service', $service);
     }
 
+    public function testRemove()
+    {
+        $this->container['ServiceInterface'] = new Service();
+
+        $service = $this->container->get('ServiceInterface');
+
+        $this->assertInstanceOf('Tomahawk\DI\Test\Service', $service);
+
+        $this->container->remove('ServiceInterface');
+        $this->assertFalse($this->container->has('ServiceInterface'));
+    }
+
 
     public function testClassBuildable()
     {

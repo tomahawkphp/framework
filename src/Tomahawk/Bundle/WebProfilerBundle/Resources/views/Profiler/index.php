@@ -94,7 +94,6 @@
                 <?php endif ?>
             </div>
         </div>
-        </div>
         <ul id="axe-profiler-open-tabs" class="axe-profiler-tabs">
             <li><a data-axe-profiler-tab="axe-profiler-log" class="axe-profiler-tab" href="#">Log <span class="axe-profiler-count"><?php echo count($logs) ?></span></a></li>
             <li>

@@ -39,7 +39,7 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 
     public function shutdown()
     {
-        
+        $this->container->remove('web_profiler');
     }
 
     /**

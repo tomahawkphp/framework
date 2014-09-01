@@ -70,4 +70,10 @@ interface ContainerInterface extends \ArrayAccess
      * @return $this
      */
     public function removeAlias($name);
+
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function remove($name);
 }
