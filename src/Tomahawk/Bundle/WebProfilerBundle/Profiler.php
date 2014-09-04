@@ -4,6 +4,7 @@ namespace Tomahawk\Bundle\WebProfilerBundle;
 
 use Symfony\Component\Templating\EngineInterface;
 use Illuminate\Database\DatabaseManager;
+use Tomahawk\HttpKernel\Kernel;
 
 class Profiler
 {
@@ -140,7 +141,8 @@ class Profiler
             'memory'      => $memory,
             'memory_peak' => $memory_peak,
             'time'        => $time,
-            'timers'      => $timers
+            'timers'      => $timers,
+            'version'     => Kernel::VERSION
 
         ));
     }
