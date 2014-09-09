@@ -109,6 +109,7 @@ span.axe-profiler-count {
     min-width: 20px;
     text-align: center;
     vertical-align: middle;
+    color: #333333;
 }
 
 .axe-toolbar-icon a > span span {
