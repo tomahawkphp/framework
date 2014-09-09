@@ -214,3 +214,4 @@ class BlocksHelper extends Helper
         return 'blocks';
     }
 }
+

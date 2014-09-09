@@ -47,3 +47,4 @@ interface AssetManagerInterface
     public function outputCss($container = 'default');
 
 }
+

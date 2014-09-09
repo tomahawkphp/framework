@@ -141,3 +141,4 @@ class Auth implements AuthInterface
         return $this->user = $user;
     }
 }
+

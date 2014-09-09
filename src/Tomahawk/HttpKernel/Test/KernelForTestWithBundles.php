@@ -25,3 +25,4 @@ class KernelForTestWithBundles extends BaseKernel
     }
 
 }
+

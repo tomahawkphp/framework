@@ -34,3 +34,4 @@ class FormManagerTest extends TestCase
         $this->assertCount(0, $this->formManager->getAll());
     }
 }
+

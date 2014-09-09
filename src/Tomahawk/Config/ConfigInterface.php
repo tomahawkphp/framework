@@ -19,3 +19,4 @@ interface ConfigInterface
      */
     public function set($key, $value);
 }
+

@@ -249,3 +249,4 @@ class AssetManager implements AssetManagerInterface
         return true;
     }
 }
+

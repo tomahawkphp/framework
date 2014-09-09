@@ -16,3 +16,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class ExtensionLoadedBundle extends Bundle
 {
 }
+

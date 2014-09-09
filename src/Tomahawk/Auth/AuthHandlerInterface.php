@@ -43,3 +43,4 @@ interface AuthHandlerInterface
      */
     public function getModelName();
 }
+

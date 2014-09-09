@@ -46,3 +46,4 @@ interface AssetContainerInterface
     public function addJs($name, $source, $dependencies = array(), $attributes = array());
 
 }
+

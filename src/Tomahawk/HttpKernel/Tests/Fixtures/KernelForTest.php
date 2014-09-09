@@ -35,3 +35,4 @@ class KernelForTest extends Kernel
         return $this->booted;
     }
 }
+

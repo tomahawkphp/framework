@@ -185,3 +185,4 @@ class TwigTemplateStub extends Twig_Template
     public function doDisplay(array $context, array $blocks = array())
     {}
 }
+

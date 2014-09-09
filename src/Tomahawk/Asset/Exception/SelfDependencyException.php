@@ -15,3 +15,4 @@ class SelfDependencyException extends \Exception
 {
 
 }
+

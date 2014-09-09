@@ -23,3 +23,4 @@ interface UserInterface
      */
     public function getAuthPassword();
 }
+

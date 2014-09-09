@@ -29,3 +29,4 @@ class TestClient extends Client
         return $script;
     }
 }
+

@@ -16,3 +16,4 @@ class BarCommand extends Command
 
     }
 }
+

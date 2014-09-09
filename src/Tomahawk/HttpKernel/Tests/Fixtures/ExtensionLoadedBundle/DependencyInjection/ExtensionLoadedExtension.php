@@ -20,3 +20,4 @@ class ExtensionLoadedExtension extends Extension
     {
     }
 }
+

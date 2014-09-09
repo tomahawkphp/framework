@@ -120,3 +120,4 @@ class WebProfilerBundleTest extends TestCase
             ->getMock();
     }
 }
+

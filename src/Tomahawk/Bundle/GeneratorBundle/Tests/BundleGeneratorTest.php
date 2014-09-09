@@ -91,3 +91,4 @@ class BundleGeneratorTest extends GeneratorTest
         return $generator;
     }
 }
+

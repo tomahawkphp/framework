@@ -21,3 +21,4 @@ class FooCommand extends Command
     }
 
 }
+
