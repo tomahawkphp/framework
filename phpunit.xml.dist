@@ -16,7 +16,7 @@
             <directory suffix="Test.php">./src/Tomahawk/*/*/Tests</directory>
         </testsuite>
     </testsuites>
-
+    
     <filter>
         <whitelist>
             <directory>./src/Tomahawk/</directory>
