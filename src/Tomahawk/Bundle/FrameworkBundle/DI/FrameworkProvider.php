@@ -20,6 +20,7 @@ use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -208,6 +209,10 @@ class FrameworkProvider implements ServiceProviderInterface
                 throw new \Exception(sprintf('Cache provider %d does not exist or has not been set.', $provider));
             }
             return new CacheManager($c['cache.providers.' .$provider]);
+        });
+
+        $container->set('filesystem', function() {
+            return new Filesystem();
         });
 
         $container->set('Tomahawk\Database\DatabaseManager', function(ContainerInterface $c) {
