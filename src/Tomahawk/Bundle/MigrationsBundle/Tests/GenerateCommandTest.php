@@ -68,7 +68,7 @@ class GenerateCommandTest extends TestCase
 
     protected function getGenerator()
     {
-        $generator = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migration\MigrationGenerator')
+        $generator = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationGenerator')
             ->disableOriginalConstructor()
             ->getMock();
 

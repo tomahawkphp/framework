@@ -3,11 +3,11 @@
 namespace Tomahawk\Bundle\MigrationsBundle\Tests;
 
 use Symfony\Component\HttpKernel\Kernel;
-use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationGenerator;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationGenerator;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Tomahawk\Bundle\MigrationsBundle\Migration\Migrator;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\Migrator;
 use Symfony\Component\Finder\Finder;
 
 class MigratorTest extends TestCase
@@ -165,7 +165,7 @@ class MigratorTest extends TestCase
 
         $connectionResolver = $this->getConnectionResolver($connection);
 
-        $migratorRepo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migration\MigrationRepo')
+        $migratorRepo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationRepo')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -194,7 +194,7 @@ class MigratorTest extends TestCase
 
         $connectionResolver = $this->getConnectionResolver($connection);
 
-        $migratorRepo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migration\MigrationRepo')
+        $migratorRepo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationRepo')
             ->disableOriginalConstructor()
             ->getMock();
 

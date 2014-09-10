@@ -15,7 +15,7 @@ use Symfony\Component\Console\Command\Command as BaseCommand;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
 
-class Command extends BaseCommand implements ContainerAwareInterface
+abstract class Command extends BaseCommand implements ContainerAwareInterface
 {
 
     /**

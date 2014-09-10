@@ -11,12 +11,11 @@
 
 namespace Tomahawk\Bundle\MigrationsBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Filesystem\Exception\IOException;
-use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationGenerator;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationGenerator;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\HttpKernel\Test\Kernel;
@@ -26,7 +25,7 @@ class GenerateCommand extends Command implements ContainerAwareInterface
     /**
      * @var ContainerInterface|null
      */
-    private $container;
+    protected $container;
 
     protected function configure()
     {
@@ -43,11 +42,11 @@ class GenerateCommand extends Command implements ContainerAwareInterface
         $bundleName = $input->getArgument('bundle');
         $name = $input->getArgument('name');
         $version = date('YmdHis');
-        $migrationName = sprintf('M%s%dMigration', $version, $name);
+        $migrationName = sprintf('M%d%sMigration', $version, $name);
 
         $bundle = $this->getKernel()->getBundle($bundleName);
 
-        $migrationGenerator->setSkeletonDirs(__DIR__ .'/../Resources');
+        $migrationGenerator->setSkeletonDirs(__DIR__ .'/../Resources/skeleton');
 
         try
         {

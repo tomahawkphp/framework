@@ -2,8 +2,9 @@
 
 namespace Tomahawk\Bundle\MigrationsBundle\Tests;
 
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationReference;
 use Tomahawk\Test\TestCase;
-use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationRepo;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationRepo;
 
 class MigratorRepoTest extends TestCase
 {
@@ -128,7 +129,19 @@ class MigratorRepoTest extends TestCase
 
         $migratorRepo = new MigrationRepo($controllerResolver, 'migrations');
 
-        $migratorRepo->log('foo', 99);
+        $bundle = $this
+            ->getMockBuilder('Tomahawk\HttpKernel\Bundle\BundleInterface')
+            ->setMethods(array('getPath', 'getParent', 'getName'))
+            ->disableOriginalConstructor();
+
+        $bundle = $bundle->getMockForAbstractClass();
+
+        $bundle
+            ->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue(get_class($bundle)));
+
+        $migratorRepo->log(new MigrationReference($bundle, 'path'), 99);
     }
 
     public function testDelete()

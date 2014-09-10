@@ -46,7 +46,7 @@ class InstallCommandTest extends TestCase
 
     protected function getMigrationRepo()
     {
-        $repo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migration\MigrationRepo')
+        $repo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationRepo')
             ->disableOriginalConstructor()
             ->getMock();
 

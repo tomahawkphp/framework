@@ -13,7 +13,7 @@ namespace Tomahawk\Bundle\MigrationsBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tomahawk\Bundle\MigrationsBundle\Migration\Migrator;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\Migrator;
 
 class MigrateCommand extends Command
 {

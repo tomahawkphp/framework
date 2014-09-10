@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migrator;
 
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationReference;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -61,10 +62,12 @@ class MigrationRepo
      */
     public function createRepository(Blueprint $blueprint)
     {
+        $this->connectionResolver->connection()->useDefaultSchemaGrammar();
         $grammar = $this->connectionResolver->connection()->getSchemaGrammar();
 
         try
         {
+            $blueprint->create();
             $blueprint->string('bundle');
             $blueprint->string('migration');
             $blueprint->integer('batch');
@@ -92,13 +95,13 @@ class MigrationRepo
     /**
      * Log that a migration was run.
      *
-     * @param  string  $file
+     * @param  MigrationReference  $migrationReference
      * @param  int     $batch
      * @return void
      */
-    public function log($file, $batch)
+    public function log(MigrationReference $migrationReference, $batch)
     {
-        $record = array('migration' => $file, 'batch' => $batch);
+        $record = array('bundle' => $migrationReference->getBundleName(), 'migration' => $migrationReference->getName(), 'batch' => $batch);
 
         $this->table()->insert($record);
     }

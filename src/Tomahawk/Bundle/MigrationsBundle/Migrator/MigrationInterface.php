@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migrator;
 
 use Illuminate\Database\Schema\Builder;
 

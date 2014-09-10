@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migrator;
 
 use Tomahawk\HttpKernel\Kernel;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationReference;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationReference;
 
 class Migrator
 {
@@ -66,7 +66,7 @@ class Migrator
 
         $files = $this->getMigrationFiles();
 
-        $migrations = array_diff($files, $ran);
+        $migrations = $this->diffRan($files, $ran);
 
         $this->runMigrationList($migrations);
     }
@@ -84,15 +84,11 @@ class Migrator
             return count($migrations);
         }
 
+        $migrations = $this->convertToMigrationReferences($migrations);
+
         foreach ($migrations as $migration)
         {
-            $bundle = $this->kernel->getBundle($migration->bundle);
-
-            $migrationPath = $bundle->getPath() .'/Migration/' . $migration->migration . '.php';
-
-            $migrationReference = new MigrationReference($bundle, $migrationPath);
-
-            $this->runDown($migrationReference);
+            $this->runDown($migration);
         }
 
         return count($migrations);
@@ -111,15 +107,14 @@ class Migrator
             return count($migrations);
         }
 
+        //var_dump($migrations);
+        //exit;
+
+        $migrations = $this->convertToMigrationReferences($migrations);
+
         foreach ($migrations as $migration)
         {
-            $bundle = $this->kernel->getBundle($migration->bundle);
-
-            $migrationPath = $bundle->getPath() .'/Migration/' . $migration->migration . '.php';
-
-            $migrationReference = new MigrationReference($bundle, $migrationPath);
-
-            $this->runDown($migrationReference);
+            $this->runDown($migration);
         }
 
         return count($migrations);
@@ -158,9 +153,9 @@ class Migrator
         $migrationClass = new $class();
         $migrationClass->down($this->getSchemaBuilder());
 
-        $file = $migrationReference->getClass();
+        $file = $migrationReference->getName();
 
-        $this->repository->delete($migrationReference->getClass());
+        $this->repository->delete($migrationReference->getName());
 
         $this->note("<info>Rolled back:</info> $file");
     }
@@ -192,6 +187,12 @@ class Migrator
         foreach ($this->kernel->getBundles() as $bundle)
         {
             $directory = $bundle->getPath() . '/Migration';
+
+            // If bundle doesn't have migrations skip
+            if (!file_exists($directory)) {
+                continue;
+            }
+
             $finder = $this->finder->files()->in($directory)->name('*.php')->sortByName();
 
             foreach ($finder as $file) {
@@ -223,5 +224,47 @@ class Migrator
     protected function getSchemaBuilder()
     {
         return $this->repository->getConnectionResolver()->connection()->getSchemaBuilder();
+    }
+
+    /**
+     * @param MigrationReference[] $migrationsReferences
+     * @param array $ran
+     * @return array
+     */
+    protected function diffRan(array $migrationsReferences, array $ran)
+    {
+        $migrations = array();
+
+        foreach ($migrationsReferences as $migrationsReference)
+        {
+            if (!in_array($migrationsReference->getName(), $ran))
+            {
+                $migrations[] = $migrationsReference;
+            }
+        }
+
+        return $migrations;
+    }
+
+    /**
+     * @param array $migrations
+     * @return array
+     */
+    protected function convertToMigrationReferences(array $migrations)
+    {
+        $converted = array();
+
+        foreach ($migrations as $migration)
+        {
+            $bundle = $this->kernel->getBundle($migration->bundle);
+
+            $migrationPath = $bundle->getPath() .'/Migration/' . $migration->migration . '.php';
+
+            $migrationReference = new MigrationReference($bundle, $migrationPath);
+
+            $converted[] = $migrationReference;
+        }
+
+        return $converted;
     }
 }

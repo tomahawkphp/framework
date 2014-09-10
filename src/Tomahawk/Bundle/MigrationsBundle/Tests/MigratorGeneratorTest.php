@@ -5,7 +5,7 @@ namespace Tomahawk\Bundle\MigrationsBundle\Tests;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationGenerator;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationGenerator;
 use Symfony\Component\Finder\Finder;
 
 class MigratorGeneratorTest extends TestCase

@@ -6,7 +6,7 @@
 namespace Tomahawk\Bundle\MigrationsBundle\Test\Migration;
 
 use Illuminate\Database\Schema\Builder;
-use Tomahawk\Bundle\MigrationsBundle\Migration\MigrationInterface;
+use Tomahawk\Bundle\MigrationsBundle\Migrator\MigrationInterface;
 
 class M1406873315Migration implements MigrationInterface
 {

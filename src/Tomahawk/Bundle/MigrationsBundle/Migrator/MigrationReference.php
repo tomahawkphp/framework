@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\MigrationsBundle\Migration;
+namespace Tomahawk\Bundle\MigrationsBundle\Migrator;
 
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 
@@ -37,6 +37,11 @@ class MigrationReference
     public function getName()
     {
         return str_replace('.php', '', basename($this->getPath()));
+    }
+
+    public function getBundleName()
+    {
+        return $this->bundle->getName();
     }
 
     /**

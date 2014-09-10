@@ -34,7 +34,7 @@ class MigrateResetCommandTest extends TestCase
 
     protected function getMigrator()
     {
-        $repo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migration\Migrator')
+        $repo = $this->getMockBuilder('Tomahawk\Bundle\MigrationsBundle\Migrator\Migrator')
             ->disableOriginalConstructor()
             ->getMock();
 
