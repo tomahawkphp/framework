@@ -16,7 +16,6 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Command\Proxy;
 
-use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\ORM\Tools\Console\Command\InfoCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;

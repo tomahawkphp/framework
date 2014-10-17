@@ -11,7 +11,6 @@
 
 namespace Tomahawk\DI;
 
-use Pimple\Container as BaseContainer;
 use ReflectionClass;
 use ReflectionParameter;
 use Tomahawk\DI\Exception\BindingResolutionException;

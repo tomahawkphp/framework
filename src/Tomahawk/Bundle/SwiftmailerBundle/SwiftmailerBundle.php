@@ -12,9 +12,6 @@
 namespace Tomahawk\Bundle\SwiftmailerBundle;
 
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Symfony\Component\HttpFoundation\Request;
-use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
-use Tomahawk\Config\ConfigInterface;
 
 class SwiftmailerBundle extends Bundle
 {
