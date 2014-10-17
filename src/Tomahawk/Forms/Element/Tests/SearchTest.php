@@ -10,7 +10,7 @@ class SearchTest extends TestCase
 {
     public function testHidden()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Search('search'));
 

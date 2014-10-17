@@ -14,7 +14,7 @@ class FormTest extends TestCase
 
     public function testAddingElements()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Text('first_name'));
 
@@ -38,5 +38,23 @@ class FormTest extends TestCase
         $text->setName('full_name');
 
         $this->assertEquals('full_name', $text->getName());
+    }
+
+    public function testOpenReturnsCorrectHtml()
+    {
+        $form = new Form('/', 'GET');
+
+        $html = $form->open();
+
+        $this->assertEquals('<form method="GET" action="/">', $html);
+    }
+
+    public function testCloseReturnsCorrectHtml()
+    {
+        $form = new Form('/', 'GET');
+
+        $html = $form->close();
+
+        $this->assertEquals('</form>', $html);
     }
 }

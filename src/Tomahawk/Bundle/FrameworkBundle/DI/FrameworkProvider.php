@@ -240,16 +240,11 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Symfony\Component\Templating\EngineInterface', $container->factory(function(ContainerInterface $c) {
 
             $kernel = $c->get('kernel');
-            $locator = new FileLocator($kernel);
+            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
             $templateLocator = new TemplateLocator($locator);
-
             $loader = new FilesystemLoader($templateLocator);
-
             $parser = new TemplateNameParser($kernel);
-
             $phpEngine = new PhpEngine($parser, $loader);
-            //$environment = new \Twig_Environment()
-            //$twigEngine = new TwigEngine(, $parser);
 
             return new DelegatingEngine(array(
                 $phpEngine

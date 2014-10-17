@@ -107,9 +107,6 @@ class Migrator
             return count($migrations);
         }
 
-        //var_dump($migrations);
-        //exit;
-
         $migrations = $this->convertToMigrationReferences($migrations);
 
         foreach ($migrations as $migration)

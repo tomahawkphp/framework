@@ -11,7 +11,7 @@ class DateTest extends TestCase
 
     public function testDate()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Date('date'));
 

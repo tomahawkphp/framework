@@ -10,7 +10,7 @@ class NumberTest extends TestCase
 {
     public function testHidden()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Number('age'));
 

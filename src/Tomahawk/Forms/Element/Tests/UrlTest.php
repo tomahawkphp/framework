@@ -10,7 +10,7 @@ class UrlTest extends TestCase
 {
     public function testTextAreaNoValue()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Url('website'));
 

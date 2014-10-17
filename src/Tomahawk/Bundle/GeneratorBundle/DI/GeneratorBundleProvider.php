@@ -16,7 +16,6 @@ use Tomahawk\DI\ContainerInterface;
 use Tomahawk\DI\ServiceProviderInterface;
 use Tomahawk\Bundle\GeneratorBundle\Generator\ModelGenerator;
 use Tomahawk\Bundle\GeneratorBundle\Generator\ControllerGenerator;
-use Symfony\Component\Filesystem\Filesystem;
 
 class GeneratorBundleProvider implements ServiceProviderInterface
 {

@@ -156,7 +156,7 @@ class Profiler
     protected function getFileSize($size)
     {
         $units = array('Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
-        return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2).' '.$units[$i];
+        return round($size / pow(1024, ($i = floor(log($size, 1024)))), 2).' '.$units[$i];
     }
 
     protected function escape($value)

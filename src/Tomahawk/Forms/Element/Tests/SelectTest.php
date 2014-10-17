@@ -10,7 +10,7 @@ class SelectTest extends TestCase
 {
     public function testSelectSelected()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Select('question1', array(
             'yes' => 'Yes',
@@ -24,7 +24,7 @@ class SelectTest extends TestCase
 
     public function testSelectGroup()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Select('question1', array(
             'group1' => array(
@@ -44,7 +44,7 @@ class SelectTest extends TestCase
 
     public function testSelectGroupSelected()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Select('question1', array(
             'group1' => array(
@@ -64,7 +64,7 @@ class SelectTest extends TestCase
 
     public function testSelectGroupMultipleSelected()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Select('question1', array(
             'group1' => array(
@@ -84,7 +84,7 @@ class SelectTest extends TestCase
 
     public function testSelectNotSelected()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Select('question1', array(
             'yes' => 'Yes',

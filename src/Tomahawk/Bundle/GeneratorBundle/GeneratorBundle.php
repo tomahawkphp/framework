@@ -18,6 +18,6 @@ class GeneratorBundle extends Bundle
 {
     public function boot()
     {
-        $this->container->registerProvider(new GeneratorBundleProvider($this->getPath() . '/Resources/skeleton'));
+        $this->container->register(new GeneratorBundleProvider($this->getPath() . '/Resources/skeleton'));
     }
 }

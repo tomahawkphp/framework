@@ -10,7 +10,7 @@ class EmailTest extends TestCase
 {
     public function testDate()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Email('email_address'));
 

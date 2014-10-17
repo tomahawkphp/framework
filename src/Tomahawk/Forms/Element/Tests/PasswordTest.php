@@ -10,7 +10,7 @@ class PasswordTest extends TestCase
 {
     public function testHidden()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Password('password'));
 

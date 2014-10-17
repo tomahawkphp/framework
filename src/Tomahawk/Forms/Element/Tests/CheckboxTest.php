@@ -11,7 +11,7 @@ class CheckboxTest extends TestCase
 
     public function testCheckbox()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Checkbox('enabled', 1));
 
@@ -22,7 +22,7 @@ class CheckboxTest extends TestCase
 
     public function testCheckboxChecked()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Checkbox('enabled', 1, true));
 
@@ -33,7 +33,7 @@ class CheckboxTest extends TestCase
 
     public function testCheckboxCheckedAlternative()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Checkbox('enabled', 1));
 

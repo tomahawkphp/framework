@@ -8,6 +8,7 @@ abstract class ContainerAware implements ContainerAwareInterface
      * @var ContainerInterface
      */
     protected $container;
+    
     /**
      * Sets the Container.
      *

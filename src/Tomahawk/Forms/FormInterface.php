@@ -33,6 +33,20 @@ interface FormInterface
     public function add(Element $element);
 
     /**
+     * Open the form
+     *
+     * @return string
+     */
+    public function open();
+
+    /**
+     * Close the form
+     *
+     * @return string
+     */
+    public function close();
+
+    /**
      * @param $name
      * @param array $attributes
      * @return mixed

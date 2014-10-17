@@ -79,7 +79,10 @@ class GenerateBundleCommand extends GenerateCommand
 
         $output->writeln('Generating the bundle code: <info>OK</info>');
 
-        $this->checkAutoloader($output, $namespace, $bundle, $dir);
+        if ($msg = $this->checkAutoloader($output, $namespace, $bundle, $dir))
+        {
+            $output->writeln($msg);
+        }
     }
 
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
@@ -92,6 +95,8 @@ class GenerateBundleCommand extends GenerateCommand
                 '',
             );
         }
+
+        $output->writeln('<info>OK</info>');
     }
 
     /**

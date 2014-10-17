@@ -21,7 +21,7 @@ class FrameworkBundle extends Bundle
 
     public function boot()
     {
-        $this->container->registerProvider(new FrameworkProvider());
+        $this->container->register(new FrameworkProvider());
 
         $c = $this->container;
 

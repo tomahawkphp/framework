@@ -5,7 +5,7 @@ namespace Tomahawk\Forms;
 use Tomahawk\Forms\Element\Element;
 use Tomahawk\Validation\ValidatorInterface;
 
-class Form implements FormInterface
+class Form extends AttributeBuilder implements FormInterface
 {
     /**
      * @var \Tomahawk\Forms\Element\Element[]
@@ -17,16 +17,31 @@ class Form implements FormInterface
      */
     protected $model;
 
+    /**
+     * @var array
+     */
     protected $input = array();
+
+    protected $url;
+
+    protected $method;
+
+    protected $oldInput = array();
+
+    protected $attributes = array();
 
     /**
      * @var ValidatorInterface
      */
     protected $validator;
 
-    public function __construct($model = null)
+    public function __construct($url, $method = 'POST', $model = null, array $oldInput = array(), array $attributes = array())
     {
+        $this->url = $url;
+        $this->method = $method;
         $this->model = $model;
+        $this->oldInput = $oldInput;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -71,6 +86,33 @@ class Form implements FormInterface
     {
         $this->elements[$element->getName()] = $element;
         return $this;
+    }
+
+    /**
+     * Open the form
+     *
+     * @return string
+     */
+    public function open()
+    {
+        $attributes = array(
+            'method' => $this->method,
+            'action' => $this->url
+        );
+
+        $attributes = array_merge($attributes, $this->attributes);
+
+        return sprintf('<form%s>', $this->attributes($attributes));
+    }
+
+    /**
+     * Close the form
+     *
+     * @return string
+     */
+    public function close()
+    {
+        return '</form>';
     }
 
     /**
@@ -131,33 +173,37 @@ class Form implements FormInterface
         return $this->elements;
     }
 
-    protected function getValue($element)
+    protected function getValue($name)
     {
-        $method = $this->getElementGetMethod($element);
+        $method = $this->getElementGetMethod($name);
 
-        if ($this->model && method_exists($this->model, $method))
+        if (isset($this->oldInput[$name]))
+        {
+            return $this->oldInput[$name];
+        }
+        else if ($this->model && method_exists($this->model, $method))
         {
             return $this->model->$method();
         }
-        else if ($this->model && property_exists($this->model, $element))
+        else if ($this->model && property_exists($this->model, $name))
         {
-            return $this->model->$element;
+            return $this->model->$name;
         }
 
         return null;
     }
 
-    protected function setValue($element, $value)
+    protected function setValue($name, $value)
     {
-        $method = $this->getElementSetMethod($element);
+        $method = $this->getElementSetMethod($name);
 
         if ($this->model && method_exists($this->model, $method))
         {
             $this->model->$method($value);
         }
-        else if ($this->model && property_exists($this->model, $element))
+        else if ($this->model && property_exists($this->model, $name))
         {
-            $this->model->$element = $value;
+            $this->model->$name = $value;
         }
 
         return $this;

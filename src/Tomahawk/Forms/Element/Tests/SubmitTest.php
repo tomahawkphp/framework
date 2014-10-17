@@ -10,7 +10,7 @@ class SubmitTest extends TestCase
 {
     public function testSubmit()
     {
-        $form = new Form();
+        $form = new Form('/');
 
         $form->add(new Submit('submitForm', 'Save'));
 

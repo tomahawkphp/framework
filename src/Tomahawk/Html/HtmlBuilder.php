@@ -2,29 +2,57 @@
 
 namespace Tomahawk\Html;
 
+/**
+ * Class HtmlBuilder
+ * @package Tomahawk\Html
+ */
 class HtmlBuilder implements HtmlBuilderInterface
 {
 
+    /**
+     * @param $value
+     * @return string
+     */
     public function entities($value)
     {
         return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
     }
 
+    /**
+     * @param $url
+     * @param array $attributes
+     * @return string
+     */
     public function script($url, array $attributes = array())
     {
         return sprintf('<script src="%s"%s></script>', $url, $this->attributes($attributes));
     }
 
+    /**
+     * @param $url
+     * @param array $attributes
+     * @return string
+     */
     public function style($url, array $attributes = array())
     {
         return sprintf('<link rel="stylesheet" type="text/css" href="%s"%s>', $url, $this->attributes($attributes));
     }
 
+    /**
+     * @param $url
+     * @param $text
+     * @param array $attributes
+     * @return string
+     */
     public function link($url, $text, array $attributes = array())
     {
         return sprintf('<a href="%s"%s>%s</a>', $url, $this->attributes($attributes), $text);
     }
 
+    /**
+     * @param array $attributes
+     * @return string
+     */
     public function attributes(array $attributes)
     {
         $html = array();

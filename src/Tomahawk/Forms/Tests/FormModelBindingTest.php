@@ -5,9 +5,6 @@ namespace Tomahawk\Forms\Tests;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Forms\Form;
 use Tomahawk\Forms\Element\Text;
-use Tomahawk\Forms\Element\Password;
-use Tomahawk\Forms\Element\Select;
-use Tomahawk\Forms\Element\Hidden;
 use Tomahawk\Validation\Validator;
 use Tomahawk\Validation\Constraints\Required;
 use Tomahawk\Forms\Test\Model;
@@ -16,14 +13,14 @@ use Tomahawk\Forms\Test\Model2;
 class FormModelBindingTest extends TestCase
 {
 
-    public function testBind()
+    public function testValuesAreTakenFromModelWhenRendering()
     {
         $peep = new Model();
 
         $peep->setName('Tom Ellis');
         $peep->setAge(27);
 
-        $form = new Form($peep);
+        $form = new Form('/', 'POST', $peep);
 
         $form->add(new Text('name'));
 
@@ -40,7 +37,7 @@ class FormModelBindingTest extends TestCase
         $peep->name = 'Tom Ellis';
         $peep->age = 27;
 
-        $form = new Form($peep);
+        $form = new Form('/', 'POST', $peep);
 
         $form->add(new Text('name'));
         $form->add(new Text('age'));
@@ -53,6 +50,24 @@ class FormModelBindingTest extends TestCase
 
         $this->assertEquals('<input type="text" name="age" value="27">', $html);
 
+    }
+
+    public function testOldInputIsUsedWhenRendering()
+    {
+        $peep = new Model();
+
+        $peep->setName('Tom Ellis');
+        $peep->setAge(27);
+
+        $form = new Form('/', 'POST', $peep, array(
+            'name' => 'Tommy'
+        ));
+
+        $form->add(new Text('name'));
+        $form->add(new Text('age'));
+
+        $html = $form->render('name');
+        $this->assertEquals('<input type="text" name="name" value="Tommy">', $html);
     }
 
     public function testBindWithFailedValidation()
@@ -69,7 +84,7 @@ class FormModelBindingTest extends TestCase
         $peep->setName('Tom Ellis');
         $peep->setAge(27);
 
-        $form = new Form($peep);
+        $form = new Form('/', 'POST', $peep);
         $form->setValidator($validator);
         $form->add(new Text('name'));
         $form->bind($input);
@@ -92,7 +107,7 @@ class FormModelBindingTest extends TestCase
         $peep->setName('Tom Ellis');
         $peep->setAge(27);
 
-        $form = new Form($peep);
+        $form = new Form('/', 'POST', $peep);
         $form->setValidator($validator);
         $form->add(new Text('name'));
         $form->bind($input);
@@ -116,7 +131,7 @@ class FormModelBindingTest extends TestCase
         $peep->setName('Tom Ellis');
         $peep->setAge(27);
 
-        $form = new Form();
+        $form = new Form('/', 'POST');
         $form->setModel($peep);
         $form->setValidator($validator);
         $form->add(new Text('name'));
@@ -142,9 +157,9 @@ class FormModelBindingTest extends TestCase
         $peep = new Model2();
 
         $peep->name = 'Tom Ellis';
-        $peep->age =27;
+        $peep->age = 27;
 
-        $form = new Form($peep);
+        $form = new Form('/', 'POST', $peep);
         $form->setValidator($validator);
         $form->add(new Text('name'));
         $form->bind($input);
@@ -152,7 +167,7 @@ class FormModelBindingTest extends TestCase
         $this->assertEquals('Tommy Ellis', $peep->name);
     }
 
-    public function testException()
+    public function testExceptionWhenCheckingIfFormIsValid()
     {
         $this->setExpectedException('Exception');
 
@@ -160,7 +175,7 @@ class FormModelBindingTest extends TestCase
             'name' => 'Tommy Ellis'
         );
 
-        $form = new Form();
+        $form = new Form('/', 'POST');
         $form->bind($input);
 
         $form->isValid();
