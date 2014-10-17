@@ -80,7 +80,7 @@ class MetadataFactory
             throw MappingException::classIsNotAValidEntityOrMappedSuperClass($class);
         }
 
-        $this->findNamespaceAndPathForMetadata($metadata);
+        $this->findNamespaceAndPathForMetadata($metadata, $path);
 
         return $metadata;
     }
