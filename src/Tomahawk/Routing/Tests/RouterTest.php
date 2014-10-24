@@ -22,6 +22,19 @@ class RouterTest extends TestCase
         $this->assertCount(1, $router->getRoutes()->getIterator());
     }
 
+    public function testCreateHttpsRoute()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+
+        $router->createRoute('GET', '/', 'home', function() {
+            return 'Test';
+        }, true);
+
+        $this->assertEquals(array('http', 'https'), $routeCollection->get('home')->getSchemes());
+    }
+
     public function testRouteWithRequirements()
     {
         $routeCollection = new RouteCollection();
@@ -106,6 +119,34 @@ class RouterTest extends TestCase
         $this->assertEquals(array('https'), $adminRoute->getSchemes());
         $this->assertEquals('/admin', $router->getRoutes()->get('admin_home')->getPath());
 
+    }
+
+    public function testRouteGetPattern()
+    {
+        // setPattern/getPattern is deprecated in 2.2
+        // and his here for the sake of code coverage
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+        $route = $router->get('user/{id}', 'home', function() {
+            return 'Test';
+        });
+
+        $this->assertEquals('/user/{id}', $route->getPattern());
+    }
+
+    public function testRouteSetPattern()
+    {
+        // setPattern/getPattern is deprecated in 2.2
+        // and his here for the sake of code coverage
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+        $route = $router->get('user/{id}', 'home', function() {
+            return 'Test';
+        })->setPattern('user/{user_id}');
+
+        $this->assertEquals('/user/{user_id}', $route->getPattern());
     }
 
 }

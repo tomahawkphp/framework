@@ -5,7 +5,7 @@
  *
  * (c) Tom Ellis
  *
- * The is based on code originally distributed inside the Symfony framework.
+ * The is based on code originally distributed inside the Symfony/Doctrine framework.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  * (c) Doctrine Project, Benjamin Eberlei <kontakt@beberlei.de>

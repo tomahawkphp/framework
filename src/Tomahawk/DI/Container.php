@@ -56,25 +56,6 @@ class Container implements \ArrayAccess, ContainerInterface
         }
     }
 
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function get($id)
-    {
-        if ($this->hasAlias($id))
-        {
-            $id = $this->getAlias($id);
-        }
-
-        if (!$this->has($id) && class_exists($id))
-        {
-            return $this->build($id);
-        }
-
-        return $this[$id];
-    }
-
     public function build($class, $parameters = array())
     {
 
@@ -193,6 +174,15 @@ class Container implements \ArrayAccess, ContainerInterface
 
     /**
      * @param $id
+     * @return mixed
+     */
+    public function get($id)
+    {
+        return $this[$id];
+    }
+
+    /**
+     * @param $id
      * @param $value
      * @return $this
      */
@@ -283,8 +273,16 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function offsetGet($id)
     {
+        if (is_object($id)) {
+            return $id;
+        }
+
         if ($this->hasAlias($id)) {
             $id = $this->getAlias($id);
+        }
+
+        if (!$this->has($id) && class_exists($id)) {
+            return $this->build($id);
         }
 
         if (!isset($this->keys[$id])) {
@@ -435,6 +433,7 @@ class Container implements \ArrayAccess, ContainerInterface
         $factory = $this->values[$id];
 
         $extended = function ($c) use ($callable, $factory) {
+            /** @var \Closure|string $callable */
             return $callable($factory($c), $c);
         };
 
@@ -474,4 +473,5 @@ class Container implements \ArrayAccess, ContainerInterface
 
         return $this;
     }
+
 }

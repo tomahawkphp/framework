@@ -19,6 +19,15 @@ class ContainerTest extends TestCase
         parent::setUp();
     }
 
+    public function testConstructAddServices()
+    {
+        $container = new Container(array(
+            'service' => new Service(),
+        ));
+
+        $this->assertTrue($container->has('service'));
+    }
+
     public function testValue()
     {
         $this->container['foo'] = 'bar';
@@ -145,6 +154,28 @@ class ContainerTest extends TestCase
 
         $this->container->removeAlias('my_service');
         $this->assertFalse($this->container->hasAlias('my_service'));
+    }
+
+    /**
+     * @expectedException \RunTimeException
+     */
+    public function testAccessingFrozenServiceThrowsException()
+    {
+
+        $this->container['ServiceInterfaceFoo'] = function() {
+            return new Service();
+        };
+
+        $this->container->addAlias('my_service_foo', 'ServiceInterfaceFoo');
+
+        $service = $this->container['my_service_foo'];
+
+        $this->container['ServiceInterfaceFoo'] = new Service();
+    }
+
+    public function testWhenObjectIsPassesItIsReturned()
+    {
+        $this->assertInstanceOf('Tomahawk\DI\Test\Service', $this->container->get(new Service()));
     }
 
 }

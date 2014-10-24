@@ -5,7 +5,7 @@
  *
  * (c) Tom Ellis
  *
- * The is based on code originally distributed inside the Symfony framework.
+ * The is based on code originally distributed inside the Symfony/Doctrine framework.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  * (c) Doctrine Project, Benjamin Eberlei <kontakt@beberlei.de>
@@ -38,6 +38,7 @@ abstract class CommandHelper
     {
         /** @var $em \Doctrine\ORM\EntityManager */
         $em = $application->getKernel()->getContainer()->get('doctrine')->getManager($emName);
+
         $helperSet = $application->getHelperSet();
         $helperSet->set(new ConnectionHelper($em->getConnection()), 'db');
         $helperSet->set(new EntityManagerHelper($em), 'em');

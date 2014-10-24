@@ -5,7 +5,7 @@
  *
  * (c) Tom Ellis
  *
- * The is based on code originally distributed inside the Symfony framework.
+ * The is based on code originally distributed inside the Symfony/Doctrine framework.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  * (c) Doctrine Project, Benjamin Eberlei <kontakt@beberlei.de>
@@ -28,7 +28,7 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jonathan H. Wage <jonwage@gmail.com>
  */
-class DropSchemaDoctrineCommand extends DropCommand
+class DropSchemaCommand extends DropCommand
 {
     /**
      * {@inheritDoc}

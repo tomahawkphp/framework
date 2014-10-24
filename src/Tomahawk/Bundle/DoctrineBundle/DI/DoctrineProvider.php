@@ -11,6 +11,8 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\DI;
 
+use Doctrine\Common\Cache\FilesystemCache;
+use Tomahawk\Bundle\DoctrineBundle\Registry;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\DI\ServiceProviderInterface;
 use Doctrine\ORM\EntityManager;
@@ -27,18 +29,32 @@ class DoctrineProvider implements ServiceProviderInterface
     public function register(ContainerInterface $container)
     {
 
+        $container->set('doctrine', function(ContainerInterface $c) {
+
+            $registry = new Registry($c, array(), array('default' => $c['doctrine.entitymanager']), 'master', 'default');
+
+            return $registry;
+        });
+
+
         $container->set('doctrine.entitymanager', function(ContainerInterface $c) {
+
+
+            $cache = new FilesystemCache($c['config']->get('cache.directory'));
+            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+
 
             $doctrineConfig = $c->get('config')->get('doctrine');
 
             $config = Setup::createXMLMetadataConfiguration(
                 $doctrineConfig['mapping_directories'],
                 $c->get('kernel')->isDebug(),
-                $c->get('cache')
+                $doctrineConfig['proxy_directories'],
+                $cache
             );
 
             $config->setProxyNamespace($doctrineConfig['proxy_namespace']);
-            $config->setProxyDir($doctrineConfig['proxy_directories']);
+            //$config->setProxyDir($doctrineConfig['proxy_directories']);
             $config->setAutoGenerateProxyClasses($doctrineConfig['auto_generate_proxies']);
 
             return EntityManager::create($doctrineConfig['database'], $config);

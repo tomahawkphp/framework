@@ -5,7 +5,7 @@
  *
  * (c) Tom Ellis
  *
- * The is based on code originally distributed inside the Symfony framework.
+ * The is based on code originally distributed inside the Symfony/Doctrine framework.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  * (c) Doctrine Project, Benjamin Eberlei <kontakt@beberlei.de>
@@ -16,7 +16,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Command\Proxy;
 
-use Doctrine\ORM\Tools\Console\Command\InfoCommand;
+use Doctrine\ORM\Tools\Console\Command\InfoCommand as BaseInfoCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-class InfoDoctrineCommand extends InfoCommand
+class InfoCommand extends BaseInfoCommand
 {
     /**
      * {@inheritDoc}

@@ -5,7 +5,7 @@
  *
  * (c) Tom Ellis
  *
- * The is based on code originally distributed inside the Symfony framework.
+ * The is based on code originally distributed inside the Symfony/Doctrine framework.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  * (c) Doctrine Project, Benjamin Eberlei <kontakt@beberlei.de>
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
-use Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand;
+use Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand as BaseEnsureProductionSettingsCommand;
 
 /**
  * Ensure the Doctrine ORM is configured properly for a production environment.
@@ -28,7 +28,7 @@ use Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jonathan H. Wage <jonwage@gmail.com>
  */
-class EnsureProductionSettingsDoctrineCommand extends EnsureProductionSettingsCommand
+class EnsureProductionSettingsCommand extends BaseEnsureProductionSettingsCommand
 {
     /**
      * {@inheritDoc}
