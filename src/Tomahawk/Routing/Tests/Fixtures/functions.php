@@ -37,6 +37,14 @@ class TestController2
     }
 }
 
+class UncallableController
+{
+    private function action($foo)
+    {
+
+    }
+}
+
 
 
 class TestInvokeableClass

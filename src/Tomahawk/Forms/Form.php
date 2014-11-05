@@ -123,8 +123,7 @@ class Form extends AttributeBuilder implements FormInterface
     public function render($name, array $attributes = array())
     {
         $element = $this->elements[$name];
-        if ($value = $this->getValue($name))
-        {
+        if ($value = $this->getValue($name)) {
             $element->setValue($value);
         }
         return $element->render($attributes);
@@ -136,15 +135,13 @@ class Form extends AttributeBuilder implements FormInterface
      */
     public function bind($input)
     {
-        $this->input = $input;
-
-        if (!$this->model)
-        {
+        if (!$this->model) {
             return $this;
         }
 
-        foreach ($this->input as $name => $value)
-        {
+        $this->input = $input;
+
+        foreach ($this->input as $name => $value) {
             $this->setValue($name, $value);
         }
 
@@ -157,8 +154,7 @@ class Form extends AttributeBuilder implements FormInterface
      */
     public function isValid()
     {
-        if (!$this->getValidator())
-        {
+        if (!$this->getValidator()) {
             throw new \Exception('Validator not present on Form');
         }
 
@@ -177,16 +173,13 @@ class Form extends AttributeBuilder implements FormInterface
     {
         $method = $this->getElementGetMethod($name);
 
-        if (isset($this->oldInput[$name]))
-        {
+        if (isset($this->oldInput[$name])) {
             return $this->oldInput[$name];
         }
-        else if ($this->model && method_exists($this->model, $method))
-        {
+        else if ($this->model && method_exists($this->model, $method)) {
             return $this->model->$method();
         }
-        else if ($this->model && property_exists($this->model, $name))
-        {
+        else if ($this->model && property_exists($this->model, $name)) {
             return $this->model->$name;
         }
 
@@ -197,12 +190,10 @@ class Form extends AttributeBuilder implements FormInterface
     {
         $method = $this->getElementSetMethod($name);
 
-        if ($this->model && method_exists($this->model, $method))
-        {
+        if ($this->model && method_exists($this->model, $method)) {
             $this->model->$method($value);
         }
-        else if ($this->model && property_exists($this->model, $name))
-        {
+        else if ($this->model && property_exists($this->model, $name)) {
             $this->model->$name = $value;
         }
 

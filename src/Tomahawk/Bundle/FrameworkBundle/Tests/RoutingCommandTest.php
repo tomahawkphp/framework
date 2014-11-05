@@ -8,6 +8,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Tomahawk\Bundle\FrameworkBundle\Command\RoutingCommand;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
+use Tomahawk\Routing\Route;
 use Tomahawk\Test\TestCase;
 use Tomahawk\DI\Container;
 
@@ -19,6 +20,7 @@ class RoutingCommandTest extends TestCase
         $command = new RoutingCommand();
 
         $routeCollection = new RouteCollection();
+        $routeCollection->add('home', new Route('/'));
 
         $commandTester = $this->getCommandTester($command, $routeCollection);
 

@@ -120,6 +120,38 @@ class Profiler
     }
 
     /**
+     * @return array
+     */
+    public function getQueries()
+    {
+        return $this->queries;
+    }
+
+    public function addLogs($logs = array())
+    {
+        foreach ($logs as $log) {
+            $this->logs[] = $log;
+        }
+    }
+
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
+    public function addTimers($timers = array())
+    {
+        foreach ($timers as $timer) {
+            $this->timers[] = $timer;
+        }
+    }
+
+    public function getTimers()
+    {
+        return $this->timers;
+    }
+
+    /**
      * Render Template
      *
      * @return string

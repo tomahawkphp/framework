@@ -24,7 +24,6 @@ class MigrationsBundle extends Bundle
     public function boot()
     {
         $this->container->set('migration_repo', function(ContainerInterface $c) {
-
             $database = $c->get('illuminate_database');
             return new MigrationRepo($database->getDatabaseManager(), 'tomahawk_migrations');
         });

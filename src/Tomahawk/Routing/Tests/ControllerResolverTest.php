@@ -5,28 +5,18 @@ namespace Tomahawk\Routing\Tests;
 use Mockery;
 use Tomahawk\Test\TestCase;
 use Psr\Log\LoggerInterface;
-use Tomahawk\HttpCore\ResponseBuilder;
-use Tomahawk\Cache\CacheManager;
-use Tomahawk\Encryption\Crypt;
-use Tomahawk\Database\DatabaseManager;
-use Tomahawk\Session\SessionManager;
 use Tomahawk\Html\HtmlBuilder;
-use Tomahawk\Asset\AssetManager;
 use Tomahawk\HttpKernel\HttpKernel;
-use Tomahawk\HttpKernel\Kernel;
 use Tomahawk\DI\Container;
 use Tomahawk\Routing\Router;
 use Tomahawk\Routing\Controller\ControllerResolver;
 use Tomahawk\Routing\Controller;
-use Tomahawk\Forms\FormsManager;
-use Tomahawk\HttpCore\Response\Cookies;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Response;
-use Tomahawk\View\ViewGenerator;
 
 class ControllerResolverTest extends TestCase
 {
@@ -390,6 +380,19 @@ class ControllerResolverTest extends TestCase
 
         $request = Request::create('/');
         $request->attributes->set('_controller', array(new \TestController2(), 'action'));
+        $resolver->getController($request);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedMessage  Controller "UncallableController::action" for URI "/" is not callable.
+     */
+    public function testUncallableController()
+    {
+        $resolver = $this->createControllerResolver();
+
+        $request = Request::create('/');
+        $request->attributes->set('_controller', 'UncallableController::action');
         $resolver->getController($request);
     }
 

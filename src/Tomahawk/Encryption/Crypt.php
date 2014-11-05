@@ -56,8 +56,7 @@ class Crypt implements CryptInterface
     {
         $value = $this->safeB64decode($value);
 
-        if ($value = $this->validateHmac($value))
-        {
+        if ($value = $this->validateHmac($value)) {
             return $this->cipher->decrypt($value);
         }
 
@@ -107,8 +106,7 @@ class Crypt implements CryptInterface
     {
         $data = str_replace(array('-','_'), array('+','/'), $value);
         $mod4 = strlen($data) % 4;
-        if ($mod4)
-        {
+        if ($mod4) {
             $data .= substr('====', $mod4);
         }
         return base64_decode($data);

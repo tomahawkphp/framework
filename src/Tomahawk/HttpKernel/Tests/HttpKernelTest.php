@@ -32,6 +32,19 @@ class HttpKernelTest extends TestCase
      */
     protected $container;
 
+    /**
+     * @expectedException \LogicException
+     * @expectedMessage The controller must return a response (null given). Did you forget to add a return statement somewhere in your controller?
+     */
+    public function testNullResponse()
+    {
+        $httpRequest = $this->getHttpKernel();
+
+        $request = Request::create('/null', 'GET');
+
+        $httpRequest->handle($request);
+    }
+
     public function testResourceNotFoundException()
     {
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
@@ -266,6 +279,14 @@ class HttpKernelTest extends TestCase
 
         $this->assertEquals($expectedStatusCode, $response->getStatusCode());
         $this->assertFalse($response->headers->has('X-Status-Code'));
+    }
+
+    public function testFormatPath()
+    {
+        $httpRequest = $this->getHttpKernel();
+
+        $this->assertEquals('/', $httpRequest->formatPath('/'));
+        $this->assertEquals('/test/', $httpRequest->formatPath('/test/'));
     }
 
     public function getStatusCodes()

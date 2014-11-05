@@ -14,6 +14,7 @@ namespace Tomahawk\Asset;
 use Tomahawk\Html\HtmlBuilderInterface;
 use Tomahawk\Url\UrlGeneratorInterface;
 use Tomahawk\Asset\Exception\CircularDependencyException;
+use Tomahawk\Asset\Exception\SelfDependencyException;
 
 /**
  * Asset Manager
@@ -239,7 +240,7 @@ class AssetManager implements AssetManagerInterface
         }
         elseif ($dependency === $asset)
         {
-            throw new \Exception("Asset [$asset] is dependent on itself.");
+            throw new SelfDependencyException("Asset [$asset] is dependent on itself.");
         }
         elseif (isset($assets[$dependency]) && in_array($asset, $assets[$dependency]['dependencies']))
         {

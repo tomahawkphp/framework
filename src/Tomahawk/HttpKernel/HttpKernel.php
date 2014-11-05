@@ -258,8 +258,7 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
      */
     public function formatPath( $path )
     {
-        if ($path === '/')
-        {
+        if ($path === '/') {
             return $path;
         }
 

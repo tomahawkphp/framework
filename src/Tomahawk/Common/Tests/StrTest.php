@@ -62,4 +62,15 @@ class StrTest extends TestCase
 
         $this->assertEquals('Tom', Str::title($string));
     }
+
+    public function testStrRandomReturnsCorrectLength()
+    {
+        $this->assertEquals(10, strlen(Str::random(10)));
+    }
+
+    public function testStrQuickRandomReturnsCorrectLength()
+    {
+        $this->assertEquals(10, strlen(Str::quickRandom(10)));
+    }
+
 }

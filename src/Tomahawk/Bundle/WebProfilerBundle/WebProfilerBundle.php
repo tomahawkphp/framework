@@ -50,11 +50,6 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
         return $this->container->get('event_dispatcher');
     }
 
-    protected function getProfiler()
-    {
-        return $this->container->get('web_profiler');
-    }
-
     protected function setUpProfiler()
     {
         $assetsPath = $this->getPath() .'/Resources/assets/';

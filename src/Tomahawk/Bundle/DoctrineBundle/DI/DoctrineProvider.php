@@ -28,22 +28,15 @@ class DoctrineProvider implements ServiceProviderInterface
 
     public function register(ContainerInterface $container)
     {
-
         $container->set('doctrine', function(ContainerInterface $c) {
-
             $registry = new Registry($c, array(), array('default' => $c['doctrine.entitymanager']), 'master', 'default');
-
             return $registry;
         });
 
-
         $container->set('doctrine.entitymanager', function(ContainerInterface $c) {
-
 
             $cache = new FilesystemCache($c['config']->get('cache.directory'));
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
-
-
             $doctrineConfig = $c->get('config')->get('doctrine');
 
             $config = Setup::createXMLMetadataConfiguration(

@@ -40,7 +40,7 @@ class FrameworkBundleTest extends TestCase
             'example.com'
         )));
 
-        $container->expects($this->at(0))->method('registerProvider');
+        $container->expects($this->at(0))->method('register');
         $container->expects($this->at(1))->method('get')->will($this->returnValue($eventDispatcher));
         $container->expects($this->at(2))->method('get')->will($this->returnValue($this->getRouteListener()));
         $container->expects($this->at(3))->method('get')->will($this->returnValue($config));

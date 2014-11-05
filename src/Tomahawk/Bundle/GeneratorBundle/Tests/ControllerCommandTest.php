@@ -36,7 +36,12 @@ class ControllerCommandTest extends TestCase
         $command = new GenerateControllerCommand();
         $commandTester = $this->getCommandTester($command, $this->getGenerator());
 
-        $commandTester->execute(array('command' => $command->getName(), 'bundle' => 'FooBundle', 'controller' => 'User'));
+        $commandTester->execute(array(
+            'command'    => $command->getName(),
+            'bundle'     => 'FooBundle',
+            'controller' => 'User',
+            '--actions'    => array('getUser'),
+        ));
     }
 
     protected function getGenerator()

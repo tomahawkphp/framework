@@ -24,13 +24,13 @@
                 <directory>./vendor</directory>
                 <directory>./src/Tomahawk/*/*/Resources</directory>
                 <directory>./src/Tomahawk/Bundle/*/Resources</directory>
+                <directory>./src/Tomahawk/Bundle/DoctrineBundle/Command/Proxy</directory>
                 <directory>./src/Tomahawk/*/Tests</directory>
                 <directory>./src/Tomahawk/*/*/Tests</directory>
                 <directory>./src/Tomahawk/DI/Test</directory>
                 <directory>./src/Tomahawk/Forms/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Fixtures</directory>
-                <directory>./src/Tomahawk/Cache/Old</directory>
             </exclude>
         </whitelist>
     </filter>

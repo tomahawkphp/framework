@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Bundle\WebProfilerBundle\Tests;
 
+use Tomahawk\Bundle\WebProfilerBundle\Test\MockPdo;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
@@ -38,6 +39,77 @@ class ProfilerTest extends TestCase
         $this->assertTrue($profiler->disabled());
     }
 
+    public function testAddQueries()
+    {
+        $engine = $this->getTemplatingEngineMock();
+
+        $databaseManager = $this->getDatabaseManagerMock();
+
+        $pdoMock = new MockPdo();
+
+        $connection = $this->getMockBuilder('Illuminate\Database\Connection')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connection->expects($this->once())
+            ->method('getPdo')
+            ->will($this->returnValue($pdoMock));
+
+        $databaseManager->expects($this->once())
+            ->method('connection')
+            ->will($this->returnValue($connection));
+
+
+        $profiler = new Profiler($engine, $databaseManager, 'dir');
+
+
+        $profiler->addQueries(array(
+            array(
+                'bindings' => array(1),
+                'query'    => 'select * from users where id = ?'
+            )
+        ));
+
+        $this->assertCount(1, $profiler->getQueries());
+
+    }
+
+    public function testLogs()
+    {
+        $engine = $this->getTemplatingEngineMock();
+
+        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+
+        $profiler->addLogs(array(
+            'A log'
+        ));
+
+        $this->assertCount(1, $profiler->getLogs());
+    }
+
+    public function testTimers()
+    {
+        $engine = $this->getTemplatingEngineMock();
+
+        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+
+        $profiler->addTimers(array(
+            array(
+                'name' => 'Name',
+                'start' => 0,
+                'end'   => 10,
+                'ticks' => array(
+                    array(
+                        'time' => 1,
+                        'diff' => 10,
+                    )
+                )
+            )
+        ));
+
+        $this->assertCount(1, $profiler->getTimers());
+    }
+
     public function testRender()
     {
         $response = new Response();
@@ -49,6 +121,20 @@ class ProfilerTest extends TestCase
             ->will($this->returnValue($response));
 
         $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+
+        $profiler->addTimers(array(
+            array(
+                'name' => 'Name',
+                'start' => 0,
+                'end'   => 10,
+                'ticks' => array(
+                    array(
+                        'time' => 1,
+                        'diff' => 10,
+                    )
+                )
+            )
+        ));
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $profiler->render());
     }

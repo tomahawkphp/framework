@@ -31,13 +31,11 @@ abstract class AttributeBuilder
      */
     protected function attributeElement($key, $value)
     {
-        if (is_numeric($key))
-        {
+        if (is_numeric($key)) {
             $key = $value;
         }
 
-        if ( ! is_null($value))
-        {
+        if (!is_null($value)) {
             return $key.'="'.$this->entities($value).'"';
         }
     }

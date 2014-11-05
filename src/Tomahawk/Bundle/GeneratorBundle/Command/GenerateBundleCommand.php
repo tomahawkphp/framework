@@ -53,7 +53,7 @@ class GenerateBundleCommand extends GenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        foreach (array('namespace', 'dir', 'bundle-name') as $option) {
+        foreach (array('namespace', 'dir') as $option) {
             if (null === $input->getOption($option)) {
                 throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
             }
