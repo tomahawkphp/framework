@@ -47,7 +47,6 @@ class DoctrineProvider implements ServiceProviderInterface
             );
 
             $config->setProxyNamespace($doctrineConfig['proxy_namespace']);
-            //$config->setProxyDir($doctrineConfig['proxy_directories']);
             $config->setAutoGenerateProxyClasses($doctrineConfig['auto_generate_proxies']);
 
             return EntityManager::create($doctrineConfig['database'], $config);
