@@ -8,36 +8,24 @@ use Tomahawk\Bundle\DoctrineBundle\DI\DoctrineProvider;
 
 class DoctrineBundleProviderTest extends TestCase
 {
-    public function testProviderAddsDoctrineToContainer()
+    protected $doctrineConfig;
+
+    protected function setUp()
     {
-        $container = $this->getContainer();
-
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
-
-        /*$config->expects($this->once())
-            ->method('get')
-            ->with('cache.namespace')
-            ->will($this->returnValue(''));
-
-        $config->expects($this->once())
-            ->method('get')
-            ->with('cache.namespace')
-            ->will($this->returnValue(''));
-
-
-        $config->expects($this->once())
-            ->method('get')
-            ->with('doctrine')
-            ->will($this->returnValue(array(
-                'format'    => 'xml',
-                'proxy_namespace' => 'DoctrineProxies',
-                'auto_generate_proxies' => true,
-                'proxy_directories' => __DIR__ . '/../Resources/Doctrine/proxies',
-                'mapping_directories' => array(__DIR__ . '/../Resources/Doctrine/mappings'),
-                'database' => array(
+        $this->doctrineConfig = array(
+            'cache' => 'array',
+            'format'    => 'xml',
+            'proxy_namespace' => 'DoctrineProxies',
+            'auto_generate_proxies' => true,
+            'proxy_directories' => __DIR__ . '/../Resources/Doctrine/proxies',
+            'mapping_directories' => array(__DIR__ . '/../Resources/Doctrine/mappings'),
+            'default_connection' => 'default',
+            'connections' => array(
+                'default' => array(
+                    'service'      => 'doctrine.connection.default',
                     'wrapperClass' => 'Doctrine\DBAL\Connections\MasterSlaveConnection',
-                    'driver'    => 'pdo_mysql',
-                    'master' => array(
+                    'driver'       => 'pdo_mysql',
+                    'master'       => array(
                         'host'      => 'localhost',
                         'port'      => '3306',
                         'dbname'    => 'tomahawk',
@@ -53,8 +41,17 @@ class DoctrineBundleProviderTest extends TestCase
                             'password'  => '',
                         )
                     ),
-                ),
-            )));*/
+                )
+            ),
+        );
+    }
+
+    public function testProviderAddsDoctrineToContainer()
+    {
+        $container = $this->getContainer();
+
+        $config = $this->getConfig();
+
 
         $container->set('config', $config);
 
@@ -66,12 +63,36 @@ class DoctrineBundleProviderTest extends TestCase
 
 
         //$this->assertInstanceOf('Tomahawk\Bundle\DoctrineBundle\Registry', $container->get('doctrine'));
-        //$this->assertInstanceOf('Swift_Mailer', $container->get('mailer'));
+    }
+
+    public function testConnectionsArrayIsReturned()
+    {
+        $container = $this->getContainer();
+
+        $config = $this->getConfig();
+        $config->expects($this->once())
+            ->method('get')
+            ->with('doctrine')
+            ->will($this->returnValue($this->doctrineConfig));
+
+        $container->set('config', $config);
+
+        $provider = new DoctrineProvider();
+        $provider->register($container);
+
+        $connections = $container->get('doctrine.connections');
+
+        $this->assertTrue(is_array($connections));
     }
 
     protected function getContainer()
     {
         return new Container();
+    }
+
+    protected function getConfig()
+    {
+        return $this->getMock('Tomahawk\Config\ConfigInterface');
     }
 
 }

@@ -206,7 +206,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Tomahawk\Cache\CacheInterface', function(ContainerInterface $c) {
             $provider = $c['config']->get('cache.driver', 'array');
             if (!$c->has('cache.providers.' .$provider)) {
-                throw new \Exception(sprintf('Cache provider %d does not exist or has not been set.', $provider));
+                throw new \Exception(sprintf('Cache provider %s does not exist or has not been set.', $provider));
             }
             return new CacheManager($c['cache.providers.' .$provider]);
         });
