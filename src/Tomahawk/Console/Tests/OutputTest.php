@@ -22,6 +22,8 @@ class OutputTest extends TestCase
     public function testWrapperMethodInfo()
     {
         $output = new TestOutput();
+        $output->clear();
+        $output->setDecorated(false);
         $output->info('some information');
         $this->assertEquals("some information\n", $output->output);
     }
@@ -29,12 +31,16 @@ class OutputTest extends TestCase
     public function testWrapperMethodSuccess()
     {
         $output = new TestOutput();
+        $output->clear();
+        $output->setDecorated(false);
         $output->success('some success message');
         $this->assertEquals("some success message\n", $output->output);
     }
     public function testWrapperMethodError()
     {
         $output = new TestOutput();
+        $output->clear();
+        $output->setDecorated(false);
         $output->error('some error message');
         $this->assertEquals("some error message\n", $output->output);
     }
@@ -42,6 +48,8 @@ class OutputTest extends TestCase
     public function testWrapperMethodQuestion()
     {
         $output = new TestOutput();
+        $output->clear();
+        $output->setDecorated(false);
         $output->question('question?');
         $this->assertEquals("question?\n", $output->output);
     }

@@ -8,7 +8,7 @@ use Tomahawk\Middleware\Middleware;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tomahawk\HttpCore\Response\Cookies;
 
-class Response extends Middleware
+class HeaderCookies extends Middleware
 {
     public function boot()
     {
