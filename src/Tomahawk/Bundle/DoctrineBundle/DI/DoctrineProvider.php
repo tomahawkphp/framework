@@ -57,7 +57,11 @@ class DoctrineProvider implements ServiceProviderInterface
         });
 
         $container->set('doctrine', function(ContainerInterface $c) {
-            $registry = new Registry($c, $c['doctrine.connections'], array('default' => $c['doctrine.entitymanager']), 'master', 'default');
+
+            $doctrineConfig = $c->get('config')->get('doctrine');
+            $defaultConnection = $doctrineConfig['default_connection'];
+
+            $registry = new Registry($c, $c['doctrine.connections'], array('default' => $c['doctrine.entitymanager']), $defaultConnection, 'default');
             return $registry;
         });
 
