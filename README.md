@@ -1,3 +1,6 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/85348a82-45a1-4ab4-ab32-62eddef3d82f/small.png)](https://insight.sensiolabs.com/projects/85348a82-45a1-4ab4-ab32-62eddef3d82f)
+
+
 TomahawkPHP Framework
 -----------------
 
