@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Bundle\SwiftmailerBundle;
 
+use Tomahawk\Bundle\SwiftmailerBundle\DI\SwiftmailerBundleProvider;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 
 class SwiftmailerBundle extends Bundle
@@ -18,7 +19,7 @@ class SwiftmailerBundle extends Bundle
 
     public function boot()
     {
-
+        $this->container->register(new SwiftmailerBundleProvider());
     }
 
 }
