@@ -20,7 +20,11 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class Router
 {
-
+    /**
+     * Whether we're in a route section
+     *
+     * @var bool
+     */
     protected $inSection = false;
     /**
      * @var RouteCollection
@@ -43,6 +47,8 @@ class Router
     protected $regex = '([\w-_]+)';
 
     /**
+     * Set route collection
+     *
      * @param RouteCollection $routes
      * @return $this
      */
@@ -53,6 +59,8 @@ class Router
     }
 
     /**
+     * Get route collection
+     *
      * @return RouteCollection
      */
     public function getRoutes()
@@ -66,11 +74,12 @@ class Router
      * @param $path
      * @param $name
      * @param null $callback
+     * @param array $schemes
      * @return Route
      */
-    public function get($path, $name, $callback = null)
+    public function get($path, $name, $callback = null, array $schemes = array())
     {
-        return $this->createRoute('GET', $path, $name, $callback);
+        return $this->createRoute('GET', $path, $name, $callback, $schemes);
     }
 
     /**
@@ -79,11 +88,12 @@ class Router
      * @param $path
      * @param $name
      * @param null $callback
+     * @param array $schemes
      * @return Route
      */
-    public function post($path, $name, $callback = null)
+    public function post($path, $name, $callback = null, array $schemes = array())
     {
-        return $this->createRoute('POST', $path, $name, $callback);
+        return $this->createRoute('POST', $path, $name, $callback, $schemes);
     }
 
     /**
@@ -92,11 +102,12 @@ class Router
      * @param $path
      * @param $name
      * @param null $callback
+     * @param array $schemes
      * @return Route
      */
-    public function any($path, $name, $callback = null)
+    public function any($path, $name, $callback = null, array $schemes = array())
     {
-        return $this->createRoute(array(), $path, $name, $callback);
+        return $this->createRoute(array(), $path, $name, $callback, $schemes);
     }
 
     /**
@@ -104,10 +115,10 @@ class Router
      * @param $path
      * @param $name
      * @param $callback
-     * @param bool $https
+     * @param array $schemes
      * @return Route
      */
-    public function createRoute($method, $path, $name, $callback, $https = false)
+    public function createRoute($method, $path, $name, $callback, array $schemes = array())
     {
         $methods = is_array($method) ? $method : explode('|', $method);
 
@@ -115,17 +126,10 @@ class Router
             $path = $this->formatPath($path); //Symfony always stores with a starting slash
         }
 
-        $schemes = array(
-            'http'
-        );
-
-        if ($https) {
-            $schemes[] = 'https';
-        }
+        // Create a new Route class
 
         $route = new Route($path,
             array(
-                //'_controller' => 'MyController@method', //Default Values
                 '_controller'   => $callback
             ),
             array(), // requirements
@@ -135,6 +139,7 @@ class Router
             $methods // methods
         );
 
+        // Add route to collection
         $this->routes->add($name, $route);
 
         return $route;
@@ -152,9 +157,16 @@ class Router
         return $path;
     }
 
+    /**
+     * Create a route section
+     *
+     * @param $name
+     * @param array $options
+     * @param callable $callback
+     * @return $this
+     */
     public function section($name, $options = array(), \Closure $callback)
     {
-
         $sub_collection = new RouteCollection();
 
         $sub_router = new self();
@@ -167,22 +179,29 @@ class Router
         $sub_collection->addDefaults($options);
 
         $this->getRoutes()->addCollection($sub_collection);
+
+        return $this;
     }
 
     /**
+     * Set whether we are in a route section or not
+     *
      * @param boolean $inSection
+     * @return $this
      */
     public function setInSection($inSection)
     {
         $this->inSection = $inSection;
+        return $this;
     }
 
     /**
+     * Get whether we are in a route section or not
+     *
      * @return boolean
      */
     public function getInSection()
     {
         return $this->inSection;
     }
-
 }

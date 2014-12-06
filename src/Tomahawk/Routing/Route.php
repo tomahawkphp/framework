@@ -14,6 +14,14 @@ namespace Tomahawk\Routing;
 use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Route as BaseRoute;
 
+/**
+ * Class Route
+ *
+ * Base on Symfony Route, but for route collections with prefixes
+ * Tomahawk strips off the end slash to normalise rout matching based on URL
+ *
+ * @package Tomahawk\Routing
+ */
 class Route extends BaseRoute
 {
 
@@ -95,6 +103,11 @@ class Route extends BaseRoute
         $this->setCondition($condition);
     }
 
+    /**
+     * Serialise route information to an array
+     *
+     * @return string
+     */
     public function serialize()
     {
         return serialize(array(
@@ -109,6 +122,11 @@ class Route extends BaseRoute
         ));
     }
 
+    /**
+     * Set route information from array of data
+     *
+     * @param string $data
+     */
     public function unserialize($data)
     {
         $data = unserialize($data);

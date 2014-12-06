@@ -30,9 +30,11 @@ class RouterTest extends TestCase
 
         $router->createRoute('GET', '/', 'home', function() {
             return 'Test';
-        }, true);
+        }, array(
+            'https'
+        ));
 
-        $this->assertEquals(array('http', 'https'), $routeCollection->get('home')->getSchemes());
+        $this->assertEquals(array('https'), $routeCollection->get('home')->getSchemes());
     }
 
     public function testRouteWithRequirements()
