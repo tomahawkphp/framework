@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Templating\DelegatingEngine;
+use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\Templating\PhpEngine;
 use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Tomahawk\Cache\Provider\ApcProvider;
@@ -62,6 +63,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Tomahawk\Templating\Helper\BlocksHelper;
 use Tomahawk\Templating\Loader\FilesystemLoader;
 use Tomahawk\Templating\Loader\TemplateLocator;
 use Tomahawk\Templating\TemplateNameParser;
@@ -244,7 +246,10 @@ class FrameworkProvider implements ServiceProviderInterface
             $templateLocator = new TemplateLocator($locator);
             $loader = new FilesystemLoader($templateLocator);
             $parser = new TemplateNameParser($kernel);
-            $phpEngine = new PhpEngine($parser, $loader);
+            $phpEngine = new PhpEngine($parser, $loader, array(
+                new SlotsHelper(),
+                new BlocksHelper(),
+            ));
 
             return new DelegatingEngine(array(
                 $phpEngine
