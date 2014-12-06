@@ -1,7 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Tomahawk\Templating\Loader;
-
 
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
@@ -64,7 +71,8 @@ class TemplateLocator implements FileLocatorInterface
 
         try {
             return $this->cache[$key] = $this->locator->locate($template->getPath(), $currentPath);
-        } catch (\InvalidArgumentException $e) {
+        }
+        catch (\InvalidArgumentException $e) {
             throw new \InvalidArgumentException(sprintf('Unable to find template "%s" : "%s".', $template, $e->getMessage()), 0, $e);
         }
     }

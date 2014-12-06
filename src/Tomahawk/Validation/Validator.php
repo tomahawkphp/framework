@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Validation;
 
 use Tomahawk\Validation\Constraints\ConstraintInterface;
@@ -44,18 +53,15 @@ class Validator implements ValidatorInterface
      */
     public function add($name, $constraints)
     {
-        if (!isset($this->constraints[$name]))
-        {
+        if (!isset($this->constraints[$name])) {
             $this->constraints[$name] = array();
         }
 
-        if (!is_array($constraints))
-        {
+        if (!is_array($constraints)) {
             $constraints = array($constraints);
         }
 
-        foreach ($constraints as $constraint)
-        {
+        foreach ($constraints as $constraint) {
             $this->constraints[$name][] = $constraint;
         }
 
@@ -76,10 +82,8 @@ class Validator implements ValidatorInterface
         /**
          * @var ConstraintInterface $constraint
          */
-        foreach ($this->constraints as $field => $constraints)
-        {
-            foreach ($constraints as $constraint)
-            {
+        foreach ($this->constraints as $field => $constraints) {
+            foreach ($constraints as $constraint) {
                 $constraint->validate($this, $field, $this->getInput($field));
             }
 
@@ -97,13 +101,11 @@ class Validator implements ValidatorInterface
      */
     public function addMessage($field, Message $message)
     {
-        if (!isset($this->messages[$field]))
-        {
+        if (!isset($this->messages[$field])) {
             $this->messages[$field] = array();
         }
 
         $this->messages[$field][] = $message;
-
         return $this;
     }
 

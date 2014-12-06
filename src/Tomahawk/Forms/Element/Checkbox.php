@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Forms\Element;
 
 class Checkbox extends Element
@@ -29,8 +38,7 @@ class Checkbox extends Element
 
         $attributes = array_merge($current_attributes, $attributes);
 
-        if ($this->checked)
-        {
+        if ($this->checked) {
             $attributes['checked'] = 'checked';
         }
 

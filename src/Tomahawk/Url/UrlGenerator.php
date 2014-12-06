@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Url;
 
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
@@ -14,7 +23,6 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
      * @var bool
      */
     protected $sslOn = true;
-
     protected $validUrlStartChars = array(
         '#',
         '//',
@@ -64,30 +72,27 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
     {
         // Check if valid URL
         if ($this->validateURL($path)) {
-
             $extra = implode('/', array_map('rawurlencode', $extra));
-
             return rtrim($path, '/') . $extra;
         }
 
         $scheme = $this->context->getScheme();
+        $host = $this->context->getHost();
+        $base = $this->context->getBaseUrl();
+        $port = '';
 
         // When in a test environment you might not have SSL enabled, so you can turn this off easily
         if ($secure && $this->sslOn) {
             $scheme = 'https';
-        } else {
+        }
+        else {
             $scheme = 'http';
         }
 
-        $host = $this->context->getHost();
-
-        $base = $this->context->getBaseUrl();
-
-        $port = '';
-
         if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
             $port = ':'.$this->context->getHttpPort();
-        } elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
+        }
+        elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
             $port = ':'.$this->context->getHttpsPort();
         }
 

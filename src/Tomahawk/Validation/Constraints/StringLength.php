@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
@@ -9,7 +18,6 @@ class StringLength extends Constraint
 {
     protected $min_message = 'The minimum length is %min_length%';
     protected $max_message = 'The maximum length is %max_length%';
-
     protected $min_length = 100;
     protected $max_length = 100;
 
@@ -17,28 +25,22 @@ class StringLength extends Constraint
     {
         $passed = true;
 
-        if (strlen($value) > $this->max_length)
-        {
-            if ($trans = $validator->getTranslator())
-            {
+        if (strlen($value) > $this->max_length) {
+            if ($trans = $validator->getTranslator()) {
                 $this->setMaxMessage($trans->trans($this->getMaxMessage(), $this->getData()));
             }
-            else
-            {
+            else {
                 $this->mergeMaxMessageData();
             }
             $validator->addMessage($attribute, new Message($this->getMaxMessage(), $this->getData()));
             $passed = false;
         }
 
-        if (strlen($value) < $this->min_length)
-        {
-            if ($trans = $validator->getTranslator())
-            {
+        if (strlen($value) < $this->min_length) {
+            if ($trans = $validator->getTranslator()) {
                 $this->setMinMessage($trans->trans($this->getMinMessage(), $this->getData()));
             }
-            else
-            {
+            else {
                 $this->mergeMinMessageData();
             }
             $validator->addMessage($attribute, new Message($this->getMinMessage(), $this->getData()));
@@ -81,8 +83,7 @@ class StringLength extends Constraint
     protected function mergeMinMessageData()
     {
 
-        foreach ($this->getData() as $key => $value)
-        {
+        foreach ($this->getData() as $key => $value) {
             $this->min_message = str_replace($key, $value, $this->min_message);
         }
 
@@ -92,8 +93,7 @@ class StringLength extends Constraint
     protected function mergeMaxMessageData()
     {
 
-        foreach ($this->getData() as $key => $value)
-        {
+        foreach ($this->getData() as $key => $value) {
             $this->max_message = str_replace($key, $value, $this->max_message);
         }
 

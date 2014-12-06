@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Templating\Twig;
 
 use Symfony\Component\Templating\EngineInterface;
@@ -56,7 +65,8 @@ class TwigEngine implements EngineInterface
             // cast possible TemplateReferenceInterface to string because the
             // EngineInterface supports them but Twig_LoaderInterface does not
             $loader->getSource((string) $name);
-        } catch (\Twig_Error_Loader $e) {
+        }
+        catch (\Twig_Error_Loader $e) {
             return false;
         }
 

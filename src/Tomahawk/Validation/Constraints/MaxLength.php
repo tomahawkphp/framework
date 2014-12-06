@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
@@ -8,19 +17,15 @@ use Tomahawk\Validation\Message;
 class MaxLength extends Constraint
 {
     protected $message = 'The maximum length is %max_length%';
-
     protected $max_length = 100;
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (strlen($value) > $this->max_length)
-        {
-            if ($trans = $validator->getTranslator())
-            {
+        if (strlen($value) > $this->max_length) {
+            if ($trans = $validator->getTranslator()) {
                 $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
             }
-            else
-            {
+            else {
                 $this->mergeMessageData();
             }
 

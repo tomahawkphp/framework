@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Encryption;
 
 use \Crypt_Rijndael;
@@ -31,9 +40,7 @@ class Crypt implements CryptInterface
         $this->block_length = $block_length;
         $this->mode = $mode;
         $this->cipher = new Crypt_Rijndael($this->mode);
-
         $this->cipher->setKey($key);
-
         $this->cipher->setBlockLength($this->block_length);
     }
 
@@ -44,7 +51,6 @@ class Crypt implements CryptInterface
     public function encrypt($value)
     {
         $value = $this->cipher->encrypt($value);
-
         return $this->safeB64encode($this->addHmac($value));
     }
 
@@ -115,7 +121,6 @@ class Crypt implements CryptInterface
     private function addHmac($value)
     {
         $hmac = $this->safeB64encode(hash_hmac('sha256',$value, $this->key, true));
-
         // append it and return the hmac protected string
         return $value.$hmac;
     }
@@ -127,7 +132,6 @@ class Crypt implements CryptInterface
 
         // and remove it from the value
         $value = substr($value, 0, strlen($value)-43);
-
         $hmac1 = hash_hmac('sha256',$value, $this->key, true);
 
         return StringUtils::equals($this->safeB64encode($hmac1), $hmac) ? $value : false;

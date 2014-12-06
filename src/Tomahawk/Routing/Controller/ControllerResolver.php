@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Routing\Controller;
 
 use Psr\Log\LoggerInterface;
@@ -64,7 +73,8 @@ class ControllerResolver implements ControllerResolverInterface
         if (false === strpos($controller, ':')) {
             if (method_exists($controller, '__invoke')) {
                 return new $controller();
-            } elseif (function_exists($controller)) {
+            }
+            elseif (function_exists($controller)) {
                 return $controller;
             }
         }
@@ -87,10 +97,12 @@ class ControllerResolver implements ControllerResolverInterface
     {
         if (is_array($controller)) {
             $r = new \ReflectionMethod($controller[0], $controller[1]);
-        } elseif (is_object($controller) && !$controller instanceof \Closure) {
+        }
+        elseif (is_object($controller) && !$controller instanceof \Closure) {
             $r = new \ReflectionObject($controller);
             $r = $r->getMethod('__invoke');
-        } else {
+        }
+        else {
             $r = new \ReflectionFunction($controller);
         }
 
@@ -104,16 +116,21 @@ class ControllerResolver implements ControllerResolverInterface
         foreach ($parameters as $param) {
             if (array_key_exists($param->name, $attributes)) {
                 $arguments[] = $attributes[$param->name];
-            } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
+            }
+            elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
                 $arguments[] = $request;
-            } elseif ($param->isDefaultValueAvailable()) {
+            }
+            elseif ($param->isDefaultValueAvailable()) {
                 $arguments[] = $param->getDefaultValue();
-            } else {
+            }
+            else {
                 if (is_array($controller)) {
                     $repr = sprintf('%s::%s()', get_class($controller[0]), $controller[1]);
-                } elseif (is_object($controller)) {
+                }
+                elseif (is_object($controller)) {
                     $repr = get_class($controller);
-                } else {
+                }
+                else {
                     $repr = $controller;
                 }
 

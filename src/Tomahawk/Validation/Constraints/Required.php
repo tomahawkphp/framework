@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
@@ -11,14 +20,11 @@ class Required extends Constraint
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (is_null($value) || (is_string($value) and trim($value) === '') || (is_array($validator) && !$value))
-        {
-            if ($trans = $validator->getTranslator())
-            {
+        if (is_null($value) || (is_string($value) and trim($value) === '') || (is_array($validator) && !$value)) {
+            if ($trans = $validator->getTranslator()) {
                 $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
             }
-            else
-            {
+            else {
                 $this->mergeMessageData();
             }
 

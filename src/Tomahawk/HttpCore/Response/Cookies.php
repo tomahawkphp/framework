@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\HttpCore\Response;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -53,8 +62,7 @@ class Cookies implements CookiesInterface
 
     public function get($name, $default = null)
     {
-        if (($value = $this->request->cookies->get($name)) !== null)
-        {
+        if (($value = $this->request->cookies->get($name)) !== null) {
             return $this->parse($value) ?: $default;
         }
 
@@ -95,8 +103,7 @@ class Cookies implements CookiesInterface
         // First we will make sure the cookie actually has enough segments to even
         // be valid as being set by the application. If it does not we will go
         // ahead and throw exceptions now since there the cookie is invalid.
-        if ( ! (count($segments) >= 2))
-        {
+        if ( ! (count($segments) >= 2)) {
             return null;
         }
 

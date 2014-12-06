@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Config;
 
 use Symfony\Component\Finder\Finder;
@@ -42,8 +51,7 @@ class ConfigManager implements ConfigInterface
      */
     public function get($key = null, $default = null)
     {
-        if (is_null($key))
-        {
+        if (is_null($key)) {
             return $this->config;
         }
 
@@ -58,7 +66,6 @@ class ConfigManager implements ConfigInterface
     public function set($key, $value)
     {
         $this->arraySet($this->config, $key, $value);
-
         return $this;
     }
 
@@ -66,22 +73,17 @@ class ConfigManager implements ConfigInterface
     {
         $this->config = array();
 
-        foreach ($this->configDirectories as $configDirectory)
-        {
+        foreach ($this->configDirectories as $configDirectory) {
 
             $finder = new Finder();
             $finder->in($configDirectory)->depth('== 0')->files()->name('*.php');
-
-            //->name('*.yml');
 
             foreach ($finder as $file) {
                 /**
                  * @var \Symfony\Component\Finder\SplFileInfo $file
                  */
                 $key = substr($file->getFilename(), 0, -4);
-
                 $values = $this->loader->load($file->getRealPath());
-
                 $this->set($key, $values);
             }
         }
@@ -100,19 +102,19 @@ class ConfigManager implements ConfigInterface
      */
     function arraySet(&$array, $key, $value)
     {
-        if (is_null($key)) return $array = $value;
+        if (is_null($key)) {
+            return $array = $value;
+        }
 
         $keys = explode('.', $key);
 
-        while (count($keys) > 1)
-        {
+        while (count($keys) > 1) {
             $key = array_shift($keys);
 
             // If the key doesn't exist at this depth, we will just create an empty array
             // to hold the next value, allowing us to create the arrays to hold final
             // values at the correct depth. Then we'll keep digging into the array.
-            if ( ! isset($array[$key]) || ! is_array($array[$key]))
-            {
+            if ( ! isset($array[$key]) || ! is_array($array[$key])) {
                 $array[$key] = array();
             }
 
@@ -134,17 +136,18 @@ class ConfigManager implements ConfigInterface
      */
     function arrayGet($array, $key, $default = null)
     {
-        if (is_null($key)) return $array;
+        if (is_null($key)) {
+            return $array;
+        }
 
-        if (isset($array[$key])) return $array[$key];
+        if (isset($array[$key])) {
+            return $array[$key];
+        }
 
-        foreach (explode('.', $key) as $segment)
-        {
-            if ( ! is_array($array) || ! array_key_exists($segment, $array))
-            {
+        foreach (explode('.', $key) as $segment) {
+            if ( ! is_array($array) || ! array_key_exists($segment, $array)) {
                 return value($default);
             }
-
             $array = $array[$segment];
         }
 

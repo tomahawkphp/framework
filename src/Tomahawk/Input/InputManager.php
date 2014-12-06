@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Tomahawk\Input;
 
 use Tomahawk\Session\Session;
@@ -34,8 +44,7 @@ class InputManager implements InputInterface
      */
     public function get($key = null, $default = null)
     {
-        if (is_null($key))
-        {
+        if (is_null($key)) {
             return $this->request->query->all();
         }
         return $this->request->query->get($key, $default);
@@ -162,6 +171,8 @@ class InputManager implements InputInterface
         foreach ($data as $key => $item) {
             $this->session->setOld($key, $item);
         }
+
+        return $this;
     }
 
 }

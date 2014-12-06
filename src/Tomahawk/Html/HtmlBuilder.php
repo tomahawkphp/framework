@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Html;
 
 /**
@@ -80,13 +89,11 @@ class HtmlBuilder implements HtmlBuilderInterface
      */
     public function attributeElement($key, $value)
     {
-        if (is_numeric($key))
-        {
+        if (is_numeric($key)) {
             $key = $value;
         }
 
-        if ( ! is_null($value))
-        {
+        if (!is_null($value)) {
             return $key.'="'.$this->entities($value).'"';
         }
     }

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Forms\Element;
 
 class Select extends Element
@@ -21,8 +30,7 @@ class Select extends Element
     {
         $list = array();
 
-        foreach ($this->list as $value => $display)
-        {
+        foreach ($this->list as $value => $display) {
             $list[] = $this->getSelectOption($display, $value, $this->value);
         }
 
@@ -39,8 +47,7 @@ class Select extends Element
      */
     public function getSelectOption($display, $value, $selected)
     {
-        if (is_array($display))
-        {
+        if (is_array($display)) {
             return $this->optionGroup($display, $value, $selected);
         }
 
@@ -59,8 +66,7 @@ class Select extends Element
     {
         $html = array();
 
-        foreach ($list as $value => $display)
-        {
+        foreach ($list as $value => $display) {
             $html[] = $this->option($display, $value, $selected);
         }
 
@@ -96,8 +102,7 @@ class Select extends Element
      */
     protected function getSelectedValue($value, $selected)
     {
-        if (is_array($selected))
-        {
+        if (is_array($selected)) {
             return in_array($value, $selected) ? 'selected' : null;
         }
 

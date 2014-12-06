@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Forms;
 
 class FormsManager implements FormsManagerInterface
@@ -17,7 +26,6 @@ class FormsManager implements FormsManagerInterface
     public function set($name, FormInterface $form)
     {
         $this->forms[$name] = $form;
-
         return $this;
     }
 
@@ -45,7 +53,6 @@ class FormsManager implements FormsManagerInterface
     public function clear()
     {
         $this->forms = array();
-
         return $this;
     }
 

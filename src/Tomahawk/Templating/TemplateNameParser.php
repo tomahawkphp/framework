@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Templating;
 
 use Symfony\Component\Templating\TemplateNameParserInterface;
@@ -28,7 +37,8 @@ class TemplateNameParser implements TemplateNameParserInterface
     {
         if ($name instanceof TemplateReferenceInterface) {
             return $name;
-        } elseif (isset($this->cache[$name])) {
+        }
+        elseif (isset($this->cache[$name])) {
             return $this->cache[$name];
         }
 
@@ -55,7 +65,8 @@ class TemplateNameParser implements TemplateNameParserInterface
         if ($template->get('bundle')) {
             try {
                 $this->kernel->getBundle($template->get('bundle'));
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid.', $name), 0, $e);
             }
         }

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Routing;
 
 use Tomahawk\Auth\AuthInterface;
@@ -150,8 +159,7 @@ class Controller
     {
         $content = $this->renderView($view, $parameters);
 
-        if (null === $response)
-        {
+        if (null === $response) {
             $response = new Response();
         }
 

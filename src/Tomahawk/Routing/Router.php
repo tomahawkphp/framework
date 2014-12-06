@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Routing;
 
 use Tomahawk\Routing\Route;
@@ -12,7 +21,7 @@ use Symfony\Component\Routing\RouteCollection;
 class Router
 {
 
-    protected $in_section = false;
+    protected $inSection = false;
     /**
      * @var RouteCollection
      */
@@ -35,10 +44,12 @@ class Router
 
     /**
      * @param RouteCollection $routes
+     * @return $this
      */
     public function setRoutes(RouteCollection $routes)
     {
         $this->routes = $routes;
+        return $this;
     }
 
     /**
@@ -57,7 +68,7 @@ class Router
      * @param null $callback
      * @return Route
      */
-    public function get( $path, $name, $callback = null )
+    public function get($path, $name, $callback = null)
     {
         return $this->createRoute('GET', $path, $name, $callback);
     }
@@ -70,7 +81,7 @@ class Router
      * @param null $callback
      * @return Route
      */
-    public function post( $path, $name, $callback = null )
+    public function post($path, $name, $callback = null)
     {
         return $this->createRoute('POST', $path, $name, $callback);
     }
@@ -100,8 +111,7 @@ class Router
     {
         $methods = is_array($method) ? $method : explode('|', $method);
 
-        if( $path !== '/' )
-        {
+        if ('/' !== $path) {
             $path = $this->formatPath($path); //Symfony always stores with a starting slash
         }
 
@@ -136,7 +146,7 @@ class Router
      * @param $path
      * @return string
      */
-    public function formatPath( $path )
+    public function formatPath($path)
     {
         $path = '/' .trim(trim($path), '/');
         return $path;
@@ -160,11 +170,11 @@ class Router
     }
 
     /**
-     * @param boolean $in_section
+     * @param boolean $inSection
      */
-    public function setInSection($in_section)
+    public function setInSection($inSection)
     {
-        $this->in_section = $in_section;
+        $this->inSection = $inSection;
     }
 
     /**
@@ -172,7 +182,7 @@ class Router
      */
     public function getInSection()
     {
-        return $this->in_section;
+        return $this->inSection;
     }
 
 }
