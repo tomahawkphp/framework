@@ -60,6 +60,14 @@ class LocaleListenerTest extends TestCase
 
     public function testOnKernelFinishRequestEvent()
     {
+        $parentRequest = Request::create('http://localhost/', 'get');
+        $parentRequest->attributes->set('_locale', 'de');
+
+        $anotherRequest = Request::create('http://localhost/', 'get');
+
+        $this->requestStack->push($parentRequest);
+        $this->requestStack->push($anotherRequest);
+        
         $requestContext = new RequestContext();
         $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
         $request = Request::create('http://localhost/', 'get');
