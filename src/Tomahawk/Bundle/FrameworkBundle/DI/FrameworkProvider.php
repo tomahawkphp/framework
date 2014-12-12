@@ -21,6 +21,7 @@ use Doctrine\Common\Cache\XcacheCache;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -31,6 +32,9 @@ use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\Templating\PhpEngine;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\Loader\PhpFileLoader as TransPhpFileLoader;
+use Symfony\Component\Translation\MessageSelector;
 use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Tomahawk\Cache\Provider\ApcProvider;
 use Tomahawk\Cache\Provider\ArrayProvider;
@@ -58,12 +62,19 @@ use Tomahawk\Routing\Controller\ControllerResolver;
 use Tomahawk\Routing\Controller;
 use Tomahawk\Forms\FormsManager;
 use Tomahawk\HttpCore\Response\Cookies;
+
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
+
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Tomahawk\Templating\Helper\BlocksHelper;
+use Tomahawk\Templating\Helper\RequestHelper;
+use Tomahawk\Templating\Helper\TranslatorHelper;
+use Tomahawk\Templating\Helper\UrlHelper;
 use Tomahawk\Templating\Loader\FilesystemLoader;
 use Tomahawk\Templating\Loader\TemplateLocator;
 use Tomahawk\Templating\TemplateNameParser;
@@ -249,6 +260,9 @@ class FrameworkProvider implements ServiceProviderInterface
             $phpEngine = new PhpEngine($parser, $loader, array(
                 new SlotsHelper(),
                 new BlocksHelper(),
+                new TranslatorHelper($c['translator']),
+                new UrlHelper($c['url_generator']),
+                new RequestHelper($c['request_stack'])
             ));
 
             return new DelegatingEngine(array(
@@ -385,6 +399,38 @@ class FrameworkProvider implements ServiceProviderInterface
             }
             return new Session($c['session.storage.' .$session]);
         });
+
+        $container->set('Symfony\Component\Translation\TranslatorInterface', function(ContainerInterface $c) {
+
+            $locale = $c['config']->get('translation.locale');
+            $fallbackLocale = $c['config']->get('translation.fallback_locale');
+            $translationDirs = $c['config']->get('translation.translation_dirs');
+            $cacheDir = $c['config']->get('translation.cache_dir');
+
+            $translator = new Translator($locale, new MessageSelector(), $cacheDir);
+            $translator->setFallbackLocales(array($fallbackLocale));
+            $translator->addLoader('php', new TransPhpFileLoader());
+            $translator->addLoader('array', new ArrayLoader());
+
+            foreach ($translationDirs as $translationDir) {
+
+                $finder = new Finder();
+
+                $finder->in($translationDir)->depth(0)->directories();
+
+                foreach ($finder as $directory)  {
+
+                    $dFinder = new Finder();
+                    $dFinder->in($directory->getPathname())->files()->name('*.php');
+
+                    foreach ($dFinder as $file) {
+                        $translator->addResource('php', $file->getPathname(), $directory->getFileName());
+                    }
+                }
+            }
+
+            return $translator;
+        });
     }
 
     protected function registerAliases(ContainerInterface $container)
@@ -408,6 +454,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
         $container->addAlias('session', 'Tomahawk\Session\SessionInterface');
         $container->addAlias('templating', 'Symfony\Component\Templating\EngineInterface');
+        $container->addAlias('translator', 'Symfony\Component\Translation\TranslatorInterface');
         $container->addAlias('url_generator', 'Tomahawk\Url\UrlGeneratorInterface');
     }
 }

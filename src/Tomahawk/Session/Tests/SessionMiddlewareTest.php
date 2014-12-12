@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Component\HttpFoundation\Session\Tests;
+namespace Tomahawk\Routing\Tests;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;

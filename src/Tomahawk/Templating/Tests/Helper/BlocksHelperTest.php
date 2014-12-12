@@ -1,8 +1,11 @@
 <?php
 
+namespace Tomahawk\Routing\Tests;
+
+use Tomahawk\Test\TestCase;
 use Tomahawk\Templating\Helper\BlocksHelper;
 
-class BlocksHelperTest extends PHPUnit_Framework_TestCase
+class BlocksHelperTest extends TestCase
 {
     public function testGetName()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Component\HttpFoundation\Session\Tests;
+namespace Tomahawk\Routing\Tests;
 
 use Tomahawk\Test\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;

@@ -1,0 +1,37 @@
+<?php
+
+namespace Tomahawk\Routing\Tests;
+
+use Tomahawk\Test\TestCase;
+use Tomahawk\Templating\Helper\TranslatorHelper;
+use Symfony\Component\Translation\TranslatorInterface;
+
+class TranslatorHelperTest extends TestCase
+{
+    public function testHelperCallTransMethod()
+    {
+        $translator = $this->getTranslator();
+
+        $translator->expects($this->once())
+            ->method('trans');
+
+        $helper = new TranslatorHelper($translator);
+        $helper->trans('name');
+    }
+
+    public function testHelperCallTransChoiceMethod()
+    {
+        $translator = $this->getTranslator();
+
+        $translator->expects($this->once())
+            ->method('transChoice');
+
+        $helper = new TranslatorHelper($translator);
+        $helper->transChoice('name', 2);
+    }
+
+    protected function getTranslator()
+    {
+        return $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+    }
+}
