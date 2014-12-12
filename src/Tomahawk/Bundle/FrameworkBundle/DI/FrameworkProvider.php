@@ -36,6 +36,7 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as TransPhpFileLoader;
 use Symfony\Component\Translation\MessageSelector;
 use Tomahawk\Auth\Handlers\EloquentAuthHandler;
+use Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener;
 use Tomahawk\Cache\Provider\ApcProvider;
 use Tomahawk\Cache\Provider\ArrayProvider;
 use Tomahawk\Cache\Provider\FilesystemProvider;
@@ -62,10 +63,7 @@ use Tomahawk\Routing\Controller\ControllerResolver;
 use Tomahawk\Routing\Controller;
 use Tomahawk\Forms\FormsManager;
 use Tomahawk\HttpCore\Response\Cookies;
-
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\TranslatorInterface;
-
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
@@ -318,6 +316,13 @@ class FrameworkProvider implements ServiceProviderInterface
 
             return $context;
         }));
+
+        $container->set('locale_listener', function(ContainerInterface $c) {
+            $config = $c['config'];
+            $locale = $config->get('translation.locale');
+
+            return new LocaleListener($locale, $c['request_stack'], $c['request_context']);
+        });
 
         $container->set('request_stack', new RequestStack());
 

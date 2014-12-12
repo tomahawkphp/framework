@@ -29,6 +29,8 @@ class FrameworkBundle extends Bundle
 
         $eventDispatcher->addSubscriber($c->get('route_listener'));
 
+        $eventDispatcher->addSubscriber($c->get('locale_listener'));
+
         if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);
         }
@@ -40,6 +42,7 @@ class FrameworkBundle extends Bundle
         if ($trustedHosts = $this->getConfig()->get('kernel.trusted_hosts')) {
             Request::setTrustedHosts($trustedHosts);
         }
+
     }
 
     /**

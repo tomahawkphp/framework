@@ -27,7 +27,7 @@ class FrameworkBundleTest extends TestCase
         $container = $this->getContainerMock();
 
         $eventDispatcher = $this->getEventDispatcherMock();
-        $eventDispatcher->expects($this->once())->method('addSubscriber');
+        $eventDispatcher->expects($this->exactly(2))->method('addSubscriber');
 
         $config = $this->getConfigMock();
         $config->expects($this->at(0))->method('get')->will($this->returnValue(array(
@@ -43,9 +43,10 @@ class FrameworkBundleTest extends TestCase
         $container->expects($this->at(0))->method('register');
         $container->expects($this->at(1))->method('get')->will($this->returnValue($eventDispatcher));
         $container->expects($this->at(2))->method('get')->will($this->returnValue($this->getRouteListener()));
-        $container->expects($this->at(3))->method('get')->will($this->returnValue($config));
+        $container->expects($this->at(3))->method('get')->will($this->returnValue($this->getLocaleListener()));
         $container->expects($this->at(4))->method('get')->will($this->returnValue($config));
         $container->expects($this->at(5))->method('get')->will($this->returnValue($config));
+        $container->expects($this->at(6))->method('get')->will($this->returnValue($config));
 
         $frameworkBundle = new FrameworkBundle();
         $frameworkBundle->setContainer($container);
@@ -92,6 +93,15 @@ class FrameworkBundleTest extends TestCase
     public function getRouteListener()
     {
         $listener = $this->getMockBuilder('Symfony\Component\HttpKernel\EventListener\RouterListener')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $listener;
+    }
+
+    public function getLocaleListener()
+    {
+        $listener = $this->getMockBuilder('Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener')
             ->disableOriginalConstructor()
             ->getMock();
 
