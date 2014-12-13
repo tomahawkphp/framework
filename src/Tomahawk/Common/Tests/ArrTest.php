@@ -7,38 +7,25 @@ use Tomahawk\Common\Arr;
 
 class ArrTest extends TestCase
 {
-    public function testPluckArray()
+    public function testFirstReturnsCorrectValue()
     {
-        $people = array(
-            array(
-                'name' => 'Tom',
-                'age'  => 27
-            ),
-            array(
-                'name' => 'Melia',
-                'age'  => 25
-            )
-        );
-
-        $this->assertEquals(array('Tom', 'Melia'), Arr::pluck($people, 'name'));
+        $this->assertEquals(3, Arr::first(array(3,2,1)));
     }
 
-    public function testPluckObject()
+    public function testFirstByReturnsCorrectValue()
     {
-        $people = array();
+        $this->assertEquals(2, Arr::firstBy(array(3,2,1), function($key, $value) {
+            return $value === 2;
+        }));
 
-        $person1 = new \stdClass();
-        $person1->name = 'Tom';
-        $person1->age = 27;
+        $this->assertEquals('a', Arr::firstBy(array('a','b','c'), function($key, $value) {
+            return $value === 'a';
+        }));
+    }
 
-        $person2 = new \stdClass();
-        $person2->name = 'Melia';
-        $person2->age = 25;
-
-
-        array_push($people, $person1, $person2);
-
-        $this->assertEquals(array('Tom', 'Melia'), Arr::pluck($people, 'name'));
+    public function testLastReturnsCorrectValue()
+    {
+        $this->assertEquals(1, Arr::last(array(3,2,1)));
     }
 
     public function testOnly()
@@ -47,8 +34,6 @@ class ArrTest extends TestCase
             'foo' => 'bar',
             'baz' => 'boom'
         );
-
-        //var_dump(Arr::only($array, 'foo'));
 
         $this->assertEquals(array('foo' => 'bar'), Arr::only($array, 'foo'));
     }
@@ -61,6 +46,56 @@ class ArrTest extends TestCase
         );
 
         $this->assertEquals(array('baz' => 'boom'), Arr::except($array, 'foo'));
+    }
+
+    public function testArrayGetReturnsValue()
+    {
+        $array = array(
+            'foo' => 'bar',
+            'baz' => 'boom'
+        );
+
+        $this->assertEquals('bar', Arr::get($array, 'foo'));
+    }
+
+    public function testArrayGetReturnsDefaultValue()
+    {
+        $array = array(
+            'foo' => 'bar',
+        );
+
+        $this->assertEquals('boom', Arr::get($array, 'baz', 'boom'));
+    }
+
+    public function testArraySet()
+    {
+        $array = array(
+            'foo' => 'bar',
+        );
+
+        Arr::set($array, 'baz', 'boom');
+
+        $this->assertEquals('boom', Arr::get($array, 'baz'));
+    }
+
+    public function testArrayHas()
+    {
+        $array = array(
+            'foo' => 'bar',
+        );
+
+        $this->assertTrue(Arr::has($array, 'foo'));
+        $this->assertFalse(Arr::has($array, 'bar'));
+    }
+
+    public function testArrayContains()
+    {
+        $array = array(
+            'foo' => 'bar',
+        );
+
+        $this->assertTrue(Arr::contains($array, 'bar'));
+        $this->assertFalse(Arr::contains($array, 'boom'));
     }
 
 }
