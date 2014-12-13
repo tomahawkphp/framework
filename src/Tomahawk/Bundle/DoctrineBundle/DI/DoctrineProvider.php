@@ -121,8 +121,9 @@ class DoctrineProvider implements ServiceProviderInterface
         });
 
         $container->set('doctrine.cache.filesystem', function(ContainerInterface $c) {
-            $cache = new FilesystemCache($c['config']->get('cache.directory'));
-            $cache->setNamespace($c['config']->get('cache.namespace', ''));
+            $config = $c['config'];
+            $cache = new FilesystemCache($config->get('cache.directory'));
+            $cache->setNamespace($config->get('cache.namespace', ''));
             return $cache;
         });
 

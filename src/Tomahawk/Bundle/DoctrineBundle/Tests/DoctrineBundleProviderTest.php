@@ -65,6 +65,25 @@ class DoctrineBundleProviderTest extends TestCase
         //$this->assertInstanceOf('Tomahawk\Bundle\DoctrineBundle\Registry', $container->get('doctrine'));
     }
 
+    public function testDefaultConnectionsIsReturned()
+    {
+        $container = $this->getContainer();
+
+        $config = $this->getConfig();
+        $config->expects($this->once())
+            ->method('get')
+            ->with('doctrine')
+            ->will($this->returnValue($this->doctrineConfig));
+
+
+        $container->set('config', $config);
+
+        $provider = new DoctrineProvider();
+        $provider->register($container);
+
+        $this->assertInstanceOf('Doctrine\DBAL\Connection', $container->get('doctrine.connection.default'));
+    }
+
     public function testConnectionsArrayIsReturned()
     {
         $container = $this->getContainer();
@@ -83,6 +102,68 @@ class DoctrineBundleProviderTest extends TestCase
         $connections = $container->get('doctrine.connections');
 
         $this->assertTrue(is_array($connections));
+    }
+
+    public function testAPCCacheInstanceIsReturned()
+    {
+        $container = $this->getContainer();
+
+        $config = $this->getConfig();
+
+        $config->expects($this->once())
+            ->method('get')
+            ->with('cache.namespace')
+            ->will($this->returnValue(''));
+
+        $container->set('config', $config);
+
+        $provider = new DoctrineProvider();
+        $provider->register($container);
+
+        $this->assertInstanceOf('Doctrine\Common\Cache\ApcCache', $container->get('doctrine.cache.apc'));
+    }
+
+    public function testArrayacheInstanceIsReturned()
+    {
+        $container = $this->getContainer();
+
+        $config = $this->getConfig();
+
+        $config->expects($this->once())
+            ->method('get')
+            ->with('cache.namespace')
+            ->will($this->returnValue(''));
+
+        $container->set('config', $config);
+
+        $provider = new DoctrineProvider();
+        $provider->register($container);
+
+        $this->assertInstanceOf('Doctrine\Common\Cache\ArrayCache', $container->get('doctrine.cache.array'));
+    }
+
+    public function testFSacheInstanceIsReturned()
+    {
+        $container = $this->getContainer();
+
+        $config = $this->getConfig();
+
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('cache.directory')
+            ->will($this->returnValue('/cache'));
+
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('cache.namespace')
+            ->will($this->returnValue(''));
+
+        $container->set('config', $config);
+
+        $provider = new DoctrineProvider();
+        $provider->register($container);
+
+        $this->assertInstanceOf('Doctrine\Common\Cache\FilesystemCache', $container->get('doctrine.cache.filesystem'));
     }
 
     protected function getContainer()

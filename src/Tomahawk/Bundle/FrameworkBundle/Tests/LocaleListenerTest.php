@@ -67,7 +67,7 @@ class LocaleListenerTest extends TestCase
 
         $this->requestStack->push($parentRequest);
         $this->requestStack->push($anotherRequest);
-        
+
         $requestContext = new RequestContext();
         $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
         $request = Request::create('http://localhost/', 'get');
