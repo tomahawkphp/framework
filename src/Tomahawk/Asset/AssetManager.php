@@ -113,7 +113,8 @@ class AssetManager implements AssetManagerInterface
 
         foreach ($assets as $asset)
         {
-            $html[] = $this->html->script($asset['source'], $asset['attributes']);
+            $source = $this->url ? $this->url->to($asset['source']): $asset['source'];
+            $html[] = $this->html->script($source, $asset['attributes']);
         }
 
         return trim(implode(PHP_EOL, $html));
