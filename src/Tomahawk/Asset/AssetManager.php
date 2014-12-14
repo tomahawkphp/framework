@@ -113,7 +113,7 @@ class AssetManager implements AssetManagerInterface
 
         foreach ($assets as $asset)
         {
-            $source = $this->url ? $this->url->to($asset['source']): $asset['source'];
+            $source = $this->url ? $this->url->asset($asset['source']): $asset['source'];
             $html[] = $this->html->script($source, $asset['attributes']);
         }
 
@@ -128,7 +128,7 @@ class AssetManager implements AssetManagerInterface
 
         foreach ($assets as $asset)
         {
-            $source = $this->url ? $this->url->to($asset['source']): $asset['source'];
+            $source = $this->url ? $this->url->asset($asset['source']): $asset['source'];
             $html[] = $this->html->style($source, $asset['attributes']);
         }
 

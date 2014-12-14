@@ -63,6 +63,51 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
     }
 
     /**
+     * URL to an asset
+     *
+     * @param $path
+     * @param array $extra
+     * @param bool $secure
+     * @return string
+     */
+    public function asset($path, array $extra = array(), $secure = false)
+    {
+        // Check if valid URL
+        if ($this->validateURL($path)) {
+            $extra = implode('/', array_map('rawurlencode', $extra));
+            return rtrim($path, '/') . $extra;
+        }
+
+        $scheme = $this->context->getScheme();
+        $host = $this->context->getHost();
+        $base = '';
+        $port = '';
+
+        // When in a test environment you might not have SSL enabled, so you can turn this off easily
+        if ($secure && $this->sslOn) {
+            $scheme = 'https';
+        }
+        else {
+            $scheme = 'http';
+        }
+
+        if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
+            $port = ':'.$this->context->getHttpPort();
+        }
+        elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
+            $port = ':'.$this->context->getHttpsPort();
+        }
+
+        $extra = implode('/', array_map('rawurlencode', $extra));
+
+        $path = trim($path . '/' . $extra, '/');
+
+        $url = rtrim(sprintf('%s://%s%s%s/%s', $scheme, $host, $port, $base, $path), '/');
+
+        return $url;
+    }
+
+    /**
      * @param string $path
      * @param array $extra
      * @param bool $secure

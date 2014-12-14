@@ -60,6 +60,13 @@ class UrlGeneratorTest extends TestCase
         $this->assertEquals('http://symfony.devbox.com:8182', $this->url->getCurrentUrl());
     }
 
+    public function testURLToAssetWorks()
+    {
+        // Base url isn't used so shouldn'ty appear in returned URL
+        $this->url->getContext()->setBaseUrl('/app_dev.php');
+        $this->assertEquals('http://symfony.devbox.com:8182/js/jquery.js', $this->url->asset('js/jquery.js'));
+    }
+
     public function testSSLOff()
     {
         $this->url->setSslOn(false);

@@ -27,6 +27,16 @@ interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface
     public function getCurrentUrl();
 
     /**
+     * URL to an asset
+     *
+     * @param $path
+     * @param array $extra
+     * @param bool $secure
+     * @return string
+     */
+    public function asset($path, array $extra = array(), $secure = false);
+
+    /**
      * @param string $path
      * @param array $extra
      * @param bool $secure
