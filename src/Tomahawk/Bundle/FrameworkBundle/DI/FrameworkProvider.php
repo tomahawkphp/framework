@@ -126,7 +126,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Symfony\Component\EventDispatcherInterface', new EventDispatcher());
 
         $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $container) {
-            return new AssetManager($container['html_builder']);
+            return new AssetManager($container['html_builder'], $container['url_generator']);
         });
 
         $container->set('Symfony\Component\Config\Loader\LoaderInterface', function(ContainerInterface $c) {
