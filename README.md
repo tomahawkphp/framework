@@ -23,4 +23,4 @@ work for you:
    known PHP bug (see https://bugs.php.net/bug.php?id=55156).
 
  * PHP 5.3.16 has a major bug in the Reflection subsystem and is not suitable to
-   run Symfony2 (https://bugs.php.net/bug.php?id=62715)
+   run TomahawkPHP and Symfony2 Components (https://bugs.php.net/bug.php?id=62715)
