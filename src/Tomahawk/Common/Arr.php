@@ -13,6 +13,13 @@ namespace Tomahawk\Common;
 
 use Closure;
 
+/**
+ * Class Arr
+ *
+ * A simple class for array manipulation
+ *
+ * @package Tomahawk\Common
+ */
 class Arr
 {
     /**

@@ -73,4 +73,25 @@ class StrTest extends TestCase
         $this->assertEquals(10, strlen(Str::quickRandom(10)));
     }
 
+    public function testCamelCase()
+    {
+        $this->assertEquals('tomEllis', Str::camelCase('tom_ellis'));
+    }
+
+    public function testStudlyCase()
+    {
+        $this->assertEquals('TomEllis', Str::studlyCase('tom_ellis'));
+    }
+
+    public function testSlug()
+    {
+        $this->assertEquals('tom-ellis', Str::slug('tom_ellis'));
+    }
+
+    public function testIs()
+    {
+        $this->assertTrue(Str::is('tom', 'tom'));
+        $this->assertTrue(Str::is('account/dashboard', 'account/*'));
+    }
+
 }

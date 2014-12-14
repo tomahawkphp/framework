@@ -11,9 +11,30 @@
 
 namespace Tomahawk\Common;
 
+use Patchwork\Utf8;
+
+/**
+ * Class Str
+ *
+ * A simple class for string manipulation
+ *
+ * @package Tomahawk\Common
+ */
 class Str
 {
     public static $random = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    /**
+     * Generic UTF-8 to ASCII transliteration
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public static function ascii($value)
+    {
+        return Utf8::toAscii($value);
+    }
+
     /**
      * Convert the given string to lower-case.
      *
@@ -45,6 +66,76 @@ class Str
     public static function title($value)
     {
         return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
+    }
+
+    /**
+     * Convert string to camel case
+     *
+     * @param $value
+     * @return string
+     */
+    public static function camelCase($value)
+    {
+        return lcfirst(static::studlyCase($value));
+    }
+
+    /**
+     * Convert a value to studly case.
+     *
+     * @param $value
+     * @return string
+     */
+    public static function studlyCase($value)
+    {
+        $value = ucwords(str_replace(array('-', '_'), ' ', $value));
+        return str_replace(' ', '', $value);
+    }
+
+    /**
+     * Check if a string matches passed pattern
+     *
+     * @param $value
+     * @param $pattern
+     * @return bool
+     */
+    public static function is($value, $pattern)
+    {
+        if ($pattern === $value) {
+            return true;
+        }
+
+        $pattern = preg_quote($pattern, '/');
+
+        $pattern = str_replace('\*', '.*', $pattern).'\z';
+
+        return (bool) preg_match('/^'.$pattern.'/', $value);
+    }
+
+    /**
+     * Generate a URL friendly "slug" from a given string.
+     *
+     * Taken from \Illuminate\Support\Str
+     *
+     * @param  string  $title
+     * @param  string  $separator
+     * @return string
+     */
+    public static function slug($title, $separator = '-')
+    {
+        $title = static::ascii($title);
+
+        // Convert all dashes/underscores into separator
+        $flip = $separator == '-' ? '_' : '-';
+
+        $title = preg_replace('!['.preg_quote($flip).']+!u', $separator, $title);
+
+        // Remove all characters that are not the separator, letters, numbers, or whitespace.
+        $title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower($title));
+
+        // Replace all separator characters and whitespace by a single separator
+        $title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $title);
+
+        return trim($title, $separator);
     }
 
     /**
