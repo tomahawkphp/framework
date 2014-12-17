@@ -72,48 +72,17 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
      */
     public function asset($path, array $extra = array(), $secure = false)
     {
-        // Check if valid URL
-        if ($this->validateURL($path)) {
-            $extra = implode('/', array_map('rawurlencode', $extra));
-            return rtrim($path, '/') . $extra;
-        }
-
-        $scheme = $this->context->getScheme();
-        $host = $this->context->getHost();
-        $base = '';
-        $port = '';
-
-        // When in a test environment you might not have SSL enabled, so you can turn this off easily
-        if ($secure && $this->sslOn) {
-            $scheme = 'https';
-        }
-        else {
-            $scheme = 'http';
-        }
-
-        if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
-            $port = ':'.$this->context->getHttpPort();
-        }
-        elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
-            $port = ':'.$this->context->getHttpsPort();
-        }
-
-        $extra = implode('/', array_map('rawurlencode', $extra));
-
-        $path = trim($path . '/' . $extra, '/');
-
-        $url = rtrim(sprintf('%s://%s%s%s/%s', $scheme, $host, $port, $base, $path), '/');
-
-        return $url;
+        return $this->to($path, $extra, $secure, true);
     }
 
     /**
      * @param string $path
      * @param array $extra
      * @param bool $secure
+     * @param bool $asset
      * @return mixed|string
      */
-    public function to($path = '', array $extra = array(), $secure = false)
+    public function to($path = '', array $extra = array(), $secure = false, $asset = false)
     {
         // Check if valid URL
         if ($this->validateURL($path)) {
@@ -123,7 +92,11 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
 
         $scheme = $this->context->getScheme();
         $host = $this->context->getHost();
-        $base = $this->context->getBaseUrl();
+        $base = '';
+
+        if (!$asset) {
+            $base = $this->context->getBaseUrl();
+        }
         $port = '';
 
         // When in a test environment you might not have SSL enabled, so you can turn this off easily
@@ -154,11 +127,12 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
      * @param string $url
      * @param array $extra
      * @param bool $secure
+     * @param bool $asset
      * @return string
      */
-    public function secureTo($url = '', array $extra = array(), $secure = true)
+    public function secureTo($url = '', array $extra = array(), $secure = true, $asset = false)
     {
-        return $this->to($url, $extra, $secure);
+        return $this->to($url, $extra, $secure, $asset);
     }
 
     /**

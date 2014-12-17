@@ -40,17 +40,19 @@ interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface
      * @param string $path
      * @param array $extra
      * @param bool $secure
+     * @param bool $asset
      * @return mixed|string
      */
-    public function to($path = '', array $extra = array(), $secure = false);
+    public function to($path = '', array $extra = array(), $secure = false, $asset = false);
 
     /**
      * @param string $url
      * @param array $extra
      * @param bool $secure
+     * @param bool $asset
      * @return string
      */
-    public function secureTo($url = '', array $extra = array(), $secure = true);
+    public function secureTo($url = '', array $extra = array(), $secure = true, $asset = false);
 
     /**
      * Determine if the given path is a valid URL.
