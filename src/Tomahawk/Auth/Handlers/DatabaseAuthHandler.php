@@ -51,7 +51,6 @@ class DatabaseAuthHandler implements AuthHandlerInterface
             $user = new User((array)$result);
             $user->setPrimaryKey($this->key);
             $user->setPasswordField($this->passwordField);
-
             return $user;
         }
 
@@ -78,11 +77,9 @@ class DatabaseAuthHandler implements AuthHandlerInterface
         $result = $query->first();
 
         if ($result) {
-
             $user = new User((array)$result);
             $user->setPrimaryKey($this->key);
             $user->setPasswordField($this->passwordField);
-
             return $user;
         }
 
@@ -99,7 +96,6 @@ class DatabaseAuthHandler implements AuthHandlerInterface
     public function validateCredentials(UserInterface $user, array $credentials)
     {
         $plain = $credentials['password'];
-
         return $this->hasher->check($plain, $user->getAuthPassword());
     }
 

@@ -14,12 +14,14 @@ class RegistryTest extends TestCase
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->assertEquals('default', $registry->getDefaultConnectionName());
     }
+
     public function testGetDefaultEntityManagerName()
     {
         $container = $this->getMock('Tomahawk\DI\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->assertEquals('default', $registry->getDefaultManagerName());
     }
+
     public function testGetDefaultConnection()
     {
         $conn = $this->getMock('Doctrine\DBAL\Connection', array(), array(), '', false);
@@ -31,6 +33,7 @@ class RegistryTest extends TestCase
         $registry = new Registry($container, array('default' => 'doctrine.dbal.default_connection'), array(), 'default', 'default');
         $this->assertSame($conn, $registry->getConnection());
     }
+
     public function testGetConnection()
     {
         $conn = $this->getMock('Doctrine\DBAL\Connection', array(), array(), '', false);
@@ -42,6 +45,7 @@ class RegistryTest extends TestCase
         $registry = new Registry($container, array('default' => 'doctrine.dbal.default_connection'), array(), 'default', 'default');
         $this->assertSame($conn, $registry->getConnection('default'));
     }
+
     public function testGetUnknownConnection()
     {
         $container = $this->getMock('Tomahawk\DI\ContainerInterface');
@@ -49,12 +53,14 @@ class RegistryTest extends TestCase
         $this->setExpectedException('InvalidArgumentException', 'Doctrine ORM Connection named "default" does not exist.');
         $registry->getConnection('default');
     }
+
     public function testGetConnectionNames()
     {
         $container = $this->getMock('Tomahawk\DI\ContainerInterface');
         $registry = new Registry($container, array('default' => 'doctrine.dbal.default_connection'), array(), 'default', 'default');
         $this->assertEquals(array('default' => 'doctrine.dbal.default_connection'), $registry->getConnectionNames());
     }
+
     public function testGetDefaultEntityManager()
     {
         $em = new \stdClass();
@@ -66,6 +72,7 @@ class RegistryTest extends TestCase
         $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
         $this->assertSame($em, $registry->getManager());
     }
+
     public function testGetEntityManager()
     {
         $em = new \stdClass();
@@ -77,6 +84,7 @@ class RegistryTest extends TestCase
         $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
         $this->assertSame($em, $registry->getManager('default'));
     }
+
     public function testGetUnknownEntityManager()
     {
         $container = $this->getMock('Tomahawk\DI\ContainerInterface');
@@ -84,6 +92,7 @@ class RegistryTest extends TestCase
         $this->setExpectedException('InvalidArgumentException', 'Doctrine ORM Manager named "default" does not exist.');
         $registry->getManager('default');
     }
+
     public function testResetDefaultEntityManager()
     {
         $container = $this->getMock('Tomahawk\DI\ContainerInterface');
@@ -93,6 +102,7 @@ class RegistryTest extends TestCase
         $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
         $registry->resetManager();
     }
+
     public function testResetEntityManager()
     {
         $container = $this->getMock('Tomahawk\DI\ContainerInterface');
@@ -102,11 +112,26 @@ class RegistryTest extends TestCase
         $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
         $registry->resetManager('default');
     }
+
     public function testResetUnknownEntityManager()
     {
         $container = $this->getMock('Tomahawk\DI\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->setExpectedException('InvalidArgumentException', 'Doctrine ORM Manager named "default" does not exist.');
         $registry->resetManager('default');
+    }
+
+    public function testGetManagers()
+    {
+        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
+        $this->assertCount(1, $registry->getManagers());
+    }
+
+    public function testGetEntityManagerNames()
+    {
+        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
+        $this->assertEquals(array('default' => 'doctrine.orm.default_entity_manager'), $registry->getManagerNames());
     }
 }

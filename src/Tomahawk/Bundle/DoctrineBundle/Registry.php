@@ -69,12 +69,12 @@ class Registry extends AbstractManagerRegistry implements RegistryInterface
      *
      * @return string The default entity manager name
      *
+     * @codeCoverageIgnore
+     *
      * @deprecated
      */
     public function getDefaultEntityManagerName()
     {
-        trigger_error('getDefaultEntityManagerName is deprecated since Symfony 2.1. Use getDefaultManagerName instead', E_USER_DEPRECATED);
-
         return $this->getDefaultManagerName();
     }
 
@@ -85,12 +85,12 @@ class Registry extends AbstractManagerRegistry implements RegistryInterface
      *
      * @return EntityManager
      *
+     * @codeCoverageIgnore
+     *
      * @deprecated
      */
     public function getEntityManager($name = null)
     {
-        trigger_error('getEntityManager is deprecated since Symfony 2.1. Use getManager instead', E_USER_DEPRECATED);
-
         return $this->getManager($name);
     }
 
@@ -99,12 +99,12 @@ class Registry extends AbstractManagerRegistry implements RegistryInterface
      *
      * @return EntityManager[] an array of all EntityManager instances
      *
+     * @codeCoverageIgnore
+     *
      * @deprecated
      */
     public function getEntityManagers()
     {
-        trigger_error('getEntityManagers is deprecated since Symfony 2.1. Use getManagers instead', E_USER_DEPRECATED);
-
         return $this->getManagers();
     }
 
@@ -125,6 +125,8 @@ class Registry extends AbstractManagerRegistry implements RegistryInterface
      *
      * @return EntityManager
      *
+     * @codeCoverageIgnore
+     *
      * @deprecated
      */
     public function resetEntityManager($name = null)
@@ -143,12 +145,12 @@ class Registry extends AbstractManagerRegistry implements RegistryInterface
      *
      * @return string The full namespace
      *
+     * @codeCoverageIgnore
+     *
      * @deprecated
      */
     public function getEntityNamespace($alias)
     {
-        trigger_error('getEntityNamespace is deprecated since Symfony 2.1. Use getAliasNamespace instead', E_USER_DEPRECATED);
-
         return $this->getAliasNamespace($alias);
     }
 
@@ -180,12 +182,12 @@ class Registry extends AbstractManagerRegistry implements RegistryInterface
      *
      * @return array An array of connection names
      *
+     * @codeCoverageIgnore
+     *
      * @deprecated
      */
     public function getEntityManagerNames()
     {
-        trigger_error('getEntityManagerNames is deprecated since Symfony 2.1. Use getManagerNames instead', E_USER_DEPRECATED);
-
         return $this->getManagerNames();
     }
 
@@ -196,12 +198,12 @@ class Registry extends AbstractManagerRegistry implements RegistryInterface
      *
      * @return EntityManager|null
      *
+     * @codeCoverageIgnore
+     *
      * @deprecated
      */
     public function getEntityManagerForClass($class)
     {
-        trigger_error('getEntityManagerForClass is deprecated since Symfony 2.1. Use getManagerForClass instead', E_USER_DEPRECATED);
-
         return $this->getManagerForClass($class);
     }
 }

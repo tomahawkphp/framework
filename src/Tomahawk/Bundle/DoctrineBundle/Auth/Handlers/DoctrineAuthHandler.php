@@ -6,8 +6,6 @@ use Tomahawk\Auth\AuthHandlerInterface;
 use Tomahawk\Auth\UserInterface;
 use Tomahawk\Hashing\HasherInterface;
 use Doctrine\ORM\Repository;
-use Doctrine\Common\Persistence\ObjectRepository;
-
 use Tomahawk\Bundle\DoctrineBundle\RegistryInterface;
 
 class DoctrineAuthHandler implements AuthHandlerInterface
@@ -16,8 +14,20 @@ class DoctrineAuthHandler implements AuthHandlerInterface
      * @var \Tomahawk\Hashing\HasherInterface
      */
     protected $hasher;
+
+    /**
+     * @var \Tomahawk\Bundle\DoctrineBundle\RegistryInterface
+     */
     protected $doctrine;
+
+    /**
+     * @var string
+     */
     protected $model;
+
+    /**
+     * @var string
+     */
     protected $usernameField;
 
     public function __construct(HasherInterface $hasher, RegistryInterface $doctrine, $model, $usernameField)
