@@ -48,6 +48,7 @@ class Arr
                 return $value;
             }
         }
+        return null;
     }
 
     /**

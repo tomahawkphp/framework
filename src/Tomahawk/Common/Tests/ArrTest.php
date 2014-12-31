@@ -21,6 +21,10 @@ class ArrTest extends TestCase
         $this->assertEquals('a', Arr::firstBy(array('a','b','c'), function($key, $value) {
             return $value === 'a';
         }));
+
+        $this->assertEquals(null, Arr::firstBy(array('a','b','c'), function($key, $value) {
+            return $value === 'd';
+        }));
     }
 
     public function testLastReturnsCorrectValue()

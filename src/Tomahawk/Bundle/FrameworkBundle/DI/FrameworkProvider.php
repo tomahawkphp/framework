@@ -35,6 +35,7 @@ use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as TransPhpFileLoader;
 use Symfony\Component\Translation\MessageSelector;
+use Tomahawk\Auth\Handlers\DatabaseAuthHandler;
 use Tomahawk\Auth\Handlers\EloquentAuthHandler;
 use Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener;
 use Tomahawk\Cache\Provider\ApcProvider;
@@ -92,8 +93,37 @@ class FrameworkProvider implements ServiceProviderInterface
     protected function registerServices(ContainerInterface $container)
     {
 
-        $container->set('Tomahawk\Auth\AuthHandlerInterface', function(ContainerInterface $c) {
-            return new EloquentAuthHandler($c['hasher'], $c['config']->get('security.model'));
+        $container->set('auth_handler', function(ContainerInterface $c) {
+            /** @var ConfigInterface $config */
+            $config = $c['config'];
+
+            $handler = $config->get('security.handler');
+            
+            return $c[$handler . '_auth_handler'];
+        });
+
+        $container->set('eloquent_auth_handler', function(ContainerInterface $c) {
+            /** @var ConfigInterface $config */
+            $config = $c['config'];
+            $eloquentConfig = $config->get('security.handlers.eloquent');
+            return new EloquentAuthHandler($c['hasher'], $eloquentConfig['model']);
+        });
+
+        $container->set('database_auth_handler', function(ContainerInterface $c) {
+            /** @var ConfigInterface $config */
+            $config = $c['config'];
+
+            $databaseConfig = $config->get('security.handlers.database');
+
+            $connection = $c['illuminate_database']->getDatabaseManager()->connection($databaseConfig['connection']);
+
+            return new DatabaseAuthHandler(
+                $c['hasher'],
+                $connection,
+                $databaseConfig['table'],
+                $databaseConfig['key'],
+                $databaseConfig['password']
+            );
         });
 
         $container->set('Tomahawk\Auth\AuthInterface', function(ContainerInterface $c) {
@@ -102,9 +132,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('illuminate_database', function(ContainerInterface $c) {
 
-            /**
-             * @var ConfigInterface
-             */
+            /** @var ConfigInterface $config */
             $config = $c['config'];
 
             $manager = new Manager();
@@ -441,7 +469,6 @@ class FrameworkProvider implements ServiceProviderInterface
     protected function registerAliases(ContainerInterface $container)
     {
         $container->addAlias('auth', 'Tomahawk\Auth\AuthInterface');
-        $container->addAlias('auth_handler', 'Tomahawk\Auth\AuthHandlerInterface');
         $container->addAlias('asset_manager', 'Tomahawk\Asset\AssetManagerInterface');
         $container->addAlias('cache', 'Tomahawk\Cache\CacheInterface');
         $container->addAlias('config_loader', 'Symfony\Component\Config\Loader\LoaderInterface');

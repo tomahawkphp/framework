@@ -19,7 +19,9 @@ use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\DBAL\DriverManager;
+use Tomahawk\Bundle\DoctrineBundle\Auth\Handlers\DoctrineAuthHandler;
 use Tomahawk\Bundle\DoctrineBundle\Registry;
+use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\DI\ServiceProviderInterface;
 use Doctrine\ORM\EntityManager;
@@ -96,6 +98,19 @@ class DoctrineProvider implements ServiceProviderInterface
             }
 
             return DriverManager::getConnection($allConnections[$defaultConnection]);
+        });
+
+        $container->set('doctrine_auth_handler', function(ContainerInterface $c) {
+
+            /**
+             * @var ConfigInterface $config
+             */
+            $config = $c['config'];
+
+            $model = $config->get('security.doctrine_model');
+            $usernameField = $config->get('security.doctrine_username_field');
+
+            return new DoctrineAuthHandler($c['hasher'], $c['doctrine'], $model, $usernameField);
         });
     }
 

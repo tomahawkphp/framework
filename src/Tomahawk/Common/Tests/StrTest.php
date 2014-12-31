@@ -1,8 +1,10 @@
 <?php
 namespace Tomahawk\Common\Tests;
 
+use Tomahawk\Common\TestOpenStr;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Common\Str;
+use Tomahawk\Common\TestStr;
 
 class StrTest extends TestCase
 {
@@ -94,4 +96,13 @@ class StrTest extends TestCase
         $this->assertTrue(Str::is('account/dashboard', 'account/*'));
     }
 
+    public function testRandomWhenOpenSSLIsNotAvailable()
+    {
+        $this->assertEquals(10, strlen(TestStr::random(10)));
+    }
+
+    public function testRandomWhenOpenSSLIsAvailableButInvalid()
+    {
+        $this->assertEquals(false, strlen(TestOpenStr::random(10)));
+    }
 }

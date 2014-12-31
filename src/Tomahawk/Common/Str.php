@@ -186,16 +186,18 @@ class Str
      * Generate a more truly "random" alpha-numeric string.
      *
      * @param  int $length
-     * @return string
+     * @return string|boolean
      */
     public static function random($length = 16)
     {
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            $bytes = openssl_random_pseudo_bytes($length * 2);
+        if (static::supportOpenSSL()) {
+
+            $bytes = static::secureBytes($length);
 
             if (false !== $bytes) {
                 return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
             }
+            return false;
         }
         return static::quickRandom($length);
     }
@@ -211,5 +213,15 @@ class Str
     public static function quickRandom($length = 16)
     {
         return substr(str_shuffle(str_repeat(static::$random, 5)), 0, $length);
+    }
+
+    protected static function supportOpenSSL()
+    {
+        return function_exists('openssl_random_pseudo_bytes');
+    }
+
+    protected static function secureBytes($length)
+    {
+        return openssl_random_pseudo_bytes($length * 2);
     }
 }

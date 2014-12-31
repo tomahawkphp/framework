@@ -9,9 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Cache\Loader;
+namespace Tomahawk\Common;
 
-interface CacheLoaderInterface
+use Tomahawk\Common\Str;
+
+class TestStr extends Str
 {
-
+    protected static function supportOpenSSL()
+    {
+        return false;
+    }
 }

@@ -89,28 +89,6 @@ class ConfigTest extends TestCase
         $this->assertEquals('cookie', $config->get('session.driver'));
     }
 
-   /* public function testSetGetConfig()
-    {
-        $configDirectories = array(
-            __DIR__ .'/configs',
-            __DIR__ .'/configs/develop'
-        );
-
-        $locator = new FileLocator($configDirectories);
-
-        $loaderResolver = new LoaderResolver(
-            array(
-                new YamlConfigLoader($locator),
-                new PhpConfigLoader($locator)
-            )
-        );
-
-        $delegatingLoader = new DelegatingLoader($loaderResolver);
-
-        $config = new ConfigManager($delegatingLoader, $configDirectories);
-    }*/
-
-
     public function testChangeTheThings()
     {
         $configDirectories = array(
@@ -217,5 +195,35 @@ class ConfigTest extends TestCase
 
         $this->assertEquals(null, $config->get('new'));
 
+    }
+
+    public function testArraySetAndGet()
+    {
+        $configDirectories = array(
+            __DIR__ .'/Resources/configs'
+        );
+
+        $loaderResolver = new LoaderResolver(array());
+
+        $delegatingLoader = new DelegatingLoader($loaderResolver);
+
+        $config = new ConfigManager($delegatingLoader, $configDirectories);
+
+        $config->set(null, array(
+            'foo' => array(
+                'bar' => 'baz'
+            )
+        ));
+
+
+        $this->assertEquals(array(
+            'bar' => 'baz'
+        ), $config->get('foo'));
+        $this->assertEquals('baz', $config->get('foo.bar'));
+        $this->assertEquals(array(
+            'foo' => array(
+                'bar' => 'baz'
+            )
+        ), $config->get());
     }
 }

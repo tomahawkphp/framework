@@ -17,24 +17,20 @@ class TransportBuilder
     {
         $type = $config['transport'];
 
-        switch ($type)
-        {
-            case 'gmail':
-                $transport = self::buildGmailTransport($config);
-                break;
-            case 'smtp':
-                $transport = self::buildSmtpTransport($config);
-                break;
-            case 'sendmail':
-                $transport = self::buildSendMailTransport();
-                break;
-            case 'mail':
-                $transport = self::buildMailTransport();
-                break;
-            case 'null':
-            default:
-                $transport = self::buildNullTransport();
-                break;
+        if ('gmail' === $type) {
+            $transport = static::buildGmailTransport($config);
+        }
+        else if ('smtp' === $type) {
+            $transport = static::buildSmtpTransport($config);
+        }
+        else if ('sendmail' === $type) {
+            $transport = static::buildSendMailTransport();
+        }
+        else if ('mail' === $type) {
+            $transport = static::buildMailTransport();
+        }
+        else {
+            $transport = static::buildNullTransport();
         }
 
         return $transport;
@@ -46,7 +42,7 @@ class TransportBuilder
         $config['port'] = 573;
         $config['security'] = 'ssl';
 
-        return self::buildSmtpTransport($config);
+        return static::buildSmtpTransport($config);
     }
 
     public static function buildSmtpTransport(array $config)

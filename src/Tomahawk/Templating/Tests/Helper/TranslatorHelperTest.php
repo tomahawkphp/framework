@@ -30,6 +30,12 @@ class TranslatorHelperTest extends TestCase
         $helper->transChoice('name', 2);
     }
 
+    public function testGetName()
+    {
+        $helper = new TranslatorHelper($this->getTranslator());
+        $this->assertEquals('translator', $helper->getName());
+    }
+
     protected function getTranslator()
     {
         return $this->getMock('Symfony\Component\Translation\TranslatorInterface');

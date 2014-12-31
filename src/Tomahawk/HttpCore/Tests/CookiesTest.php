@@ -24,9 +24,7 @@ class CookiesTest extends TestCase
 
     public function testSet()
     {
-
         $cookies = new Cookies($this->request, $this->key);
-
         $cookies->set('name', 'Tom');
 
         $this->assertCount(1, $cookies->getQueued());
@@ -42,6 +40,17 @@ class CookiesTest extends TestCase
 
         $this->assertTrue($cookies->has('name'));
         $this->assertEquals('Tom', $cookies->get('name'));
+    }
+
+    public function testHasFailsWithInvalidCookie()
+    {
+        $value = hash_hmac('sha1', 'Tom', $this->key);
+
+        $request = new Request(array(), array(), array(), array('name' => $value));
+        $cookies = new Cookies($request, $this->key);
+
+        $this->assertTrue($cookies->has('name'));
+        $this->assertEquals(null, $cookies->get('name'));
     }
 
     public function testHasNotExists()

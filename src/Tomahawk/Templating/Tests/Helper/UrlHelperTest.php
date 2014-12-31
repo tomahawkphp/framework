@@ -36,6 +36,17 @@ class UrlHelperTest extends TestCase
         $helper->route('home');
     }
 
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testInvalidMethodThrowsException()
+    {
+        $urlGenerator = $this->getUrlGenerator();
+
+        $helper = new UrlHelper($urlGenerator);
+        $helper->foo('home');
+    }
+
     protected function getUrlGenerator()
     {
         return $this->getMock('Tomahawk\Url\UrlGeneratorInterface');

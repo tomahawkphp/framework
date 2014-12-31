@@ -18,6 +18,15 @@ class RequestHelperTest extends TestCase
         $this->requestStack->push($request);
     }
 
+    /**
+     * @expectedException \LogicException
+     */
+    public function testGetParameterThrowsExceptionOnNoRequest()
+    {
+        $helper = new RequestHelper(new RequestStack());
+        $this->assertNull($helper->getParameter('foo'));
+    }
+
     public function testGetParameter()
     {
         $helper = new RequestHelper($this->requestStack);

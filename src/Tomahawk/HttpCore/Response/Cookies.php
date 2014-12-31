@@ -103,7 +103,7 @@ class Cookies implements CookiesInterface
         // First we will make sure the cookie actually has enough segments to even
         // be valid as being set by the application. If it does not we will go
         // ahead and throw exceptions now since there the cookie is invalid.
-        if ( ! (count($segments) >= 2)) {
+        if (!(count($segments) >= 2)) {
             return null;
         }
 

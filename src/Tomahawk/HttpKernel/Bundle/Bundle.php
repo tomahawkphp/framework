@@ -2,6 +2,23 @@
 
 namespace Tomahawk\HttpKernel\Bundle;
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * Based on the Bundle implementation from Symfony2
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+/**
+ * An implementation of BundleInterface that adds a few conventions
+ * for DependencyInjection extensions and Console commands.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ */
+
 use Tomahawk\Console\Application;
 use Symfony\Component\Finder\Finder;
 use Tomahawk\DI\ContainerAware;

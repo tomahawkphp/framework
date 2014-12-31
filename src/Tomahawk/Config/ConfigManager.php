@@ -51,10 +51,6 @@ class ConfigManager implements ConfigInterface
      */
     public function get($key = null, $default = null)
     {
-        if (is_null($key)) {
-            return $this->config;
-        }
-
         return $this->arrayGet($this->config, $key, $default);
     }
 
@@ -100,7 +96,7 @@ class ConfigManager implements ConfigInterface
      * @param  mixed   $value
      * @return array
      */
-    function arraySet(&$array, $key, $value)
+    protected function arraySet(&$array, $key, $value)
     {
         if (is_null($key)) {
             return $array = $value;
@@ -134,7 +130,7 @@ class ConfigManager implements ConfigInterface
      * @param  mixed   $default
      * @return mixed
      */
-    function arrayGet($array, $key, $default = null)
+    protected function arrayGet($array, $key = null, $default = null)
     {
         if (is_null($key)) {
             return $array;
