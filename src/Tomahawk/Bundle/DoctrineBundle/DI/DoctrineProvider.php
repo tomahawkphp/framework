@@ -107,10 +107,9 @@ class DoctrineProvider implements ServiceProviderInterface
              */
             $config = $c['config'];
 
-            $model = $config->get('security.doctrine_model');
-            $usernameField = $config->get('security.doctrine_username_field');
+            $s = $config->get('security.handlers.doctrine');
 
-            return new DoctrineAuthHandler($c['hasher'], $c['doctrine'], $model, $usernameField);
+            return new DoctrineAuthHandler($c['hasher'], $c['doctrine'], $s['model'], $s['username']);
         });
     }
 

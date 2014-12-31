@@ -98,7 +98,7 @@ class FrameworkProvider implements ServiceProviderInterface
             $config = $c['config'];
 
             $handler = $config->get('security.handler');
-            
+
             return $c[$handler . '_auth_handler'];
         });
 
