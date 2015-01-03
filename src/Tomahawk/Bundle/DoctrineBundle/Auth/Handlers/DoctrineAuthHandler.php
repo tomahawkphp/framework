@@ -5,7 +5,6 @@ namespace Tomahawk\Bundle\DoctrineBundle\Auth\Handlers;
 use Tomahawk\Auth\AuthHandlerInterface;
 use Tomahawk\Auth\UserInterface;
 use Tomahawk\Hashing\HasherInterface;
-use Doctrine\ORM\Repository;
 use Tomahawk\Bundle\DoctrineBundle\RegistryInterface;
 
 class DoctrineAuthHandler implements AuthHandlerInterface
