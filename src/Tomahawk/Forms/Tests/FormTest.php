@@ -2,12 +2,11 @@
 
 namespace Tomahawk\Forms\Tests;
 
+use Tomahawk\Forms\Element\Checkbox;
+use Tomahawk\Forms\Element\Radio;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Forms\Form;
 use Tomahawk\Forms\Element\Text;
-use Tomahawk\Forms\Element\Password;
-use Tomahawk\Forms\Element\Select;
-use Tomahawk\Forms\Element\Hidden;
 
 class FormTest extends TestCase
 {
@@ -17,16 +16,63 @@ class FormTest extends TestCase
         $form = new Form('/');
 
         $form->add(new Text('first_name'));
+        $form->add(new Checkbox('enabled', 1, true));
+        $form->add(new Radio('status', 'active'));
 
         $html = $form->render('first_name');
 
         $this->assertEquals('<input type="text" name="first_name">', $html);
 
+        $html = $form->render('enabled');
+
+        $this->assertEquals('<input type="checkbox" name="enabled" value="1" checked="checked">', $html);
+
+        $html = $form->render('status');
+
+        $this->assertEquals('<input type="radio" name="status" value="active">', $html);
+
         $html = $form->render('first_name', array('class' => 'input-field', 'disabled'));
 
         $this->assertEquals('<input type="text" name="first_name" class="input-field" disabled="disabled">', $html);
 
-        $this->assertCount(1, $form->getElements());
+        $this->assertCount(3, $form->getElements());
+    }
+
+    public function testOldInputWithElements()
+    {
+        // Checkable elements shouldn't have there value set
+        // and if a value exists in the post data it should be checked
+
+        $input = array(
+            'first_name' => 'Tommy Ellis',
+            'enabled'    => 110,
+            'status'     => 11,
+        );
+
+        $form = new Form('/');
+        $form->setOldInput($input);
+
+        $form->add(new Text('first_name'));
+        $form->add(new Checkbox('enabled', 1));
+        $form->add(new Radio('status', 'active'));
+
+        $html = $form->render('first_name');
+
+        $this->assertEquals('<input type="text" name="first_name">', $html);
+
+        $html = $form->render('enabled');
+
+        $this->assertEquals('<input type="checkbox" name="enabled" value="1" checked="checked">', $html);
+
+        $html = $form->render('status');
+
+        $this->assertEquals('<input type="radio" name="status" value="active">', $html);
+
+        $html = $form->render('first_name', array('class' => 'input-field', 'disabled'));
+
+        $this->assertEquals('<input type="text" name="first_name" class="input-field" disabled="disabled" value="Tommy Ellis">', $html);
+
+        $this->assertCount(3, $form->getElements());
     }
 
     public function testChangingElementName()

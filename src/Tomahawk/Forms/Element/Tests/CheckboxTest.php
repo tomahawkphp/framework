@@ -41,4 +41,15 @@ class CheckboxTest extends TestCase
 
         $this->assertEquals('<input type="checkbox" name="enabled" value="1" class="input-field" checked="checked">', $html);
     }
+
+    public function testCheckboxMethods()
+    {
+        $checkbox = new Checkbox('enabled', 1);
+
+        $this->assertFalse($checkbox->isChecked());
+
+        $checkbox->setChecked(true);
+
+        $this->assertTrue($checkbox->isChecked());
+    }
 }

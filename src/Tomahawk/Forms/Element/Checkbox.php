@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Forms\Element;
 
-class Checkbox extends Element
+class Checkbox extends Element implements CheckableInterface
 {
     /**
      * @var bool
@@ -23,6 +23,32 @@ class Checkbox extends Element
         $this->name = $name;
         $this->value = $value;
         $this->checked = $checked;
+    }
+
+    /**
+     * @param bool $checked
+     * @return $this
+     */
+    public function setChecked($checked)
+    {
+        $this->checked = $checked;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getChecked()
+    {
+        return $this->checked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isChecked()
+    {
+        return $this->getChecked();
     }
 
     /**

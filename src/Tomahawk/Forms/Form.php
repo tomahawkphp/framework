@@ -13,6 +13,7 @@ namespace Tomahawk\Forms;
 
 use Tomahawk\Forms\Element\Element;
 use Tomahawk\Validation\ValidatorInterface;
+use Tomahawk\Forms\Element\CheckableInterface;
 
 class Form extends AttributeBuilder implements FormInterface
 {
@@ -132,7 +133,9 @@ class Form extends AttributeBuilder implements FormInterface
     public function render($name, array $attributes = array())
     {
         $element = $this->elements[$name];
-        if ($value = $this->getValue($name)) {
+
+        // Only set the value of an Element that isn't checkable
+        if (!($element instanceof CheckableInterface) && ($value = $this->getValue($name))) {
             $element->setValue($value);
         }
         return $element->render($attributes);
@@ -168,6 +171,78 @@ class Form extends AttributeBuilder implements FormInterface
         }
 
         return $this->getValidator()->validate($this->input);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * @param string $method
+     * @return $this
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOldInput()
+    {
+        return $this->oldInput;
+    }
+
+    /**
+     * @param array $oldInput
+     * @return $this
+     */
+    public function setOldInput(array $oldInput)
+    {
+        $this->oldInput = $oldInput;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param array $attributes
+     * @return $this
+     */
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = $attributes;
+        return $this;
     }
 
     /**

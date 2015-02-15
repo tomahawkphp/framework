@@ -144,6 +144,8 @@ class DoctrineBundleProviderTest extends TestCase
 
     public function testFSacheInstanceIsReturned()
     {
+        $folder = dirname(__FILE__) . 'cache';
+
         $container = $this->getContainer();
 
         $config = $this->getConfig();
@@ -151,7 +153,7 @@ class DoctrineBundleProviderTest extends TestCase
         $config->expects($this->at(0))
             ->method('get')
             ->with('cache.directory')
-            ->will($this->returnValue('/cache'));
+            ->will($this->returnValue($folder));
 
         $config->expects($this->at(1))
             ->method('get')
