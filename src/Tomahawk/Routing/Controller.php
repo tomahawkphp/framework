@@ -27,6 +27,7 @@ use Tomahawk\HttpCore\ResponseBuilderInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Url\UrlGeneratorInterface;
+use Tomahawk\Input\InputInterface;
 
 class Controller
 {
@@ -96,9 +97,14 @@ class Controller
     protected $container;
 
     /**
-     * @var
+     * @var \Tomahawk\Url\UrlGeneratorInterface
      */
     protected $url;
+
+    /**
+     * @var \Tomahawk\Input\InputInterface
+     */
+    protected $input;
 
     public function __construct(
         AuthInterface $auth,
@@ -114,7 +120,8 @@ class Controller
         ConfigInterface $config,
         ContainerInterface $container,
         DatabaseManager $database = null,
-        UrlGeneratorInterface $url
+        UrlGeneratorInterface $url,
+        InputInterface $input
     )
     {
         $this->auth = $auth;
@@ -131,8 +138,8 @@ class Controller
         $this->config = $config;
         $this->container = $container;
         $this->url = $url;
+        $this->input = $input;
     }
-
 
     public function forward($controller, array $path = array(), array $query = array())
     {

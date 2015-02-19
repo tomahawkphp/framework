@@ -12,7 +12,7 @@
 
 namespace Tomahawk\Input;
 
-use Tomahawk\Session\Session;
+use Tomahawk\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class InputManager implements InputInterface
@@ -29,9 +29,9 @@ class InputManager implements InputInterface
 
     /**
      * @param Request $request
-     * @param Session $session
+     * @param SessionInterface $session
      */
-    public function __construct(Request $request, Session $session)
+    public function __construct(Request $request, SessionInterface $session)
     {
         $this->request = $request;
         $this->session = $session;

@@ -117,7 +117,8 @@ class ControllerTest extends TestCase
             $this->getMock('Tomahawk\Config\ConfigInterface'),
             $container,
             $this->getMock('Tomahawk\Database\DatabaseManager', array(), array(), '', false),
-            $this->getMock('Tomahawk\Url\UrlGeneratorInterface')
+            $this->getMock('Tomahawk\Url\UrlGeneratorInterface'),
+            $this->getMock('Tomahawk\Input\InputInterface', array(), array(), '', false)
         );
 
         return $controller;

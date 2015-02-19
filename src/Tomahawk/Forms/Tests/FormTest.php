@@ -46,7 +46,7 @@ class FormTest extends TestCase
         $input = array(
             'first_name' => 'Tommy Ellis',
             'enabled'    => 110,
-            'status'     => 11,
+            'status'     => 'active',
         );
 
         $form = new Form('/');
@@ -58,21 +58,15 @@ class FormTest extends TestCase
 
         $html = $form->render('first_name');
 
-        $this->assertEquals('<input type="text" name="first_name">', $html);
+        $this->assertEquals('<input type="text" name="first_name" value="Tommy Ellis">', $html);
 
         $html = $form->render('enabled');
 
-        $this->assertEquals('<input type="checkbox" name="enabled" value="1" checked="checked">', $html);
+        $this->assertEquals('<input type="checkbox" name="enabled" value="1">', $html);
 
         $html = $form->render('status');
 
-        $this->assertEquals('<input type="radio" name="status" value="active">', $html);
-
-        $html = $form->render('first_name', array('class' => 'input-field', 'disabled'));
-
-        $this->assertEquals('<input type="text" name="first_name" class="input-field" disabled="disabled" value="Tommy Ellis">', $html);
-
-        $this->assertCount(3, $form->getElements());
+        $this->assertEquals('<input type="radio" name="status" value="active" checked="checked">', $html);
     }
 
     public function testChangingElementName()
@@ -102,5 +96,59 @@ class FormTest extends TestCase
         $html = $form->close();
 
         $this->assertEquals('</form>', $html);
+    }
+
+    public function testOldInputMethods()
+    {
+        $input = array(
+            'first_name' => 'Tommy Ellis',
+            'enabled'    => 110,
+            'status'     => 11,
+        );
+
+        $form = new Form('/');
+
+        $this->assertEquals(array(), $form->getOldInput());
+
+        $form->setOldInput($input);
+
+        $this->assertEquals($input, $form->getOldInput());
+    }
+
+    public function testAttributesMethods()
+    {
+        $attributes = array(
+            'class' => 'form',
+        );
+
+        $form = new Form('/');
+
+        $this->assertEquals(array(), $form->getAttributes());
+
+        $form->setAttributes($attributes);
+
+        $this->assertEquals($attributes, $form->getAttributes());
+    }
+
+    public function testUrlMethods()
+    {
+        $form = new Form('/');
+
+        $this->assertEquals('/', $form->getUrl());
+
+        $form->setUrl('/foo');
+
+        $this->assertEquals('/foo', $form->getUrl());
+    }
+
+    public function testMethodMethods()
+    {
+        $form = new Form('/');
+
+        $this->assertEquals('POST', $form->getMethod());
+
+        $form->setMethod('GET');
+
+        $this->assertEquals('GET', $form->getMethod());
     }
 }

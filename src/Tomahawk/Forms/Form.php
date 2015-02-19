@@ -135,7 +135,10 @@ class Form extends AttributeBuilder implements FormInterface
         $element = $this->elements[$name];
 
         // Only set the value of an Element that isn't checkable
-        if (!($element instanceof CheckableInterface) && ($value = $this->getValue($name))) {
+        if (($element instanceof CheckableInterface) && ($value = $this->getValue($name))) {
+            $element->setChecked($element->getValue() == $this->getValue($name));
+        }
+        else if (!($element instanceof CheckableInterface) && ($value = $this->getValue($name))) {
             $element->setValue($value);
         }
         return $element->render($attributes);

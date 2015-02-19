@@ -57,6 +57,7 @@ use Tomahawk\Encryption\Crypt;
 use Tomahawk\Database\DatabaseManager;
 use Tomahawk\HttpKernel\Config\FileLocator;
 use Tomahawk\HttpKernel\HttpKernel;
+use Tomahawk\Input\InputManager;
 use Tomahawk\Session\Session;
 use Tomahawk\Html\HtmlBuilder;
 use Tomahawk\Asset\AssetManager;
@@ -263,6 +264,10 @@ class FrameworkProvider implements ServiceProviderInterface
         });
 
         $container->set('Tomahawk\Forms\FormsManagerInterface', new FormsManager());
+
+        $container->set('Tomahawk\Input\InputInterface', function(ContainerInterface $c) {
+            return new InputManager($c['request'], $c['session']);
+        });
 
         $container->set('Tomahawk\Html\HtmlBuilderInterface', new HtmlBuilder());
 
@@ -485,6 +490,7 @@ class FrameworkProvider implements ServiceProviderInterface
         // Request might not be needed....
         $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
         $container->addAlias('session', 'Tomahawk\Session\SessionInterface');
+        $container->addAlias('input', 'Tomahawk\Input\InputInterface');
         $container->addAlias('templating', 'Symfony\Component\Templating\EngineInterface');
         $container->addAlias('translator', 'Symfony\Component\Translation\TranslatorInterface');
         $container->addAlias('url_generator', 'Tomahawk\Url\UrlGeneratorInterface');
