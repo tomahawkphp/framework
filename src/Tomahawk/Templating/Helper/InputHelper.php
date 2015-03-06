@@ -11,32 +11,32 @@
 
 namespace Tomahawk\Templating\Helper;
 
-use Tomahawk\Url\UrlGeneratorInterface;
+use Tomahawk\Input\InputInterface;
 use Symfony\Component\Templating\Helper\Helper;
 
 /**
- * UrlHelper generates urls to routes
+ * InputHelper gives access to the InputManager
  *
  * @author Tom Elis <tellishtc@gmail.com>
  *
  * @api
  */
-class UrlHelper extends Helper
+class InputHelper extends Helper
 {
 
     /**
-     * @var UrlGeneratorInterface
+     * @var InputInterface
      */
-    protected $urlGenerator;
+    protected $input;
 
     /**
      * Construct
      *
-     * @param UrlGeneratorInterface $urlGenerator
+     * @param InputInterface $input
      */
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(InputInterface $input)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->input = $input;
     }
 
     /**
@@ -49,11 +49,11 @@ class UrlHelper extends Helper
      */
     public function __call($method, $arguments = array())
     {
-        if (method_exists($this->urlGenerator, $method)) {
-            return call_user_func_array(array($this->urlGenerator, $method), $arguments);
+        if (method_exists($this->input, $method)) {
+            return call_user_func_array(array($this->input, $method), $arguments);
         }
 
-        throw new \BadMethodCallException(sprintf('Method "%s" does not exist on the UrlGenerator', $method));
+        throw new \BadMethodCallException(sprintf('Method "%s" does not exist on the Input', $method));
     }
 
     /**
@@ -65,6 +65,6 @@ class UrlHelper extends Helper
      */
     public function getName()
     {
-        return 'url';
+        return 'input';
     }
 }

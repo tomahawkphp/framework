@@ -70,17 +70,20 @@ class InputManagerTest extends TestCase
         $this->assertCount(1, $input->old());
     }
 
-    public function testFlash()
+    public function testFlashInput()
     {
         $data = array(
             'name' => 'Tom',
             'age'  => 27
         );
 
+        $session = $this->getSession();
         $request = new Request();
-        $input = new InputManager($request, $this->getSession());
+        $input = new InputManager($request, $session);
 
-        $input->flash($data);
+        $input->flashInput($data);
+
+        $this->assertEquals($data, $session->getNewInputBag()->all());
     }
     
     protected function getSession()
@@ -88,7 +91,7 @@ class InputManagerTest extends TestCase
         $storage = new MockArraySessionStorage();
         $session = new Session($storage);
 
-        $session->setOld('name', 'Tommy');
+        $session->setOldInput('name', 'Tommy');
 
         return $session;
     }

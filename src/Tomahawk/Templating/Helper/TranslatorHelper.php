@@ -91,4 +91,3 @@ class TranslatorHelper extends Helper
         return 'translator';
     }
 }
-

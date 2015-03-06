@@ -72,7 +72,9 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Tomahawk\Templating\Helper\BlocksHelper;
+use Tomahawk\Templating\Helper\InputHelper;
 use Tomahawk\Templating\Helper\RequestHelper;
+use Tomahawk\Templating\Helper\SessionHelper;
 use Tomahawk\Templating\Helper\TranslatorHelper;
 use Tomahawk\Templating\Helper\UrlHelper;
 use Tomahawk\Templating\Loader\FilesystemLoader;
@@ -293,7 +295,9 @@ class FrameworkProvider implements ServiceProviderInterface
                 new BlocksHelper(),
                 new TranslatorHelper($c['translator']),
                 new UrlHelper($c['url_generator']),
-                new RequestHelper($c['request_stack'])
+                new RequestHelper($c['request_stack']),
+                new SessionHelper($c['session']),
+                new InputHelper($c['input']),
             ));
 
             return new DelegatingEngine(array(

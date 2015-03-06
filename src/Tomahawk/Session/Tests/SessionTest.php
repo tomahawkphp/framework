@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
+use Tomahawk\Common\Arr;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Tomahawk\Session\Session;
@@ -49,39 +50,6 @@ class SessionTest extends TestCase
         $this->assertFalse($this->session->has('name'));
     }
 
-    public function testHasSetGetInputOld()
-    {
-        $this->session->getOldBag()->set('name', 'Tom');
-
-        $this->assertTrue($this->session->getOldBag()->has('name'));
-        $this->assertEquals('Tom', $this->session->getOldBag()->get('name'));
-        $this->assertEquals('Fred', $this->session->getOldBag()->get('username', 'Fred'));
-    }
-
-    public function testDeleteInputOld()
-    {
-        $this->session->getOldBag()->set('name', 'Tom');
-        $this->assertTrue($this->session->getOldBag()->has('name'));
-
-        $this->session->getOldBag()->remove('name');
-        $this->assertFalse($this->session->getOldBag()->has('name'));
-
-        $new_input = array(
-            'place' => 'stamford'
-        );
-
-        $this->session->getOldBag()->replace($new_input);
-
-        $this->assertCount(1, $this->session->getOldBag()->all());
-
-        $this->assertEquals('stamford', $this->session->getOldBag()->get('place'));
-
-        $this->session->getOldBag()->clear();
-        $this->assertCount(0, $this->session->getOldBag()->all());
-        $this->assertEquals(0, $this->session->getOldBag()->count());
-
-    }
-
     public function testHasSetGetFlash()
     {
         $this->session->setFlash('name', 'Tom');
@@ -96,24 +64,52 @@ class SessionTest extends TestCase
         $this->assertCount(0, $this->session->getFlash('name'));
     }
 
-    /**
-     * @covers \Tomahawk\Session\InputOldBag::getIterator
-     */
-    public function testGetIterator()
+    public function testOldInput()
     {
+        $this->session->setOldInput('foo', 'bar');
+        $this->assertEquals('bar', $this->session->getOldInput('foo'));
+        $this->assertTrue($this->session->hasOldInput('foo'));
+        $this->assertFalse($this->session->hasOldInput('baz'));
+        $this->session->clearOldInput();
+        $this->assertCount(0, $this->session->getOldInputBag()->all());
+    }
 
-        $flashes = array('hello' => 'world', 'beep' => 'boop', 'notice' => 'nope');
-        foreach ($flashes as $key => $val) {
-            $this->session->getOldBag()->set($key, $val);
-        }
+    public function testNewInput()
+    {
+        $this->session->setNewInput('foo', 'bar');
+        $this->assertEquals('bar', $this->session->getNewInput('foo'));
+        $this->assertTrue($this->session->hasNewInput('foo'));
+        $this->assertFalse($this->session->hasNewInput('baz'));
+        $this->session->clearNewInput();
+        $this->assertCount(0, $this->session->getNewInputBag()->all());
+    }
 
-        $i = 0;
-        foreach ($this->session->getOldBag() as $key => $val) {
-            $this->assertEquals($flashes[$key], $val);
-            $i++;
-        }
+    public function testGetInputData()
+    {
+        $this->session->setOldInput('name', 'Tom');
+        $this->session->setNewInput('name', 'Tommy');
+        $this->session->setNewInput('age', '27');
 
-        $this->assertEquals(count($flashes), $i);
+        $input = $this->session->getInputData();
+
+        $this->assertCount(2, $this->session->getInputData());
+
+        $this->assertEquals('Tommy', Arr::get($input, 'name'));
+        $this->assertEquals('27', Arr::get($input, 'age'));
+    }
+
+    public function testReflashInput()
+    {
+        $this->session->setOldInput('name', 'Tom');
+        $this->session->reflashInput();
+        $this->assertEquals('Tom', $this->session->getNewInput('name'));
+    }
+
+    public function testMergeNewInput()
+    {
+        $this->session->setNewInput('name', 'Tom');
+        $this->session->mergeNewInput();
+        $this->assertEquals('Tom', $this->session->getOldInput('name'));
     }
 
 }

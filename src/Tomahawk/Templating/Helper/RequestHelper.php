@@ -88,4 +88,3 @@ class RequestHelper extends Helper
         return 'request';
     }
 }
-

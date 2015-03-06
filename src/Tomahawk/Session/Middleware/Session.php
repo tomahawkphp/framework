@@ -24,6 +24,13 @@ class Session extends Middleware
         $session = $this->getSessionManager();
 
         $this->getEventDispatcher()->addListener(KernelEvents::FINISH_REQUEST, function(FinishRequestEvent $event) use ($session) {
+
+            // Clear old input data
+            $session->clearOldInput();
+
+            // Add queued old input
+            $session->mergeNewInput();
+
             $session->save();
         });
     }

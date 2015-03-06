@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Tomahawk\Input;
 
 use Tomahawk\Session\SessionInterface;
@@ -38,6 +37,8 @@ class InputManager implements InputInterface
     }
 
     /**
+     * Get a value from the query string
+     *
      * @param null $key
      * @param null $default
      * @return array|mixed|null
@@ -50,12 +51,20 @@ class InputManager implements InputInterface
         return $this->request->query->get($key, $default);
     }
 
+    /**
+     * Check if a value exists from the query string
+     *
+     * @param $key
+     * @return bool
+     */
     public function getHas($key)
     {
         return $this->request->query->has($key);
     }
 
     /**
+     * Get values from the query string except the one(s) passed
+     *
      * @param $values
      * @return array
      */
@@ -78,10 +87,12 @@ class InputManager implements InputInterface
     }
 
     /**
+     * Get certain values from the query string
+     *
      * @param $values
      * @return array
      */
-    public function getOnly( $values )
+    public function getOnly($values)
     {
         if (!is_array($values)) {
             $values = array($values);
@@ -96,11 +107,13 @@ class InputManager implements InputInterface
     }
 
     /**
+     * Get a value from the request
+     *
      * @param null $key
      * @param null $default
      * @return array|mixed|null
      */
-    public function post( $key = null, $default = null )
+    public function post($key = null, $default = null)
     {
         if (is_null($key)) {
             return $this->request->request->all();
@@ -108,16 +121,24 @@ class InputManager implements InputInterface
         return $this->request->request->get($key, $default);
     }
 
+    /**
+     * Check if a value exists on the request
+     *
+     * @param $key
+     * @return bool
+     */
     public function postHas($key)
     {
         return $this->request->request->has($key);
     }
 
     /**
+     * Get all values from the request except the one(s) passed
+     *
      * @param $values
      * @return array
      */
-    public function postExcept( $values )
+    public function postExcept($values)
     {
         if (!is_array($values)) {
             $values = array($values);
@@ -136,10 +157,12 @@ class InputManager implements InputInterface
     }
 
     /**
+     * Get certain values from the request
+     *
      * @param $values
      * @return array
      */
-    public function postOnly( $values )
+    public function postOnly($values)
     {
         if (!is_array($values)) {
             $values = array($values);
@@ -153,26 +176,44 @@ class InputManager implements InputInterface
         return $post;
     }
 
+    /**
+     * Get old input
+     *
+     * @param $name
+     * @return mixed
+     */
     public function hasOld($name)
     {
-        return $this->session->getOldBag()->has($name);
+        return $this->session->getOldInputBag()->has($name);
     }
 
+    /**
+     * Get a value from the old input bag
+     *
+     * @param null $name
+     * @param null $default
+     * @return array|mixed
+     */
     public function old($name = null, $default = null)
     {
         if ($name === null) {
-            return $this->session->getOldBag()->all();
+            return $this->session->getOldInputBag()->all();
         }
-        return $this->session->getOldBag()->get($name, $default);
+        return $this->session->getOldInputBag()->get($name, $default);
     }
 
-    public function flash(array $data)
+    /**
+     * Flash input for use on next request
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function flashInput(array $data)
     {
         foreach ($data as $key => $item) {
-            $this->session->setOld($key, $item);
+            $this->session->setNewInput($key, $item);
         }
 
         return $this;
     }
-
 }

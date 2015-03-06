@@ -11,36 +11,35 @@
 
 namespace Tomahawk\Templating\Helper;
 
-use Tomahawk\Url\UrlGeneratorInterface;
+use Tomahawk\Session\SessionInterface;
 use Symfony\Component\Templating\Helper\Helper;
 
 /**
- * UrlHelper generates urls to routes
+ * SessionHelper allows easy to the Session
  *
  * @author Tom Elis <tellishtc@gmail.com>
  *
  * @api
  */
-class UrlHelper extends Helper
+class SessionHelper extends Helper
 {
-
     /**
-     * @var UrlGeneratorInterface
+     * @var SessionInterface
      */
-    protected $urlGenerator;
+    protected $session;
 
     /**
      * Construct
      *
-     * @param UrlGeneratorInterface $urlGenerator
+     * @param SessionInterface $session
      */
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(SessionInterface $session)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->session = $session;
     }
 
     /**
-     * Pass all method calls off to the UrlGenerator
+     * Pass all method calls off to the Session
      *
      * @param $method
      * @param array $arguments
@@ -49,11 +48,11 @@ class UrlHelper extends Helper
      */
     public function __call($method, $arguments = array())
     {
-        if (method_exists($this->urlGenerator, $method)) {
-            return call_user_func_array(array($this->urlGenerator, $method), $arguments);
+        if (method_exists($this->session, $method)) {
+            return call_user_func_array(array($this->session, $method), $arguments);
         }
 
-        throw new \BadMethodCallException(sprintf('Method "%s" does not exist on the UrlGenerator', $method));
+        throw new \BadMethodCallException(sprintf('Method "%s" does not exist on the Session', $method));
     }
 
     /**
@@ -65,6 +64,6 @@ class UrlHelper extends Helper
      */
     public function getName()
     {
-        return 'url';
+        return 'session';
     }
 }
