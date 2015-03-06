@@ -50,6 +50,9 @@ class SessionMiddlewareTest extends TestCase
             ->method('mergeNewInput');
 
         $session->expects($this->once())
+            ->method('clearNewInput');
+
+        $session->expects($this->once())
             ->method('save');
 
         $container = $this->getContainer($session);

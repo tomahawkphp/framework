@@ -173,6 +173,13 @@ interface SessionInterface
     public function reflashInput();
 
     /**
+     * Clear new input
+     *
+     * @return $this
+     */
+    public function clearNewInput();
+
+    /**
      * Clear old input
      *
      * @return $this

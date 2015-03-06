@@ -31,6 +31,9 @@ class Session extends Middleware
             // Add queued old input
             $session->mergeNewInput();
 
+            // Clear new input data
+            $session->clearNewInput();
+
             $session->save();
         });
     }
