@@ -42,7 +42,7 @@ interface ResponseBuilderInterface
      * @param array $headers
      * @return StreamedResponse
      */
-    public function stream(Closure $callback, $status = 302, $headers = array());
+    public function stream(Closure $callback, $status = 200, $headers = array());
 
     /**
      * @param array $data
@@ -50,7 +50,7 @@ interface ResponseBuilderInterface
      * @param array $headers
      * @return JsonResponse
      */
-    public function json(array $data, $status = 302, $headers = array());
+    public function json(array $data, $status = 200, $headers = array());
 
     /**
      * @param $file
@@ -62,5 +62,5 @@ interface ResponseBuilderInterface
      * @param bool $autoLastModified
      * @return BinaryFileResponse
      */
-    public function download($file, $status = 302, $headers = array(), $public = true, $contentDisposition, $autoEtag = false, $autoLastModified = true);
+    public function download($file, $status = 200, $headers = array(), $public = true, $contentDisposition, $autoEtag = false, $autoLastModified = true);
 }

@@ -50,7 +50,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param array $headers
      * @return StreamedResponse
      */
-    public function stream(Closure $callback, $status = 302, $headers = array())
+    public function stream(Closure $callback, $status = 200, $headers = array())
     {
         $response = new StreamedResponse($callback, $status, $headers);
         return $response;
@@ -62,7 +62,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param array $headers
      * @return JsonResponse
      */
-    public function json(array $data, $status = 302, $headers = array())
+    public function json(array $data, $status = 200, $headers = array())
     {
         $response = new JsonResponse($data, $status, $headers);
         return $response;
@@ -78,7 +78,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param bool $autoLastModified
      * @return BinaryFileResponse
      */
-    public function download($file, $status = 302, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
+    public function download($file, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
     {
         $response = new BinaryFileResponse($file, $status, $headers, $public, $contentDisposition, $autoEtag, $autoLastModified);
         return $response;
