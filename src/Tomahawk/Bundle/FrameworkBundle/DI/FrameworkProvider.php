@@ -146,6 +146,7 @@ class FrameworkProvider implements ServiceProviderInterface
                 $manager->addConnection($connection, $name);
             }
 
+            $manager->setFetchMode($config->get('database.fetch'));
             $manager->getDatabaseManager()->setDefaultConnection($config->get('database.default'));
 
             $manager->bootEloquent();
