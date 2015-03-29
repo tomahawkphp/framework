@@ -1,9 +1,9 @@
 <?php
 
-use Tomahawk\Templating\Twig\TwigEngine;
+use Tomahawk\Templating\Twig\Bridge\TwigEngine;
 use Symfony\Component\Templating\TemplateReference;
 
-class TwigEngineTest extends PHPUnit_Framework_TestCase
+class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
 {
     public function testExistsWithTemplateInstances()
     {

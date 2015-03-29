@@ -11,104 +11,59 @@
 
 namespace Tomahawk\Templating\Twig;
 
-use Symfony\Component\Templating\EngineInterface;
+use Tomahawk\Templating\Twig\Bridge\TwigEngine as BaseEngine;
 use Symfony\Component\Templating\TemplateNameParserInterface;
-use Symfony\Component\Templating\TemplateReferenceInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Config\FileLocatorInterface;
+use Tomahawk\Templating\TemplateReference;
+use Symfony\Component\Templating\EngineInterface;
 
-class TwigEngine implements EngineInterface
+class TwigEngine extends BaseEngine implements EngineInterface
 {
-    protected $environment;
-    protected $parser;
-
+    protected $locator;
     /**
      * Constructor.
      *
      * @param \Twig_Environment           $environment A \Twig_Environment instance
      * @param TemplateNameParserInterface $parser      A TemplateNameParserInterface instance
+     * @param FileLocatorInterface        $locator     A FileLocatorInterface instance
      */
-    public function __construct(\Twig_Environment $environment, TemplateNameParserInterface $parser)
+    public function __construct(\Twig_Environment $environment, TemplateNameParserInterface $parser, FileLocatorInterface $locator)
     {
-        $this->environment = $environment;
-        $this->parser = $parser;
+        parent::__construct($environment, $parser);
+        $this->locator = $locator;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * It also supports \Twig_Template as name parameter.
-     *
-     * @throws \Twig_Error if something went wrong like a thrown exception while rendering the template
      */
     public function render($name, array $parameters = array())
     {
-        return $this->load($name)->render($parameters);
+        try {
+            return parent::render($name, $parameters);
+        } catch (\Twig_Error $e) {
+            if ($name instanceof TemplateReference) {
+                try {
+                    // try to get the real file name of the template where the error occurred
+                    $e->setTemplateFile(sprintf('%s', $this->locator->locate($this->parser->parse($e->getTemplateFile()))));
+                } catch (\Exception $ex) {
+                }
+            }
+            throw $e;
+        }
     }
-
     /**
      * {@inheritdoc}
      *
-     * It also supports \Twig_Template as name parameter.
+     * @throws \Twig_Error if something went wrong like a thrown exception while rendering the template
      */
-    public function exists($name)
+    public function renderResponse($view, array $parameters = array(), Response $response = null)
     {
-        if ($name instanceof \Twig_Template) {
-            return true;
+        if (null === $response) {
+            $response = new Response();
         }
-
-        $loader = $this->environment->getLoader();
-
-        if ($loader instanceof \Twig_ExistsLoaderInterface) {
-            return $loader->exists((string) $name);
-        }
-
-        try {
-            // cast possible TemplateReferenceInterface to string because the
-            // EngineInterface supports them but Twig_LoaderInterface does not
-            $loader->getSource((string) $name);
-        }
-        catch (\Twig_Error_Loader $e) {
-            return false;
-        }
-
-        return true;
+        $response->setContent($this->render($view, $parameters));
+        return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * It also supports \Twig_Template as name parameter.
-     */
-    public function supports($name)
-    {
-        if ($name instanceof \Twig_Template) {
-            return true;
-        }
-
-        $template = $this->parser->parse($name);
-
-        return 'twig' === $template->get('engine');
-    }
-
-    /**
-     * Loads the given template.
-     *
-     * @param string|TemplateReferenceInterface|\Twig_Template $name A template name or an instance of
-     *                                                               TemplateReferenceInterface or \Twig_Template
-     *
-     * @return \Twig_TemplateInterface A \Twig_TemplateInterface instance
-     *
-     * @throws \InvalidArgumentException if the template does not exist
-     */
-    protected function load($name)
-    {
-        if ($name instanceof \Twig_Template) {
-            return $name;
-        }
-
-        try {
-            return $this->environment->loadTemplate((string) $name);
-        } catch (\Twig_Error_Loader $e) {
-            throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
 }

@@ -78,11 +78,18 @@ use Tomahawk\Templating\Helper\SessionHelper;
 use Tomahawk\Templating\Helper\TranslatorHelper;
 use Tomahawk\Templating\Helper\UrlHelper;
 use Tomahawk\Templating\Loader\FilesystemLoader;
+use Tomahawk\Templating\Twig\Extension\InputExtension;
+use Tomahawk\Templating\Twig\Extension\RequestExtension;
+use Tomahawk\Templating\Twig\Extension\SessionExtension;
+use Tomahawk\Templating\Twig\Extension\TranslatorExtension;
+use Tomahawk\Templating\Twig\Extension\UrlExtension;
+use Tomahawk\Templating\Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
 use Tomahawk\Templating\Loader\TemplateLocator;
 use Tomahawk\Templating\TemplateNameParser;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Auth\Auth;
 use Tomahawk\Hashing\Hasher;
+use Tomahawk\Templating\Twig\TwigEngine;
 use Tomahawk\Url\UrlGenerator;
 
 class FrameworkProvider implements ServiceProviderInterface
@@ -284,14 +291,9 @@ class FrameworkProvider implements ServiceProviderInterface
             return new Cookies($c['request'], array());
         }));
 
-        $container->set('Symfony\Component\Templating\EngineInterface', $container->factory(function(ContainerInterface $c) {
+        $container->set('templating.php.helpers', $container->protect(function(ContainerInterface $c) {
 
-            $kernel = $c->get('kernel');
-            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
-            $templateLocator = new TemplateLocator($locator);
-            $loader = new FilesystemLoader($templateLocator);
-            $parser = new TemplateNameParser($kernel);
-            $phpEngine = new PhpEngine($parser, $loader, array(
+            return array(
                 new SlotsHelper(),
                 new BlocksHelper(),
                 new TranslatorHelper($c['translator']),
@@ -299,10 +301,53 @@ class FrameworkProvider implements ServiceProviderInterface
                 new RequestHelper($c['request_stack']),
                 new SessionHelper($c['session']),
                 new InputHelper($c['input']),
-            ));
+            );
+        }));
+
+        $container->set('templating.twig.extensions', $container->protect(function(ContainerInterface $c) {
+
+            return array(
+                new TranslatorExtension($c['translator']),
+                new UrlExtension($c['url_generator']),
+                new RequestExtension($c['request_stack']),
+                new SessionExtension($c['session']),
+                new InputExtension($c['input']),
+            );
+        }));
+
+        $container->set('templating.engine.php', function(ContainerInterface $c) {
+            $kernel = $c->get('kernel');
+            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
+            $templateLocator = new TemplateLocator($locator);
+            $loader = new FilesystemLoader($templateLocator);
+            $parser = new TemplateNameParser($kernel);
+            return new PhpEngine($parser, $loader, $c->get('templating.php.helpers'));
+        });
+
+        $container->set('templating.engine.twig', function(ContainerInterface $c) {
+            $kernel = $c->get('kernel');
+            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
+            $templateLocator = new TemplateLocator($locator);
+            $parser = new TemplateNameParser($kernel);
+
+            $loader = new TwigFilesystemLoader($templateLocator, $parser);
+
+            $twig = new \Twig_Environment($loader);
+
+            $extensions = $c->get('templating.twig.extensions');
+
+            foreach ($extensions as $extension) {
+                $twig->addExtension($extension);
+            }
+
+            return new TwigEngine($twig, $parser, $locator);
+        });
+
+        $container->set('Symfony\Component\Templating\EngineInterface', $container->factory(function(ContainerInterface $c) {
 
             return new DelegatingEngine(array(
-                $phpEngine
+                $c->get('templating.engine.php'),
+                $c->get('templating.engine.twig'),
             ));
 
         }));
