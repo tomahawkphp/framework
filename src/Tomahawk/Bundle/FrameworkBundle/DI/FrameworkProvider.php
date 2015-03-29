@@ -291,7 +291,7 @@ class FrameworkProvider implements ServiceProviderInterface
             return new Cookies($c['request'], array());
         }));
 
-        $container->set('templating.php.helpers', $container->protect(function(ContainerInterface $c) {
+        $container->set('templating.php.helpers', function(ContainerInterface $c) {
 
             return array(
                 new SlotsHelper(),
@@ -302,9 +302,9 @@ class FrameworkProvider implements ServiceProviderInterface
                 new SessionHelper($c['session']),
                 new InputHelper($c['input']),
             );
-        }));
+        });
 
-        $container->set('templating.twig.extensions', $container->protect(function(ContainerInterface $c) {
+        $container->set('templating.twig.extensions', function(ContainerInterface $c) {
 
             return array(
                 new TranslatorExtension($c['translator']),
@@ -313,7 +313,7 @@ class FrameworkProvider implements ServiceProviderInterface
                 new SessionExtension($c['session']),
                 new InputExtension($c['input']),
             );
-        }));
+        });
 
         $container->set('templating.engine.php', function(ContainerInterface $c) {
             $kernel = $c->get('kernel');
