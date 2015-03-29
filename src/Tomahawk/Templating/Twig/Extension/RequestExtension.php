@@ -31,8 +31,8 @@ class RequestExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('request', array($this, 'getRequest')),
-            new \Twig_SimpleFunction('locale', array($this, 'getLocale')),
-            new \Twig_SimpleFunction('parameter', array($this, 'getParameter')),
+            new \Twig_SimpleFunction('request_locale', array($this, 'getLocale')),
+            new \Twig_SimpleFunction('request_parameter', array($this, 'getParameter')),
         );
     }
 

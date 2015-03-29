@@ -70,7 +70,7 @@ class TranslatorExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('trans', array($this, 'trans')),
-            new \Twig_SimpleFunction('transChoice', array($this, 'transChoice')),
+            new \Twig_SimpleFunction('trans_choice', array($this, 'transChoice')),
         );
     }
 
