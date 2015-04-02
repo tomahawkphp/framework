@@ -13,11 +13,6 @@ class BarBundle extends Bundle
         $this->container->set('bar_bundle', 'yay!');
     }
 
-    public function shutdown()
-    {
-        $this->container->set('bar_bundle', null);
-    }
-
     /**
      * @return EventDispatcherInterface
      */

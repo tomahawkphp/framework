@@ -2,6 +2,7 @@
 
 namespace Tomahawk\HttpKernel\Tests;
 
+use Tomahawk\HttpKernel\Test\Bundles\BarBundle\BarBundle;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\Kernel;
@@ -74,6 +75,21 @@ class BundleTest extends TestCase
 
         $bundle->registerCommands($application);
 
+    }
+
+    public function testRegisterBundleNoCommands()
+    {
+        $app = new TestAppKernel('prod', false);
+        $app->setContainer($this->container);
+
+        $application = new Application($app);
+
+        $bundle = new BarBundle();
+        $bundle->setContainer($this->container);
+
+        $this->assertEquals('BarBundle', $bundle->getName());
+
+        $bundle->registerCommands($application);
     }
 
     public function testRegisterCommandsIngoreCommandAsAService()

@@ -225,6 +225,12 @@ class HttpKernel extends BaseHttpKernel implements TerminableInterface
         $this->requestStack->pop();
     }
 
+    /**
+     * @param $var
+     * @return string
+     *
+     * @codeCoverageIgnore
+     */
     private function varToString($var)
     {
         if (is_object($var)) {

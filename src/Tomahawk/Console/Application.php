@@ -89,6 +89,7 @@ class Application extends BaseApplication
         }
         // @codeCoverageIgnoreEnd
 
+        // @codeCoverageIgnore
         return parent::doRun($input, $output);
     }
 
