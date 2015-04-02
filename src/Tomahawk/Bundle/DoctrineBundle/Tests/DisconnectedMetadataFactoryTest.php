@@ -16,13 +16,34 @@ class DisconnectedMetadataFactoryTest extends TestCase
             $this->markTestSkipped('Doctrine ORM is not available.');
         }
     }
+
     public function testFindNamespaceAndPathForMetadata()
     {
-        /*$this->setExpectedException('RuntimeException', 'Can\'t find base path for "Doctrine\Bundle\DoctrineBundle\Tests\Mapping\DisconnectedMetadataFactoryTest');
         $class = new ClassMetadataInfo(__CLASS__);
         $collection = new ClassMetadataCollection(array($class));
         $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
         $factory = new DisconnectedMetadataFactory($registry);
-        $factory->findNamespaceAndPathForMetadata($collection);*/
+        $factory->findNamespaceAndPathForMetadata($collection);
+
+        $this->assertEquals('Tomahawk\Bundle\DoctrineBundle\Tests', $collection->getNamespace());
+    }
+
+    protected function getBundleMock()
+    {
+        $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\BundleInterface');
+
+        $bundle->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('UserBundle'));
+
+        $bundle->expects($this->any())
+            ->method('getNamespace')
+            ->will($this->returnValue('MyCompany\\Bundle\\UserBundle'));
+
+        $bundle->expects($this->any())
+            ->method('getPath')
+            ->will($this->returnValue('/code/mycompany'));
+
+        return $bundle;
     }
 }

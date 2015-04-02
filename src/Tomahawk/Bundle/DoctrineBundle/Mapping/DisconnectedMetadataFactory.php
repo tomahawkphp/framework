@@ -19,7 +19,6 @@ namespace Tomahawk\Bundle\DoctrineBundle\Mapping;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
-
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 
 /**
