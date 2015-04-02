@@ -87,10 +87,9 @@ class Application extends BaseApplication
 
             return 0;
         }
-        // @codeCoverageIgnoreEnd
 
-        // @codeCoverageIgnore
         return parent::doRun($input, $output);
+        // @codeCoverageIgnoreEnd
     }
 
     protected function registerCommands()
