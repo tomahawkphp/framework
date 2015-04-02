@@ -2,7 +2,6 @@
 
 namespace Tomahawk\Templating\Twig\Extension;
 
-use Tomahawk\DI\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestExtension extends \Twig_Extension

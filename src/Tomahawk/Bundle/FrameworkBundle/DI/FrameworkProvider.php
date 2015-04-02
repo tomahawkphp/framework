@@ -78,7 +78,6 @@ use Tomahawk\Templating\Helper\SessionHelper;
 use Tomahawk\Templating\Helper\TranslatorHelper;
 use Tomahawk\Templating\Helper\UrlHelper;
 use Tomahawk\Templating\Loader\FilesystemLoader;
-use Tomahawk\Templating\Twig\Extension\InputExtension;
 use Tomahawk\Templating\Twig\Extension\RequestExtension;
 use Tomahawk\Templating\Twig\Extension\SessionExtension;
 use Tomahawk\Templating\Twig\Extension\TranslatorExtension;

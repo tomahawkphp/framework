@@ -2,7 +2,6 @@
 
 namespace Tomahawk\Templating\Twig\Extension;
 
-use Tomahawk\DI\ContainerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslatorExtension extends \Twig_Extension
