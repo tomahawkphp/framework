@@ -99,7 +99,7 @@ class UrlExtension extends \Twig_Extension
      */
     public function secureTo($url = '', array $extra = array(), $secure = true, $asset = false)
     {
-        return $this->to($url, $extra, $secure, $asset);
+        return $this->urlGenerator->secureTo($url, $extra, $secure, $asset);
     }
 
     /**

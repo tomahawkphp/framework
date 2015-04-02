@@ -311,7 +311,6 @@ class FrameworkProvider implements ServiceProviderInterface
                 new UrlExtension($c['url_generator']),
                 new RequestExtension($c['request_stack']),
                 new SessionExtension($c['session']),
-                new InputExtension($c['input']),
             );
         });
 
