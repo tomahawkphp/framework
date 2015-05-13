@@ -72,6 +72,33 @@ class ValidationTest extends TestCase
         $this->assertCount(0, $this->validator->getMessages());
     }
 
+    public function testRequiredWithArray()
+    {
+        $input = array(
+            'things' => array()
+        );
+
+        $this->validator->add('things', array(
+            new Required()
+        ));
+
+
+        $this->assertFalse($this->validator->validate($input));
+        /**
+         * @var Message[] $errors
+         */
+        $errors = $this->validator->getMessagesFor('things');
+        $this->assertEquals('The field is required', $errors[0]->getMessage());
+        $this->assertCount(1, $this->validator->getMessages());
+
+        $input = array(
+            'things' => array(1)
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+        $this->assertCount(0, $this->validator->getMessages());
+    }
+
     public function testRequiredWithTranslation()
     {
         $this->validator->setTranslator($this->translator);
