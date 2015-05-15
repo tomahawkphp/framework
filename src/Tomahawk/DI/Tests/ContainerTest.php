@@ -318,9 +318,6 @@ class ContainerTest extends TestCase
 
     public function testExtendDoesNotLeakWithFactories()
     {
-        if (extension_loaded('pimple')) {
-            $this->markTestSkipped('Pimple extension does not support this test');
-        }
         $container = new Container();
 
         $container['foo'] = $container->factory(function () { return; });
