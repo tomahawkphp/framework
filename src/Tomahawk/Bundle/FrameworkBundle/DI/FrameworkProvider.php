@@ -356,7 +356,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $config = $c['config'];
             $kernel = $c['kernel'];
-            $defaultLogName = 'tomahawk ' . date('Y_m_d');
+            $defaultLogName = 'tomahawk ' . date('Y_m_d') . '.log';
             $defaultLogPath = $kernel->getRootDir() .'/app/storage/logs/';
 
             $logPath = $config->get('monolog.path', $defaultLogPath);
