@@ -11,6 +11,7 @@
 
 namespace Tomahawk\HttpKernel;
 
+use Psr\Log\LoggerInterface;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Tomahawk\DI\Container;
 use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\HttpKernel\HttpKernel;
 
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
@@ -40,11 +40,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $startTime;
     protected $paths = array();
 
-    const VERSION         = '1.1.2';
-    const VERSION_ID      = '10102';
+    const VERSION         = '1.1.3';
+    const VERSION_ID      = '10103';
     const MAJOR_VERSION   = '1';
     const MINOR_VERSION   = '1';
-    const RELEASE_VERSION = '2';
+    const RELEASE_VERSION = '3';
     const EXTRA_VERSION   = '';
 
     /**
