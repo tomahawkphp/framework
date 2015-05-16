@@ -45,7 +45,8 @@
         "symfony/templating": "2.6.6",
         "twig/twig": "1.18.0",
         "phpseclib/phpseclib" : "0.3",
-        "predis/predis" : "1.0.0"
+        "predis/predis" : "1.0.0",
+        "psr/log" : "~1.0.0"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
