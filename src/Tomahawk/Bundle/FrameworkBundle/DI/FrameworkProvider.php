@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\DI;
 
+use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Doctrine\Common\Cache\ApcCache;
@@ -364,9 +365,19 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $stream = $logPath . $logName;
 
+            // the default date format is "Y-m-d H:i:s"
+            $dateFormat = "Y n j, g:i a";
+            // the default output format is "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n"
+            $output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+            // finally, create a formatter
+            $formatter = new LineFormatter($output, $dateFormat);
+
+            $streamHandler = new StreamHandler($stream, Logger::WARNING);
+            $streamHandler->setFormatter($formatter);
+
             // Create a log channel
             $log = new Logger('tomahawk_logger');
-            $log->pushHandler(new StreamHandler($stream, Logger::WARNING));
+            $log->pushHandler($streamHandler);
 
             return $log;
         });
