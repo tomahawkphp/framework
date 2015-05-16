@@ -11,6 +11,8 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\DI;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
@@ -350,8 +352,23 @@ class FrameworkProvider implements ServiceProviderInterface
 
         }));
 
-        $container->set('monolog_logger', function() {
-            return null;
+        $container->set('Psr\Log\LoggerInterface', function(ContainerInterface $c) {
+
+            $config = $c['config'];
+            $kernel = $c['kernel'];
+            $defaultLogName = 'tomahawk ' . date('Y_m_d');
+            $defaultLogPath = $kernel->getRootDir() .'/app/storage/logs/';
+
+            $logPath = $config->get('monolog.path', $defaultLogPath);
+            $logName = $config->get('monolog.name', $defaultLogName);;
+
+            $stream = $logPath . $logName;
+
+            // Create a log channel
+            $log = new Logger('tomahawk_logger');
+            $log->pushHandler(new StreamHandler($stream, Logger::WARNING));
+
+            return $log;
         });
 
         $container->set('route_listener', function(ContainerInterface $c) {
@@ -534,6 +551,8 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('form_manager', 'Tomahawk\Forms\FormsManagerInterface');
         $container->addAlias('html_builder', 'Tomahawk\Html\HtmlBuilderInterface');
         $container->addAlias('http_kernel', 'Tomahawk\HttpKernel\HttpKernelInterface');
+        $container->addAlias('monolog_logger', 'Psr\Log\LoggerInterface');
+        $container->addAlias('logger', 'Psr\Log\LoggerInterface');
         $container->addAlias('response_builder', 'Tomahawk\HttpCore\ResponseBuilderInterface');
         // Request might not be needed....
         $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
