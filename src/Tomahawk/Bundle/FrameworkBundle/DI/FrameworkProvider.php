@@ -353,6 +353,10 @@ class FrameworkProvider implements ServiceProviderInterface
 
         }));
 
+        $container->set('route_logger', function(ContainerInterface $c) {
+            return null;
+        });
+
         $container->set('Psr\Log\LoggerInterface', function(ContainerInterface $c) {
 
             $config = $c['config'];
@@ -365,12 +369,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $stream = $logPath . $logName;
 
-            // the default date format is "Y-m-d H:i:s"
-            $dateFormat = "Y n j, g:i a";
-            // the default output format is "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n"
-            $output = "%datetime% > %level_name% > %message% %context% %extra%\n";
-            // finally, create a formatter
-            $formatter = new LineFormatter($output, $dateFormat);
+            $formatter = new LineFormatter(null, null, true, true);
 
             $streamHandler = new StreamHandler($stream, Logger::WARNING);
             $streamHandler->setFormatter($formatter);
@@ -383,7 +382,7 @@ class FrameworkProvider implements ServiceProviderInterface
         });
 
         $container->set('route_listener', function(ContainerInterface $c) {
-            return new RouterListener($c['url_matcher'], $c['request_context'], $c['monolog_logger'], $c['request_stack']);
+            return new RouterListener($c['url_matcher'], $c['request_context'], $c['route_logger'], $c['request_stack']);
         });
 
         $container->set('route_locator', $container->factory(function(ContainerInterface $c) {
