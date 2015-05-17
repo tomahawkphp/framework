@@ -12,8 +12,8 @@
 namespace Tomahawk\Bundle\FrameworkBundle\DI;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
@@ -361,7 +361,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $config = $c['config'];
             $kernel = $c['kernel'];
-            $defaultLogName = 'tomahawk ' . date('Y_m_d') . '.log';
+            $defaultLogName = 'tomahawk.log';
             $defaultLogPath = $kernel->getRootDir() .'/app/storage/logs/';
 
             $logPath = $config->get('monolog.path', $defaultLogPath);
@@ -371,12 +371,12 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $formatter = new LineFormatter(null, null, true, true);
 
-            $streamHandler = new StreamHandler($stream, Logger::WARNING);
-            $streamHandler->setFormatter($formatter);
+            $handler = new RotatingFileHandler($stream, 0, Logger::WARNING);
+            $handler->setFormatter($formatter);
 
             // Create a log channel
             $log = new Logger('tomahawk_logger');
-            $log->pushHandler($streamHandler);
+            $log->pushHandler($handler);
 
             return $log;
         });
