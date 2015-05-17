@@ -26,7 +26,7 @@ class DatabaseManager
     }
 
     /**
-     * @param null $connection
+     * @param string $connection
      * @return \Illuminate\Database\Connection
      */
     public function connection($connection = null)
@@ -36,7 +36,7 @@ class DatabaseManager
 
     /**
      * @param $table
-     * @param $connection
+     * @param string $connection
      * @return \Illuminate\Database\Query\Builder
      */
     public function table($table, $connection = null)
@@ -45,7 +45,7 @@ class DatabaseManager
     }
 
     /**
-     * @param null $connection
+     * @param string $connection
      * @return \Illuminate\Database\Schema\Builder
      */
     public function schema($connection = null)
