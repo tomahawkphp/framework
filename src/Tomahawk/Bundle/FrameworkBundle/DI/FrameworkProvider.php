@@ -410,13 +410,18 @@ class FrameworkProvider implements ServiceProviderInterface
             return new ControllerResolver($c);
         }));
 
-        $container->set('request_context', $container->factory(function(ContainerInterface $c) {
-            $context = new RequestContext();
+        $container->set('request_context', function(ContainerInterface $c) {
+            $config = $c['config'];
 
-            $context->fromRequest($c['request']);
-
-            return $context;
-        }));
+            return new RequestContext(
+                $config->get('request.base_url', ''),
+                'GET',
+                $config->get('request.host', 'localhost'),
+                $config->get('request.scheme', 'http'),
+                $config->get('request.http_port', 80),
+                $config->get('request.https_port', 443)
+            );
+        });
 
         $container->set('locale_listener', function(ContainerInterface $c) {
             $config = $c['config'];
