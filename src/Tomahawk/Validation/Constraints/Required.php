@@ -20,7 +20,7 @@ class Required extends Constraint
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (is_null($value) || (is_string($value) and trim($value) === '') || (is_array($value) && !$value)) {
+        if (is_null($value) || (is_string($value) && trim($value) === '') || (is_array($value) && !$value)) {
             if ($trans = $validator->getTranslator()) {
                 $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
             }
