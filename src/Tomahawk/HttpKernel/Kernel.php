@@ -11,14 +11,13 @@
 
 namespace Tomahawk\HttpKernel;
 
-use Psr\Log\LoggerInterface;
-use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Tomahawk\DI\Container;
 use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\HttpKernel\Bundle\BundleInterface;
 
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
