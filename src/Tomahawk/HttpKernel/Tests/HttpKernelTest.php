@@ -208,7 +208,7 @@ class HttpKernelTest extends TestCase
         $router = new Router();
         $router->setRoutes($routeCollection);
         $router->get('/', 'home', function() {
-            $r = 5/0;
+           throw new \Exception();
         });
 
         $router->get('/test', 'test', function() {
