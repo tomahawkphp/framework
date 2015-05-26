@@ -84,6 +84,7 @@ class WebProfilerBundleTest extends TestCase
     {
         return $this->getMockBuilder('Illuminate\Database\Capsule\Manager')
             ->disableOriginalConstructor()
+            ->setMethods(array('getDatabaseManager'))
             ->getMock();
     }
 
@@ -91,6 +92,7 @@ class WebProfilerBundleTest extends TestCase
     {
         return $this->getMockBuilder('Illuminate\Database\DatabaseManager')
             ->disableOriginalConstructor()
+            ->setMethods(array('connection'))
             ->getMock();
     }
 
