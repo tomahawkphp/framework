@@ -7,6 +7,9 @@ use Tomahawk\Test\TestCase;
 
 class FrameworkProviderTest extends TestCase
 {
+    /**
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider
+     */
     public function testProvider()
     {
         $container = $this->getContainer();
