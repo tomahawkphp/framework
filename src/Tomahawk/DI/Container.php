@@ -27,11 +27,39 @@ use Tomahawk\DI\Exception\InstantiateException;
  */
 class Container implements \ArrayAccess, ContainerInterface
 {
+    /**
+     * @var array
+     */
+    private $serviceTags = array();
+
+    /**
+     * @var array
+     */
     private $values = array();
+
+    /**
+     * @var \SplObjectStorage
+     */
     private $factories;
+
+    /**
+     * @var \SplObjectStorage
+     */
     private $protected;
+
+    /**
+     * @var array
+     */
     private $frozen = array();
+
+    /**
+     * @var array
+     */
     private $raw = array();
+
+    /**
+     * @var array
+     */
     private $keys = array();
 
     /**
@@ -474,4 +502,43 @@ class Container implements \ArrayAccess, ContainerInterface
         return $this;
     }
 
+    /**
+     * Tag a service
+     *
+     * @param string $id
+     * @param string $tag
+     * @return $this
+     */
+    public function tag($id, $tag)
+    {
+        if (!isset($this->serviceTags[$id])) {
+            $this->serviceTags[$id] = array();
+        }
+        $this->serviceTags[$id][] = $tag;
+        return $this;
+    }
+
+    /**
+     * Find all service ids with a given tag
+     *
+     * @param string $tag
+     * @return array
+     */
+    public function findTaggedServiceIds($tag)
+    {
+        $ids = array();
+
+        foreach ($this->serviceTags as $id => $tags) {
+            if (in_array($tag, $tags)) {
+                $ids[] = $id;
+            }
+        }
+
+        return $ids;
+    }
+
+    public function getServiceTags()
+    {
+        return $this->serviceTags;
+    }
 }

@@ -85,4 +85,21 @@ interface ContainerInterface extends \ArrayAccess
      * @return $this
      */
     public function remove($name);
+
+    /**
+     * Tag a service
+     *
+     * @param string $id
+     * @param string $tag
+     * @return $this
+     */
+    public function tag($id, $tag);
+
+    /**
+     * Find all service ids with a given tag
+     *
+     * @param string $tag
+     * @return array
+     */
+    public function findTaggedServiceIds($tag);
 }

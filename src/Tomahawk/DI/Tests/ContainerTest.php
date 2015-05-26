@@ -520,4 +520,41 @@ class ContainerTest extends TestCase
         });
         $this->assertSame('bar.baz', $container['bar']);
     }
+
+    public function testTaggingServices()
+    {
+        $container = new Container();
+        $container['foo'] = function () {
+            return 'foo';
+        };
+
+        $this->assertCount(0, $container->getServiceTags());
+
+        $container->tag('foo', 'tag');
+
+        $this->assertEquals(array('foo' => array('tag')), $container->getServiceTags());
+    }
+
+    public function testFindingTaggedServicesReturnsCorrectTags()
+    {
+        $container = new Container();
+        $container['foo'] = function () {
+            return 'foo';
+        };
+
+        $container['bar'] = function () {
+            return 'bar';
+        };
+
+        $container['baz'] = function () {
+            return 'baz';
+        };
+
+        $container->tag('foo', 'tag');
+        $container->tag('foo', 'tag2');
+        $container->tag('bar', 'tag');
+        $container->tag('baz', 'tag2');
+
+        $this->assertEquals(array('foo', 'bar'), $container->findTaggedServiceIds('tag'));
+    }
 }
