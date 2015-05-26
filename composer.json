@@ -50,7 +50,7 @@
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "4.6.*"
     },
     "autoload": {
         "classmap": [
