@@ -2,7 +2,7 @@
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
          colors="true"
-         bootstrap="phpunit.php"
+         bootstrap="./phpunit.php"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -12,6 +12,7 @@
 >
     <testsuites>
         <testsuite name="Tomahawk Test Suite">
+            <!--<exclude suffix="Test.php">./src/Tomahawk/Cache/Tests/*</exclude>-->
             <directory suffix="Test.php">./src/Tomahawk/*/Tests</directory>
             <directory suffix="Test.php">./src/Tomahawk/*/*/Tests</directory>
         </testsuite>
