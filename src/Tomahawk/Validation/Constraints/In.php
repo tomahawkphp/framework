@@ -14,15 +14,24 @@ namespace Tomahawk\Validation\Constraints;
 use Tomahawk\Validation\Validator;
 use Tomahawk\Validation\Message;
 
-class Regex extends Constraint
+class In extends Constraint
 {
-    protected $message = 'The field is not in the correct format';
-    protected $expression;
+    protected $message = 'Please choose from the following: %choices%';
+    protected $choices = array();
+
+    public function getData()
+    {
+        return array(
+            '%choices%' => implode(', ', $this->choices)
+        );
+    }
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        if ( ! in_array($value, $this->choices)) {
+
             $this->fail($attribute, $validator);
+
             return false;
         }
 

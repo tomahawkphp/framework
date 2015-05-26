@@ -12,9 +12,8 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class RequiredWith extends Constraint
+class RequiredWith extends AbstractRequired
 {
     protected $message = 'The field is required with %with%';
 
@@ -26,14 +25,8 @@ class RequiredWith extends Constraint
     {
         $withValue = $validator->getInput($this->with);
 
-        if ((strlen(trim($withValue)) > 0) && !trim($value)) {
-            if ($trans = $validator->getTranslator()) {
-                $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
-            }
-            else {
-                $this->mergeMessageData();
-            }
-            $validator->addMessage($attribute, new Message($this->getMessage(), $this->getData()));
+        if ($this->hasRequiredValue($withValue) && !$this->hasRequiredValue($value)) {
+            $this->fail($attribute, $validator);
             return false;
         }
 

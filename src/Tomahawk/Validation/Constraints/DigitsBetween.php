@@ -12,16 +12,26 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class Regex extends Constraint
+class DigitsBetween extends Constraint
 {
-    protected $message = 'The field is not in the correct format';
-    protected $expression;
+    protected $start = 0;
+    protected $end = 10;
+    protected $message = 'The field must be between %start% and %end%';
+
+    public function getData()
+    {
+        return array(
+            '%start%' => $this->start,
+            '%end%' => $this->end,
+        );
+    }
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        $value = (int)$value;
+
+        if ($value < $this->start || $value > $this->end) {
             $this->fail($attribute, $validator);
             return false;
         }

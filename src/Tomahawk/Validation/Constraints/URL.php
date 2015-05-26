@@ -12,21 +12,18 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class Regex extends Constraint
+class URL extends Constraint
 {
-    protected $message = 'The field is not in the correct format';
-    protected $expression;
+    protected $message = 'The URL is invalid';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        if (false === filter_var($value, FILTER_VALIDATE_URL)) {
             $this->fail($attribute, $validator);
             return false;
         }
 
         return true;
     }
-
 }

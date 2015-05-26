@@ -12,16 +12,18 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class Regex extends Constraint
+class RequiredWithout extends AbstractRequired
 {
-    protected $message = 'The field is not in the correct format';
-    protected $expression;
+    protected $message = 'The field is required';
+
+    protected $without = null;
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        $withoutValue = $validator->getInput($this->without);
+
+        if (!$this->hasRequiredValue($withoutValue) && !$this->hasRequiredValue($value)) {
             $this->fail($attribute, $validator);
             return false;
         }

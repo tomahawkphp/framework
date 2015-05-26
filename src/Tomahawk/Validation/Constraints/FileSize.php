@@ -12,28 +12,41 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
+use Symfony\Component\HttpFoundation\File\File;
 
-class Identical extends Constraint
+class FileSize extends Constraint
 {
-    protected $message = 'The field is doesn\'t match with %with%';
-    protected $with;
-    protected $with_name = null;
+    /**
+     * @var float
+     */
+    protected $size;
+
+    /**
+     * @var string
+     */
+    protected $message = 'The field is required';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if ($validator->getInput($this->with) !== $value) {
-            $this->fail($attribute, $validator);
-            return false;
+        if (!$value instanceof File) {
+            $valid = false;
+        }
+        else {
+            $size = $value->getSize() / 1024;
+            $valid = $size == $this->size;
         }
 
-        return true;
+        if (!$valid) {
+            $this->fail($attribute, $validator);
+        }
+
+        return $valid;
     }
 
     public function getData()
     {
         return array(
-            '%with%' => $this->with_name ?: $this->with
+            '%size%' => $this->size
         );
     }
 

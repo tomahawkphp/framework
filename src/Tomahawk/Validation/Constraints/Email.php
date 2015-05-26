@@ -21,13 +21,7 @@ class Email extends Constraint
     public function validate(Validator $validator, $attribute, $value)
     {
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            if ($trans = $validator->getTranslator()) {
-                $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
-            }
-            else {
-                $this->mergeMessageData();
-            }
-            $validator->addMessage($attribute, new Message($this->getMessage()));
+            $this->fail($attribute, $validator);
             return false;
         }
 

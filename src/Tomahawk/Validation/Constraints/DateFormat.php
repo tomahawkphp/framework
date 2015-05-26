@@ -12,21 +12,28 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class Regex extends Constraint
+class DateFormat extends Constraint
 {
-    protected $message = 'The field is not in the correct format';
-    protected $expression;
+    protected $format = 'Y-m-d';
+    protected $message = 'The date format of the field is incorrect. Must be in format: %date_format%';
+
+    public function getData()
+    {
+        return array(
+            '%date_format%' => $this->format
+        );
+    }
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        $date = \DateTime::createFromFormat($this->format, $value);
+
+        if (false === $date || $date->format($this->format) !== $value) {
             $this->fail($attribute, $validator);
             return false;
         }
 
         return true;
     }
-
 }

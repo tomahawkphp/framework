@@ -21,14 +21,7 @@ class Numeric extends Constraint
     public function validate(Validator $validator, $attribute, $value)
     {
         if (!is_numeric($value)) {
-            if ($trans = $validator->getTranslator()) {
-                $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
-            }
-            else {
-                $this->mergeMessageData();
-            }
-
-            $validator->addMessage($attribute, new Message($this->getMessage()));
+            $this->fail($attribute, $validator);
             return false;
         }
 

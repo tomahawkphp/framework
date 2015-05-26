@@ -12,28 +12,40 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
+use Symfony\Component\HttpFoundation\File\File;
 
-class Identical extends Constraint
+class MimeTypes extends Constraint
 {
-    protected $message = 'The field is doesn\'t match with %with%';
-    protected $with;
-    protected $with_name = null;
+    /**
+     * @var array
+     */
+    protected $types = array();
+
+    /**
+     * @var string
+     */
+    protected $message = 'The field has an invalid mime type';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if ($validator->getInput($this->with) !== $value) {
-            $this->fail($attribute, $validator);
-            return false;
+        if (!$value instanceof File) {
+            $valid = false;
+        }
+        else {
+            $valid = in_array($value->getMimeType(), $this->types);
         }
 
-        return true;
+        if (!$valid) {
+            $this->fail($attribute, $validator);
+        }
+
+        return $valid;
     }
 
     public function getData()
     {
         return array(
-            '%with%' => $this->with_name ?: $this->with
+            '%types%' => implode(', ', $this->types)
         );
     }
 

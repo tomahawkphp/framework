@@ -12,28 +12,20 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class Required extends Constraint
+class Required extends AbstractRequired
 {
     protected $message = 'The field is required';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (is_null($value) || (is_string($value) && trim($value) === '') || (is_array($value) && !$value)) {
-            if ($trans = $validator->getTranslator()) {
-                $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
-            }
-            else {
-                $this->mergeMessageData();
-            }
+        $valid = $this->hasRequiredValue($value);
 
-            $validator->addMessage($attribute, new Message($this->getMessage(), array()));
-
-            return false;
+        if (!$valid) {
+            $this->fail($attribute, $validator);
         }
 
-        return true;
+        return $valid;
     }
 
 }

@@ -2,10 +2,13 @@
 
 namespace Tomahawk\Validation\Constraints;
 
+use Tomahawk\Validation\Message;
+use Tomahawk\Validation\ValidatorInterface;
+
 abstract class Constraint implements ConstraintInterface
 {
     /**
-     * @var
+     * @var string
      */
     protected $message;
 
@@ -48,5 +51,17 @@ abstract class Constraint implements ConstraintInterface
             $this->message = str_replace($key, $value, $this->message);
         }
         return $this;
+    }
+
+    protected function fail($attribute, ValidatorInterface $validator)
+    {
+        if ($trans = $validator->getTranslator()) {
+            $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
+        }
+        else {
+            $this->mergeMessageData();
+        }
+
+        $validator->addMessage($attribute, new Message($this->getMessage(), $this->getData()));
     }
 }

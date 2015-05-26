@@ -12,21 +12,21 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class Regex extends Constraint
+class TimeZone extends Constraint
 {
-    protected $message = 'The field is not in the correct format';
-    protected $expression;
+    protected $message = 'The timezone is incorrect';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        try {
+            $timezone = new \DateTimeZone($value);
+        }
+        catch(\Exception $e) {
             $this->fail($attribute, $validator);
             return false;
         }
 
         return true;
     }
-
 }

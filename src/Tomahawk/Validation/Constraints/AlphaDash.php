@@ -12,17 +12,17 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
-class Regex extends Constraint
+class AlphaDash extends Constraint
 {
-    protected $message = 'The field is not in the correct format';
-    protected $expression;
+    protected $expression = '/^[\pL\pM\pN_-]+$/u';
+    protected $message = 'The field is must only container alphanumeric characters, dashes and underscores';
 
     public function validate(Validator $validator, $attribute, $value)
     {
         if (!preg_match($this->expression, $value)) {
             $this->fail($attribute, $validator);
+
             return false;
         }
 

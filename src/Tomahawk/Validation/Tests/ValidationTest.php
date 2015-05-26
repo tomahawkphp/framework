@@ -3,6 +3,19 @@
 namespace Tomahawk\Validation\Tests;
 
 use Tomahawk\Test\TestCase;
+use Tomahawk\Validation\Constraints\Alpha;
+use Tomahawk\Validation\Constraints\AlphaDash;
+use Tomahawk\Validation\Constraints\AlphaNumeric;
+use Tomahawk\Validation\Constraints\DateFormat;
+use Tomahawk\Validation\Constraints\DigitsBetween;
+use Tomahawk\Validation\Constraints\Image;
+use Tomahawk\Validation\Constraints\In;
+use Tomahawk\Validation\Constraints\IPAddress;
+use Tomahawk\Validation\Constraints\MimeTypes;
+use Tomahawk\Validation\Constraints\NotIn;
+use Tomahawk\Validation\Constraints\RequiredWithout;
+use Tomahawk\Validation\Constraints\TimeZone;
+use Tomahawk\Validation\Constraints\URL;
 use Tomahawk\Validation\Validator;
 use Tomahawk\Validation\Constraints\Email;
 use Tomahawk\Validation\Constraints\Required;
@@ -99,6 +112,31 @@ class ValidationTest extends TestCase
         $this->assertCount(0, $this->validator->getMessages());
     }
 
+    public function testRequiredWithFiles()
+    {
+        $input = array(
+            'file' => $this->getUploadedFile()
+        );
+
+        $this->validator->add('file', array(
+            new Required()
+        ));
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'file' => $this->getUploadedFile(false)
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        /**
+         * @var Message[] $errors
+         */
+        $errors = $this->validator->getMessagesFor('file');
+        $this->assertEquals('The field is required', $errors[0]->getMessage());
+    }
+
     public function testRequiredWithTranslation()
     {
         $this->validator->setTranslator($this->translator);
@@ -154,8 +192,40 @@ class ValidationTest extends TestCase
          */
         $errors = $this->validator->getMessagesFor('last_name');
         $this->assertEquals('The field is required with First Name', $errors[0]->getMessage());
+    }
+
+    public function testRequiredWithout()
+    {
+        $this->validator->add('achoice', array(
+            new RequiredWithout(array(
+                'without' => 'bchoice',
+            ))
+        ));
+
+        $input = array(
+            'achoice' => 'foo',
+        );
 
 
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'achoice' => 'foo',
+            'bchoice' => '',
+        );
+
+        $this->assertTrue($this->validator->validate($input2));
+
+        $input3 = array(
+            'achoice' => '',
+        );
+
+        $this->assertFalse($this->validator->validate($input3));
+        /**
+         * @var Message[] $errors
+         */
+        $errors = $this->validator->getMessagesFor('achoice');
+        $this->assertEquals('The field is required', $errors[0]->getMessage());
     }
 
     public function testRequiredWithWithTranslator()
@@ -922,5 +992,374 @@ class ValidationTest extends TestCase
 
         $this->assertEquals('The minimum length is 5', $errors[0]->getMessage());
         $this->assertCount(1, $errors[0]->getData());
+    }
+
+    public function testInConstraintPasses()
+    {
+        $this->validator->setTranslator($this->translator);
+
+        $this->validator->getTranslator()->setLocale('en_GB');
+
+        $this->validator->add('prefix', array(
+            new In(array(
+                'choices' => array(
+                    'Mr',
+                    'Mrs'
+                )
+            ))
+        ));
+
+        $input = array(
+            'prefix' => 'Mr'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+    }
+
+    public function testInConstraintFails()
+    {
+        $this->validator->setTranslator($this->translator);
+
+        $this->validator->getTranslator()->setLocale('en_GB');
+
+        $this->validator->add('prefix', array(
+            new In(array(
+                'choices' => array(
+                    'Mr',
+                    'Mrs'
+                )
+            ))
+        ));
+
+        $input = array(
+            'prefix' => 'Dr'
+        );
+
+        $this->assertFalse($this->validator->validate($input));
+        /**
+         * @var Message[] $errors
+         */
+        $errors = $this->validator->getMessagesFor('prefix');
+
+        $this->assertEquals('Please choose from the following: Mr, Mrs', $errors[0]->getMessage());
+        $this->assertCount(1, $errors[0]->getData());
+    }
+
+    public function testNotInConstraintPasses()
+    {
+        $this->validator->setTranslator($this->translator);
+
+        $this->validator->getTranslator()->setLocale('en_GB');
+
+        $this->validator->add('prefix', array(
+            new NotIn(array(
+                'choices' => array(
+                    'Mr',
+                    'Mrs'
+                )
+            ))
+        ));
+
+        $input = array(
+            'prefix' => 'Dr'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+    }
+
+    public function testNotInConstraintFails()
+    {
+        $this->validator->setTranslator($this->translator);
+
+        $this->validator->getTranslator()->setLocale('en_GB');
+
+        $this->validator->add('prefix', array(
+            new NotIn(array(
+                'choices' => array(
+                    'Mr',
+                    'Mrs'
+                )
+            ))
+        ));
+
+        $input = array(
+            'prefix' => 'Mr'
+        );
+
+        $this->assertFalse($this->validator->validate($input));
+        /**
+         * @var Message[] $errors
+         */
+        $errors = $this->validator->getMessagesFor('prefix');
+
+        $this->assertEquals('Please choose a value that is not from the following: Mr, Mrs', $errors[0]->getMessage());
+        $this->assertCount(1, $errors[0]->getData());
+    }
+
+    public function testValidateAlpha()
+    {
+        $this->validator->add('prefix', array(
+            new Alpha()
+        ));
+
+        $input = array(
+            'prefix' => 'abcdefg'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'prefix' => 'abcdefg-$'
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('prefix');
+
+        $this->assertEquals('The field is must only container alphabetic characters', $errors[0]->getMessage());
+
+    }
+
+    public function testValidateAlphaNumeric()
+    {
+        $this->validator->add('prefix', array(
+            new AlphaNumeric()
+        ));
+
+        $input = array(
+            'prefix' => 'abcdefg1234'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'prefix' => 'abcdefg$f'
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('prefix');
+
+        $this->assertEquals('The field is must only container alphanumeric characters', $errors[0]->getMessage());
+    }
+
+    public function testValidateAlphaDash()
+    {
+        $this->validator->add('prefix', array(
+            new AlphaDash()
+        ));
+
+        $input = array(
+            'prefix' => 'abcdefg-_'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'prefix' => 'abcdefg$'
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('prefix');
+
+        $this->assertEquals('The field is must only container alphanumeric characters, dashes and underscores', $errors[0]->getMessage());
+    }
+
+    public function testValidateDateFormat()
+    {
+        $this->validator->add('date', array(
+            new DateFormat(array(
+                'format' => 'Y-m-d H:i:s'
+            ))
+        ));
+
+        $input = array(
+            'date' => '2015-04-11 13:00:00'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'date' => '2015-04-11'
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('date');
+
+        $this->assertEquals('The date format of the field is incorrect. Must be in format: Y-m-d H:i:s', $errors[0]->getMessage());
+
+    }
+
+    public function testValidateIPAddress()
+    {
+        $this->validator->add('ip_address', array(
+            new IPAddress()
+        ));
+
+        $input = array(
+            'ip_address' => '128.0.0.1'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'ip_address' => '128.256.0.1'
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('ip_address');
+
+        $this->assertEquals('The IP Address is invalid', $errors[0]->getMessage());
+
+    }
+
+    public function testValidateURL()
+    {
+        $this->validator->add('url', array(
+            new URL()
+        ));
+
+        $input = array(
+            'url' => 'http://example.com'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'url' => 'example.com'
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('url');
+
+        $this->assertEquals('The URL is invalid', $errors[0]->getMessage());
+
+    }
+
+    public function testValidateTimeZone()
+    {
+        $this->validator->add('timezone', array(
+            new TimeZone()
+        ));
+
+        $input = array(
+            'timezone' => 'Europe/London'
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'timezone' => 'Foo'
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('timezone');
+
+        $this->assertEquals('The timezone is incorrect', $errors[0]->getMessage());
+
+    }
+
+    public function testValidateDigitsBetween()
+    {
+        $this->validator->add('number', array(
+            new DigitsBetween(array(
+                'start' => 10,
+                'end'   => 20
+            ))
+        ));
+
+        $input = array(
+            'number' =>  15
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'number' => 5
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('number');
+
+        $this->assertEquals('The field must be between 10 and 20', $errors[0]->getMessage());
+
+    }
+
+    public function testValidateMimeTypes()
+    {
+        $this->validator->add('file', array(
+            new MimeTypes(array(
+                'types' => array(
+                    'image/png'
+                )
+            ))
+        ));
+
+        $input = array(
+            'file' =>  $this->getUploadedFile(true, 'image/png')
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'file' => $this->getUploadedFile(true, 'text/plain')
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('file');
+
+        $this->assertEquals('The field has an invalid mime type', $errors[0]->getMessage());
+    }
+
+    public function testValidateImage()
+    {
+        $this->validator->add('file', array(
+            new Image()
+        ));
+
+        $input = array(
+            'file' =>  $this->getUploadedFile(true, 'image/png')
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'file' => $this->getUploadedFile(true, 'text/plain')
+        );
+
+        $this->assertFalse($this->validator->validate($input2));
+
+        $errors = $this->validator->getMessagesFor('file');
+
+        $this->assertEquals('The field has an invalid mime type', $errors[0]->getMessage());
+    }
+
+    protected function getUploadedFile($valid = true, $mimeType = null)
+    {
+        $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\File\UploadedFile')
+            ->enableOriginalConstructor()
+            ->setConstructorArgs([tempnam(sys_get_temp_dir(), ''), 'dummy'])
+            ->setMethods(array(
+                'isValid',
+                'getMimeType'
+            ))
+            ->getMock();
+
+        $mock->expects($this->any())
+            ->method('isValid')
+            ->will($this->returnValue($valid));
+
+        $mock->expects($this->any())
+            ->method('getMimeType')
+            ->will($this->returnValue($mimeType));
+
+        return $mock;
     }
 }
