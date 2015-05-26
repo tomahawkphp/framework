@@ -134,6 +134,13 @@ class CacheRedisProviderTest extends TestCase
     protected function getCacheMock()
     {
         $cache = $this->getMockBuilder('Doctrine\Common\Cache\RedisCache')
+            ->setMethods(array(
+                'save',
+                'fetch',
+                'flushAll',
+                'contains',
+                'delete',
+            ))
             ->disableOriginalConstructor()
             ->getMock();
 

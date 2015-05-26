@@ -134,6 +134,13 @@ class CacheMemcacheProviderTest extends TestCase
     protected function getCacheMock()
     {
         $cache = $this->getMockBuilder('Doctrine\Common\Cache\MemcacheCache')
+            ->setMethods(array(
+                'save',
+                'fetch',
+                'flushAll',
+                'contains',
+                'delete',
+            ))
             ->disableOriginalConstructor()
             ->getMock();
 
