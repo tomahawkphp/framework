@@ -16,7 +16,5 @@ class CSRFProvider implements ServiceProviderInterface
         });
 
         $container->addAlias('security.csrf.tokenmanager', 'Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface');
-
-        $container->get('event_dispatcher')->addSubscriber(new TokenSubscriber($container->get('security.csrf.tokenmanager')));
     }
 }

@@ -2,11 +2,8 @@
 
 namespace Tomahawk\Bundle\CSRFBundle\Validation;
 
-use Tomahawk\Bundle\CSRFBundle\Exception\InvalidTokenException;
-use Tomahawk\Bundle\CSRFBundle\Exception\TokenNotFoundException;
 use Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface;
 use Tomahawk\Validation\Constraints\Constraint;
-use Tomahawk\Validation\Message;
 use Tomahawk\Validation\Validator;
 
 class CSRFToken extends Constraint
@@ -16,12 +13,7 @@ class CSRFToken extends Constraint
      */
     protected $tokenManager;
 
-    /**
-     * @var bool
-     */
-    protected $throw = false;
-
-    protected $message = 'Security token has expired';
+    protected $message = 'Invalid security token';
 
     public function __construct(TokenManagerInterface $tokenManager, array $config = array())
     {
@@ -37,31 +29,15 @@ class CSRFToken extends Constraint
 
         // Check if token is set
         if (!$value) {
-
             $valid = false;
-            if ($this->throw) {
-                throw new TokenNotFoundException();
-            }
         }
         // Check if token is valid
         else if ($value !== $actualToken) {
-
-            if ($this->throw) {
-                throw new InvalidTokenException();
-            }
+            $valid = false;
         }
 
-        if ( ! $valid) {
-
-            if ($trans = $validator->getTranslator()) {
-                $this->setMessage($trans->trans($this->getMessage(), $this->getData()));
-            }
-            else {
-                $this->mergeMessageData();
-            }
-
-            $validator->addMessage($attribute, new Message($this->getMessage(), array()));
-
+        if (!$valid) {
+            $this->fail($attribute, $validator);
             return false;
         }
 

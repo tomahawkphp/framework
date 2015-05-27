@@ -2,53 +2,37 @@
 
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
+use Tomahawk\DI\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Bundle\CSRFBundle\DI\CSRFProvider;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 class CSRFProviderTest extends TestCase
 {
+    /**
+     * @covers \Tomahawk\Bundle\CSRFBundle\DI\CSRFProvider
+     */
     public function testProvider()
     {
-        $eventDispatcher = $this->getEventDispatcher();
-
-        $eventDispatcher->expects($this->once())
-            ->method('addSubscriber');
-
         $container = $this->getContainer();
 
-        $container->expects($this->once())
-            ->method('set')
-            ->with('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface');
-
-        $container->expects($this->once())
-            ->method('addAlias')
-            ->with('security.csrf.tokenmanager', 'Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface');
-
-
-        $container->expects($this->exactly(2))
-            ->method('get')
-            ->will($this->returnValueMap(array(
-                array('event_dispatcher', $eventDispatcher),
-                array('security.csrf.tokenmanager', $this->getMock('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface')),
-            )));
+        $container->set('session', $this->getSession());
 
         $csrfProvider = new CSRFProvider();
         $csrfProvider->register($container);
+
+        $this->assertInstanceOf('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface', $container->get('security.csrf.tokenmanager'));
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return Container
      */
     protected function getContainer()
     {
-        return $this->getMock('Tomahawk\DI\ContainerInterface');
+        return new Container();
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function getEventDispatcher()
+    protected function getSession()
     {
-        return $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        return $this->getMock('Tomahawk\Session\SessionInterface');
     }
 }
