@@ -51,6 +51,44 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     public function shutdown();
 
     /**
+     * Get Bundle Route Paths
+     *
+     * @return array
+     */
+    public function getRoutePaths();
+
+    /**
+     * Set Bundle Route Directories
+     *
+     * @param $routePaths
+     * @return $this
+     */
+    public function setRoutePaths($routePaths);
+
+    /**
+     * Set paths
+     *
+     * @param $paths
+     * @return mixed
+     */
+    public function setPaths($paths);
+
+    /**
+     * Get all paths
+     *
+     * @return mixed
+     */
+    public function getPaths();
+
+    /**
+     * Get path
+     *
+     * @param $path
+     * @return mixed
+     */
+    public function getPath($path);
+
+    /**
      * Gets the registered bundle instances.
      *
      * @return BundleInterface[] An array of registered bundle instances

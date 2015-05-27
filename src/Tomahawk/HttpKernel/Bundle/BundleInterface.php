@@ -2,6 +2,7 @@
 
 namespace Tomahawk\HttpKernel\Bundle;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Tomahawk\Console\Application;
 
 interface BundleInterface
@@ -68,4 +69,24 @@ interface BundleInterface
      * @param Application $application An Application instance
      */
     public function registerCommands(Application $application);
+
+    /**
+     * File path to load routes from
+     *
+     * /dir/to/routes.php
+     *
+     * @return mixed
+     */
+    public function getRoutePath();
+
+    /**
+     * Register any events for the bundle
+     *
+     * This is called after all bundles have been boot so you get access
+     * to all the services
+     *
+     *
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function registerEvents(EventDispatcherInterface $dispatcher);
 }

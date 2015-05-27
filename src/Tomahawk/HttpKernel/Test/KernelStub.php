@@ -30,4 +30,9 @@ class KernelStub extends BaseKernel
     {
         return $this->getHttpKernel();
     }
+
+    protected function registerEvents()
+    {
+
+    }
 }

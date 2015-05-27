@@ -19,6 +19,7 @@ namespace Tomahawk\HttpKernel\Bundle;
  * @author Fabien Potencier <fabien@symfony.com>
  */
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Tomahawk\Console\Application;
 use Symfony\Component\Finder\Finder;
 use Tomahawk\DI\ContainerAware;
@@ -67,6 +68,32 @@ abstract class Bundle extends ContainerAware implements BundleInterface
     }
 
     public function shutdown()
+    {
+
+    }
+
+    /**
+     * File path to load routes from
+     *
+     * /dir/to/routes.php
+     *
+     * @return mixed
+     */
+    public function getRoutePath()
+    {
+
+    }
+
+    /**
+     * Register any events for the bundle
+     *
+     * This is called after all bundles have been boot so you get access
+     * to all the services
+     *
+     *
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function registerEvents(EventDispatcherInterface $dispatcher)
     {
 
     }

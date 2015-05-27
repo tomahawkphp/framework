@@ -29,4 +29,9 @@ class TestKernel extends Kernel
         return array();
     }
 
+    protected function registerEvents()
+    {
+
+    }
+
 }

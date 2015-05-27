@@ -2,25 +2,14 @@
 
 namespace Tomahawk\HttpKernel\Tests;
 
-use Tomahawk\Test\TestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Tomahawk\HttpKernel\Test\KernelWithBundleEvents;
+use Tomahawk\Test\TestCase;
 use Tomahawk\DI\Container;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
-use Tomahawk\Routing\Router;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Tomahawk\Routing\Controller\ControllerResolver;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Tomahawk\HttpKernel\HttpKernel;
-use Tomahawk\HttpKernel\Kernel;
-use Tomahawk\HttpKernel\Bundle\Bundle;
-
+use Tomahawk\HttpKernel\Test\Kernel;
 use Tomahawk\HttpKernel\Test\Kernel as KernelForTest;
 use Tomahawk\HttpKernel\Test\KernelForTestWithBundles;
 use Tomahawk\HttpKernel\Test\KernelStub;
@@ -95,7 +84,7 @@ class KernelTest extends TestCase
             ->method('setContainer');
 
         $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'initializeMiddleware', 'getBundles'));
-        $kernel->expects($this->once())
+        $kernel->expects($this->exactly(2))
             ->method('getBundles')
             ->will($this->returnValue(array($bundle)));
 
@@ -139,7 +128,7 @@ class KernelTest extends TestCase
     public function testShutdownGivesNullContainerToAllBundles()
     {
         $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\Bundle');
-        $bundle->expects($this->at(3))
+        $bundle->expects($this->at(4))
             ->method('setContainer')
             ->with(null);
 
@@ -243,7 +232,7 @@ class KernelTest extends TestCase
         $child = $this->getBundle(null, 'ParentABundle', 'ChildABundle');
 
         // use test kernel so we can access getBundleMap()
-        $kernel = $this->getKernelForTest(array('registerBundles'));
+        $kernel = $this->getKernelForTest(array('registerBundles', 'registerEvents'));
         $kernel
             ->expects($this->once())
             ->method('registerBundles')
@@ -287,7 +276,7 @@ class KernelTest extends TestCase
         $child = $this->getBundle(null, 'ParentBBundle', 'ChildBBundle');
 
         // use test kernel so we can access getBundleMap()
-        $kernel = $this->getKernelForTest(array('registerBundles'));
+        $kernel = $this->getKernelForTest(array('registerBundles', 'registerEvents'));
         $kernel
             ->expects($this->once())
             ->method('registerBundles')
@@ -319,7 +308,7 @@ class KernelTest extends TestCase
         $child = $this->getBundle(null, 'ParentCBundle', 'ChildCBundle');
 
         // use test kernel so we can access getBundleMap()
-        $kernel = $this->getKernelForTest(array('registerBundles'));
+        $kernel = $this->getKernelForTest(array('registerBundles', 'registerEvents'));
         $kernel
             ->expects($this->once())
             ->method('registerBundles')
@@ -649,6 +638,33 @@ class KernelTest extends TestCase
         }
     }
 
+    public function testRoutesPaths()
+    {
+        $routePaths = array(
+            'dir1/routes.php',
+            'dir2/routes.php',
+        );
+
+        $kernel = new KernelStub('test', false);
+
+        $kernel->setRoutePaths($routePaths);
+
+        $this->assertEquals($routePaths, $kernel->getRoutePaths());
+    }
+
+    public function testLoadEvents()
+    {
+        $eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('addListener');
+
+        $kernel = new KernelWithBundleEvents('test', false);
+        $kernel->setEventDispatcher($eventDispatcher);
+
+        $kernel->boot();
+    }
+
     public function testEnvParameters()
     {
         $methods = array(
@@ -744,6 +760,7 @@ class KernelTest extends TestCase
     protected function getKernel(array $methods = array(), array $bundles = array(), array $middleware = array())
     {
         $methods[] = 'registerBundles';
+        $methods[] = 'registerEvents';
 
         $kernel = $this
             ->getMockBuilder('Tomahawk\HttpKernel\Kernel')
@@ -759,6 +776,9 @@ class KernelTest extends TestCase
             ->method('registerMiddleware')
             ->will($this->returnValue($middleware));
 
+        $kernel->expects($this->any())
+            ->method('registerEvents');
+
         $p = new \ReflectionProperty($kernel, 'rootDir');
         $p->setAccessible(true);
         $p->setValue($kernel, __DIR__.'/Fixtures');
@@ -772,6 +792,7 @@ class KernelTest extends TestCase
             ->setConstructorArgs(array('test', false))
             ->setMethods($methods)
             ->getMock();
+
         $p = new \ReflectionProperty($kernel, 'rootDir');
         $p->setAccessible(true);
         $p->setValue($kernel, __DIR__.'/Fixtures');

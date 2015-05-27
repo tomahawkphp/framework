@@ -11,13 +11,14 @@
 
 namespace Tomahawk\HttpKernel;
 
+use Tomahawk\DI\Container;
+use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use Tomahawk\DI\Container;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
@@ -38,6 +39,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $name;
     protected $startTime;
     protected $paths = array();
+    protected $routePaths = array();
 
     const VERSION         = '1.1.7';
     const VERSION_ID      = '10107';
@@ -102,6 +104,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         }
 
         $this->booted = true;
+
+        // Load routes from bundles
+        $this->loadRoutes();
+
+        // Register events from Bundles
+        $this->registerEvents();
 
         $this->initializeMiddleware();
     }
@@ -306,6 +314,28 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         }
     }
 
+    /**
+     * Get Bundle Route Directories
+     *
+     * @return array
+     */
+    public function getRoutePaths()
+    {
+        return $this->routePaths;
+    }
+
+    /**
+     * Set Bundle Route Directories
+     *
+     * @param array $routePaths
+     * @return $this
+     */
+    public function setRoutePaths($routePaths)
+    {
+        $this->routePaths = $routePaths;
+        return $this;
+    }
+
     public function setPaths($paths)
     {
         $this->paths = $paths;
@@ -319,7 +349,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
 
     public function getPath($path)
     {
-        return array_get($this->paths, $path);
+        return isset($this->paths[$path]) ?  $this->paths[$path] : null;
     }
 
     public function getBundles()
@@ -540,6 +570,44 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         }
 
         throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $name));
+    }
+
+    /**
+     * @return EventDispatcherInterface
+     */
+    protected function getEventDispatcher()
+    {
+        if (!$this->container) {
+            return null;
+        }
+        return $this->container->get('event_dispatcher');
+    }
+
+    protected function loadRoutes()
+    {
+        foreach ($this->getBundles() as $bundle) {
+
+            // Add Bundle Routes
+            if ($path = $bundle->getRoutePath()) {
+                $this->routePaths[] = $path;
+            }
+        }
+    }
+
+    protected function registerEvents()
+    {
+        $eventDispatcher = $this->getEventDispatcher();
+
+        if (!$eventDispatcher) {
+            return;
+        }
+
+        // Add Routes and Register Event Listeners
+        foreach ($this->getBundles() as $bundle) {
+
+            // Register Events
+            $bundle->registerEvents($eventDispatcher);
+        }
     }
 
 }

@@ -24,5 +24,10 @@ class KernelForTestWithBundles extends BaseKernel
         return array();
     }
 
+    protected function registerEvents()
+    {
+
+    }
+
 }
 

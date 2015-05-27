@@ -401,8 +401,18 @@ class FrameworkProvider implements ServiceProviderInterface
         }));
 
         $container->set('route_collection', function(ContainerInterface $c) {
+
+            $kernel = $c['kernel'];
+            $bundleRoutePaths = $kernel->getRoutePaths();
+
             $routes = new RouteCollection();
             $routes->addCollection($c['route_loader']->load('routes.php'));
+
+            foreach ($bundleRoutePaths as $bundleRoutePath) {
+                $routes->addCollection($c['route_loader']->load($bundleRoutePath));
+            }
+
+
             return $routes;
         });
 
