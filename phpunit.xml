@@ -12,7 +12,6 @@
 >
     <testsuites>
         <testsuite name="Tomahawk Test Suite">
-            <!--<exclude suffix="Test.php">./src/Tomahawk/Cache/Tests/*</exclude>-->
             <directory suffix="Test.php">./src/Tomahawk/*/Tests</directory>
             <directory suffix="Test.php">./src/Tomahawk/*/*/Tests</directory>
         </testsuite>
@@ -31,6 +30,7 @@
                 <directory>./src/Tomahawk/DI/Test</directory>
                 <directory>./src/Tomahawk/Forms/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Test</directory>
+                <directory>./src/Tomahawk/HttpKernel/Resources</directory>
                 <directory>./src/Tomahawk/HttpKernel/Fixtures</directory>
                 <directory>./src/Tomahawk/HttpKernel/KernelInterface.php</directory>
             </exclude>
