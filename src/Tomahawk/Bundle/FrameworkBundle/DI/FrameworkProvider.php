@@ -104,20 +104,13 @@ class FrameworkProvider implements ServiceProviderInterface
 
     protected function registerServices(ContainerInterface $container)
     {
-
         $container->set('auth_handler', function(ContainerInterface $c) {
-            /** @var ConfigInterface $config */
-            $config = $c['config'];
-
-            $handler = $config->get('security.handler');
-
+            $handler = $c['config']->get('security.handler');
             return $c[$handler . '_auth_handler'];
         });
 
         $container->set('eloquent_auth_handler', function(ContainerInterface $c) {
-            /** @var ConfigInterface $config */
-            $config = $c['config'];
-            $eloquentConfig = $config->get('security.handlers.eloquent');
+            $eloquentConfig = $c['config']->get('security.handlers.eloquent');
             return new EloquentAuthHandler($c['hasher'], $eloquentConfig['model']);
         });
 
@@ -344,18 +337,23 @@ class FrameworkProvider implements ServiceProviderInterface
             return new TwigEngine($twig, $parser, $locator);
         });
 
+        $container->tag('templating.engine.php', 'templating.engine');
+        $container->tag('templating.engine.twig', 'templating.engine');
+
         $container->set('Symfony\Component\Templating\EngineInterface', $container->factory(function(ContainerInterface $c) {
 
-            return new DelegatingEngine(array(
-                $c->get('templating.engine.php'),
-                $c->get('templating.engine.twig'),
-            ));
+            $engineServiceIds = $c->findTaggedServiceIds('templating.engine');
 
+            $engines = array();
+
+            foreach ($engineServiceIds as $engineServiceId) {
+                $engines[] = $c->get($engineServiceId);
+            }
+
+            return new DelegatingEngine($engines);
         }));
 
-        $container->set('route_logger', function(ContainerInterface $c) {
-            return null;
-        });
+        $container->set('route_logger', null);
 
         $container->set('Psr\Log\LoggerInterface', function(ContainerInterface $c) {
 
