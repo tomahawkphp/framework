@@ -48,6 +48,8 @@ use Tomahawk\Cache\Provider\MemcachedProvider;
 use Tomahawk\Cache\Provider\MemcacheProvider;
 use Tomahawk\Cache\Provider\RedisProvider;
 use Tomahawk\Cache\Provider\XcacheProvider;
+use Tomahawk\CommandBus\CommandBus;
+use Tomahawk\CommandBus\CommandHandlerResolver;
 use Tomahawk\Config\Loader\PhpConfigLoader;
 use Tomahawk\Config\Loader\YamlConfigLoader;
 use Tomahawk\DI\ServiceProviderInterface;
@@ -521,10 +523,11 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('Symfony\Component\Translation\TranslatorInterface', function(ContainerInterface $c) {
 
-            $locale = $c['config']->get('translation.locale');
-            $fallbackLocale = $c['config']->get('translation.fallback_locale');
-            $translationDirs = $c['config']->get('translation.translation_dirs');
-            $cacheDir = $c['config']->get('translation.cache_dir');
+            $config = $c['config'];
+            $locale = $config->get('translation.locale');
+            $fallbackLocale = $config->get('translation.fallback_locale');
+            $translationDirs = $config->get('translation.translation_dirs');
+            $cacheDir = $config->get('translation.cache_dir');
 
             $translator = new Translator($locale, new MessageSelector(), $cacheDir);
             $translator->setFallbackLocales(array($fallbackLocale));
@@ -550,6 +553,14 @@ class FrameworkProvider implements ServiceProviderInterface
 
             return $translator;
         });
+
+        $container->set('Tomahawk\CommandBus\CommandHandlerResolverInterface', function(ContainerInterface $c) {
+            return new CommandHandlerResolver($c);
+        });
+
+        $container->set('Tomahawk\CommandBus\CommandBusInterface', function(ContainerInterface $c) {
+            return new CommandBus($c['commandbus_handler_resolver']);
+        });
     }
 
     protected function registerAliases(ContainerInterface $container)
@@ -557,6 +568,8 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('auth', 'Tomahawk\Auth\AuthInterface');
         $container->addAlias('asset_manager', 'Tomahawk\Asset\AssetManagerInterface');
         $container->addAlias('cache', 'Tomahawk\Cache\CacheInterface');
+        $container->addAlias('commandbus', 'Tomahawk\CommandBus\CommandBusInterface');
+        $container->addAlias('commandbus_handler_resolver', 'Tomahawk\CommandBus\CommandHandlerResolverInterface');
         $container->addAlias('config_loader', 'Symfony\Component\Config\Loader\LoaderInterface');
         $container->addAlias('config', 'Tomahawk\Config\ConfigInterface');
         $container->addAlias('hasher', 'Tomahawk\Hashing\HasherInterface');
