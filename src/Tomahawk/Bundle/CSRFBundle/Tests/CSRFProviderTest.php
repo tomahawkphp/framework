@@ -15,6 +15,7 @@ class CSRFProviderTest extends TestCase
     {
         $container = $this->getContainer();
 
+        $container->set('config', $this->getConfig());
         $container->set('session', $this->getSession());
 
         $csrfProvider = new CSRFProvider();
@@ -32,6 +33,11 @@ class CSRFProviderTest extends TestCase
     }
 
     protected function getSession()
+    {
+        return $this->getMock('Tomahawk\Session\SessionInterface');
+    }
+
+    protected function getConfig()
     {
         return $this->getMock('Tomahawk\Session\SessionInterface');
     }
