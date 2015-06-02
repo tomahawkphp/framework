@@ -41,15 +41,47 @@ class ExceptionListenerTest extends TestCase
 
         $logger = $this->getLogger();
 
+        $config = $this->getConfig();
+
         $exceptionListener = new ExceptionListener(
             $templating,
             'prod',
+            $config,
             $logger
         );
 
         $exceptionListener->onException($getResponseForExceptionEvent);
 
         $this->assertEquals('404', $getResponseForExceptionEvent->getResponse()->getContent());
+    }
+
+    public function test404ExceptionSetsDefaultResponseWhenNoTemplate()
+    {
+        $notFoundException = new NotFoundHttpException();
+
+        $getResponseForExceptionEvent = new GetResponseForExceptionEvent(
+            $this->getHttpKernel(),
+            Request::createFromGlobals(),
+            HttpKernelInterface::MASTER_REQUEST,
+            $notFoundException
+        );
+
+        $templating = $this->getTemplating();
+
+        $logger = $this->getLogger();
+
+        $config = $this->getConfig(null, null);
+
+        $exceptionListener = new ExceptionListener(
+            $templating,
+            'prod',
+            $config,
+            $logger
+        );
+
+        $exceptionListener->onException($getResponseForExceptionEvent);
+
+        $this->assertEquals('404 - File Not Found', $getResponseForExceptionEvent->getResponse()->getContent());
     }
 
     public function testHttpException()
@@ -71,15 +103,47 @@ class ExceptionListenerTest extends TestCase
 
         $logger = $this->getLogger();
 
+        $config = $this->getConfig();
+
         $exceptionListener = new ExceptionListener(
             $templating,
             'prod',
+            $config,
             $logger
         );
 
         $exceptionListener->onException($getResponseForExceptionEvent);
 
         $this->assertEquals('500', $getResponseForExceptionEvent->getResponse()->getContent());
+    }
+
+    public function testHttpExceptionSetsDefaultResponseWhenNoTemplate()
+    {
+        $httpException = new HttpException('403');
+
+        $getResponseForExceptionEvent = new GetResponseForExceptionEvent(
+            $this->getHttpKernel(),
+            Request::createFromGlobals(),
+            HttpKernelInterface::MASTER_REQUEST,
+            $httpException
+        );
+
+        $templating = $this->getTemplating();
+
+        $logger = $this->getLogger();
+
+        $config = $this->getConfig(null, null);
+
+        $exceptionListener = new ExceptionListener(
+            $templating,
+            'prod',
+            $config,
+            $logger
+        );
+
+        $exceptionListener->onException($getResponseForExceptionEvent);
+
+        $this->assertEquals('500 - Internal Server Error', $getResponseForExceptionEvent->getResponse()->getContent());
     }
 
     public function testException()
@@ -101,9 +165,12 @@ class ExceptionListenerTest extends TestCase
 
         $logger = $this->getLogger();
 
+        $config = $this->getConfig();
+
         $exceptionListener = new ExceptionListener(
             $templating,
             'prod',
+            $config,
             $logger
         );
 
@@ -124,6 +191,20 @@ class ExceptionListenerTest extends TestCase
         $logger = $this->getMock('Psr\Log\LoggerInterface');
 
         return $logger;
+    }
+
+    protected function getConfig($path404 = 'path/to/file.php', $path500 = 'path/to/file.php')
+    {
+        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+
+        $config->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap(array(
+                array('error.template_404', null, $path404),
+                array('error.template_50x', null, $path500),
+            )));
+
+        return $config;
     }
 
     protected function getHttpKernel()

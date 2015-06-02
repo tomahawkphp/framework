@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Tomahawk\Config\ConfigInterface;
 
 /**
  * Class ExceptionListener
@@ -40,6 +41,11 @@ class ExceptionListener implements EventSubscriberInterface
     protected $templating;
 
     /**
+     * @var ConfigInterface
+     */
+    protected $config;
+
+    /**
      * @var string
      */
     protected $environment;
@@ -47,12 +53,14 @@ class ExceptionListener implements EventSubscriberInterface
     /**
      * @param EngineInterface $templating
      * @param string $environment
+     * @param ConfigInterface $config
      * @param LoggerInterface $logger
      */
-    public function __construct(EngineInterface $templating, $environment, LoggerInterface $logger = null)
+    public function __construct(EngineInterface $templating, $environment, ConfigInterface $config, LoggerInterface $logger = null)
     {
         $this->templating = $templating;
         $this->environment = $environment;
+        $this->config = $config;
         $this->logger = $logger;
     }
 
@@ -63,8 +71,15 @@ class ExceptionListener implements EventSubscriberInterface
     {
         if ($event->getException() instanceof NotFoundHttpException) {
 
+            $templatePath = $this->config->get('error.template_404', null);
             $response = new Response();
-            $response->setContent($this->templating->render(__DIR__ .'/../Resources/views/Error/404.php'));
+
+            if ($templatePath) {
+                $response->setContent($this->templating->render($templatePath));
+            }
+            else {
+                $response->setContent('404 - File Not Found');
+            }
 
             $event->setResponse($response);
         }
@@ -76,8 +91,15 @@ class ExceptionListener implements EventSubscriberInterface
 
             if ('prod' === $this->environment) {
 
+                $templatePath = $this->config->get('error.template_50x', null);
                 $response = new Response();
-                $response->setContent($this->templating->render(__DIR__ .'/../Resources/views/Error/50x.php'));
+
+                if ($templatePath) {
+                    $response->setContent($this->templating->render($templatePath));
+                }
+                else {
+                    $response->setContent('500 - Internal Server Error');
+                }
 
                 $event->setResponse($response);
             }

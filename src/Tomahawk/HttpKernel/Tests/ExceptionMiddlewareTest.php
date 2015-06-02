@@ -26,6 +26,15 @@ class ExceptionMiddlewareTest extends TestCase
 
     protected function getContainer()
     {
+        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+
+        $config->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap(array(
+                array('error.template_404', 'path/to/file.php'),
+                array('error.template_50x', 'path/to/file.php'),
+            )));
+
         $logger = $this->getMock('Psr\Log\LoggerInterface');
 
         $eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
@@ -59,6 +68,7 @@ class ExceptionMiddlewareTest extends TestCase
                 array('templating', $templating),
                 array('logger', $logger),
                 array('kernel', $kernel),
+                array('config', $config),
             )));
 
         return $container;

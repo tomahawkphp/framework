@@ -14,6 +14,7 @@ namespace Tomahawk\HttpKernel\Middleware;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Tomahawk\Config\ConfigInterface;
 use Tomahawk\HttpKernel\Event\ExceptionListener;
 use Tomahawk\HttpKernel\KernelInterface;
 use Tomahawk\Middleware\Middleware;
@@ -24,6 +25,8 @@ class ExceptionMiddleware extends Middleware
     {
         $this->getEventDispatcher()->addSubscriber(new ExceptionListener(
             $this->getTemplating(),
+            $this->getKernel()->getEnvironment(),
+            $this->getConfig(),
             $this->getLogger()
         ));
     }
@@ -58,5 +61,13 @@ class ExceptionMiddleware extends Middleware
     protected function getKernel()
     {
         return $this->container->get('kernel');
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    protected function getConfig()
+    {
+        return $this->container->get('config');
     }
 }
