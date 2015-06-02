@@ -440,7 +440,7 @@ class FrameworkProvider implements ServiceProviderInterface
             return new LocaleListener($locale, $c['request_stack'], $c['request_context']);
         });
 
-        $container->set('request_stack', new RequestStack());
+        $container->set('Symfony\Component\HttpFoundation\RequestStack', new RequestStack());
 
         $container->set('Symfony\Component\HttpFoundation\Request', function(ContainerInterface $c) {
             return $c->get('request_stack')->getCurrentRequest() ?: Request::createFromGlobals();
@@ -585,6 +585,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('response_builder', 'Tomahawk\HttpCore\ResponseBuilderInterface');
         // Request might not be needed....
         $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
+        $container->addAlias('request_stack', 'Symfony\Component\HttpFoundation\RequestStack');
         $container->addAlias('session', 'Tomahawk\Session\SessionInterface');
         $container->addAlias('input', 'Tomahawk\Input\InputInterface');
         $container->addAlias('templating', 'Symfony\Component\Templating\EngineInterface');
