@@ -23,13 +23,15 @@ class WebProfilerBundleTest extends TestCase
     {
         $httpKernel = $this->getHttpKernel();
 
+        $eventDispatcher = $this->container['event_dispatcher'];
         $event = new FilterResponseEvent($httpKernel, new Request(), HttpKernelInterface::MASTER_REQUEST, new Response());
 
         $webBundle = new WebProfilerBundle();
         $webBundle->setContainer($this->container);
         $webBundle->boot();
+        $webBundle->registerEvents($eventDispatcher);
 
-        $this->container['event_dispatcher']->dispatch(KernelEvents::RESPONSE, $event);
+        $eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
 

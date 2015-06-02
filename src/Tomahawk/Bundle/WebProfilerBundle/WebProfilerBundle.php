@@ -8,18 +8,32 @@ use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Tomahawk\Bundle\WebProfilerBundle\Profiler;
 
 class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 {
-
     public function boot()
     {
-        $this->setUpProfiler();
+        $assetsPath = $this->getPath() .'/Resources/assets/';
 
+        $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
+            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath);
+        });
+    }
+
+    /**
+     * Register any events for the bundle
+     *
+     * This is called after all bundles have been boot so you get access
+     * to all the services
+     *
+     *
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function registerEvents(EventDispatcherInterface $dispatcher)
+    {
         $c = $this->container;
 
-        $this->getEventDispatcher()->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) use($c) {
+        $dispatcher->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) use($c) {
 
             if ($response = $event->getResponse()) {
                 $content = $response->getContent();
@@ -41,22 +55,4 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
     {
         $this->container->remove('web_profiler');
     }
-
-    /**
-     * @return EventDispatcherInterface
-     */
-    public function getEventDispatcher()
-    {
-        return $this->container->get('event_dispatcher');
-    }
-
-    protected function setUpProfiler()
-    {
-        $assetsPath = $this->getPath() .'/Resources/assets/';
-
-        $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
-            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath);
-        });
-    }
-
 }
