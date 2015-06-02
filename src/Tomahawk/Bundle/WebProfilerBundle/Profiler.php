@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TomahawkPHP package.
+ *
+ * (c) Tom Ellis
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Tomahawk\Bundle\WebProfilerBundle;
 
 use Symfony\Component\Templating\EngineInterface;
@@ -127,6 +136,16 @@ class Profiler
         return $this->queries;
     }
 
+    /**
+     * Add logs to the profiler
+     *
+     * ->addLogs(array(
+     *       array('info', 'Value = bar'),
+     *       array('info', 'Value = foo'),
+     *   ));
+     *
+     * @param array $logs
+     */
     public function addLogs($logs = array())
     {
         foreach ($logs as $log) {
@@ -134,18 +153,36 @@ class Profiler
         }
     }
 
+    /**
+     * @return array
+     */
     public function getLogs()
     {
         return $this->logs;
     }
 
+    /**
+     * Add timers to profiler
+     *
+     * ->addTimers(array(
+     *       'Test' => array(
+     *           'start' => time(),
+     *           'time' => time() + 1000,
+     *       ),
+     *   ));
+     *
+     * @param array $timers
+     */
     public function addTimers($timers = array())
     {
-        foreach ($timers as $timer) {
-            $this->timers[] = $timer;
+        foreach ($timers as $name => $timer) {
+            $this->timers[$name] = $timer;
         }
     }
 
+    /**
+     * @return array
+     */
     public function getTimers()
     {
         return $this->timers;
@@ -158,6 +195,10 @@ class Profiler
      */
     public function render()
     {
+        if (!$this->enabled()) {
+            return '';
+        }
+
         $memory      = $this->getFileSize(memory_get_usage(true));
         $memory_peak = $this->getFileSize(memory_get_peak_usage(true));
         $time        = number_format((microtime(true) - TOMAHAWKPHP_START) * 1000, 2);
@@ -191,6 +232,10 @@ class Profiler
         return round($size / pow(1024, ($i = floor(log($size, 1024)))), 2).' '.$units[$i];
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     protected function escape($value)
     {
         return $this->manager->connection()->getPdo()->quote($value);

@@ -39,6 +39,17 @@ class ProfilerTest extends TestCase
         $this->assertTrue($profiler->disabled());
     }
 
+    public function testProfilerDisabledDoesntRender()
+    {
+        $engine = $this->getTemplatingEngineMock();
+
+        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+
+        $profiler->disable();
+
+        $this->assertEquals('', $profiler->render());
+    }
+
     public function testAddQueries()
     {
         $engine = $this->getTemplatingEngineMock();
