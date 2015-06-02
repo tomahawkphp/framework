@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
@@ -23,14 +24,6 @@ class FrameworkBundle extends Bundle
     {
         $this->container->register(new FrameworkProvider());
 
-        $c = $this->container;
-
-        $eventDispatcher = $c->get('event_dispatcher');
-
-        $eventDispatcher->addSubscriber($c->get('route_listener'));
-
-        $eventDispatcher->addSubscriber($c->get('locale_listener'));
-
         if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);
         }
@@ -42,7 +35,22 @@ class FrameworkBundle extends Bundle
         if ($trustedHosts = $this->getConfig()->get('kernel.trusted_hosts')) {
             Request::setTrustedHosts($trustedHosts);
         }
+    }
 
+    /**
+     * Register any events for the bundle
+     *
+     * This is called after all bundles have been boot so you get access
+     * to all the services
+     *
+     *
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function registerEvents(EventDispatcherInterface $dispatcher)
+    {
+        $dispatcher->addSubscriber($this->container->get('route_listener'));
+
+        $dispatcher->addSubscriber($this->container->get('locale_listener'));
     }
 
     /**

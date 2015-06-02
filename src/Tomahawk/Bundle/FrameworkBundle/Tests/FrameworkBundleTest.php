@@ -30,28 +30,30 @@ class FrameworkBundleTest extends TestCase
         $eventDispatcher->expects($this->exactly(2))->method('addSubscriber');
 
         $config = $this->getConfigMock();
-        $config->expects($this->at(0))->method('get')->will($this->returnValue(array(
-            '127.0.0.0'
-        )));
 
-        $config->expects($this->at(1))->method('get')->will($this->returnValue(true));
+        $config->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap(array(
+                array('kernel.trusted_proxies', null, array('127.0.0.0')),
+                array('kernel.http_method_override', null, true),
+                array('kernel.trusted_hosts',null, array('example.com')),
+            )));
 
-        $config->expects($this->at(2))->method('get')->will($this->returnValue(array(
-            'example.com'
-        )));
+        $container->expects($this->atLeast(1))->method('register');
 
-        $container->expects($this->at(0))->method('register');
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($eventDispatcher));
-        $container->expects($this->at(2))->method('get')->will($this->returnValue($this->getRouteListener()));
-        $container->expects($this->at(3))->method('get')->will($this->returnValue($this->getLocaleListener()));
-        $container->expects($this->at(4))->method('get')->will($this->returnValue($config));
-        $container->expects($this->at(5))->method('get')->will($this->returnValue($config));
-        $container->expects($this->at(6))->method('get')->will($this->returnValue($config));
+        $container->expects($this->any())
+            ->method('get')
+            ->will($this->returnValueMap(array(
+                array('event_dispatcher', $eventDispatcher),
+                array('route_listener', $this->getRouteListener()),
+                array('locale_listener', $this->getLocaleListener()),
+                array('config', $config),
+            )));
 
         $frameworkBundle = new FrameworkBundle();
         $frameworkBundle->setContainer($container);
         $frameworkBundle->boot();
-
+        $frameworkBundle->registerEvents($eventDispatcher);
     }
 
     public function getEventDispatcherMock()
