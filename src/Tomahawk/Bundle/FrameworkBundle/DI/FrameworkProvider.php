@@ -412,7 +412,6 @@ class FrameworkProvider implements ServiceProviderInterface
                 $routes->addCollection($c['route_loader']->load($bundleRoutePath));
             }
 
-
             return $routes;
         });
 
