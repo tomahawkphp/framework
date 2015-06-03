@@ -48,6 +48,7 @@ class WebProfilerBundleTest extends TestCase
         $container = new Container();
         $container['event_dispatcher'] = new EventDispatcher();
         $container['http_kernel'] = $httpKernel;
+        $container['config'] = $this->getConfigMock();
 
         $engine = $this->getMockBuilder('Symfony\Component\Templating\EngineInterface')
             ->disableOriginalConstructor()
@@ -107,20 +108,14 @@ class WebProfilerBundleTest extends TestCase
         return $connection;
     }
 
-    protected function getProfilerMock()
+    protected function getConfigMock()
     {
-        $response = new Response();
+        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config->expects($this->once())
+            ->method('get')
+            ->with('database.enabled')
+            ->will($this->returnValue(true));
 
-        $engine = $this->getMockBuilder('Symfony\Component\Templating\EngineInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $engine->expects($this->once())
-            ->method('render')
-            ->will($this->returnValue($response));
-
-        $profiler = $this->getMockBuilder('Tomahawk\Bundle\WebProfilerBundle\Profiler')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $config;
     }
 }

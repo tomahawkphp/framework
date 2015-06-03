@@ -13,7 +13,6 @@ namespace Tomahawk\Bundle\WebProfilerBundle;
 
 use Symfony\Component\Templating\EngineInterface;
 use Illuminate\Database\DatabaseManager;
-use Doctrine\DBAL\Logging\DebugStack;
 use Tomahawk\HttpKernel\Kernel;
 
 class Profiler
@@ -60,22 +59,15 @@ class Profiler
     protected $manager;
 
     /**
-     * @var DebugStack
-     */
-    protected $debugStack;
-
-    /**
      * @param EngineInterface $engine
      * @param DatabaseManager $manager
      * @param $assetsPath
-     * @param DebugStack $debugStack
      */
-    public function __construct(EngineInterface $engine, DatabaseManager $manager, $assetsPath, DebugStack $debugStack = null)
+    public function __construct(EngineInterface $engine, DatabaseManager $manager, $assetsPath)
     {
         $this->engine = $engine;
         $this->assetsPath = $assetsPath;
         $this->manager = $manager;
-        $this->debugStack = $debugStack;
     }
 
     /**
@@ -205,15 +197,6 @@ class Profiler
     {
         if (!$this->enabled()) {
             return '';
-        }
-
-        if ($this->debugStack) {
-            foreach ($this->debugStack->queries as $query) {
-                $this->addQueries(array(
-                    'query'    => $query,
-                    'bindings' => array(),
-                ));
-            }
         }
 
         $memory      = $this->getFileSize(memory_get_usage(true));

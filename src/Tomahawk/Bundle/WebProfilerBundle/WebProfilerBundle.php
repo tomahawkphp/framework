@@ -16,8 +16,7 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
         $assetsPath = $this->getPath() .'/Resources/assets/';
 
         $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
-            $debugStack = $c->has('doctrine.query_stack') ? $c->get('doctrine.query_stack') : null;
-            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath, $debugStack);
+            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath);
         });
     }
 
@@ -40,13 +39,24 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
                 $content = $response->getContent();
 
                 // If we're not using Illuminate DB we don't need to do this
-                if (false === $c->get('config')->get('database.enabled')) {
+                if (true === $c->get('config')->get('database.enabled')) {
 
                     $manager = $c->get('illuminate_database')->getDatabaseManager()->connection();
                     $queryLog = $manager->getQueryLog();
 
                     $c['web_profiler']->addQueries($queryLog);
+                }
 
+                // Check if we have the query stack from doctrine
+                $debugStack = $c->has('doctrine.query_stack') ? $c->get('doctrine.query_stack') : null;
+
+                if ($debugStack) {
+                    foreach ($debugStack->queries as $query) {
+                        $this->addQueries(array(
+                            'query'    => $query,
+                            'bindings' => array(),
+                        ));
+                    }
                 }
 
                 $content .= $c['web_profiler']->render();
