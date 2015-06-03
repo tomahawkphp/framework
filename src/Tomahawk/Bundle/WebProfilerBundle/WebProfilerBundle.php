@@ -16,7 +16,8 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
         $assetsPath = $this->getPath() .'/Resources/assets/';
 
         $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
-            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath);
+            $debugStack = $c->has('doctrine.query_stack') ? $c->get('doctrine.query_stack') : null;
+            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath, $debugStack);
         });
     }
 
