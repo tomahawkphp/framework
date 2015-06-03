@@ -19,6 +19,7 @@ use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\DebugStack;
 use Tomahawk\Bundle\DoctrineBundle\Auth\Handlers\DoctrineAuthHandler;
 use Tomahawk\Bundle\DoctrineBundle\Registry;
 use Tomahawk\Config\ConfigInterface;
@@ -67,9 +68,13 @@ class DoctrineProvider implements ServiceProviderInterface
             return $registry;
         });
 
+        $container->set('doctrine.query_stack', function() {
+           return new DebugStack();
+        });
+
         $container->set('doctrine.entitymanager', function(ContainerInterface $c) {
 
-            $cache = $c['doctrine.cache'];
+            $cache = $c->get('doctrine.cache');
 
             $doctrineConfig = $c->get('config')->get('doctrine');
 
@@ -79,6 +84,8 @@ class DoctrineProvider implements ServiceProviderInterface
                 $doctrineConfig['proxy_directories'],
                 $cache
             );
+
+            $config->setSQLLogger($c->get('doctrine.query_stack'));
 
             $config->setProxyNamespace($doctrineConfig['proxy_namespace']);
             $config->setAutoGenerateProxyClasses($doctrineConfig['auto_generate_proxies']);
