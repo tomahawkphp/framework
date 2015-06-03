@@ -238,6 +238,11 @@ class Profiler
      */
     protected function escape($value)
     {
+        // If we have no manager fallback
+        if (!$this->manager) {
+            return sprintf("%s", str_replace('"', '\"', $value));
+        }
+
         return $this->manager->connection()->getPdo()->quote($value);
     }
 }

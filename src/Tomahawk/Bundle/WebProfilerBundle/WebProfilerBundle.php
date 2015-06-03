@@ -16,7 +16,14 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
         $assetsPath = $this->getPath() .'/Resources/assets/';
 
         $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
-            return new Profiler($c['templating'], $c->get('illuminate_database')->getDatabaseManager(), $assetsPath);
+            $databaseManager = null;
+
+            // Check if we're using Illuminate Database
+            if (true === $c['config']->get('database.enabled')) {
+                $databaseManager =  $c->get('illuminate_database')->getDatabaseManager();
+            }
+
+            return new Profiler($c['templating'], $databaseManager, $assetsPath);
         });
     }
 

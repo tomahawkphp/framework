@@ -111,7 +111,7 @@ class WebProfilerBundleTest extends TestCase
     protected function getConfigMock()
     {
         $config = $this->getMock('Tomahawk\Config\ConfigInterface');
-        $config->expects($this->once())
+        $config->expects($this->any())
             ->method('get')
             ->with('database.enabled')
             ->will($this->returnValue(true));
