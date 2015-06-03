@@ -63,7 +63,7 @@ class Profiler
      * @param DatabaseManager $manager
      * @param $assetsPath
      */
-    public function __construct(EngineInterface $engine, DatabaseManager $manager, $assetsPath)
+    public function __construct(EngineInterface $engine, DatabaseManager $manager = null, $assetsPath)
     {
         $this->engine = $engine;
         $this->assetsPath = $assetsPath;
