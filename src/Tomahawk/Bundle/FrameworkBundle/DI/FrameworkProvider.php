@@ -137,7 +137,7 @@ class FrameworkProvider implements ServiceProviderInterface
             return new Auth($c['session'], $c['auth_handler']);
         });
 
-        $container->set('illuminate_database', function(ContainerInterface $c) {
+        $container->set('Illuminate\Database\Capsule\Manager', function(ContainerInterface $c) {
 
             /** @var ConfigInterface $config */
             $config = $c['config'];
@@ -161,8 +161,8 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('Symfony\Component\EventDispatcherInterface', new EventDispatcher());
 
-        $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $container) {
-            return new AssetManager($container['html_builder'], $container['url_generator']);
+        $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $c) {
+            return new AssetManager($c['html_builder'], $c['url_generator']);
         });
 
         $container->set('Symfony\Component\Config\Loader\LoaderInterface', function(ContainerInterface $c) {
@@ -312,16 +312,16 @@ class FrameworkProvider implements ServiceProviderInterface
         });
 
         $container->set('templating.engine.php', function(ContainerInterface $c) {
-            $kernel = $c->get('kernel');
+            $kernel = $c['kernel'];
             $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
             $templateLocator = new TemplateLocator($locator);
             $loader = new FilesystemLoader($templateLocator);
             $parser = new TemplateNameParser($kernel);
-            return new PhpEngine($parser, $loader, $c->get('templating.php.helpers'));
+            return new PhpEngine($parser, $loader, $c['templating.php.helpers']);
         });
 
         $container->set('templating.engine.twig', function(ContainerInterface $c) {
-            $kernel = $c->get('kernel');
+            $kernel = $c['kernel'];
             $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
             $templateLocator = new TemplateLocator($locator);
             $parser = new TemplateNameParser($kernel);
@@ -330,7 +330,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
             $twig = new \Twig_Environment($loader);
 
-            $extensions = $c->get('templating.twig.extensions');
+            $extensions = $c['templating.twig.extensions'];
 
             foreach ($extensions as $extension) {
                 $twig->addExtension($extension);
@@ -349,7 +349,7 @@ class FrameworkProvider implements ServiceProviderInterface
             $engines = array();
 
             foreach ($engineServiceIds as $engineServiceId) {
-                $engines[] = $c->get($engineServiceId);
+                $engines[] = $c[$engineServiceId];
             }
 
             return new DelegatingEngine($engines);
@@ -442,7 +442,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Symfony\Component\HttpFoundation\RequestStack', new RequestStack());
 
         $container->set('Symfony\Component\HttpFoundation\Request', function(ContainerInterface $c) {
-            return $c->get('request_stack')->getCurrentRequest() ?: Request::createFromGlobals();
+            return $c['request_stack']->getCurrentRequest() ?: Request::createFromGlobals();
         });
 
         $container->set('url_matcher', $container->factory(function(ContainerInterface $c) {
@@ -579,6 +579,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('form_manager', 'Tomahawk\Forms\FormsManagerInterface');
         $container->addAlias('html_builder', 'Tomahawk\Html\HtmlBuilderInterface');
         $container->addAlias('http_kernel', 'Tomahawk\HttpKernel\HttpKernelInterface');
+        $container->addAlias('illuminate_database', 'Illuminate\Database\Capsule\Manager');
         $container->addAlias('monolog_logger', 'Psr\Log\LoggerInterface');
         $container->addAlias('logger', 'Psr\Log\LoggerInterface');
         $container->addAlias('response_builder', 'Tomahawk\HttpCore\ResponseBuilderInterface');
