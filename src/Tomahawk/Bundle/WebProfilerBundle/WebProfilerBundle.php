@@ -38,10 +38,16 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 
             if ($response = $event->getResponse()) {
                 $content = $response->getContent();
-                $manager = $c->get('illuminate_database')->getDatabaseManager()->connection();
-                $queryLog = $manager->getQueryLog();
 
-                $c['web_profiler']->addQueries($queryLog);
+                // If we're not using Illuminate DB we don't need to do this
+                if (false === $c->get('config')->get('database.enabled')) {
+
+                    $manager = $c->get('illuminate_database')->getDatabaseManager()->connection();
+                    $queryLog = $manager->getQueryLog();
+
+                    $c['web_profiler']->addQueries($queryLog);
+
+                }
 
                 $content .= $c['web_profiler']->render();
 
