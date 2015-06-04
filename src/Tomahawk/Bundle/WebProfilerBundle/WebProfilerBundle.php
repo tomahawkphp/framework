@@ -59,9 +59,12 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 
                 if ($debugStack) {
                     foreach ($debugStack->queries as $query) {
-                        $this->addQueries(array(
-                            'query'    => $query,
-                            'bindings' => array(),
+                        $c['web_profiler']->addQueries(array(
+                            array(
+                                'query'    => $query['sql'],
+                                'bindings' => $query['params'],
+                                'time'     => $query['executionMS'],
+                            )
                         ));
                     }
                 }

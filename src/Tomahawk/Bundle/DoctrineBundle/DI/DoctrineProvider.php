@@ -90,7 +90,11 @@ class DoctrineProvider implements ServiceProviderInterface
             $config->setProxyNamespace($doctrineConfig['proxy_namespace']);
             $config->setAutoGenerateProxyClasses($doctrineConfig['auto_generate_proxies']);
 
-            return EntityManager::create($c['doctrine.connection.default'], $config);
+            $connection = $c['doctrine.connection.default'];
+
+            $connection->getConfiguration()->setSQLLogger($c->get('doctrine.query_stack'));
+
+            return EntityManager::create($connection, $config);
         });
 
         $container->set('doctrine.connection.default', function(ContainerInterface $c) {
