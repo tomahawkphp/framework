@@ -43,10 +43,6 @@ class TokenManager implements TokenManagerInterface
      */
     public function generateToken()
     {
-        /*if ($this->hasToken()) {
-            return $this->getToken();
-        }*/
-
         $token = Str::random();
 
         $this->setToken($token);
