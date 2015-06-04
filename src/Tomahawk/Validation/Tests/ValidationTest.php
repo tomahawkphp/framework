@@ -39,6 +39,9 @@ class ValidationTest extends TestCase
      */
     protected $validator;
 
+    /**
+     * @var Translator
+     */
     protected $translator;
 
     public function setUp()
@@ -67,7 +70,6 @@ class ValidationTest extends TestCase
         $this->validator->add('first_name', array(
             new Required()
         ));
-
 
         $this->assertFalse($this->validator->validate($input));
         /**
@@ -1261,7 +1263,31 @@ class ValidationTest extends TestCase
         $errors = $this->validator->getMessagesFor('timezone');
 
         $this->assertEquals('The timezone is incorrect', $errors[0]->getMessage());
+    }
 
+    public function testValidateConstraintIsSkipped()
+    {
+        $this->validator->add('prefix', array(
+            new Alpha()
+        ));
+
+        $input = array(
+            'prefix' => '',
+        );
+
+        $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'prefix' => null,
+        );
+
+        $this->assertTrue($this->validator->validate($input2));
+
+        $input3 = array(
+            'prefix' => array(),
+        );
+
+        $this->assertTrue($this->validator->validate($input3));
     }
 
     public function testValidateDigitsBetween()
@@ -1325,10 +1351,16 @@ class ValidationTest extends TestCase
         ));
 
         $input = array(
-            'file' =>  $this->getUploadedFile(true, 'image/png')
+            'file' =>  $this->getUploadedFile(false)
         );
 
         $this->assertTrue($this->validator->validate($input));
+
+        $input2 = array(
+            'file' =>  $this->getUploadedFile(true, 'image/png')
+        );
+
+        $this->assertTrue($this->validator->validate($input2));
 
         $input2 = array(
             'file' => $this->getUploadedFile(true, 'text/plain')

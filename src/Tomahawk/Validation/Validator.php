@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Validation;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tomahawk\Validation\Constraints\ConstraintInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -84,6 +85,13 @@ class Validator implements ValidatorInterface
          */
         foreach ($this->constraints as $field => $constraints) {
             foreach ($constraints as $constraint) {
+
+                // If value is empty and rule needs a value we can skip
+                // checking the field
+                if ($constraint->shouldSkipOnNoValue() && $this->isValueEmpty($this->getInput($field))) {
+                    continue;
+                }
+
                 $constraint->validate($this, $field, $this->getInput($field));
             }
 
@@ -153,5 +161,33 @@ class Validator implements ValidatorInterface
     public function getTranslator()
     {
         return $this->translator;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public function isValueEmpty($value)
+    {
+        $empty = false;
+
+        // $_FILES
+        if ($value instanceof UploadedFile && !$value->isValid()) {
+            $empty = true;
+        }
+        // Null
+        else if (is_null($value)) {
+            $empty = true;
+        }
+        // String
+        else if ((is_string($value) && trim($value) === '')) {
+            $empty = true;
+        }
+        // Array
+        else if((is_array($value) && !$value)) {
+            $empty = true;
+        }
+
+        return $empty;
     }
 }

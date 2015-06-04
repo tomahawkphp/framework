@@ -24,6 +24,13 @@ class CSRFToken extends Constraint
 
     protected $message = 'Invalid security token';
 
+    /**
+     * Whether to skip validation when no value is passed
+     *
+     * @var bool
+     */
+    protected $skipOnNoValue = false;
+
     public function __construct(TokenManagerInterface $tokenManager, array $config = array())
     {
         $this->tokenManager = $tokenManager;

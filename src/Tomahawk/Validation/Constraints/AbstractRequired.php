@@ -16,6 +16,16 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class AbstractRequired extends Constraint
 {
+    /**
+     * Whether to skip validation when no value is passed
+     *
+     * @var bool
+     */
+    protected $skipOnNoValue = false;
+
+    /**
+     * @var string
+     */
     protected $message = 'The field is required';
 
     /**

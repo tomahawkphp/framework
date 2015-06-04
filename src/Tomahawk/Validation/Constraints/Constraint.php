@@ -8,6 +8,13 @@ use Tomahawk\Validation\ValidatorInterface;
 abstract class Constraint implements ConstraintInterface
 {
     /**
+     * Whether to skip validation when no value is passed
+     *
+     * @var bool
+     */
+    protected $skipOnNoValue = true;
+
+    /**
      * @var string
      */
     protected $message;
@@ -26,20 +33,38 @@ abstract class Constraint implements ConstraintInterface
         }
     }
 
+    /**
+     * @return string
+     */
     public function getMessage()
     {
         return $this->message;
     }
 
+    /**
+     * @param $message
+     * @return $this
+     */
     public function setMessage($message)
     {
         $this->message = $message;
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return array();
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldSkipOnNoValue()
+    {
+        return $this->skipOnNoValue;
     }
 
     /**
@@ -64,4 +89,5 @@ abstract class Constraint implements ConstraintInterface
 
         $validator->addMessage($attribute, new Message($this->getMessage(), $this->getData()));
     }
+
 }
