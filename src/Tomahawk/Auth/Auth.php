@@ -36,7 +36,10 @@ class Auth implements AuthInterface
      */
     protected $user;
 
-    protected $account;
+    /**
+     * @var string
+     */
+    protected $account = 'user';
 
     public function __construct(SessionInterface $session, AuthHandlerInterface $handler)
     {

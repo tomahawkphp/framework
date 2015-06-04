@@ -106,9 +106,11 @@ class AuthTest extends TestCase
 
     public function testLoggedInLogout()
     {
+        $sessionKey = 'login_'.md5('user');
+
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
-        $session->set('login_d41d8cd98f00b204e9800998ecf8427e', 1);
+        $session->set($sessionKey, 1);
         $authInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
         $authInterface->shouldReceive('retrieveById')->andReturn(1);
 
