@@ -41,31 +41,49 @@ class Auth implements AuthInterface
      */
     protected $account = 'user';
 
+    /**
+     * @param SessionInterface $session
+     * @param AuthHandlerInterface $handler
+     */
     public function __construct(SessionInterface $session, AuthHandlerInterface $handler)
     {
         $this->session = $session;
         $this->handler = $handler;
     }
 
+    /**
+     * Check if user is a quest
+     *
+     * @return bool
+     */
     function isGuest()
     {
         return ! $this->loggedIn();
     }
 
+    /**
+     * Check if user is logged in
+     *
+     * @return bool
+     */
     function loggedIn()
     {
         return ! is_null($this->getUser());
     }
 
+    /**
+     * Attempt to login user from credentials
+     *
+     * @param array $credentials
+     * @return bool
+     */
     function attempt(array $credentials)
     {
-        if (!$user = $this->handler->retrieveByCredentials($credentials))
-        {
+        if (!$user = $this->handler->retrieveByCredentials($credentials)) {
             return false;
         }
 
-        if ($this->handler->validateCredentials($user, $credentials))
-        {
+        if ($this->handler->validateCredentials($user, $credentials)) {
             $this->login($user);
             return true;
         }
@@ -73,6 +91,11 @@ class Auth implements AuthInterface
         return false;
     }
 
+    /**
+     * Login a given user
+     *
+     * @param UserInterface $user
+     */
     public function login(UserInterface $user)
     {
         $name = $this->getName();
@@ -82,6 +105,9 @@ class Auth implements AuthInterface
         $this->setUser($user);
     }
 
+    /**
+     * Logout a user
+     */
     public function logout()
     {
         $this->user = null;

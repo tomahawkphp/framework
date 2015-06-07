@@ -11,18 +11,40 @@
 
 namespace Tomahawk\Auth;
 
-use Tomahawk\Auth\AuthHandlerInterface;
-
 interface AuthInterface
 {
-    public function isGuest();
+    /**
+     * Check if user is a quest
+     *
+     * @return bool
+     */
+    function isGuest();
 
-    public function loggedIn();
+    /**
+     * Check if user is logged in
+     *
+     * @return bool
+     */
+    function loggedIn();
 
-    public function attempt(array $credentials);
+    /**
+     * Attempt to login user from credentials
+     *
+     * @param array $credentials
+     * @return bool
+     */
+    function attempt(array $credentials);
 
+    /**
+     * Login a given user
+     *
+     * @param UserInterface $user
+     */
     public function login(UserInterface $user);
 
+    /**
+     * Logout a user
+     */
     public function logout();
 
     /**
