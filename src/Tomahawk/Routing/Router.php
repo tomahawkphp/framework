@@ -14,10 +14,6 @@ namespace Tomahawk\Routing;
 use Tomahawk\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * Class Router
- * @package Hawk
- */
 class Router
 {
     /**
