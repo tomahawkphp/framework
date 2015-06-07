@@ -26,22 +26,7 @@ class Router
      * @var RouteCollection
      */
     protected $routes;
-
-    /**
-     * @var array
-     */
-    protected $verbs = array(
-        'put',
-        'get',
-        'post',
-        'delete'
-    );
-
-    /**
-     * @var string
-     */
-    protected $regex = '([\w-_]+)';
-
+    
     /**
      * Set route collection
      *
