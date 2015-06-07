@@ -30,8 +30,14 @@ class Crypt implements CryptInterface
      */
     protected $block_length;
 
+    /**
+     * @var object
+     */
     protected $cipher;
 
+    /**
+     * @var string
+     */
     protected $key;
 
     public function __construct($key, $mode = MCRYPT_MODE_CBC, $block_length = 256)
@@ -101,6 +107,10 @@ class Crypt implements CryptInterface
         return $this->mode;
     }
 
+    /**
+     * @param $value
+     * @return mixed|string
+     */
     private function safeB64encode($value)
     {
         $data = base64_encode($value);
@@ -108,6 +118,10 @@ class Crypt implements CryptInterface
         return $data;
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     private function safeB64decode($value)
     {
         $data = str_replace(array('-','_'), array('+','/'), $value);
@@ -118,6 +132,10 @@ class Crypt implements CryptInterface
         return base64_decode($data);
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     private function addHmac($value)
     {
         $hmac = $this->safeB64encode(hash_hmac('sha256',$value, $this->key, true));
@@ -125,6 +143,10 @@ class Crypt implements CryptInterface
         return $value.$hmac;
     }
 
+    /**
+     * @param $value
+     * @return bool|string
+     */
     private function validateHmac($value)
     {
         // strip the hmac-sha256 hash from the value

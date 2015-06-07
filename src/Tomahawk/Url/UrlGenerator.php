@@ -18,11 +18,14 @@ use Psr\Log\LoggerInterface;
 
 class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
 {
-
     /**
      * @var bool
      */
     protected $sslOn = true;
+
+    /**
+     * @var array
+     */
     protected $validUrlStartChars = array(
         '#',
         '//',
@@ -36,8 +39,6 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
      * @param RouteCollection      $routes  A RouteCollection instance
      * @param RequestContext       $context The context
      * @param LoggerInterface|null $logger  A logger instance
-     *
-     * @api
      */
     public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null)
     {
@@ -110,7 +111,7 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
         if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
             $port = ':'.$this->context->getHttpPort();
         }
-        elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
+        else if ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
             $port = ':'.$this->context->getHttpsPort();
         }
 

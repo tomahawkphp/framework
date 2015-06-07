@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface as SymfonyUrlGener
 
 interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface
 {
-
     /**
      * @return string
      */
