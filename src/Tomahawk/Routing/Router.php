@@ -26,7 +26,7 @@ class Router
      * @var RouteCollection
      */
     protected $routes;
-    
+
     /**
      * Set route collection
      *
@@ -75,6 +75,34 @@ class Router
     public function post($path, $name, $callback = null, array $schemes = array())
     {
         return $this->createRoute('POST', $path, $name, $callback, $schemes);
+    }
+
+    /**
+     * PUT Route
+     *
+     * @param $path
+     * @param $name
+     * @param null $callback
+     * @param array $schemes
+     * @return Route
+     */
+    public function put($path, $name, $callback = null, array $schemes = array())
+    {
+        return $this->createRoute('PUT', $path, $name, $callback, $schemes);
+    }
+
+    /**
+     * DELETE Route
+     *
+     * @param $path
+     * @param $name
+     * @param null $callback
+     * @param array $schemes
+     * @return Route
+     */
+    public function delete($path, $name, $callback = null, array $schemes = array())
+    {
+        return $this->createRoute('DELETE', $path, $name, $callback, $schemes);
     }
 
     /**

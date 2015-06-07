@@ -22,6 +22,30 @@ class RouterTest extends TestCase
         $this->assertCount(1, $router->getRoutes()->getIterator());
     }
 
+    public function testPutRoute()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+        $route = $router->put('/put', 'put', function() {
+            return 'Test';
+        });
+
+        $this->assertSame($route, $router->getRoutes()->get('put'));
+    }
+
+    public function testDeleteRoute()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+        $route = $router->delete('/delete', 'delete', function() {
+            return 'Test';
+        });
+
+        $this->assertSame($route, $router->getRoutes()->get('delete'));
+    }
+
     public function testCreateHttpsRoute()
     {
         $routeCollection = new RouteCollection();
