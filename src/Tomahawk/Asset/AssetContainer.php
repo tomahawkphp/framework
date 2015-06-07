@@ -44,6 +44,8 @@ class AssetContainer implements AssetContainerInterface
     }
 
     /**
+     * Set name of container
+     *
      * @param string $name
      */
     public function setName($name)
@@ -52,6 +54,8 @@ class AssetContainer implements AssetContainerInterface
     }
 
     /**
+     * Get name of container
+     *
      * @return string
      */
     public function getName()

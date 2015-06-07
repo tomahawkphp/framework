@@ -13,13 +13,18 @@ namespace Tomahawk\Cache;
 
 interface CacheInterface
 {
+
     /**
+     * Fetch an item out of the cache
+     *
      * @param $id
      * @return mixed
      */
     public function fetch($id);
 
     /**
+     * Save an item into the cache
+     *
      * @param $id
      * @param $value
      * @param bool $lifetime
@@ -28,20 +33,25 @@ interface CacheInterface
     public function save($id, $value, $lifetime = false);
 
     /**
+     * Check if an item has been cached
+     *
      * @param $id
      * @return mixed
      */
     public function contains($id);
 
     /**
+     * Delete an item from the cache
+     *
      * @param $id
      * @return bool
      */
     public function delete($id);
 
     /**
+     * Delete all items from the cache
+     *
      * @return bool
      */
     public function flush();
-
 }

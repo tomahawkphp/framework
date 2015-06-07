@@ -20,12 +20,17 @@ class CacheManager implements CacheInterface
      */
     protected $cacheProvider;
 
+    /**
+     * @param CacheProviderInterface $cacheProvider
+     */
     public function __construct(CacheProviderInterface $cacheProvider)
     {
         $this->cacheProvider = $cacheProvider;
     }
 
     /**
+     * Fetch an item out of the cache
+     *
      * @param $id
      * @return mixed
      */
@@ -35,6 +40,8 @@ class CacheManager implements CacheInterface
     }
 
     /**
+     * Save an item into the cache
+     *
      * @param $id
      * @param $value
      * @param bool $lifetime
@@ -46,6 +53,8 @@ class CacheManager implements CacheInterface
     }
 
     /**
+     * Check if an item has been cached
+     *
      * @param $id
      * @return mixed
      */
@@ -55,6 +64,8 @@ class CacheManager implements CacheInterface
     }
 
     /**
+     * Delete an item from the cache
+     *
      * @param $id
      * @return bool
      */
@@ -64,6 +75,8 @@ class CacheManager implements CacheInterface
     }
 
     /**
+     * Delete all items from the cache
+     *
      * @return bool
      */
     public function flush()

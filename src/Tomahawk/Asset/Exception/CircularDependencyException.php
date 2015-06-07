@@ -13,6 +13,5 @@ namespace Tomahawk\Asset\Exception;
 
 class CircularDependencyException extends \Exception
 {
-
 }
 

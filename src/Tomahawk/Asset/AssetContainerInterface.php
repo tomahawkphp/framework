@@ -14,11 +14,15 @@ namespace Tomahawk\Asset;
 interface AssetContainerInterface
 {
     /**
+     * Set name of container
+     *
      * @param string $name
      */
     public function setName($name);
 
     /**
+     * Get name of container
+     *
      * @return string
      */
     public function getName();

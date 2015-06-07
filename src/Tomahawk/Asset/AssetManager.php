@@ -44,6 +44,10 @@ class AssetManager implements AssetManagerInterface
      */
     protected $url;
 
+    /**
+     * @param HtmlBuilderInterface $html
+     * @param UrlGeneratorInterface $url
+     */
     public function __construct(HtmlBuilderInterface $html, UrlGeneratorInterface $url = null)
     {
         $this->html = $html;
@@ -51,26 +55,36 @@ class AssetManager implements AssetManagerInterface
     }
 
     /**
+     * Get container, if it doesn't exist create it
+     *
      * @param string $name
      * @return AssetContainer
      */
     public function container($name = 'default')
     {
-        if (isset($this->containers[$name]))
-        {
+        if (isset($this->containers[$name])) {
             return $this->containers[$name];
         }
 
         return $this->containers[$name] = new AssetContainer($name);
     }
 
+    /**
+     * Add container to manager
+     *
+     * @param AssetContainer $container
+     * @return $this
+     */
     public function addContainer(AssetContainer $container)
     {
         $this->containers[$container->name] = $container;
+        return $this;
     }
 
     /**
-     * @return array|AssetContainer[]
+     * Get all containers
+     *
+     * @return AssetContainer[]
      */
     public function getContainers()
     {
@@ -105,14 +119,19 @@ class AssetManager implements AssetManagerInterface
         return $this->container()->addJs($name, $source, $dependencies, $attributes);
     }
 
+    /**
+     * Output a JS asset from the container
+     *
+     * @param string $container
+     * @return string
+     */
     public function outputJs($container = 'default')
     {
         $assets = $this->getAssets($container, 'js');
 
         $html = array();
 
-        foreach ($assets as $asset)
-        {
+        foreach ($assets as $asset) {
             $source = $this->url ? $this->url->asset($asset['source']): $asset['source'];
             $html[] = $this->html->script($source, $asset['attributes']);
         }
@@ -120,6 +139,12 @@ class AssetManager implements AssetManagerInterface
         return trim(implode(PHP_EOL, $html));
     }
 
+    /**
+     * Output a CSS asset from the container
+     *
+     * @param string $container
+     * @return string
+     */
     public function outputCss($container = 'default')
     {
         $assets = $this->getAssets($container, 'css');
@@ -135,17 +160,22 @@ class AssetManager implements AssetManagerInterface
         return trim(implode(PHP_EOL, $html));
     }
 
+    /**
+     * Get all assets of a given type from a given container
+     *
+     * @param $container
+     * @param $type
+     * @return array
+     */
     protected function getAssets($container, $type)
     {
-        if (!isset($this->containers[$container]))
-        {
+        if ( ! isset($this->containers[$container])) {
             return array();
         }
 
         $container = $this->containers[$container];
 
-        if ( ! isset($container->assets[$type]) || count($container->assets[$type]) == 0)
-        {
+        if ( ! isset($container->assets[$type]) || 0 === count($container->assets[$type])) {
             return array();
         }
 
@@ -166,10 +196,8 @@ class AssetManager implements AssetManagerInterface
     {
         list($original, $sorted) = array($assets, array());
 
-        while (count($assets) > 0)
-        {
-            foreach ($assets as $asset => $value)
-            {
+        while (count($assets) > 0) {
+            foreach ($assets as $asset => $value) {
                 $this->evaluateAsset($asset, $value, $original, $sorted, $assets);
             }
         }
@@ -192,27 +220,24 @@ class AssetManager implements AssetManagerInterface
         // If the asset has no more dependencies, we can add it to the sorted list
         // and remove it from the array of assets. Otherwise, we will not verify
         // the asset's dependencies and determine if they've been sorted.
-        if (count($assets[$asset]['dependencies']) == 0)
-        {
+        if (count($assets[$asset]['dependencies']) == 0) {
             $sorted[$asset] = $value;
 
             unset($assets[$asset]);
         }
-        else
-        {
-            foreach ($assets[$asset]['dependencies'] as $key => $dependency)
-            {
-                if ( ! $this->dependencyIsValid($asset, $dependency, $original, $assets))
-                {
+        else {
+            foreach ($assets[$asset]['dependencies'] as $key => $dependency) {
+                if ( ! $this->dependencyIsValid($asset, $dependency, $original, $assets)) {
                     unset($assets[$asset]['dependencies'][$key]);
-
                     continue;
                 }
 
                 // If the dependency has not yet been added to the sorted list, we can not
                 // remove it from this asset's array of dependencies. We'll try again on
                 // the next trip through the loop.
-                if ( ! isset($sorted[$dependency])) continue;
+                if ( ! isset($sorted[$dependency])) {
+                    continue;
+                }
 
                 unset($assets[$asset]['dependencies'][$key]);
             }
@@ -235,20 +260,16 @@ class AssetManager implements AssetManagerInterface
      */
     protected function dependencyIsValid($asset, $dependency, $original, $assets)
     {
-        if ( ! isset($original[$dependency]))
-        {
+        if ( ! isset($original[$dependency])) {
             return false;
         }
-        elseif ($dependency === $asset)
-        {
+        else if ($dependency === $asset) {
             throw new SelfDependencyException("Asset [$asset] is dependent on itself.");
         }
-        elseif (isset($assets[$dependency]) && in_array($asset, $assets[$dependency]['dependencies']))
-        {
+        else if (isset($assets[$dependency]) && in_array($asset, $assets[$dependency]['dependencies'])) {
             throw new CircularDependencyException(sprintf('Assets %s and %s have a circular dependency.', $asset, $dependency));
         }
 
         return true;
     }
 }
-

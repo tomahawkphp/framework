@@ -13,6 +13,7 @@ namespace Tomahawk\Html;
 
 /**
  * Class HtmlBuilder
+ *
  * @package Tomahawk\Html
  */
 class HtmlBuilder implements HtmlBuilderInterface

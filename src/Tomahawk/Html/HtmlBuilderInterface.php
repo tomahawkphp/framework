@@ -17,7 +17,7 @@ interface HtmlBuilderInterface
      * @param $value
      * @return mixed
      */
-    function entities($value);
+    public function entities($value);
 
     public function script($url, array $attributes = array());
 
@@ -29,18 +29,18 @@ interface HtmlBuilderInterface
      * @param array $attributes
      * @return mixed
      */
-    function link($url, $text, array $attributes = array());
+    public function link($url, $text, array $attributes = array());
 
     /**
      * @param array $attributes
      * @return mixed
      */
-    function attributes(array $attributes);
+    public function attributes(array $attributes);
 
     /**
      * @param $key
      * @param $value
      * @return mixed
      */
-    function attributeElement($key, $value);
+    public function attributeElement($key, $value);
 }
