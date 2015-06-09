@@ -92,6 +92,34 @@ class Router
     }
 
     /**
+     * PATCH Route
+     *
+     * @param $path
+     * @param $name
+     * @param null $callback
+     * @param array $schemes
+     * @return Route
+     */
+    public function patch($path, $name, $callback = null, array $schemes = array())
+    {
+        return $this->createRoute('PATCH', $path, $name, $callback, $schemes);
+    }
+
+    /**
+     * OPTIONS Route
+     *
+     * @param $path
+     * @param $name
+     * @param null $callback
+     * @param array $schemes
+     * @return Route
+     */
+    public function options($path, $name, $callback = null, array $schemes = array())
+    {
+        return $this->createRoute('OPTIONS', $path, $name, $callback, $schemes);
+    }
+
+    /**
      * DELETE Route
      *
      * @param $path

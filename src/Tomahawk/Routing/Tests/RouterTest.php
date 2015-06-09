@@ -34,6 +34,30 @@ class RouterTest extends TestCase
         $this->assertSame($route, $router->getRoutes()->get('put'));
     }
 
+    public function testPatchRoute()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+        $route = $router->put('/patch', 'patch', function() {
+            return 'Test';
+        });
+
+        $this->assertSame($route, $router->getRoutes()->get('patch'));
+    }
+
+    public function testOptionsRoute()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+        $route = $router->options('/options', 'options', function() {
+            return 'Test';
+        });
+
+        $this->assertSame($route, $router->getRoutes()->get('options'));
+    }
+
     public function testDeleteRoute()
     {
         $routeCollection = new RouteCollection();
