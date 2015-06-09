@@ -11,7 +11,6 @@
 
 namespace Tomahawk\Routing;
 
-use Tomahawk\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class Router
@@ -164,17 +163,9 @@ class Router
         }
 
         // Create a new Route class
-
-        $route = new Route($path,
-            array(
-                '_controller'   => $callback
-            ),
-            array(), // requirements
-            array(), // options
-            '', // host
-            $schemes, // schemes
-            $methods // methods
-        );
+        $route = new Route($path, array('_controller' => $callback));
+        $route->setSchemes($schemes);
+        $route->setMethods($methods);
 
         // Add route to collection
         $this->routes->add($name, $route);
