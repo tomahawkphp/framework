@@ -39,7 +39,7 @@ class RouterTest extends TestCase
         $routeCollection = new RouteCollection();
         $router = new Router();
         $router->setRoutes($routeCollection);
-        $route = $router->put('/patch', 'patch', function() {
+        $route = $router->patch('/patch', 'patch', function() {
             return 'Test';
         });
 
