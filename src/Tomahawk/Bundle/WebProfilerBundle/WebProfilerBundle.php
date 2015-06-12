@@ -58,11 +58,20 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
                 $debugStack = $c->has('doctrine.query_stack') ? $c->get('doctrine.query_stack') : null;
 
                 if ($debugStack) {
+
                     foreach ($debugStack->queries as $query) {
 
                         if (!$query['params']) {
                             $query['params'] = array();
                         }
+
+                        if (!$query['types']) {
+                            $query['types'] = array();
+                        }
+
+                        // Because doctrine columns can be more advanced we need to convert them to string
+                        // This is a quick a dirty way of doing it so could do with going elsewhere
+                        $query['params'] = $c['web_profiler']->convertDoctrineParameters($query['params'], $query['types']);
 
                         $queries = array(
                             array(

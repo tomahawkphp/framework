@@ -220,6 +220,42 @@ class Profiler
         ));
     }
 
+    public function convertDoctrineParameters(array $parameters, array $types)
+    {
+        foreach ($parameters as $i => $parameter) {
+
+            $type = $types[$i];
+
+            if ('datetime' === $type) {
+                $parameters[$i] = $parameter->format('Y-m-d H:i:s');
+            }
+            else if ('date' === $type) {
+                $parameters[$i] = $parameter->format('Y-m-d');
+            }
+            else if ('time' === $type) {
+                $parameters[$i] = $parameter->format('H:i:s');
+            }
+            else if ('datetimetz' === $type) {
+                $parameters[$i] = $parameter->getName();
+            }
+            else if ('simple_array' === $type) {
+                $parameters[$i] = explode(',', $parameter);
+            }
+            else if ('array' === $type) {
+                $parameters[$i] = serialize($parameter);
+            }
+            else if ('json_array' === $type) {
+                $parameters[$i] = json_encode($parameter);
+            }
+            else if ('object' === $type) {
+                $parameters[$i] = serialize($parameter);
+            }
+
+        }
+
+        return $parameters;
+    }
+
     /**
      * Calculate the human-readable file size with units.
      *
