@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Bundle\WebProfilerBundle\Tests;
 
+use Doctrine\DBAL\Logging\DebugStack;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -49,6 +50,7 @@ class WebProfilerBundleTest extends TestCase
         $container['event_dispatcher'] = new EventDispatcher();
         $container['http_kernel'] = $httpKernel;
         $container['config'] = $this->getConfigMock();
+        $container['doctrine.query_stack'] = new DebugStack();
 
         $engine = $this->getMockBuilder('Symfony\Component\Templating\EngineInterface')
             ->disableOriginalConstructor()

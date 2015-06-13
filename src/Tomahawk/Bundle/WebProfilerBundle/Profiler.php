@@ -11,9 +11,10 @@
 
 namespace Tomahawk\Bundle\WebProfilerBundle;
 
+use Tomahawk\HttpKernel\Kernel;
 use Symfony\Component\Templating\EngineInterface;
 use Illuminate\Database\DatabaseManager;
-use Tomahawk\HttpKernel\Kernel;
+use Doctrine\DBAL\Logging\DebugStack;
 
 class Profiler
 {
@@ -114,6 +115,7 @@ class Profiler
 
     /**
      * @param array $queries
+     * @return $this
      */
     public function addQueries(array $queries)
     {
@@ -121,11 +123,49 @@ class Profiler
 
             foreach ($query['bindings'] as $binding) {
                 $binding = $this->escape($binding);
-                $query['query'] = preg_replace('/\?/', $binding, $query ['query'], 1);
+                $query['query'] = preg_replace('/\?/', $binding, $query['query'], 1);
             }
 
             $this->queries[] = $query;
         }
+
+        return $this;
+    }
+
+    /**
+     * Add queries for doctrine off the DebugStack logger
+     *
+     * @param DebugStack $debugStack
+     * @return $this
+     */
+    public function addDoctrineQueries(DebugStack $debugStack)
+    {
+        foreach ($debugStack->queries as $query) {
+
+            if (!$query['params']) {
+                $query['params'] = array();
+            }
+
+            if (!$query['types']) {
+                $query['types'] = array();
+            }
+
+            // Because doctrine columns can be more advanced we need to convert them to string
+            // This is a quick a dirty way of doing it so could do with going elsewhere
+            $query['params'] = $this->convertDoctrineParameters($query['params'], $query['types']);
+
+            $queries = array(
+                array(
+                    'query'    => $query['sql'],
+                    'bindings' => $query['params'],
+                    'time'     => $query['executionMS'],
+                )
+            );
+
+            $this->addQueries($queries);
+        }
+
+        return $this;
     }
 
     /**
@@ -145,12 +185,15 @@ class Profiler
      *   ));
      *
      * @param array $logs
+     * @return $this
      */
     public function addLogs($logs = array())
     {
         foreach ($logs as $log) {
             $this->logs[] = $log;
         }
+
+        return $this;
     }
 
     /**
@@ -172,12 +215,15 @@ class Profiler
      *   ));
      *
      * @param array $timers
+     * @return $this
      */
     public function addTimers($timers = array())
     {
         foreach ($timers as $name => $timer) {
             $this->timers[$name] = $timer;
         }
+
+        return $this;
     }
 
     /**
@@ -239,7 +285,7 @@ class Profiler
                 $parameters[$i] = $parameter->getName();
             }
             else if ('simple_array' === $type) {
-                $parameters[$i] = explode(',', $parameter);
+                $parameters[$i] = implode(',', $parameter);
             }
             else if ('array' === $type) {
                 $parameters[$i] = serialize($parameter);

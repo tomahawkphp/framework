@@ -1328,16 +1328,22 @@ class ValidationTest extends TestCase
         ));
 
         $input = array(
+            'file' =>  'not a file'
+        );
+
+        $this->assertFalse($this->validator->validate($input));
+
+        $input2 = array(
             'file' =>  $this->getUploadedFile(true, 'image/png')
         );
 
-        $this->assertTrue($this->validator->validate($input));
+        $this->assertTrue($this->validator->validate($input2));
 
-        $input2 = array(
+        $input3 = array(
             'file' => $this->getUploadedFile(true, 'text/plain')
         );
 
-        $this->assertFalse($this->validator->validate($input2));
+        $this->assertFalse($this->validator->validate($input3));
 
         $errors = $this->validator->getMessagesFor('file');
 

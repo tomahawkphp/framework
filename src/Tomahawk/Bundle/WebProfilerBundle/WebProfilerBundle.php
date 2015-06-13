@@ -45,47 +45,26 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
             if ($response = $event->getResponse()) {
                 $content = $response->getContent();
 
+                /** @var Profiler $webProfiler */
+                $webProfiler = $c['web_profiler'];
+
                 // If we're not using Illuminate DB we don't need to do this
                 if (true === $c->get('config')->get('database.enabled')) {
 
                     $manager = $c->get('illuminate_database')->getDatabaseManager()->connection();
                     $queryLog = $manager->getQueryLog();
 
-                    $c['web_profiler']->addQueries($queryLog);
+                    $webProfiler->addQueries($queryLog);
                 }
 
                 // Check if we have the query stack from doctrine
                 $debugStack = $c->has('doctrine.query_stack') ? $c->get('doctrine.query_stack') : null;
 
                 if ($debugStack) {
-
-                    foreach ($debugStack->queries as $query) {
-
-                        if (!$query['params']) {
-                            $query['params'] = array();
-                        }
-
-                        if (!$query['types']) {
-                            $query['types'] = array();
-                        }
-
-                        // Because doctrine columns can be more advanced we need to convert them to string
-                        // This is a quick a dirty way of doing it so could do with going elsewhere
-                        $query['params'] = $c['web_profiler']->convertDoctrineParameters($query['params'], $query['types']);
-
-                        $queries = array(
-                            array(
-                                'query'    => $query['sql'],
-                                'bindings' => $query['params'],
-                                'time'     => $query['executionMS'],
-                            )
-                        );
-
-                        $c['web_profiler']->addQueries($queries);
-                    }
+                    $webProfiler->addDoctrineQueries($debugStack);
                 }
 
-                $content .= $c['web_profiler']->render();
+                $content .= $webProfiler->render();
 
                 $response->setContent($content);
                 $event->setResponse($response);

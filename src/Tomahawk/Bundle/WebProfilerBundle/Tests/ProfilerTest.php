@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Bundle\WebProfilerBundle\Tests;
 
+use Doctrine\DBAL\Logging\DebugStack;
 use Tomahawk\Bundle\WebProfilerBundle\Test\MockPdo;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -82,6 +83,20 @@ class ProfilerTest extends TestCase
         ));
 
         $this->assertCount(1, $profiler->getQueries());
+
+    }
+
+    public function testAddDoctrineQueries()
+    {
+        $engine = $this->getTemplatingEngineMock();
+
+        $profiler = new Profiler($engine, null, 'dir');
+
+        $debugStack = $this->getDebugStack();
+
+        $profiler->addDoctrineQueries($debugStack);
+
+        $this->assertCount(9, $profiler->getQueries());
 
     }
 
@@ -166,6 +181,70 @@ class ProfilerTest extends TestCase
             ->getMock();
 
         return $manager;
+    }
+
+    protected function getDebugStack()
+    {
+        $debugStack = new DebugStack();
+
+        $debugStack->queries = array(
+            array(
+                'sql'         => 'select * from foo where created_date = ?',
+                'params'      => array(new \DateTime()),
+                'types'       => array('datetime'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'select * from foo where date = ?',
+                'params'      => array(new \DateTime()),
+                'types'       => array('date'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'select * from foo where time = ?',
+                'params'      => array(new \DateTime()),
+                'types'       => array('time'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'select * from foo where tz = ?',
+                'params'      => array(new \DateTimeZone('UTC')),
+                'types'       => array('datetimetz'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'update foo set file = ?',
+                'params'      => array('AFAKEFILEBLOB'),
+                'types'       => array('object'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'update foo set data = ?',
+                'params'      => array(array(1,3)),
+                'types'       => array('array'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'update foo set data = ?',
+                'params'      => array(array(1,3)),
+                'types'       => array('simple_array'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'update foo set data = ?',
+                'params'      => array(array(1,3)),
+                'types'       => array('json_array'),
+                'executionMS' => 0.10,
+            ),
+            array(
+                'sql'         => 'select * from users',
+                'params'      => null,
+                'types'       => null,
+                'executionMS' => 0.10,
+            )
+        );
+
+        return $debugStack;
     }
 
 }
