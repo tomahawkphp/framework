@@ -11,7 +11,6 @@
 
 namespace Tomahawk\Validation\Constraints;
 
-use Tomahawk\Validation\Validator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class AbstractRequired extends Constraint

@@ -11,7 +11,6 @@
 
 namespace Tomahawk\Validation\Constraints;
 
-use Tomahawk\Validation\Message;
 use Tomahawk\Validation\Validator;
 
 class MinLength extends Constraint

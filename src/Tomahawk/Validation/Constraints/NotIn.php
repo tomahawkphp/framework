@@ -12,7 +12,6 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
 class NotIn extends Constraint
 {

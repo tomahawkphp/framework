@@ -11,9 +11,6 @@
 
 namespace Tomahawk\Validation\Constraints;
 
-use Tomahawk\Validation\Validator;
-use Symfony\Component\HttpFoundation\File\File;
-
 class Image extends MimeTypes
 {
     /**

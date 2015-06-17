@@ -12,7 +12,6 @@
 namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
-use Tomahawk\Validation\Message;
 
 class Identical extends Constraint
 {

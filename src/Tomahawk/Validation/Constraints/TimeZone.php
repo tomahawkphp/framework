@@ -20,7 +20,7 @@ class TimeZone extends Constraint
     public function validate(Validator $validator, $attribute, $value)
     {
         try {
-            $timezone = new \DateTimeZone($value);
+            new \DateTimeZone($value);
         }
         catch(\Exception $e) {
             $this->fail($attribute, $validator);
