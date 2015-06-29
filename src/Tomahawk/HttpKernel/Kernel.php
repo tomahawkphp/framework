@@ -111,6 +111,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         // Register events from Bundles
         $this->registerEvents();
 
+        // Setup any middleware registered
         $this->initializeMiddleware();
     }
 
