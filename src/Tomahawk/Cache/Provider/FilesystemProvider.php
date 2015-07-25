@@ -18,11 +18,11 @@ class FilesystemProvider implements CacheProviderInterface
     /**
      * @var \Doctrine\Common\Cache\FilesystemCache
      */
-    protected $arrayCache;
+    protected $filesystemCache;
 
-    public function __construct(FilesystemCache $arrayCache)
+    public function __construct(FilesystemCache $filesystemCache)
     {
-        $this->arrayCache = $arrayCache;
+        $this->filesystemCache = $filesystemCache;
     }
 
     /**
@@ -39,7 +39,7 @@ class FilesystemProvider implements CacheProviderInterface
      */
     public function fetch($id)
     {
-        return $this->arrayCache->fetch($id);
+        return $this->filesystemCache->fetch($id);
     }
 
     /**
@@ -50,7 +50,7 @@ class FilesystemProvider implements CacheProviderInterface
      */
     public function save($id, $value, $lifetime = false)
     {
-        return $this->arrayCache->save($id, $value, $lifetime);
+        return $this->filesystemCache->save($id, $value, $lifetime);
     }
 
     /**
@@ -59,7 +59,7 @@ class FilesystemProvider implements CacheProviderInterface
      */
     public function contains($id)
     {
-        return $this->arrayCache->contains($id);
+        return $this->filesystemCache->contains($id);
     }
 
     /**
@@ -68,7 +68,7 @@ class FilesystemProvider implements CacheProviderInterface
      */
     public function delete($id)
     {
-        return $this->arrayCache->delete($id);
+        return $this->filesystemCache->delete($id);
     }
 
     /**
@@ -76,6 +76,6 @@ class FilesystemProvider implements CacheProviderInterface
      */
     public function flush()
     {
-        return $this->arrayCache->flushAll();
+        return $this->filesystemCache->flushAll();
     }
 }
