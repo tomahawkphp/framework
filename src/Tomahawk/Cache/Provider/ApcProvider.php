@@ -18,11 +18,11 @@ class ApcProvider implements CacheProviderInterface
     /**
      * @var \Doctrine\Common\Cache\ApcCache
      */
-    protected $arrayCache;
+    protected $apcCache;
 
-    public function __construct(ApcCache $arrayCache)
+    public function __construct(ApcCache $apcCache)
     {
-        $this->arrayCache = $arrayCache;
+        $this->apcCache = $apcCache;
     }
 
     /**
@@ -39,7 +39,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function fetch($id)
     {
-        return $this->arrayCache->fetch($id);
+        return $this->apcCache->fetch($id);
     }
 
     /**
@@ -50,7 +50,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function save($id, $value, $lifetime = false)
     {
-        return $this->arrayCache->save($id, $value, $lifetime);
+        return $this->apcCache->save($id, $value, $lifetime);
     }
 
     /**
@@ -59,7 +59,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function contains($id)
     {
-        return $this->arrayCache->contains($id);
+        return $this->apcCache->contains($id);
     }
 
     /**
@@ -68,7 +68,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function delete($id)
     {
-        return $this->arrayCache->delete($id);
+        return $this->apcCache->delete($id);
     }
 
     /**
@@ -76,6 +76,6 @@ class ApcProvider implements CacheProviderInterface
      */
     public function flush()
     {
-        return $this->arrayCache->flushAll();
+        return $this->apcCache->flushAll();
     }
 }
