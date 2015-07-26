@@ -11,18 +11,38 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Tomahawk\HttpKernel\Bundle\Bundle;
-use Symfony\Component\HttpFoundation\Request;
-use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\CommandBusProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\ConfigProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\RoutingProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\SessionProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\TranslatorProvider;
 use Tomahawk\Config\ConfigInterface;
+use Tomahawk\HttpKernel\Bundle\Bundle;
+use Tomahawk\Bundle\FrameworkBundle\DI\CacheProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\TemplatingProvider;
+use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FrameworkBundle extends Bundle
 {
-
     public function boot()
     {
         $this->container->register(new FrameworkProvider());
+
+        $this->container->register(new CacheProvider());
+
+        $this->container->register(new CommandBusProvider());
+
+        $this->container->register(new ConfigProvider());
+
+        $this->container->register(new TemplatingProvider());
+
+        $this->container->register(new TranslatorProvider());
+
+        $this->container->register(new RoutingProvider());
+
+        $this->container->register(new SessionProvider());
 
         if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);
