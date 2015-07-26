@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
+use Tomahawk\Bundle\FrameworkBundle\DI\AuthProvider;
 use Tomahawk\Bundle\FrameworkBundle\DI\CommandBusProvider;
 use Tomahawk\Bundle\FrameworkBundle\DI\ConfigProvider;
 use Tomahawk\Bundle\FrameworkBundle\DI\RoutingProvider;
@@ -29,6 +30,8 @@ class FrameworkBundle extends Bundle
     public function boot()
     {
         $this->container->register(new FrameworkProvider());
+
+        $this->container->register(new AuthProvider());
 
         $this->container->register(new CacheProvider());
 
