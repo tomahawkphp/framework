@@ -2,6 +2,7 @@
 
 namespace Tomahawk\HttpKernel\Tests;
 
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Tomahawk\Test\TestCase;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -92,13 +93,10 @@ class HttpKernelTest extends TestCase
     {
         $httpRequest = $this->getHttpKernel();
 
-
         $eventDispatcher = $this->container['event_dispatcher'];
 
         $eventDispatcher->addListener(KernelEvents::REQUEST, function(GetResponseEvent $event) {
-
             $event->setResponse(new Response('foobar'));
-
         });
 
         $request = Request::create('/', 'GET');
@@ -193,6 +191,33 @@ class HttpKernelTest extends TestCase
         $this->assertEquals('logic exception', $response->getContent());
     }
 
+    public function testResponseHandleException()
+    {
+        $httpRequest = $this->getHttpKernel();
+
+        /**
+         * @var EventDispatcher $eventDispatcher
+         */
+        $eventDispatcher = $this->container['event_dispatcher'];
+
+
+        $eventDispatcher->addListener(KernelEvents::EXCEPTION, function(GetResponseForExceptionEvent $event) {
+            $response = new Response('exception response');
+            $event->setResponse($response);
+        });
+
+        $eventDispatcher->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) {
+
+            throw new \Exception();
+        });
+
+        $request = Request::create('/response', 'GET');
+        $response = $httpRequest->handle($request);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertEquals('exception response', $response->getContent());
+    }
+
     protected function getHttpKernel()
     {
         $request = Request::create('/', 'GET');
@@ -214,6 +239,10 @@ class HttpKernelTest extends TestCase
         $router->get('/test', 'test', function() {
 
             return 'baz';
+        });
+
+        $router->get('/response', 'response', function() {
+            return new Response('Yay a response');
         });
 
         $router->get('/null', 'null', function() {
@@ -271,8 +300,6 @@ class HttpKernelTest extends TestCase
         });
 
         $resolver = $this->getResolver(function () { throw new \RuntimeException(); });
-
-        //$resolver = new ControllerResolver($this->container);
 
         $kernel = new HttpKernel($dispatcher, $resolver);
         $response = $kernel->handle(new Request());

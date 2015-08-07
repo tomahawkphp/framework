@@ -56,6 +56,9 @@ class BundleTest extends TestCase
         $this->container = new Container();
     }
 
+    /**
+     * @covers \Tomahawk\HttpKernel\Bundle\Bundle::registerCommands
+     */
     public function testRegisterCommands()
     {
         $app = new TestAppKernel('prod', false);
@@ -74,7 +77,6 @@ class BundleTest extends TestCase
         $this->assertEquals('FooBundle', $bundle->getName());
 
         $bundle->registerCommands($application);
-
     }
 
     public function testRegisterBundleNoCommands()
@@ -86,10 +88,20 @@ class BundleTest extends TestCase
 
         $bundle = new BarBundle();
         $bundle->setContainer($this->container);
+        $bundle->boot();
 
         $this->assertEquals('BarBundle', $bundle->getName());
 
         $bundle->registerCommands($application);
+        $bundle->shutdown();
+    }
+
+    public function testRegisterBundlesWithRoutes()
+    {
+        $this->container->set('event_dispatcher', $this->eventDispatcher);
+
+        $app = new TestAppKernel('prod', false);
+        $app->setContainer($this->container);
     }
 
     public function testRegisterCommandsIngoreCommandAsAService()

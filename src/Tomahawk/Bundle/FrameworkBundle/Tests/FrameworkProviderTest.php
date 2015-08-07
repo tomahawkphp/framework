@@ -27,4 +27,3 @@ class FrameworkProviderTest extends TestCase
         return $container;
     }
 }
-

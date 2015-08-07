@@ -10,11 +10,9 @@ use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use Tomahawk\Routing\Route;
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
 
 class RoutingCommandTest extends TestCase
 {
-
     public function testCommand()
     {
         $command = new RoutingCommand();
@@ -26,7 +24,6 @@ class RoutingCommandTest extends TestCase
 
         $commandTester->execute(array('command' => $command->getName()));
     }
-
 
     /**
      * @param \Symfony\Component\Console\Command\Command $command
@@ -52,5 +49,4 @@ class RoutingCommandTest extends TestCase
 
         return $commandTester;
     }
-
 }

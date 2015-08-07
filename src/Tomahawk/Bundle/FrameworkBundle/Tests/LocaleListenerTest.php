@@ -86,4 +86,3 @@ class LocaleListenerTest extends TestCase
 
     }
 }
-

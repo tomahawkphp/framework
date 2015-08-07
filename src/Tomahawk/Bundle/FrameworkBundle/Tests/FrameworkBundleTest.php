@@ -110,4 +110,3 @@ class FrameworkBundleTest extends TestCase
         return $listener;
     }
 }
-

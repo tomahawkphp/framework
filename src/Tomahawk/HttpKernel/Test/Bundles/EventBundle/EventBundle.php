@@ -3,10 +3,16 @@
 namespace Tomahawk\HttpKernel\Test\Bundles\EventBundle;
 
 use Tomahawk\HttpKernel\Bundle\Bundle;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventBundle extends Bundle
 {
+    public function boot()
+    {
+        $this->container->set('event_dispatcher', new EventDispatcher());
+    }
+
     /**
      * Register any events for the bundle
      *

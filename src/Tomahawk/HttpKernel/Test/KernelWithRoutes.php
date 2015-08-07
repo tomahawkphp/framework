@@ -12,18 +12,16 @@
 namespace Tomahawk\HttpKernel\Test;
 
 use Tomahawk\HttpKernel\Kernel as BaseKernel;
-use Tomahawk\HttpKernel\Test\Bundles\BarBundle\BarBundle;
-use Tomahawk\HttpKernel\Test\Bundles\EventBundle\EventBundle;
+use Tomahawk\HttpKernel\Test\Bundles\RouteBundle\RouteBundle;
 
-class KernelWithBundleEvents extends BaseKernel
+class KernelWithRoutes extends BaseKernel
 {
     protected $eventDispatcher;
 
     public function registerBundles()
     {
         $bundles = array(
-            new EventBundle(),
-            new BarBundle(),
+            new RouteBundle(),
         );
         return $bundles;
     }
@@ -42,4 +40,15 @@ class KernelWithBundleEvents extends BaseKernel
     {
         return $this->booted;
     }
+
+    public function setEventDispatcher($eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
+    }
 }
+

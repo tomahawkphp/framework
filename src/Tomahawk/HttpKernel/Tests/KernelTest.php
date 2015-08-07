@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\HttpKernel\Test\KernelWithBundleEvents;
+use Tomahawk\HttpKernel\Test\KernelWithRoutes;
 use Tomahawk\Test\TestCase;
 use Tomahawk\DI\Container;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
@@ -654,15 +655,17 @@ class KernelTest extends TestCase
 
     public function testLoadEvents()
     {
-        $eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-        $eventDispatcher
-            ->expects($this->once())
-            ->method('addListener');
-
         $kernel = new KernelWithBundleEvents('test', false);
-        $kernel->setEventDispatcher($eventDispatcher);
+        //$kernel->setEventDispatcher($eventDispatcher);
 
         $kernel->boot();
+    }
+
+    public function testLoadRoutes()
+    {
+        $kernel = new KernelWithRoutes('test', false);
+        $kernel->boot();
+        $this->assertCount(1, $kernel->getRoutePaths());
     }
 
     public function testEnvParameters()
