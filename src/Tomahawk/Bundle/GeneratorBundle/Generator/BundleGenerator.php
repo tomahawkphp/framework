@@ -48,9 +48,11 @@ class BundleGenerator extends Generator
             if ($files != array('.', '..')) {
                 throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" is not empty.', realpath($dir)));
             }
+            //@codeCoverageIgnoreStart
             if (!is_writable($dir)) {
                 throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" is not writable.', realpath($dir)));
             }
+            //@codeCoverageIgnoreEnd
         }
 
         $basename = substr($bundle, 0, -6);

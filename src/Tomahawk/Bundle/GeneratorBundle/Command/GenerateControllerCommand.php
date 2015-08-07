@@ -70,33 +70,35 @@ class GenerateControllerCommand extends GenerateCommand
 
     public function parseActions($actions)
     {
-        $newActions = array();
+        if (empty($actions) || $actions !== array_values($actions)) {
+            return $actions;
+        }
+
+        $parsedActions = array();
 
         foreach ($actions as $l => $action) {
 
             $data = explode(':', $action);
 
             // name
-            if (!isset($data[0])) {
-                throw new \InvalidArgumentException('An action must have a name');
-            }
             $name = array_shift($data);
 
-            // route
-            $route = (isset($data[0]) && '' != $data[0]) ? array_shift($data) : '/'.substr($name, 0, -6);
+            // route parameters
+            $route = (isset($data[0]) && '' != $data[0]) ? array_shift($data) : null;
+
             if ($route) {
                 $placeholders = $this->getPlaceholdersFromRoute($route);
-            } else {
+            }
+            else {
                 $placeholders = array();
             }
 
-            $newActions[$name] = array(
+            $parsedActions[$name] = array(
                 'name'         => $name,
-                'route'        => $route,
                 'placeholders' => $placeholders,
             );
         }
 
-        return $newActions;
+        return $parsedActions;
     }
 }

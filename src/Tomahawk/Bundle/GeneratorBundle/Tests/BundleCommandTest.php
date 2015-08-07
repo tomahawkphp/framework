@@ -4,7 +4,9 @@ namespace Tomahawk\Bundle\GeneratorBundle\Tests;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 use Tomahawk\Bundle\GeneratorBundle\Command\GenerateBundleCommand;
+use Tomahawk\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use Tomahawk\Test\TestCase;

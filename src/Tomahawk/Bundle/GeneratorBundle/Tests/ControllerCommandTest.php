@@ -11,7 +11,7 @@ use Tomahawk\Test\TestCase;
 
 class ControllerCommandTest extends TestCase
 {
-    public function testCommandWhenBundleIsntSet()
+    public function testCommandWhenBundleIsNotSet()
     {
         $command = new GenerateControllerCommand();
         $commandTester = $this->getCommandTester($command, $this->getGenerator());
@@ -31,7 +31,19 @@ class ControllerCommandTest extends TestCase
         $this->assertTrue($error);
     }
 
-    public function testCommand()
+    public function testCommandWithNoActions()
+    {
+        $command = new GenerateControllerCommand();
+        $commandTester = $this->getCommandTester($command, $this->getGenerator());
+
+        $commandTester->execute(array(
+            'command'    => $command->getName(),
+            'bundle'     => 'FooBundle',
+            'controller' => 'User',
+        ));
+    }
+
+    public function testCommandWithAction()
     {
         $command = new GenerateControllerCommand();
         $commandTester = $this->getCommandTester($command, $this->getGenerator());
@@ -41,6 +53,34 @@ class ControllerCommandTest extends TestCase
             'bundle'     => 'FooBundle',
             'controller' => 'User',
             '--actions'    => array('getUser'),
+        ));
+    }
+
+    public function testCommandWithActionAndPlaceholders()
+    {
+        $command = new GenerateControllerCommand();
+        $commandTester = $this->getCommandTester($command, $this->getGenerator());
+
+        $commandTester->execute(array(
+            'command'    => $command->getName(),
+            'bundle'     => 'FooBundle',
+            'controller' => 'User',
+            '--actions'    => array(
+                'getUser:{foo}'
+            ),
+        ));
+    }
+
+    public function testCommandWithInvalidAction()
+    {
+        $command = new GenerateControllerCommand();
+        $commandTester = $this->getCommandTester($command, $this->getGenerator());
+
+        $commandTester->execute(array(
+            'command'    => $command->getName(),
+            'bundle'     => 'FooBundle',
+            'controller' => 'User',
+            '--actions'  => array(''),
         ));
     }
 

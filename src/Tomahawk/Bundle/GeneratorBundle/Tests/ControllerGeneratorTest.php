@@ -68,6 +68,33 @@ class ControllerGeneratorTest extends GeneratorTest
         }
     }
 
+    public function testGenerateControllerWithInvalidActions()
+    {
+        $generator = $this->getGenerator();
+        $actions = array(
+            0 => array(
+                'name' => 'showPageAction',
+                'placeholders' => array('id', 'slug'),
+            ),
+            1 => array(
+                'name' => 'getListOfPagesAction',
+                'placeholders' => array('max_count'),
+            ),
+        );
+
+        $generator->generate($this->getBundle(), 'Page', $actions);
+
+        $content = file_get_contents($this->tmpDir.'/Controller/PageController.php');
+        $strings = array(
+            'public function showPageAction($id, $slug)',
+            'public function getListOfPagesAction($max_count)',
+        );
+
+        foreach ($strings as $string) {
+            $this->assertContains($string, $content);
+        }
+    }
+
     /**
      * @return BundleInterface
      */

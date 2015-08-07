@@ -36,20 +36,21 @@ class GenerateBundleCommand extends GenerateCommand
     protected function configure()
     {
         $this
+            ->setName('generate:bundle')
+            ->setDescription('Generates a bundle')
             ->setDefinition(array(
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
-            ))
-            ->setDescription('Generates a bundle')
-            ->setName('generate:bundle');
+            ));
     }
 
     /**
      * @see Command
      *
-     * @throws \InvalidArgumentException When namespace doesn't end with Bundle
-     * @throws \RuntimeException         When bundle can't be executed
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void When namespace doesn't end with Bundle
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -85,6 +86,9 @@ class GenerateBundleCommand extends GenerateCommand
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
     {
         $output->write('Checking that the bundle is autoloaded: ');

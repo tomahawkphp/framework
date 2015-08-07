@@ -3,12 +3,8 @@
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\Bundle\CSRFBundle\DI\CSRFProvider;
 use Tomahawk\Test\TestCase;
-use Tomahawk\Bundle\CSRFBundle\Token\TokenManager;
-use Tomahawk\DI\ContainerInterface;
 use Tomahawk\Bundle\CSRFBundle\Event\TokenSubscriber;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class TokenSubscriberTest extends TestCase
 {
@@ -23,11 +19,30 @@ class TokenSubscriberTest extends TestCase
         ), $tokenSubscriber->getSubscribedEvents());
     }
 
+    /**
+     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\InvalidTokenException
+     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\TokenNotFoundException
+     */
     public function testTokenSubscriberExitsWhenProtectionIsNotRequired()
     {
         $tokenManager = $this->getTokenManager();
 
         $request = $this->getRequest(false, $tokenManager->getTokenName());
+        $event = $this->getEvent($request);
+
+        $tokenSubscriber = new TokenSubscriber($tokenManager);
+        $tokenSubscriber->onRequest($event);
+    }
+
+    /**
+     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\InvalidTokenException
+     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\TokenNotFoundException
+     */
+    public function testTokenSubscriberExitsWhenProtectionIsNotRequiredAndFilterIsTrue()
+    {
+        $tokenManager = $this->getTokenManager();
+
+        $request = $this->getRequest(true, $tokenManager->getTokenName(), null, 'GET');
         $event = $this->getEvent($request);
 
         $tokenSubscriber = new TokenSubscriber($tokenManager);
@@ -88,7 +103,7 @@ class TokenSubscriberTest extends TestCase
         return $mock;
     }
 
-    protected function getRequest($filterCsrf = true, $tokenName, $token = null)
+    protected function getRequest($filterCsrf = true, $tokenName, $token = null, $method = 'POST')
     {
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
@@ -107,7 +122,7 @@ class TokenSubscriberTest extends TestCase
 
         $mock->expects($this->any())
             ->method('getMethod')
-            ->will($this->returnValue('POST'));
+            ->will($this->returnValue($method));
 
         return $mock;
     }

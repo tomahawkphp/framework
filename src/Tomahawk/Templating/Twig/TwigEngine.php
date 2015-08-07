@@ -42,6 +42,7 @@ class TwigEngine extends BaseEngine implements EngineInterface
         try {
             return parent::render($name, $parameters);
         } catch (\Twig_Error $e) {
+            //@codeCoverageIgnoreStart
             if ($name instanceof TemplateReference) {
                 try {
                     // try to get the real file name of the template where the error occurred
@@ -50,6 +51,7 @@ class TwigEngine extends BaseEngine implements EngineInterface
                 }
             }
             throw $e;
+            //@codeCoverageIgnoreEnd
         }
     }
     /**
