@@ -45,7 +45,7 @@ class ConfigProvider implements ServiceProviderInterface
 
             $kernel = $c['kernel'];
 
-            $cacheFile = sprintf($kernel->getRootDir(). '/Resources/config_%s.php', $kernel->getEnvironment());
+            $cacheFile = sprintf($kernel->getRootDir(). '/config/config_%s.php', $kernel->getEnvironment());
 
             $paths = array(
                 $kernel->getRootDir() .'/config',
