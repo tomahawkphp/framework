@@ -51,6 +51,7 @@ class CacheProvider implements ServiceProviderInterface
             return new FilesystemProvider($cache);
         });
 
+        //@codeCoverageIgnoreStart
         $container->set('cache.providers.memcached', function(ContainerInterface $c) {
             $cache = new MemcachedCache();
             $cache->setMemcached(new \Memcached());
@@ -71,6 +72,7 @@ class CacheProvider implements ServiceProviderInterface
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
             return new RedisProvider($cache);
         });
+        //@codeCoverageIgnoreEnd
 
         $container->set('cache.providers.xcache', function(ContainerInterface $c) {
             $cache = new XcacheCache();
@@ -78,6 +80,7 @@ class CacheProvider implements ServiceProviderInterface
             return new XcacheProvider($cache);
         });
 
+        //@codeCoverageIgnoreStart
         $container->set('Tomahawk\Cache\CacheInterface', function(ContainerInterface $c) {
             $provider = $c['config']->get('cache.driver', 'array');
             if (!$c->has('cache.providers.' .$provider)) {
@@ -85,6 +88,7 @@ class CacheProvider implements ServiceProviderInterface
             }
             return new CacheManager($c['cache.providers.' .$provider]);
         });
+        //@codeCoverageIgnoreEnd
 
         $container->addAlias('cache', 'Tomahawk\Cache\CacheInterface');
     }

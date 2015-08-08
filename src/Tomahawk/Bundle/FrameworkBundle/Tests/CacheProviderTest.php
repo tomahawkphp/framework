@@ -18,7 +18,8 @@ class CacheProviderTest extends TestCase
             ->method('get')
             ->will($this->returnValueMap(array(
                 array('cache.namespace', ''),
-                array('cache.directory', '', '../'),
+                array('cache.directory', null, __DIR__ . '/Resources/cache'),
+                array('cache.directory', '', __DIR__ . '/Resources/cache'),
             )));
 
         $container = new Container();
@@ -30,6 +31,7 @@ class CacheProviderTest extends TestCase
         $this->assertInstanceOf('Tomahawk\Cache\Provider\ArrayProvider', $container->get('cache.providers.array'));
         $this->assertInstanceOf('Tomahawk\Cache\Provider\ApcProvider', $container->get('cache.providers.apc'));
         $this->assertInstanceOf('Tomahawk\Cache\Provider\XcacheProvider', $container->get('cache.providers.xcache'));
+        $this->assertInstanceOf('Tomahawk\Cache\Provider\FilesystemProvider', $container->get('cache.providers.filesystem'));
     }
 
     protected function getConfig()
