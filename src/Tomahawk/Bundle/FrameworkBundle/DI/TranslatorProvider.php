@@ -55,5 +55,7 @@ class TranslatorProvider implements ServiceProviderInterface
 
             return $translator;
         });
+
+        $container->addAlias('translator', 'Symfony\Component\Translation\TranslatorInterface');
     }
 }

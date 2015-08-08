@@ -159,6 +159,7 @@ class FrameworkProvider implements ServiceProviderInterface
 
     protected function registerAliases(ContainerInterface $container)
     {
+        $container->addAlias('asset_manager', 'Tomahawk\Asset\AssetManagerInterface');
         $container->addAlias('hasher', 'Tomahawk\Hashing\HasherInterface');
         $container->addAlias('database', 'Tomahawk\Database\DatabaseManager');
         $container->addAlias('encrypter', 'Tomahawk\Encryption\CryptInterface');
@@ -175,7 +176,6 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
         $container->addAlias('request_stack', 'Symfony\Component\HttpFoundation\RequestStack');
         $container->addAlias('input', 'Tomahawk\Input\InputInterface');
-        $container->addAlias('translator', 'Symfony\Component\Translation\TranslatorInterface');
         $container->addAlias('url_generator', 'Tomahawk\Url\UrlGeneratorInterface');
     }
 }

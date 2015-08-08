@@ -54,6 +54,5 @@ class AuthProvider implements ServiceProviderInterface
         });
 
         $container->addAlias('auth', 'Tomahawk\Auth\AuthInterface');
-        $container->addAlias('asset_manager', 'Tomahawk\Asset\AssetManagerInterface');
     }
 }
