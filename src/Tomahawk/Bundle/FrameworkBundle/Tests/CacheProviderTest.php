@@ -28,6 +28,8 @@ class CacheProviderTest extends TestCase
         $cacheProvider->register($container);
 
         $this->assertInstanceOf('Tomahawk\Cache\Provider\ArrayProvider', $container->get('cache.providers.array'));
+        $this->assertInstanceOf('Tomahawk\Cache\Provider\ApcProvider', $container->get('cache.providers.apc'));
+        $this->assertInstanceOf('Tomahawk\Cache\Provider\XcacheProvider', $container->get('cache.providers.xcache'));
     }
 
     protected function getConfig()

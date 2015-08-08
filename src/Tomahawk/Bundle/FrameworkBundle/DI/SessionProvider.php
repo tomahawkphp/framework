@@ -25,7 +25,7 @@ class SessionProvider implements ServiceProviderInterface
     {
         $container->set('session.storage.file', function(ContainerInterface $c) {
             $config = $c['config']->get('session');
-            $nativeFileSessionHandler = new NativeFileSessionHandler($$config['save_path']);
+            $nativeFileSessionHandler = new NativeFileSessionHandler($config['directory']);
             return new NativeSessionStorage(array(), $nativeFileSessionHandler);
         });
 
@@ -57,10 +57,10 @@ class SessionProvider implements ServiceProviderInterface
             $config = $c['config']->get('session');
 
             $pdoSessionHandler = new PdoSessionHandler($pdo, array(
-                'db_table'    => $config['tomahawk_sessions'],
-                'db_id_col'   => $config['id'],
-                'db_data_col' => $config['data'],
-                'db_time_col' => $config['date'],
+                'db_table'    => $config['table'],
+                'db_id_col'   => $config['id_column'],
+                'db_data_col' => $config['data_column'],
+                'db_time_col' => $config['date_column'],
             ));
 
             $session_settings = array(
@@ -85,5 +85,6 @@ class SessionProvider implements ServiceProviderInterface
         });
 
         $container->addAlias('session', 'Tomahawk\Session\SessionInterface');
+        $container->addAlias('session.storage.filesystem', 'session.storage.file');
     }
 }

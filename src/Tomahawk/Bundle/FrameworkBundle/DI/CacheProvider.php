@@ -33,7 +33,6 @@ class CacheProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
     {
-
         $container->set('cache.providers.apc', function(ContainerInterface $c) {
             $cache = new ApcCache();
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
