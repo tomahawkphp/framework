@@ -96,7 +96,8 @@ class ConfigManager implements ConfigInterface
                  */
 
                 // If file starts with config_ its a compiled one so ignore
-                if (Str::is('config_*', $file->getFilename())) {
+                // If file starts with config_ its a compiled one so ignore
+                if (Str::is($file->getFilename(), '*config_*')) {
                     continue;
                 }
 
