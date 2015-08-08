@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Config;
 
+use Tomahawk\Common\Str;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -36,12 +37,21 @@ class ConfigManager implements ConfigInterface
      */
     protected $config = array();
 
+    /**
+     * @var array
+     */
     protected $parsed = array();
 
-    public function __construct(LoaderInterface $loader, $configDirectories)
+    /**
+     * @var string
+     */
+    protected $cacheFile;
+
+    public function __construct(LoaderInterface $loader, $configDirectories, $cacheFile = null)
     {
         $this->loader = $loader;
         $this->configDirectories = $configDirectories;
+        $this->cacheFile = $cacheFile;
     }
 
     /**
@@ -69,6 +79,12 @@ class ConfigManager implements ConfigInterface
     {
         $this->config = array();
 
+        // Check if we have a compiled cached file
+        if ($this->cacheFile && file_exists($this->cacheFile)) {
+            $this->config = include($this->cacheFile);
+            return;
+        }
+
         foreach ($this->configDirectories as $configDirectory) {
 
             $finder = new Finder();
@@ -78,6 +94,12 @@ class ConfigManager implements ConfigInterface
                 /**
                  * @var \Symfony\Component\Finder\SplFileInfo $file
                  */
+
+                // If file starts with config_ its a compiled one so ignore
+                if (Str::is('config_*', $file->getFilename())) {
+                    continue;
+                }
+
                 $key = substr($file->getFilename(), 0, -4);
                 $values = $this->loader->load($file->getRealPath());
                 $this->set($key, $values);

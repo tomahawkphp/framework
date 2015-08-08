@@ -15,6 +15,12 @@ use Tomahawk\HttpKernel\Test\Bundles\FooBundle\FooBundle;
 
 class TestKernel extends Kernel
 {
+    public function setRootDir($rootDir)
+    {
+        $this->rootDir = $rootDir;
+        return $this;
+    }
+
     public function registerBundles()
     {
         $bundles = array(
