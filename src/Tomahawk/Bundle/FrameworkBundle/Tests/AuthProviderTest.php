@@ -25,16 +25,42 @@ class AuthProviderTest extends TestCase
 
 
         $this->assertInstanceOf('Tomahawk\Auth\Auth', $container->get('auth'));
+        $this->assertInstanceOf('Tomahawk\Auth\Handlers\DatabaseAuthHandler', $container->get('database_auth_handler'));
     }
 
     protected function getContainer()
     {
         $container = new Container();
         $container->set('config', $this->getConfig());
+        $container->set('illuminate_database', $this->getIlluminateDBMock());
         $container->set('hasher', $this->getMock('Tomahawk\Hashing\HasherInterface'));
         $container->set('session', $this->getMock('Tomahawk\Session\SessionInterface'));
 
         return $container;
+    }
+
+    protected function getIlluminateDBMock()
+    {
+        $connection = $this->getMock('Illuminate\Database\ConnectionInterface');
+
+        $manager = $this->getMockBuilder('Illuminate\Database\DatabaseManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $manager->expects($this->any())
+            ->method('connection')
+            ->will($this->returnValue($connection));
+
+        $db = $this->getMockBuilder('Illuminate\Database\Capsule\Manager')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getDatabaseManager'))
+            ->getMock();
+
+        $db->expects($this->any())
+            ->method('getDatabaseManager')
+            ->will($this->returnValue($manager));
+
+        return $db;
     }
 
     protected function getConfig()
@@ -46,6 +72,13 @@ class AuthProviderTest extends TestCase
                 array('security.handler', null, 'eloquent'),
                 array('security.handlers.eloquent', null, array(
                     'model' => 'User'
+                )),
+                array('security.handlers.database', null, array(
+                    'table' => 'users',
+                    'key'   => 'id',
+                    'username'   => 'username',
+                    'password'   => 'password',
+                    'connection' => 'default',
                 )),
             )));
 

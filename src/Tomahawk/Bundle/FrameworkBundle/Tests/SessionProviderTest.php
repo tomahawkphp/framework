@@ -23,10 +23,26 @@ class SessionProviderTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.database'));
     }
 
-    protected function getContainer()
+    /**
+     * @expectedException \Exception
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\SessionProvider
+     */
+    public function testProviderNoDriver()
+    {
+        $container = $this->getContainer('mongo');
+        $sessionProvider = new SessionProvider();
+        $sessionProvider->register($container);
+
+        $this->assertInstanceOf('Tomahawk\Session\Session', $container->get('session'));
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.file'));
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.cookie'));
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.database'));
+    }
+
+    protected function getContainer($sessionDriver = 'array')
     {
         $container = new Container();
-        $container->set('config', $this->getConfig());
+        $container->set('config', $this->getConfig($sessionDriver));
         $container->set('database', $this->getDatabaseManager());
 
         return $container;
@@ -54,13 +70,13 @@ class SessionProviderTest extends TestCase
 
     }
 
-    protected function getConfig()
+    protected function getConfig($sessionDriver)
     {
         $config = $this->getMock('Tomahawk\Config\ConfigInterface');
 
         $config->method('get')
             ->will($this->returnValueMap(array(
-                array('session.driver', 'array', 'array'),
+                array('session.driver', 'array', $sessionDriver),
                 array('session', null, array(
                     'driver'           => 'cookie',
                     'enabled' => true,
