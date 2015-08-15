@@ -44,14 +44,14 @@ class DropDatabaseDoctrineCommand extends DoctrineCommand
 The <info>doctrine:database:drop</info> command drops the default connections
 database:
 
-<info>php app/console doctrine:database:drop</info>
+<info>php app/hatchet doctrine:database:drop</info>
 
 The --force parameter has to be used to actually drop the database.
 
 You can also optionally specify the name of a connection to drop the database
 for:
 
-<info>php app/console doctrine:database:drop --connection=default</info>
+<info>php app/hatchet doctrine:database:drop --connection=default</info>
 
 <error>Be careful: All data in a given database will be lost when executing
 this command.</error>
@@ -68,7 +68,13 @@ EOT
 
         $params = $connection->getParams();
 
-        $name = isset($params['path']) ? $params['path'] : (isset($params['dbname']) ? $params['dbname'] : false);
+        // Do we have a master/slave configuration setup
+        if (isset($params['master'])) {
+            $name = isset($params['master']['path']) ? $params['master']['path'] : (isset($params['master']['dbname']) ? $params['master']['dbname'] : false);
+        }
+        else {
+            $name = isset($params['path']) ? $params['path'] : (isset($params['dbname']) ? $params['dbname'] : false);
+        }
 
         if (!$name) {
             throw new \InvalidArgumentException("Connection does not contain a 'path' or 'dbname' parameter and cannot be dropped.");

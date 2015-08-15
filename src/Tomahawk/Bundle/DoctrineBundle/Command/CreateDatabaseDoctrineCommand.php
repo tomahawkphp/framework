@@ -40,12 +40,12 @@ class CreateDatabaseDoctrineCommand extends DoctrineCommand
 The <info>doctrine:database:create</info> command creates the default
 connections database:
 
-<info>php app/console doctrine:database:create</info>
+<info>php app/hatchet doctrine:database:create</info>
 
 You can also optionally specify the name of a connection to create the
 database for:
 
-<info>php app/console doctrine:database:create --connection=default</info>
+<info>php app/hatchet doctrine:database:create --connection=default</info>
 EOT
         );
     }
@@ -58,7 +58,14 @@ EOT
         $connection = $this->getDoctrineConnection($input->getOption('connection'));
 
         $params = $connection->getParams();
-        $name = isset($params['path']) ? $params['path'] : $params['dbname'];
+
+        // Do we have a master/slave configuration setup
+        if (isset($params['master'])) {
+            $name = isset($params['master']['path']) ? $params['master']['path'] : $params['master']['dbname'];
+        }
+        else {
+            $name = isset($params['path']) ? $params['path'] : $params['dbname'];
+        }
 
         unset($params['dbname']);
 
