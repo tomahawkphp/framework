@@ -56,7 +56,10 @@ class MigratorTest extends TestCase
 
     public function testMigrateUp()
     {
-        $bundles = array($this->getBundle('MigrationsBundle', 'Tomahawk\Bundle\MigrationsBundle\Test', $this->migrationPath));
+        $bundles = array(
+            $this->getBundle('MigrationsBundle', 'Tomahawk\Bundle\MigrationsBundle\Test', $this->migrationPath),
+            $this->getBundle('ABundle', 'Foo\BarBundle', __DIR__ .'/'),
+        );
 
         $kernel = $this->getKernel(array(), $bundles);
 

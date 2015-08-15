@@ -28,7 +28,6 @@ class MigrationsBundle extends Bundle
             return new MigrationRepo($database->getDatabaseManager(), 'tomahawk_migrations');
         });
 
-
         $this->container->set('migration_generator', function(ContainerInterface $c) {
             return new MigrationGenerator(new Filesystem());
         });
