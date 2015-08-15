@@ -115,10 +115,17 @@ class FrameworkProvider implements ServiceProviderInterface
             $defaultLogName = 'tomahawk.log';
             $defaultLogPath = $kernel->getRootDir() .'/app/storage/logs/';
 
-            $logPath = $config->get('monolog.path', $defaultLogPath);
-            $logName = $config->get('monolog.name', $defaultLogName);;
+            // We do this check without adding a default to the config call so we can test it
+            $logPath = $config->get('monolog.path');
+            $logName = $config->get('monolog.name');
 
             $stream = $logPath . $logName;
+
+            // Check if we have a stream from the config above
+            // if not use default
+            if ( ! $stream) {
+                $stream =  $defaultLogPath . $defaultLogName;
+            }
 
             $formatter = new LineFormatter(null, null, true, true);
 

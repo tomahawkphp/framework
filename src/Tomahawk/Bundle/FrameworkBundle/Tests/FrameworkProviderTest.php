@@ -35,7 +35,7 @@ class FrameworkProviderTest extends TestCase
         $this->assertInstanceOf('Tomahawk\Hashing\HasherInterface', $container->get('hasher'));
         $this->assertInstanceOf('Tomahawk\HttpCore\ResponseBuilderInterface', $container->get('response_builder'));
         $this->assertInstanceOf('Tomahawk\HttpCore\Response\CookiesInterface', $container->get('cookies'));
-        //$this->assertInstanceOf('Psr\Log\LoggerInterface', $container->get('logger'));
+        $this->assertInstanceOf('Psr\Log\LoggerInterface', $container->get('logger'));
         $this->assertInstanceOf('Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener', $container->get('locale_listener'));
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RequestStack', $container->get('request_stack'));
         $this->assertInstanceOf('Tomahawk\Url\UrlGeneratorInterface', $container->get('url_generator'));
@@ -89,8 +89,8 @@ class FrameworkProviderTest extends TestCase
                 array('database.default', null, 'default'),
                 array('database.fetch', null, \PDO::FETCH_CLASS),
                 array('security.key', null, 'asdasdasdadsas'),
-                array('monolog.path', $this->anything(), __DIR__ . '/../storage/logs/'),
-                array('monolog.name', $this->anything(), 'tomahawk.log'),
+                array('monolog.path', null),
+                array('monolog.name', null),
                 array('translation.locale', null, 'en'),
             )));
 
@@ -105,7 +105,7 @@ class FrameworkProviderTest extends TestCase
 
         $kernel->expects($this->any())
             ->method('getRootDir')
-            ->will($this->returnValue(__DIR__ .'/'));
+            ->will($this->returnValue(__DIR__));
 
         $kernel->expects($this->any())
             ->method('getRoutePaths')
