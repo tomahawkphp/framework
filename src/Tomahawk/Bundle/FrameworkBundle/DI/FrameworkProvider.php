@@ -68,7 +68,7 @@ class FrameworkProvider implements ServiceProviderInterface
             return $manager;
         });
 
-        $container->set('Symfony\Component\EventDispatcherInterface', new EventDispatcher());
+        $container->set('Symfony\Component\EventDispatcher\EventDispatcherInterface', new EventDispatcher());
 
         $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $c) {
             return new AssetManager($c['html_builder'], $c['url_generator']);
@@ -163,11 +163,12 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('hasher', 'Tomahawk\Hashing\HasherInterface');
         $container->addAlias('database', 'Tomahawk\Database\DatabaseManager');
         $container->addAlias('encrypter', 'Tomahawk\Encryption\CryptInterface');
-        $container->addAlias('event_dispatcher', 'Symfony\Component\EventDispatcherInterface');
+        $container->addAlias('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $container->addAlias('cookies', 'Tomahawk\HttpCore\Response\CookiesInterface');
         $container->addAlias('form_manager', 'Tomahawk\Forms\FormsManagerInterface');
         $container->addAlias('html_builder', 'Tomahawk\Html\HtmlBuilderInterface');
         $container->addAlias('http_kernel', 'Tomahawk\HttpKernel\HttpKernelInterface');
+        $container->addAlias('input', 'Tomahawk\Input\InputInterface');
         $container->addAlias('illuminate_database', 'Illuminate\Database\Capsule\Manager');
         $container->addAlias('monolog_logger', 'Psr\Log\LoggerInterface');
         $container->addAlias('logger', 'Psr\Log\LoggerInterface');
