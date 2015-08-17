@@ -29,7 +29,6 @@ use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\Input\InputManager;
 use Tomahawk\Html\HtmlBuilder;
 use Tomahawk\Asset\AssetManager;
-use Tomahawk\Routing\Controller;
 use Tomahawk\Forms\FormsManager;
 use Tomahawk\HttpCore\Response\Cookies;
 use Tomahawk\Config\ConfigInterface;
