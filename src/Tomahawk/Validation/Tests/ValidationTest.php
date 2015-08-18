@@ -1383,7 +1383,7 @@ class ValidationTest extends TestCase
     {
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\File\UploadedFile')
             ->enableOriginalConstructor()
-            ->setConstructorArgs([tempnam(sys_get_temp_dir(), ''), 'dummy'])
+            ->setConstructorArgs(array(tempnam(sys_get_temp_dir(), ''), 'dummy'))
             ->setMethods(array(
                 'isValid',
                 'getMimeType'
