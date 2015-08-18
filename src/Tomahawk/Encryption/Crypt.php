@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Encryption;
 
-use phpseclib\Crypt\Rijndael;
+use Crypt\Rijndael;
 use Symfony\Component\Security\Core\Util\StringUtils;
 
 class Crypt implements CryptInterface
@@ -45,7 +45,7 @@ class Crypt implements CryptInterface
         $this->key = $key;
         $this->block_length = $block_length;
         $this->mode = $mode;
-        $this->cipher = new Rijndael($this->mode);
+        $this->cipher = new Crypt_Rijndael($this->mode);
         $this->cipher->setKey($key);
         $this->cipher->setBlockLength($this->block_length);
     }
