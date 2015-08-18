@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Tomahawk\Middleware\Middleware;
 
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
@@ -76,6 +77,28 @@ abstract class Kernel implements KernelInterface, TerminableInterface
 
         $this->booted = false;
         $this->container = null;
+    }
+
+    /**
+     * Returns an array of bundles to register.
+     *
+     * @return BundleInterface[] An array of bundle instances.
+     *
+     * @api
+     */
+    public function registerBundles()
+    {
+        return array();
+    }
+
+    /**
+     * Returns an array of middleware to register
+     *
+     * @return Middleware[] An array of middleware instances
+     */
+    public function registerMiddleware()
+    {
+        return array();
     }
 
     /**
