@@ -86,20 +86,14 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      *
      * @api
      */
-    public function registerBundles()
-    {
-        return array();
-    }
+    abstract public function registerBundles();
 
     /**
      * Returns an array of middleware to register
      *
      * @return Middleware[] An array of middleware instances
      */
-    public function registerMiddleware()
-    {
-        return array();
-    }
+    abstract public function registerMiddleware();
 
     /**
      * Boots the current kernel.
