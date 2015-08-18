@@ -4,5 +4,5 @@ php:
   - 5.3
   - 5.4
 
-script:
-  ./bin/phpunit
+install:
+  -travis_retry composer install --no-interaction --prefer-source
