@@ -8,20 +8,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FilesystemLoaderTest extends PHPUnit_Framework_TestCase
 {
-    protected $filesystem;
-
-    public static function setUpBeforeClass()
-    {
-        $filesystem = new Filesystem();
-        $filesystem->touch(__DIR__ .'/Resources/index.php');
-    }
-
-    public static function tearDownAfterClass()
-    {
-        $filesystem = new Filesystem();
-        $filesystem->remove(__DIR__ .'/Resources/index.php');
-    }
-
     public function testLoadReturnFalseOnFailure()
     {
         $reference = new TemplateReference(null, null, 'index', 'php');
