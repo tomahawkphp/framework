@@ -3,5 +3,9 @@ language: php
 php:
   - 5.3
 
+sudo: false
+
 install:
   travis_retry composer install --no-interaction --prefer-source
+
+script: vendor/bin/phpunit
