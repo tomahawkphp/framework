@@ -4,4 +4,4 @@ php:
   - 5.3
 
 install:
-  -travis_retry composer install --no-interaction --prefer-source
+  travis_retry composer install --no-interaction --prefer-source
