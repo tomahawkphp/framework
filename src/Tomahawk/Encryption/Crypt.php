@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Encryption;
 
-use Crypt\Rijndael;
+use \Crypt_Rijndael;
 use Symfony\Component\Security\Core\Util\StringUtils;
 
 class Crypt implements CryptInterface
