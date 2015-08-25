@@ -1,3 +1,14 @@
+.axe-profiler-wrapper * {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border: 0 none;
+    background: none;
+    float: none;
+}
+
 .axe-toolbar-block span {
     display: inline-block;
 }
@@ -79,6 +90,7 @@ span.axe-profiler-count {
 .axe-toolbar-reset img {
     width: auto;
     display: inline;
+    border: 0 none;
 }
 
 .axe-toolbar-reset .hide-button {
@@ -196,13 +208,20 @@ span.axe-profiler-count {
 }
 
 .axe-profiler-tab-pane pre {
-    width: 70%;
     overflow-x: auto;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap !important;
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
     word-wrap: break-word;
+    border: 0 none;
+    background: #ffffff;
+    border-radius: 0;
+    padding: 5px 10px;
+    margin: 0;
+    color: #333333;
+    display: block;
+    font-family: monospace;
 }
 
 .axe-profiler-table table {
