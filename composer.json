@@ -17,6 +17,8 @@
     },
     "require": {
         "php": ">=5.3.3",
+        "ext-mcrypt": "*",
+        "ext-mbstring": "*",
         "illuminate/database": "4.1.30",
         "classpreloader/classpreloader": "1.0.0",
         "jeremeamia/superclosure": "1.0.2",
@@ -53,12 +55,6 @@
         "phpunit/phpunit": "4.6.*"
     },
     "autoload": {
-        "classmap": [
-
-        ],
-        "files": [
-
-        ],
         "psr-4": {
             "Tomahawk\\": "src/Tomahawk/"
         }
