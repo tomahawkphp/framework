@@ -43,9 +43,8 @@ class ExceptionMiddlewareTest extends TestCase
             ->method('addSubscriber');
 
         $kernel = $this->getMockBuilder('Tomahawk\HttpKernel\Kernel')
-            ->setMethods(array('getEnvironment'))
-            ->setConstructorArgs(array('test', false))
-            ->getMockForAbstractClass();
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $kernel->expects($this->any())
             ->method('getEnvironment')

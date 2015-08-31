@@ -6,6 +6,8 @@ TomahawkPHP Framework
 
 TomahawkPHP is a PHP 5.3 full-stack web framework built on top of the Symfony2 Components.
 
+Please note: although it will work be PHP as low as 5.3 we recommend 5.5 and up. 
+
 Requirements
 ------------
 

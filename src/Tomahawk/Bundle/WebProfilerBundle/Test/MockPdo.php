@@ -9,8 +9,8 @@ class MockPdo extends \PDO
 
     }
 
-    public function quote($var) {
-        return sprintf("%s", $var);
+    public function quote($string, $parameter_type = \PDO::PARAM_STR) {
+        return sprintf("%s", $string);
     }
 
 }

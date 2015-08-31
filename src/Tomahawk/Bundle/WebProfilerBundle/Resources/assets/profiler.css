@@ -1,3 +1,14 @@
+.axe-profiler-wrapper * {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border: 0 none;
+    background: none;
+    float: none;
+}
+
 .axe-toolbar-block span {
     display: inline-block;
 }
@@ -37,15 +48,9 @@ span.axe-profiler-count {
     display:inline-block !important;
     padding:0.1em 0.5em 0.2em 0.5em !important;
     color:#eee !important;
-
     border-radius: 12px;
     border-bottom-left-radius: 0;
-
-    /*-webkit-border-radius: 5px;
-    -moz-border-radius: 5px;*/
-
     -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
-
 }
 
 .axe-toolbar-reset {
@@ -55,7 +60,7 @@ span.axe-profiler-count {
     right: 0;
     height: 38px;
     margin: 0;
-    padding: 0 40px 0 0;
+    padding: 0 0;
     z-index: 6000000;
     font: 11px Verdana, Arial, sans-serif;
     text-align: left;
@@ -85,6 +90,7 @@ span.axe-profiler-count {
 .axe-toolbar-reset img {
     width: auto;
     display: inline;
+    border: 0 none;
 }
 
 .axe-toolbar-reset .hide-button {
@@ -201,19 +207,24 @@ span.axe-profiler-count {
     display: none;
 }
 
-.axe-profiler-tab-pane pre
-{
-    width: 70%;
+.axe-profiler-tab-pane pre {
     overflow-x: auto;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap !important;
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
     word-wrap: break-word;
+    border: 0 none;
+    background: #ffffff;
+    border-radius: 0;
+    padding: 5px 10px;
+    margin: 0;
+    color: #333333;
+    display: block;
+    font-family: monospace;
 }
 
-.axe-profiler-table table
-{
+.axe-profiler-table table {
     margin:0 !important;
     padding:0 !important;
     font-size:0.9em !important;
@@ -223,49 +234,41 @@ span.axe-profiler-count {
     background-color:#fff !important;
 }
 
-.axe-profiler-table pre
-{
+.axe-profiler-table pre {
     margin:0 !important;
 }
 
-.axe-profiler-table tr
-{
+.axe-profiler-table tr {
     border-bottom:1px solid #ccc !important;
 }
 
-.axe-profiler-table tr:first-child
-{
+.axe-profiler-table tr:first-child {
     border:0 !important;
 }
 
-.axe-profiler-table th
-{
+.axe-profiler-table th {
     background-color:#555 !important;
     color:#fff !important;
     text-transform:uppercase !important;
 }
 
-.axe-profiler-table th, .axe-profiler-table td
-{
+.axe-profiler-table th, .axe-profiler-table td {
     text-align:left !important;
     padding:0.4em 1em !important;
     margin:0 !important;
 }
 
-.axe-profiler-table td
-{
+.axe-profiler-table td {
     vertical-align:top !important;
 }
 
-.axe-profiler-table-first
-{
+.axe-profiler-table-first {
     background-color:#eee !important;
     border-right:1px solid #ccc !important;
     width:10% !important;
 }
 
-.axe-profiler-empty
-{
+.axe-profiler-empty {
     display:block !important;
     padding:1em !important;
     text-align:center !important;

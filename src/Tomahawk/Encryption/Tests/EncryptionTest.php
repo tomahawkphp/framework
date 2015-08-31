@@ -5,7 +5,7 @@ namespace Tomahawk\Encryption\Tests;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Encryption\Crypt;
 
-class EncyrptionTest extends TestCase
+class EncryptionTest extends TestCase
 {
     /**
      * @var Crypt
@@ -19,14 +19,14 @@ class EncyrptionTest extends TestCase
         parent::setUp();
     }
 
-    public function testValidEncyrption()
+    public function testValidEncryption()
     {
         $encrypted_string = $this->crypt->encrypt('tom');
 
         $this->assertEquals('tom', $this->crypt->decrypt($encrypted_string));
     }
 
-    public function testInvalidEncyrption()
+    public function testInvalidEncryption()
     {
         $encrypted_string = 'xI2VRcEmm8Pz0GqSZQF8ZrhIUNsR9GDvEBTyZo5tdghnbUtSREtzTEFzT25EaWo1WmxEY1NyR3lqNjVnOGUyRkllc';
 
