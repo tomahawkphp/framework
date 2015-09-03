@@ -45,12 +45,12 @@ class AuthEloquentAuthHandlerTest extends PHPUnit_Framework_TestCase
     }
     public function testValidateCredentials()
     {
-        $hasher = Mockery::mock('Tomahawk\Hashing\HasherInterface');
+        $hasher = $this->getMock('Tomahawk\Hashing\HasherInterface');
         $provider = $this->getProviderMock($hasher);
 
-        $user = Mockery::mock('Tomahawk\Auth\UserInterface');
-        $user->shouldReceive('getAuthPassword')->once()->andReturn('password');
-        $hasher->shouldReceive('check')->andReturn(true);
+        $user = $this->getMock('Tomahawk\Auth\UserInterface');
+        $user->expects($this->once())->method('getAuthPassword')->willReturn('password');
+        $hasher->expects($this->any())->method('check')->willReturn(true);
 
         $return = $provider->validateCredentials($user, array(
             'username' => 'tom',
@@ -63,7 +63,7 @@ class AuthEloquentAuthHandlerTest extends PHPUnit_Framework_TestCase
 
     public function testCreateModelReturnCorrectInstance()
     {
-        $hasher = Mockery::mock('Tomahawk\Hashing\HasherInterface');
+        $hasher = $this->getMock('Tomahawk\Hashing\HasherInterface');
 
         $provider = new EloquentAuthHandler($hasher, 'UserStub');
         $model = $provider->createModel();
@@ -74,7 +74,7 @@ class AuthEloquentAuthHandlerTest extends PHPUnit_Framework_TestCase
 
     protected function getProviderMock($hasher = null)
     {
-        $hasher = $hasher ?: Mockery::mock('Tomahawk\Hashing\HasherInterface');
+        $hasher = $hasher ?: $this->getMock('Tomahawk\Hashing\HasherInterface');
         return $this->getMock('Tomahawk\Auth\Handlers\EloquentAuthHandler', array('createModel'), array($hasher, 'foo'));
     }
 

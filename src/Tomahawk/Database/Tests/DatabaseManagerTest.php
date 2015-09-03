@@ -2,7 +2,6 @@
 
 namespace Tomahawk\Database\Tests;
 
-use Mockery;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Database\DatabaseManager;
 
@@ -10,19 +9,19 @@ class DatabaseManagerTest extends TestCase
 {
     public function testManager()
     {
-        $resolver = Mockery::mock('Illuminate\Database\ConnectionResolverInterface');
+        $resolver = $this->getMock('Illuminate\Database\ConnectionResolverInterface');
 
-        $connection = Mockery::mock('Illuminate\Database\Connection');
-        $builder = Mockery::mock('Illuminate\Database\Query\Builder');
-        $schema = Mockery::mock('Illuminate\Database\Schema\Builder');
+        $connection = $this->getMockBuilder('Illuminate\Database\Connection')->disableOriginalConstructor()->getMock();
+        $builder = $this->getMockBuilder('Illuminate\Database\Query\Builder')->disableOriginalConstructor()->getMock();
+        $schema = $this->getMockBuilder('Illuminate\Database\Schema\Builder')->disableOriginalConstructor()->getMock();
 
         $manager = new DatabaseManager($resolver);
 
-        $resolver->shouldReceive('connection')->ordered()->andReturn($connection);
-        $connection->shouldReceive('table')->andReturn($builder);
+        $resolver->expects($this->any())->method('connection')->willReturn($connection);
+        $connection->expects($this->any())->method('table')->willReturn($builder);
 
-        $resolver->shouldReceive('connection')->ordered()->andReturn($connection);
-        $connection->shouldReceive('getSchemaBuilder')->andReturn($schema);
+        $resolver->expects($this->any())->method('connection')->willReturn($connection);
+        $connection->expects($this->any())->method('getSchemaBuilder')->willReturn($schema);
 
         $manager->connection();
         $manager->table('table');

@@ -3,7 +3,6 @@
 namespace Tomahawk\HttpKernel\Test;
 
 use Tomahawk\HttpKernel\Kernel as BaseKernel;
-
 use Tomahawk\HttpKernel\Test\Bundles\BarBundle\BarBundle;
 use Tomahawk\HttpKernel\Test\Bundles\FooBundle\FooBundle;
 

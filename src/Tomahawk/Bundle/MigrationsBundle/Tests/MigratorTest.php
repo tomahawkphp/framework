@@ -251,8 +251,13 @@ class MigratorTest extends TestCase
 
     public function getSplFileInfo()
     {
-        $file = \Mockery::mock('stdClass');
-        $file->shouldReceive('getRealPath')->once()->andReturn($this->migrationFile);
+        $file = $this->getMockBuilder('stdClass')
+            ->setMethods(array('getRealPath'))
+            ->getMock();
+
+        $file->expects($this->any())
+            ->method('getRealPath')
+            ->willReturn($this->migrationFile);
 
         return $file;
     }

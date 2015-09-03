@@ -5,10 +5,8 @@ namespace Tomahawk\Auth\Tests;
 use Mockery;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Auth\Auth;
-use Tomahawk\Auth\AuthHandlerInterface;
-use Tomahawk\Auth\Handlers\EloquentAuthHandler;
+use Tomahawk\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use \Tomahawk\Session\Session;
 
 class AuthTest extends TestCase
 {
@@ -21,13 +19,13 @@ class AuthTest extends TestCase
     {
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
-        $authInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
+        $authInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
 
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
+        $user = $this->getMock('\Tomahawk\Auth\UserInterface');
 
-        $authInterface->shouldReceive('retrieveByCredentials')->andReturn($user);
+        $authInterface->expects($this->any())->method('retrieveByCredentials')->willReturn($user);
 
-        $authInterface->shouldReceive('validateCredentials')->andReturn(false);
+        $authInterface->expects($this->any())->method('validateCredentials')->willReturn(false);
 
         $auth = new Auth($session, $authInterface);
 
@@ -43,13 +41,11 @@ class AuthTest extends TestCase
     {
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
-        $authInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
+        $authInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
 
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
+        $authInterface->expects($this->any())->method('retrieveByCredentials')->willReturn(null);
 
-        $authInterface->shouldReceive('retrieveByCredentials')->andReturn(null);
-
-        $authInterface->shouldReceive('validateCredentials')->andReturn(false);
+        $authInterface->expects($this->any())->method('validateCredentials')->willReturn(false);
 
         $auth = new Auth($session, $authInterface);
 
@@ -65,17 +61,17 @@ class AuthTest extends TestCase
     {
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
-        $authInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
+        $authInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
 
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
+        $user = $this->getMock('\Tomahawk\Auth\UserInterface');
 
-        $user->shouldReceive('getAuthIdentifier')->andReturn(1);
+        $user->expects($this->any())->method('getAuthIdentifier')->willReturn(1);
 
-        $authInterface->shouldReceive('retrieveByCredentials')->andReturn($user);
+        $authInterface->expects($this->any())->method('retrieveByCredentials')->willReturn($user);
 
-        $authInterface->shouldReceive('validateCredentials')->andReturn(true);
+        $authInterface->expects($this->any())->method('validateCredentials')->willReturn(true);
 
-        $authInterface->shouldReceive('retrieveById')->andReturn(1);
+        $authInterface->expects($this->any())->method('retrieveById')->willReturn(1);
 
         $auth = new Auth($session, $authInterface);
 
@@ -93,11 +89,9 @@ class AuthTest extends TestCase
     {
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
-        $authInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
+        $authInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
 
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
-
-        $authInterface->shouldReceive('retrieveById')->andReturn(1);
+        $authInterface->expects($this->any())->method('retrieveById')->willReturn(1);
 
         $auth = new Auth($session, $authInterface);
 
@@ -111,8 +105,8 @@ class AuthTest extends TestCase
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
         $session->set($sessionKey, 1);
-        $authInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
-        $authInterface->shouldReceive('retrieveById')->andReturn(1);
+        $authInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
+        $authInterface->expects($this->any())->method('retrieveById')->willReturn(1);
 
         $auth = new Auth($session, $authInterface);
 
@@ -127,12 +121,12 @@ class AuthTest extends TestCase
     {
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
-        $authInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
+        $authInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
+        $user = $this->getMock('\Tomahawk\Auth\UserInterface');
         $auth = new Auth($session, $authInterface);
 
-        $user->shouldReceive('getAuthIdentifier')->andReturn(1);
-        $authInterface->shouldReceive('retrieveById')->andReturn(1);
+        $user->expects($this->any())->method('getAuthIdentifier')->willReturn(1);
+        $authInterface->expects($this->any())->method('retrieveById')->willReturn(1);
         $auth->login($user);
 
         $this->assertTrue($auth->loggedIn());
@@ -142,57 +136,13 @@ class AuthTest extends TestCase
     {
         $sessionStorage = new MockArraySessionStorage();
         $session = new Session($sessionStorage);
-        $authHandlerInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
-        $anotherAuthHandlerInterface = Mockery::mock('\Tomahawk\Auth\AuthHandlerInterface');
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
+        $authHandlerInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
+        $anotherAuthHandlerInterface = $this->getMock('\Tomahawk\Auth\AuthHandlerInterface');
         $auth = new Auth($session, $authHandlerInterface);
 
         $auth->setHandler($anotherAuthHandlerInterface);
 
-
         $this->assertInstanceOf('\Tomahawk\Auth\AuthHandlerInterface', $auth->getHandler());
     }
-
-    /*public function testPdoHandler()
-    {
-        $sessionStorage = new MockArraySessionStorage();
-        $session = new Session($sessionStorage);
-
-        $pdoAuthHandler = $this->getPDOProviderMock();
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
-        $auth = new Auth($session, $pdoAuthHandler);
-
-        $auth->attempt(array(
-            'username' => 'tomgrohl',
-            'password' => 'password'
-        ));
-
-        $pdoAuthHandler->shouldReceive('retrieveByCredentials')->andReturn($user);
-
-        $pdoAuthHandler->shouldReceive('validateCredentials')->andReturn(true);
-
-        $pdoAuthHandler->shouldReceive('retrieveById')->andReturn(1);
-
-        $this->assertInstanceOf('\Tomahawk\Auth\AuthHandlerInterface', $auth->getHandler());
-    }*/
-
-    /*public function testEloquentHandler()
-    {
-        $sessionStorage = new MockArraySessionStorage();
-        $session = new Session($sessionStorage);
-        $authHandlerInterface = Mockery::mock('\Tomahawk\Auth\Handlers\EloquentAuthHandler');
-
-        $user = Mockery::mock('\Tomahawk\Auth\UserInterface');
-        $auth = new Auth($session, $authHandlerInterface);
-
-        $this->assertInstanceOf('\Tomahawk\Auth\AuthHandlerInterface', $auth->getHandler());
-    }*/
-
-    /*protected function getPDOProviderMock()
-    {
-        $pdo = Mockery::mock('MockPDO');
-        $hasher = Mockery::mock('Tomahawk\Hashing\HasherInterface');
-        $pdoAuthHandler = Mockery::mock('Tomahawk\Auth\Handlers\PdoAuthHandler', array('retrieveById', 'retrieveByCredentials', 'validateCredentials'), array($hasher, $pdo, 'users', 'id'));
-    }*/
 
 }
