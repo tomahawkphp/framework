@@ -120,7 +120,13 @@ class DoctrineProvider implements ServiceProviderInterface
 
             $s = $config->get('security.handlers.doctrine');
 
-            return new DoctrineAuthHandler($c['hasher'], $c['doctrine'], $s['model'], $s['username']);
+            return new DoctrineAuthHandler(
+                $c['hasher'],
+                $c['doctrine'],
+                $s['model'],
+                $s['username'],
+                isset($s['password']) ? $s['password'] : null
+            );
         });
     }
 

@@ -29,7 +29,11 @@ class AuthProvider implements ServiceProviderInterface
 
         $container->set('eloquent_auth_handler', function(ContainerInterface $c) {
             $eloquentConfig = $c['config']->get('security.handlers.eloquent');
-            return new EloquentAuthHandler($c['hasher'], $eloquentConfig['model']);
+            return new EloquentAuthHandler(
+                $c['hasher'],
+                $eloquentConfig['model'],
+                isset($eloquentConfig['password']) ? $eloquentConfig['password'] : null
+            );
         });
 
         $container->set('database_auth_handler', function(ContainerInterface $c) {
