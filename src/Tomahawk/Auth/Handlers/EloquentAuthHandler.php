@@ -8,17 +8,26 @@ use Tomahawk\Hashing\HasherInterface;
 
 class EloquentAuthHandler implements AuthHandlerInterface
 {
+    /**
+     * @var string
+     */
     protected $model;
+
     /**
      * @var \Tomahawk\Hashing\HasherInterface
      */
     protected $hasher;
 
+    /**
+     * @var string
+     */
+    protected $passwordField;
 
-    public function __construct(HasherInterface $hasher, $model)
+    public function __construct(HasherInterface $hasher, $model, $passwordField = null)
     {
         $this->hasher = $hasher;
         $this->model = $model;
+        $this->passwordField = $passwordField ?: 'password';
     }
 
     /**
@@ -40,14 +49,12 @@ class EloquentAuthHandler implements AuthHandlerInterface
      */
     public function retrieveByCredentials(array $credentials)
     {
-        // First we will add each credential element to the query as a where clause.
-        // Then we can execute the query and, if we found a user, return it in a
-        // Eloquent User "model" that will be utilized by the Guard instances.
         $query = $this->createModel()->newQuery();
 
-        foreach ($credentials as $key => $value)
-        {
-            if ( ! str_contains($key, 'password')) $query->where($key, $value);
+        foreach ($credentials as $key => $value) {
+            if ($key !== $this->passwordField) {
+                $query->where($key, $value);
+            }
         }
 
         return $query->first();
@@ -62,7 +69,7 @@ class EloquentAuthHandler implements AuthHandlerInterface
      */
     public function validateCredentials(UserInterface $user, array $credentials)
     {
-        $plain = $credentials['password'];
+        $plain = $credentials[$this->passwordField];
 
         return $this->hasher->check($plain, $user->getAuthPassword());
     }
