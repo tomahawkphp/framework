@@ -29,12 +29,24 @@ class DoctrineAuthHandler implements AuthHandlerInterface
      */
     protected $usernameField;
 
-    public function __construct(HasherInterface $hasher, RegistryInterface $doctrine, $model, $usernameField)
+    /**
+     * @var string
+     */
+    protected $passwordField;
+
+    public function __construct(
+        HasherInterface $hasher,
+        RegistryInterface $doctrine,
+        $model,
+        $usernameField,
+        $passwordField = null
+    )
     {
         $this->hasher = $hasher;
         $this->doctrine = $doctrine;
         $this->model = $model;
         $this->usernameField = $usernameField;
+        $this->passwordField = $passwordField ?: 'password';
     }
 
     /**
@@ -59,11 +71,9 @@ class DoctrineAuthHandler implements AuthHandlerInterface
     {
         $repo = $this->doctrine->getRepository($this->model);
 
-        $field = $this->usernameField;
+        unset($credentials[$this->passwordField]);
 
-        return $repo->findOneBy(array(
-            $field => $credentials['username']
-        ));
+        return $repo->findOneBy($credentials);
     }
 
     /**
@@ -75,7 +85,7 @@ class DoctrineAuthHandler implements AuthHandlerInterface
      */
     public function validateCredentials(UserInterface $user, array $credentials)
     {
-        $plain = $credentials['password'];
+        $plain = $credentials[$this->passwordField];
 
         return $this->hasher->check($plain, $user->getAuthPassword());
     }
