@@ -15,8 +15,20 @@ class DatabaseAuthHandler implements AuthHandlerInterface
      * @var \Tomahawk\Hashing\HasherInterface
      */
     protected $hasher;
+
+    /**
+     * @var string
+     */
     protected $table;
+
+    /**
+     * @var string
+     */
     protected $key;
+
+    /**
+     * @var string
+     */
     protected $passwordField;
 
     public function __construct(
@@ -69,7 +81,7 @@ class DatabaseAuthHandler implements AuthHandlerInterface
             ->table($this->table);
 
         foreach ($credentials as $key => $value) {
-            if ( ! str_contains($key, 'password')) {
+            if ($key !== $this->passwordField) {
                 $query->where($key, $value);
             }
         }
@@ -95,7 +107,7 @@ class DatabaseAuthHandler implements AuthHandlerInterface
      */
     public function validateCredentials(UserInterface $user, array $credentials)
     {
-        $plain = $credentials['password'];
+        $plain = $credentials[$this->passwordField];
         return $this->hasher->check($plain, $user->getAuthPassword());
     }
 
