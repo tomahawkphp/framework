@@ -5,6 +5,10 @@
  *
  * (c) Tom Ellis
  *
+ * The is based on code originally distributed inside the Symfony framework.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -12,133 +16,34 @@
 namespace Tomahawk\Routing\Controller;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use ReflectionClass;
 use Tomahawk\DI\ContainerInterface;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 
-class ControllerResolver implements ControllerResolverInterface
+class ControllerResolver extends BaseControllerResolver
 {
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
     /**
      * @var \Tomahawk\DI\ContainerInterface
      */
-    private $container;
+    protected $container;
+
+    /**
+     * @var ControllerNameParser
+     */
+    protected $parser;
 
     /**
      * Constructor.
      *
      * @param \Tomahawk\DI\ContainerInterface $container
      * @param LoggerInterface $logger A LoggerInterface instance
+     * @param ControllerNameParser $parser
      */
-    public function __construct(ContainerInterface $container, LoggerInterface $logger = null)
+    public function __construct(ContainerInterface $container, LoggerInterface $logger = null, ControllerNameParser $parser = null)
     {
         $this->container = $container;
-        $this->logger = $logger;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * This method looks for a '_controller' request attribute that represents
-     * the controller name (a string like ClassName::MethodName).
-     *
-     * @api
-     */
-    public function getController(Request $request)
-    {
-        if (!$controller = $request->attributes->get('_controller')) {
-            if (null !== $this->logger) {
-                $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing');
-            }
-
-            return false;
-        }
-
-        if (is_array($controller)) {
-            return $controller;
-        }
-
-        if (is_object($controller)) {
-            if (method_exists($controller, '__invoke')) {
-                return $controller;
-            }
-
-            throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getPathInfo()));
-        }
-
-        if (false === strpos($controller, ':')) {
-            if (method_exists($controller, '__invoke')) {
-                return new $controller();
-            }
-            elseif (function_exists($controller)) {
-                return $controller;
-            }
-        }
-
-        $callable = $this->createController($controller);
-
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', $controller, $request->getPathInfo()));
-        }
-
-        return $callable;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @api
-     */
-    public function getArguments(Request $request, $controller)
-    {
-        if (is_array($controller)) {
-            $r = new \ReflectionMethod($controller[0], $controller[1]);
-        }
-        elseif (is_object($controller) && !$controller instanceof \Closure) {
-            $r = new \ReflectionObject($controller);
-            $r = $r->getMethod('__invoke');
-        }
-        else {
-            $r = new \ReflectionFunction($controller);
-        }
-
-        return $this->doGetArguments($request, $controller, $r->getParameters());
-    }
-
-    protected function doGetArguments(Request $request, $controller, array $parameters)
-    {
-        $attributes = $request->attributes->all();
-        $arguments = array();
-        foreach ($parameters as $param) {
-            if (array_key_exists($param->name, $attributes)) {
-                $arguments[] = $attributes[$param->name];
-            }
-            elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
-                $arguments[] = $request;
-            }
-            elseif ($param->isDefaultValueAvailable()) {
-                $arguments[] = $param->getDefaultValue();
-            }
-            else {
-                if (is_array($controller)) {
-                    $repr = sprintf('%s::%s()', get_class($controller[0]), $controller[1]);
-                }
-                elseif (is_object($controller)) {
-                    $repr = get_class($controller);
-                }
-                else {
-                    $repr = $controller;
-                }
-
-                throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
-            }
-        }
-
-        return $arguments;
+        $this->parser = $parser;
+        parent::__construct($logger);
     }
 
     /**
@@ -153,7 +58,22 @@ class ControllerResolver implements ControllerResolverInterface
     protected function createController($controller)
     {
         if (false === strpos($controller, '::')) {
-            throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
+            $count = substr_count($controller, ':');
+            if (2 == $count && $this->parser) {
+                // controller in the a:b:c notation then
+                $controller = $this->parser->parse($controller);
+            }
+            else if (1 == $count) {
+                // controller in the service:method notation
+                list($service, $method) = explode(':', $controller, 2);
+                return array($this->container->get($service), $method);
+            }
+            else if ($this->container->has($controller) && method_exists($service = $this->container->get($controller), '__invoke')) {
+                return $service;
+            }
+            else {
+                throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
+            }
         }
 
         list($class, $method) = explode('::', $controller, 2);
@@ -162,9 +82,23 @@ class ControllerResolver implements ControllerResolverInterface
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        // Is controller in the DI Container
-        $class = $this->container->get($class);
+        $reflector = new ReflectionClass($class);
 
-        return array($class, $method);
+        $constructor = $reflector->getConstructor();
+
+        if ($constructor && $constructor->getParameters()) {
+            return array($this->container->build($class), $method);
+        }
+
+        // Is controller in the DI Container
+        //$controller = $this->container->get($class);
+
+        /*if ($controller instanceof ContainerAwareInterface) {
+            $controller->setContainer($this->container);
+        }*/
+
+        //return array($controller, $method);
+
+        return array($this->instantiateController($class), $method);
     }
 }
