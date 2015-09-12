@@ -42,6 +42,11 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 
         $dispatcher->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) use($c) {
 
+            // If its an AJAX request return
+            if ($event->getRequest()->isXmlHttpRequest()) {
+                return;
+            }
+
             if ($response = $event->getResponse()) {
                 $content = $response->getContent();
 

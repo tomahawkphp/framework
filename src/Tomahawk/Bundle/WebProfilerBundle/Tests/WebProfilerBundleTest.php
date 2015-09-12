@@ -35,9 +35,34 @@ class WebProfilerBundleTest extends TestCase
         $eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+        $this->assertContains('<profiler>', $event->getResponse()->getContent());
 
         $webBundle->shutdown();
+    }
 
+    public function testEventDoesNotAddProfilerOnAJAXRequest()
+    {
+        $httpKernel = $this->getHttpKernel();
+
+        $eventDispatcher = $this->container['event_dispatcher'];
+
+        $response = new Response();
+        $response->setContent('plain content');
+
+        $request = new Request();
+        $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+        $event = new FilterResponseEvent($httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+
+        $webBundle = new WebProfilerBundle();
+        $webBundle->setContainer($this->container);
+        $webBundle->boot();
+        $webBundle->registerEvents($eventDispatcher);
+        $this->container->get('web_profiler')->enable();
+
+        $eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
+
+        $this->assertEquals('plain content', $event->getResponse()->getContent());
     }
 
     protected function getHttpKernel()
@@ -56,6 +81,10 @@ class WebProfilerBundleTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $engine->expects($this->any())
+            ->method('render')
+            ->willReturn('<profiler>');
+
         $container['templating'] = $engine;
 
 
@@ -63,21 +92,19 @@ class WebProfilerBundleTest extends TestCase
 
         $databaseManager = $this->getDatabaseManagerMock();
 
-        $databaseManager->expects($this->once())
+        $databaseManager->expects($this->any())
             ->method('connection')
             ->will($this->returnValue($connection));
 
-        $connection->expects($this->once())
+        $connection->expects($this->any())
             ->method('getQueryLog')
             ->will($this->returnValue(array()));
 
         $database = $this->getDatabaseMock();
 
-        $database->expects($this->exactly(2))
+        $database->expects($this->any())
             ->method('getDatabaseManager')
             ->will($this->returnValue($databaseManager));
-
-
 
         $container['illuminate_database'] = $database;
 
