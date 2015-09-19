@@ -17,6 +17,7 @@ namespace Tomahawk\Routing\Controller;
 
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
+use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 
@@ -82,23 +83,35 @@ class ControllerResolver extends BaseControllerResolver
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
+        $controller = $this->instantiateController($class);
+
+        return array($controller, $method);
+    }
+
+    /**
+     * Returns an instantiated controller
+     *
+     * @param string $class A class name
+     *
+     * @return object
+     */
+    protected function instantiateController($class)
+    {
         $reflector = new ReflectionClass($class);
 
         $constructor = $reflector->getConstructor();
 
         if ($constructor && $constructor->getParameters()) {
-            return array($this->container->build($class), $method);
+            $controller = $this->container->get($class);
+        }
+        else {
+            $controller = new $class();
         }
 
-        // Is controller in the DI Container
-        //$controller = $this->container->get($class);
-
-        /*if ($controller instanceof ContainerAwareInterface) {
+        if ($controller instanceof ContainerAwareInterface) {
             $controller->setContainer($this->container);
-        }*/
+        }
 
-        //return array($controller, $method);
-
-        return array($this->instantiateController($class), $method);
+        return $controller;
     }
 }
