@@ -12,9 +12,10 @@
 namespace Tomahawk\Bundle\WebProfilerBundle;
 
 use Tomahawk\HttpKernel\Kernel;
-use Symfony\Component\Templating\EngineInterface;
 use Illuminate\Database\DatabaseManager;
 use Doctrine\DBAL\Logging\DebugStack;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Templating\EngineInterface;
 
 class Profiler
 {
@@ -58,6 +59,11 @@ class Profiler
      * @var DatabaseManager
      */
     protected $manager;
+
+    /**
+     * @var Request|null
+     */
+    protected $request;
 
     /**
      * @param EngineInterface $engine
@@ -300,6 +306,28 @@ class Profiler
         }
 
         return $parameters;
+    }
+
+    /**
+     * Get Request
+     *
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Set Request
+     *
+     * @param Request $request
+     * @return $this
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+        return $this;
     }
 
     /**

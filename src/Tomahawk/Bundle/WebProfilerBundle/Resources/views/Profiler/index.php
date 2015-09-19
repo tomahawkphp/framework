@@ -154,6 +154,33 @@
                 </a>
             </div>
         </div>
+        <?php if ($request) : ?>
+        <div class="axe-toolbar-block">
+            <div class="axe-toolbar-icon">
+                <a href="#">
+                    <span>
+                        <span title="Current route">Current Route</span>
+                        <span class="axe-toolbar-status">
+                            <?php echo $request->get('_route') ?>
+                        </span>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="axe-toolbar-block">
+            <div class="axe-toolbar-icon">
+                <a href="#">
+                    <span>
+                        <span title="Request">Request</span>
+                        <span class="axe-toolbar-status">
+                            <?php echo $request->getMethod() ?>
+                        </span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        <?php endif ?>
 
         <a id="main-close-button" class="hide-button" title="Close Toolbar"></a>
     </div>

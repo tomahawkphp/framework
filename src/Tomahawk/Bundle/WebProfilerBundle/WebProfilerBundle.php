@@ -42,11 +42,15 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 
         $dispatcher->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) use($c) {
 
+            //$event->getRequest()->
+
             if ($response = $event->getResponse()) {
                 $content = $response->getContent();
 
                 /** @var Profiler $webProfiler */
                 $webProfiler = $c['web_profiler'];
+
+                $webProfiler->setRequest($event->getRequest());
 
                 // If we're not using Illuminate DB we don't need to do this
                 if (true === $c->get('config')->get('database.enabled')) {
