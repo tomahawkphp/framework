@@ -45,16 +45,16 @@ class DropSchemaCommand extends DropCommand
 The <info>doctrine:schema:drop</info> command generates the SQL needed to
 drop the database schema of the default entity manager:
 
-<info>php app/console doctrine:schema:drop --dump-sql</info>
+<info>php app/hatchet doctrine:schema:drop --dump-sql</info>
 
 Alternatively, you can execute the generated queries:
 
-<info>php app/console doctrine:schema:drop --force</info>
+<info>php app/hatchet doctrine:schema:drop --force</info>
 
 You can also optionally specify the name of a entity manager to drop the
 schema for:
 
-<info>php app/console doctrine:schema:drop --em=default</info>
+<info>php app/hatchet doctrine:schema:drop --em=default</info>
 EOT
         );
     }

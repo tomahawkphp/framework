@@ -50,15 +50,15 @@ default entity manager.
 For example, if you add metadata for a new column to an entity, this command
 would generate and output the SQL needed to add the new column to the database:
 
-<info>php app/console doctrine:schema:update --dump-sql</info>
+<info>php app/hatchet doctrine:schema:update --dump-sql</info>
 
 Alternatively, you can execute the generated queries:
 
-<info>php app/console doctrine:schema:update --force</info>
+<info>php app/hatchet doctrine:schema:update --force</info>
 
 You can also update the database schema for a specific entity manager:
 
-<info>php app/console doctrine:schema:update --em=default</info>
+<info>php app/hatchet doctrine:schema:update --em=default</info>
 EOT
         );
     }

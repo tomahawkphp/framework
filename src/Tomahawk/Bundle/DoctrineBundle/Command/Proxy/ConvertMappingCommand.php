@@ -46,7 +46,7 @@ class ConvertMappingCommand extends BaseConvertMappingCommand
 The <info>doctrine:mapping:convert</info> command converts mapping information
 between supported formats:
 
-<info>php app/console doctrine:mapping:convert xml /path/to/output</info>
+<info>php app/hatchet doctrine:mapping:convert xml /path/to/output</info>
 EOT
         );
     }

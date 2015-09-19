@@ -44,12 +44,12 @@ class ClearResultCacheCommand extends ResultCommand
 The <info>doctrine:cache:clear-result</info> command clears all result cache
 for the default entity manager:
 
-<info>php app/console doctrine:cache:clear-result</info>
+<info>php app/hatchet doctrine:cache:clear-result</info>
 
 You can also optionally specify the <comment>--em</comment> option to specify
 which entity manager to clear the cache for:
 
-<info>php app/console doctrine:cache:clear-result --em=default</info>
+<info>php app/hatchet doctrine:cache:clear-result --em=default</info>
 EOT
         );
     }

@@ -44,7 +44,7 @@ class RunSqlCommand extends BaseRunSqlCommand
 The <info>doctrine:query:sql</info> command executes the given SQL query and
 outputs the results:
 
-<info>php app/console doctrine:query:sql "SELECT * from user"</info>
+<info>php app/hatchet doctrine:query:sql "SELECT * from user"</info>
 EOT
         );
     }

@@ -45,12 +45,12 @@ class ValidateSchemaCommand extends DoctrineValidateSchemaCommand
 The <info>doctrine:schema:validate</info> checks the current mappings
 for valid forward and reverse mappings.
 
-<info>php app/console doctrine:schema:validate</info>
+<info>php app/hatchet doctrine:schema:validate</info>
 
 You can also optionally specify the <comment>--em</comment> option to specify
 which entity manager use for the validation.
 
-<info>php app/console doctrine:schema:validate --em=default</info>
+<info>php app/hatchet doctrine:schema:validate --em=default</info>
 EOT
         );
     }
