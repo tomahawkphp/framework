@@ -5,11 +5,22 @@ namespace Tomahawk\Routing\Tests;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Routing\Router;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class RouterTest extends TestCase
 {
+    public function testConstructorCreatesRouteCollection()
+    {
+        $router = new Router();
+        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $router->getRoutes());
+    }
+
+    public function testConstructorSetsRouteCollectionCorrectly()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router($routeCollection);
+        $this->assertSame($routeCollection, $router->getRoutes());
+    }
+
     public function testRoute()
     {
         $routeCollection = new RouteCollection();

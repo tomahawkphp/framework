@@ -27,6 +27,14 @@ class Router
     protected $routes;
 
     /**
+     * @param RouteCollection $routes
+     */
+    function __construct(RouteCollection $routes = null)
+    {
+        $this->routes = $routes ?: new RouteCollection();
+    }
+
+    /**
      * Set route collection
      *
      * @param RouteCollection $routes
