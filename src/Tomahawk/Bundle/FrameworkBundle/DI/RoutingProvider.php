@@ -14,6 +14,7 @@ namespace Tomahawk\Bundle\FrameworkBundle\DI;
 use Tomahawk\DI\ServiceProviderInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\HttpKernel\Config\FileLocator;
+use Tomahawk\Routing\Controller\ControllerNameParser;
 use Tomahawk\Routing\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\Loader\PhpFileLoader;
@@ -60,7 +61,7 @@ class RoutingProvider implements ServiceProviderInterface
         });
 
         $container->set('controller_resolver', $container->factory(function(ContainerInterface $c) {
-            return new ControllerResolver($c);
+            return new ControllerResolver($c, null, new ControllerNameParser($c['kernel']));
         }));
 
         $container->set('request_context', function(ContainerInterface $c) {
