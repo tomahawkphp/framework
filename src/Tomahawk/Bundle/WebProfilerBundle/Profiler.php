@@ -267,8 +267,8 @@ class Profiler
             'memory_peak' => $memory_peak,
             'time'        => $time,
             'timers'      => $timers,
-            'version'     => Kernel::VERSION
-
+            'version'     => Kernel::VERSION,
+            'request'     => $this->getRequest(),
         ));
     }
 
