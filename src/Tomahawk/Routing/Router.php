@@ -21,6 +21,7 @@ class Router
      * @var bool
      */
     protected $inSection = false;
+
     /**
      * @var RouteCollection
      */
@@ -198,7 +199,7 @@ class Router
      *
      * @param $name
      * @param array $options
-     * @param callable $callback
+     * @param \Closure $callback
      * @return $this
      */
     public function section($name, $options = array(), \Closure $callback)
