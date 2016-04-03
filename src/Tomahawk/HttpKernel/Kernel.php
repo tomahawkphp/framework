@@ -42,11 +42,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $paths = array();
     protected $routePaths = array();
 
-    const VERSION         = '1.4.2';
-    const VERSION_ID      = '10402';
+    const VERSION         = '1.4.3';
+    const VERSION_ID      = '10403';
     const MAJOR_VERSION   = '1';
     const MINOR_VERSION   = '4';
-    const RELEASE_VERSION = '2';
+    const RELEASE_VERSION = '3';
     const EXTRA_VERSION   = '';
 
     /**

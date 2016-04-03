@@ -104,7 +104,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->set('Tomahawk\HttpCore\ResponseBuilderInterface', new ResponseBuilder());
 
         $container->set('Tomahawk\HttpCore\Response\CookiesInterface', $container->factory(function(ContainerInterface $c) {
-            return new Cookies($c['request'], array());
+            return new Cookies($c['request'], $c['config']->get('security.key'));
         }));
 
         $container->set('Psr\Log\LoggerInterface', function(ContainerInterface $c) {
