@@ -11,52 +11,83 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\DI;
 
-use Tomahawk\DI\ServiceProviderInterface;
 use Tomahawk\DI\ContainerInterface;
-use Tomahawk\Auth\Auth;
-use Tomahawk\Auth\Handlers\DatabaseAuthHandler;
-use Tomahawk\Auth\Handlers\EloquentAuthHandler;
-use Tomahawk\Config\ConfigInterface;
+use Tomahawk\DI\ServiceProviderInterface;
+use Tomahawk\Auth\AuthManager;
+use Tomahawk\Auth\Storage\SessionStorage;
+use Tomahawk\Auth\Encoder\BCryptPasswordEncoder;
+use Tomahawk\Auth\User\InMemoryUserProvider;
 
 class AuthProvider implements ServiceProviderInterface
 {
+    /**
+     * Default user providers
+     *
+     * @var array
+     */
+    private $defaultUserProviders = [
+        'memory' => 'auth.provider.memory',
+    ];
+
     public function register(ContainerInterface $container)
     {
-        $container->set('auth_handler', function(ContainerInterface $c) {
-            $handler = $c['config']->get('security.handler');
-            return $c[$handler . '_auth_handler'];
+        $container->set('Tomahawk\Auth\Encoder\PasswordEncoderInterface', function(ContainerInterface $c) {
+            return new BCryptPasswordEncoder();
         });
 
-        $container->set('eloquent_auth_handler', function(ContainerInterface $c) {
-            $eloquentConfig = $c['config']->get('security.handlers.eloquent');
-            return new EloquentAuthHandler(
-                $c['hasher'],
-                $eloquentConfig['model'],
-                isset($eloquentConfig['password']) ? $eloquentConfig['password'] : null
+        $container->set('Tomahawk\Auth\Storage\StorageInterface', function(ContainerInterface $c) {
+            return new SessionStorage($c['session']);
+        });
+
+        $container->set('Tomahawk\Auth\User\UserProviderInterface', function(ContainerInterface $c) {
+
+            // Get registered
+            $providers = $c['config']->get('security.providers');
+
+            // User providers
+            $userProvider = $c['config']->get('security.provider');
+
+            // Is it a default user provider
+            if (isset($this->defaultUserProviders[$userProvider])) {
+                $userProviderService = $this->defaultUserProviders[$userProvider];
+            }
+            else {
+
+                // Its a custom one so get service id for this
+                if ( ! isset($providers[$userProvider]['service'])) {
+                    throw new \InvalidArgumentException(sprintf('Unknown user provider "%s". Have you added it to the security config and set the "service" parameter?', $userProvider));
+                }
+
+                $userProviderService = $providers[$userProvider]['service'];
+            }
+
+            if ( ! isset($c[$userProviderService])) {
+                throw new \InvalidArgumentException(sprintf('User provider "%s" not registered under "%s"', $userProvider, $userProviderService));
+            }
+
+            return $c[$userProviderService];
+        });
+
+        $container->set('auth.provider.memory', function(ContainerInterface $c) {
+            $config = $c['config']->get('security.providers.memory');
+
+            $users = isset($config['users']) ? $config['users'] : [];
+
+            return new InMemoryUserProvider($users);
+        });
+
+        $container->set('Tomahawk\Auth\AuthManagerInterface', function(ContainerInterface $c) {
+            return new AuthManager(
+                $c['auth.user.provider'],
+                $c['auth.password.encoder'],
+                $c['auth.storage']
             );
         });
 
-        $container->set('database_auth_handler', function(ContainerInterface $c) {
-            /** @var ConfigInterface $config */
-            $config = $c['config'];
-
-            $databaseConfig = $config->get('security.handlers.database');
-
-            $connection = $c['illuminate_database']->getDatabaseManager()->connection($databaseConfig['connection']);
-
-            return new DatabaseAuthHandler(
-                $c['hasher'],
-                $connection,
-                $databaseConfig['table'],
-                $databaseConfig['key'],
-                $databaseConfig['password']
-            );
-        });
-
-        $container->set('Tomahawk\Auth\AuthInterface', function(ContainerInterface $c) {
-            return new Auth($c['session'], $c['auth_handler']);
-        });
-
-        $container->addAlias('auth', 'Tomahawk\Auth\AuthInterface');
+        $container->addAlias('auth.storage', 'Tomahawk\Auth\Storage\StorageInterface');
+        $container->addAlias('auth.password.encoder', 'Tomahawk\Auth\Encoder\PasswordEncoderInterface');
+        $container->addAlias('auth.password.encoder.bcrypt', 'Tomahawk\Auth\Encoder\PasswordEncoderInterface');
+        $container->addAlias('auth.user.provider', 'Tomahawk\Auth\User\UserProviderInterface');
+        $container->addAlias('auth', 'Tomahawk\Auth\AuthManagerInterface');
     }
 }

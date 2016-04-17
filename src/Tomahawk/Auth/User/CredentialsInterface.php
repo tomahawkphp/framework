@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Auth;
+namespace Tomahawk\Auth\User;
 
-interface UserInterface
+/**
+ * Interface Credentials
+ *
+ * @package Tomahawk\Auth\User
+ */
+interface CredentialsInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
-    public function getAuthIdentifier();
+    public function getUsername();
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getAuthPassword();
+    public function getPassword();
 }
-
