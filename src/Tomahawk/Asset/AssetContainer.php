@@ -30,7 +30,7 @@ class AssetContainer implements AssetContainerInterface
      *
      * @var array
      */
-    public $assets = array();
+    public $assets = [];
 
     /**
      * Create a new asset container instance.
@@ -47,10 +47,12 @@ class AssetContainer implements AssetContainerInterface
      * Set name of container
      *
      * @param string $name
+     * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -74,11 +76,12 @@ class AssetContainer implements AssetContainerInterface
      */
     public function addCss($name, $source, $dependencies = array(), $attributes = array())
     {
-        if (!array_key_exists('media', $attributes)) {
+        if ( ! array_key_exists('media', $attributes)) {
             $attributes['media'] = 'all';
         }
 
         $this->add('css', $name, $source, $dependencies, $attributes);
+
         return $this;
     }
 
@@ -94,6 +97,7 @@ class AssetContainer implements AssetContainerInterface
     public function addJs($name, $source, $dependencies = array(), $attributes = array())
     {
         $this->add('js', $name, $source, $dependencies, $attributes);
+
         return $this;
     }
 
@@ -114,8 +118,8 @@ class AssetContainer implements AssetContainerInterface
         $attributes = (array) $attributes;
 
         $this->assets[$type][$name] = compact('source', 'dependencies', 'attributes');
+
         return $this;
     }
-
 }
 

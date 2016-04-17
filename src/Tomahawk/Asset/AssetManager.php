@@ -32,15 +32,15 @@ class AssetManager implements AssetManagerInterface
      *
      * @var AssetContainer[]
      */
-    protected $containers = array();
+    protected $containers = [];
 
     /**
-     * @var \Tomahawk\Html\HtmlBuilderInterface
+     * @var HtmlBuilderInterface
      */
     protected $html;
 
     /**
-     * @var \Tomahawk\Url\UrlGeneratorInterface
+     * @var UrlGeneratorInterface
      */
     protected $url;
 
@@ -100,7 +100,7 @@ class AssetManager implements AssetManagerInterface
      * @param  array            $attributes
      * @return AssetContainer
      */
-    public function addCss($name, $source, $dependencies = array(), $attributes = array())
+    public function addCss($name, $source, $dependencies = [], $attributes = [])
     {
         return $this->container()->addCss($name, $source, $dependencies, $attributes);
     }
@@ -114,7 +114,7 @@ class AssetManager implements AssetManagerInterface
      * @param  array            $attributes
      * @return AssetContainer
      */
-    public function addJs($name, $source, $dependencies = array(), $attributes = array())
+    public function addJs($name, $source, $dependencies = [], $attributes = [])
     {
         return $this->container()->addJs($name, $source, $dependencies, $attributes);
     }
@@ -129,7 +129,7 @@ class AssetManager implements AssetManagerInterface
     {
         $assets = $this->getAssets($container, 'js');
 
-        $html = array();
+        $html = [];
 
         foreach ($assets as $asset) {
             $source = $this->url ? $this->url->asset($asset['source']): $asset['source'];
@@ -149,10 +149,9 @@ class AssetManager implements AssetManagerInterface
     {
         $assets = $this->getAssets($container, 'css');
 
-        $html = array();
+        $html = [];
 
-        foreach ($assets as $asset)
-        {
+        foreach ($assets as $asset) {
             $source = $this->url ? $this->url->asset($asset['source']): $asset['source'];
             $html[] = $this->html->style($source, $asset['attributes']);
         }
@@ -170,13 +169,13 @@ class AssetManager implements AssetManagerInterface
     protected function getAssets($container, $type)
     {
         if ( ! isset($this->containers[$container])) {
-            return array();
+            return [];
         }
 
         $container = $this->containers[$container];
 
         if ( ! isset($container->assets[$type]) || 0 === count($container->assets[$type])) {
-            return array();
+            return [];
         }
 
         $assets = $container->assets[$type];
@@ -194,7 +193,7 @@ class AssetManager implements AssetManagerInterface
      */
     protected function arrange(array $assets)
     {
-        list($original, $sorted) = array($assets, array());
+        list($original, $sorted) = array($assets, []);
 
         while (count($assets) > 0) {
             foreach ($assets as $asset => $value) {
@@ -220,9 +219,8 @@ class AssetManager implements AssetManagerInterface
         // If the asset has no more dependencies, we can add it to the sorted list
         // and remove it from the array of assets. Otherwise, we will not verify
         // the asset's dependencies and determine if they've been sorted.
-        if (count($assets[$asset]['dependencies']) == 0) {
+        if (0 === count($assets[$asset]['dependencies'])) {
             $sorted[$asset] = $value;
-
             unset($assets[$asset]);
         }
         else {
@@ -255,7 +253,8 @@ class AssetManager implements AssetManagerInterface
      * @param  string $dependency
      * @param  array $original
      * @param  array $assets
-     * @throws \Exception
+     * @throws SelfDependencyException
+     * @throws CircularDependencyException
      * @return bool
      */
     protected function dependencyIsValid($asset, $dependency, $original, $assets)
@@ -264,10 +263,10 @@ class AssetManager implements AssetManagerInterface
             return false;
         }
         else if ($dependency === $asset) {
-            throw new SelfDependencyException("Asset [$asset] is dependent on itself.");
+            throw new SelfDependencyException(sprintf('Asset "%" is dependent on itself.', $asset));
         }
         else if (isset($assets[$dependency]) && in_array($asset, $assets[$dependency]['dependencies'])) {
-            throw new CircularDependencyException(sprintf('Assets %s and %s have a circular dependency.', $asset, $dependency));
+            throw new CircularDependencyException(sprintf('Assets "%s" and "%s" have a circular dependency.', $asset, $dependency));
         }
 
         return true;
