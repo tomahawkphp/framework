@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\DI;
 
-use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\MemcacheCache;
@@ -30,11 +30,14 @@ use Doctrine\ORM\Tools\Setup;
 
 class DoctrineProvider implements ServiceProviderInterface
 {
-    protected $allowedFormats = array(
+    /**
+     * @var array
+     */
+    protected $allowedFormats = [
         'xml',
         'yml',
         'annotations'
-    );
+    ];
 
     public function register(ContainerInterface $container)
     {
@@ -50,7 +53,7 @@ class DoctrineProvider implements ServiceProviderInterface
             $doctrineConfig = $c->get('config')->get('doctrine');
 
             $connections = $doctrineConfig['connections'];
-            $services = array();
+            $services = [];
 
             foreach ($connections as $name => $settings) {
                 $services[$name] = $settings['service'];
@@ -139,8 +142,8 @@ class DoctrineProvider implements ServiceProviderInterface
             return $c[$cacheService];
         });
 
-        $container->set('doctrine.cache.apc', function(ContainerInterface $c) {
-            $cache = new ApcCache();
+        $container->set('doctrine.cache.apcu', function(ContainerInterface $c) {
+            $cache = new ApcuCache();
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
             return $cache;
         });

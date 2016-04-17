@@ -1,9 +1,8 @@
 <?php
 
-namespace Tomahawk\Bundle\DoctrineBundle\Tests;
+namespace Tomahawk\Bundle\DoctrineBundle\Tests\Command;
 
 use Tomahawk\Bundle\DoctrineBundle\Command\Proxy\ValidateSchemaCommand;
-use Tomahawk\Bundle\DoctrineBundle\Tests\ProxyCommand;
 
 class ValidateSchemaCommandTest extends ProxyCommand
 {

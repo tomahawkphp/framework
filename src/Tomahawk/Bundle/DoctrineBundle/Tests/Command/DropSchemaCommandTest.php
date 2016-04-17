@@ -1,9 +1,8 @@
 <?php
 
-namespace Tomahawk\Bundle\DoctrineBundle\Tests;
+namespace Tomahawk\Bundle\DoctrineBundle\Tests\Command;
 
 use Tomahawk\Bundle\DoctrineBundle\Command\Proxy\DropSchemaCommand;
-use Tomahawk\Bundle\DoctrineBundle\Tests\ProxyCommand;
 
 class DropSchemaCommandTest extends ProxyCommand
 {

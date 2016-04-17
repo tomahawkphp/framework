@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundle\DoctrineBundle\Tests;
+namespace Tomahawk\Bundle\DoctrineBundle\Tests\Command;
 
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Tomahawk\Bundle\DoctrineBundle\Mapping\ClassMetadataCollection;

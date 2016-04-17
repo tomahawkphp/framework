@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundle\DoctrineBundle\Tests;
+namespace Tomahawk\Bundle\DoctrineBundle\Tests\Command;
 
 use Tomahawk\Test\TestCase;
 use Tomahawk\Console\Application;

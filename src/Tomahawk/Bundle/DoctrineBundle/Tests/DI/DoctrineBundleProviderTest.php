@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundle\DoctrineBundle\Tests;
+namespace Tomahawk\Bundle\DoctrineBundle\Tests\DI;
 
 use Tomahawk\DI\Container;
 use Tomahawk\Test\TestCase;
@@ -104,7 +104,7 @@ class DoctrineBundleProviderTest extends TestCase
         $this->assertTrue(is_array($connections));
     }
 
-    public function testAPCCacheInstanceIsReturned()
+    public function testAPCUCacheInstanceIsReturned()
     {
         $container = $this->getContainer();
 
@@ -120,7 +120,7 @@ class DoctrineBundleProviderTest extends TestCase
         $provider = new DoctrineProvider();
         $provider->register($container);
 
-        $this->assertInstanceOf('Doctrine\Common\Cache\ApcCache', $container->get('doctrine.cache.apc'));
+        $this->assertInstanceOf('Doctrine\Common\Cache\ApcuCache', $container->get('doctrine.cache.apcu'));
     }
 
     public function testArrayacheInstanceIsReturned()
