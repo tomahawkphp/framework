@@ -28,7 +28,9 @@
                 <directory>./src/Tomahawk/*/Tests</directory>
                 <directory>./src/Tomahawk/*/*/Tests</directory>
                 <directory>./src/Tomahawk/DI/Test</directory>
+                <directory>./src/Tomahawk/Test</directory>
                 <directory>./src/Tomahawk/Forms/Test</directory>
+                <directory>./src/Tomahawk/Routing/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Resources</directory>
                 <directory>./src/Tomahawk/HttpKernel/Fixtures</directory>
