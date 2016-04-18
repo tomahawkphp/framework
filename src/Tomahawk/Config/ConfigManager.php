@@ -127,6 +127,7 @@ class ConfigManager implements ConfigInterface
         $keys = explode('.', $key);
 
         while (count($keys) > 1) {
+
             $key = array_shift($keys);
 
             // If the key doesn't exist at this depth, we will just create an empty array
@@ -164,7 +165,7 @@ class ConfigManager implements ConfigInterface
 
         foreach (explode('.', $key) as $segment) {
             if ( ! is_array($array) || ! array_key_exists($segment, $array)) {
-                return value($default);
+                return $default;
             }
             $array = $array[$segment];
         }
