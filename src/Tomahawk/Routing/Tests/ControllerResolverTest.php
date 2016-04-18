@@ -55,18 +55,14 @@ class ControllerResolverTest extends TestCase
         $this->eventDispatcher = new EventDispatcher();
         $this->container = new Container();
 
-        $resolver = $this->getMock('Illuminate\Database\ConnectionResolverInterface');
-
         $this->container['Tomahawk\View\ViewGeneratorInterface'] = $this->getMock('Tomahawk\View\ViewGeneratorInterface');
         $this->container['Tomahawk\HttpCore\ResponseBuilderInterface'] = $this->getMock('Tomahawk\HttpCore\ResponseBuilderInterface');
         $this->container['Tomahawk\DI\ContainerInterface'] = $this->container;
-        $this->container['Tomahawk\Encryption\CryptInterface'] = $this->getMock('Tomahawk\Encryption\CryptInterface');
         $this->container['Tomahawk\Forms\FormsManagerInterface'] = $this->getMock('Tomahawk\Forms\FormsManagerInterface');
         $this->container['Tomahawk\HttpCore\Response\CookiesInterface'] = $this->getMock('Tomahawk\HttpCore\Response\CookiesInterface');
         $this->container['Tomahawk\Asset\AssetManagerInterface'] = $this->getMock('Tomahawk\Asset\AssetManagerInterface');
         $this->container['Symfony\Component\HttpFoundation\Request'] = $this->getMock('Symfony\Component\HttpFoundation\Request');
         $this->container['Tomahawk\Session\SessionInterface'] = $this->getMock('Tomahawk\Session\SessionInterface');
-        $this->container['Tomahawk\Database\DatabaseManager'] = $this->getMock('Tomahawk\Database\DatabaseManager', array(), array($resolver));
         $this->container['Tomahawk\Cache\CacheInterface'] = $this->getMock('Tomahawk\Cache\CacheInterface');
 
         $controllerResolver = new ControllerResolver($this->container);
@@ -185,6 +181,18 @@ class ControllerResolverTest extends TestCase
         $request->attributes->set('_controller','invokeable.controller');
 
         $this->assertEquals($controller, $controllerResolver->getController($request));
+    }
+
+    public function testCreateControllerWithParameters()
+    {
+        $controllerResolver = new ControllerResolver($this->container, null);
+
+        $request = Request::create('/', 'GET');
+        $request->attributes->set('_controller', 'Tomahawk\Routing\Test\Controller::homeAction');
+
+        list($controller, $action) = $controllerResolver->getController($request);
+
+        $this->assertInstanceOf('Tomahawk\Routing\Test\Controller', $controller);
     }
 
     /**

@@ -11,135 +11,29 @@
 
 namespace Tomahawk\Routing;
 
-use Tomahawk\Auth\AuthInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Tomahawk\Database\DatabaseManager;
+use Tomahawk\Auth\AuthInterface;
+use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\Hashing\HasherInterface;
 use Tomahawk\Forms\FormsManagerInterface;
 use Tomahawk\Asset\AssetManagerInterface;
-use Tomahawk\Encryption\CryptInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\Session\SessionInterface;
 use Tomahawk\HttpCore\Response\CookiesInterface;
 use Tomahawk\Cache\CacheInterface;
 use Tomahawk\HttpCore\ResponseBuilderInterface;
-use Symfony\Component\Templating\EngineInterface;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Url\UrlGeneratorInterface;
 use Tomahawk\Input\InputInterface;
 
-class Controller
+class Controller implements ContainerAwareInterface
 {
-    /**
-     * @var \Tomahawk\Auth\AuthInterface
-     */
-    protected $auth;
-
-    /**
-     * @var \Tomahawk\Forms\FormsManagerInterface
-     */
-    protected $forms;
-
-    /**
-     * @var \Tomahawk\Hashing\HasherInterface
-     */
-    protected $hasher;
-
-    /**
-     * @var \Tomahawk\Encryption\CryptInterface
-     */
-    protected $crypt;
-
-    /**
-     * @var \Tomahawk\Asset\AssetManagerInterface
-     */
-    protected $assets;
-
-    /**
-     * @var \Tomahawk\Session\SessionInterface
-     */
-    protected $session;
-
-    /**
-     * @var \Tomahawk\Database\DatabaseManager
-     */
-    protected $database;
-
-    /**
-     * @var \Tomahawk\HttpCore\Response\CookiesInterface
-     */
-    protected $cookies;
-
-    /**
-     * @var \Tomahawk\Cache\CacheInterface
-     */
-    protected $cache;
-
-    /**
-     * @var \Tomahawk\HttpCore\ResponseBuilderInterface
-     */
-    protected $response;
-
-    /**
-     * @var \Symfony\Component\Templating\EngineInterface
-     */
-    protected $templating;
-
-    /**
-     * @var \Tomahawk\Config\ConfigInterface
-     */
-    protected $config;
-
     /**
      * @var \Tomahawk\DI\ContainerInterface
      */
     protected $container;
-
-    /**
-     * @var \Tomahawk\Url\UrlGeneratorInterface
-     */
-    protected $url;
-
-    /**
-     * @var \Tomahawk\Input\InputInterface
-     */
-    protected $input;
-
-    public function __construct(
-        AuthInterface $auth,
-        FormsManagerInterface $forms,
-        CookiesInterface $cookies,
-        AssetManagerInterface $assets,
-        HasherInterface $hasher,
-        SessionInterface $session = null,
-        CryptInterface $crypt,
-        CacheInterface $cache,
-        ResponseBuilderInterface $response,
-        EngineInterface $templating,
-        ConfigInterface $config,
-        ContainerInterface $container,
-        DatabaseManager $database = null,
-        UrlGeneratorInterface $url,
-        InputInterface $input
-    )
-    {
-        $this->auth = $auth;
-        $this->forms = $forms;
-        $this->cookies = $cookies;
-        $this->assets = $assets;
-        $this->hasher = $hasher;
-        $this->session = $session;
-        $this->database = $database;
-        $this->crypt = $crypt;
-        $this->cache = $cache;
-        $this->response = $response;
-        $this->templating = $templating;
-        $this->config = $config;
-        $this->container = $container;
-        $this->url = $url;
-        $this->input = $input;
-    }
 
     public function forward($controller, array $path = array(), array $query = array())
     {
@@ -197,5 +91,15 @@ class Controller
     public function get($id)
     {
         return $this->container->get($id);
+    }
+
+    /**
+     * Sets the Container.
+     *
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 }

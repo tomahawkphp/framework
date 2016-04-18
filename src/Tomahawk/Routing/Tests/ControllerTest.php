@@ -11,7 +11,6 @@ use Tomahawk\Routing\Controller;
 
 class ControllerTest extends TestCase
 {
-
     public function testRenderView()
     {
         $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
@@ -103,23 +102,8 @@ class ControllerTest extends TestCase
             $container = $this->getMock('Tomahawk\DI\ContainerInterface');
         }
 
-        $controller = new Controller(
-            $this->getMock('Tomahawk\Auth\AuthInterface'),
-            $this->getMock('Tomahawk\Forms\FormsManagerInterface'),
-            $this->getMock('Tomahawk\HttpCore\Response\CookiesInterface', array(), array(), '', false),
-            $this->getMock('Tomahawk\Asset\AssetManagerInterface'),
-            $this->getMock('Tomahawk\Hashing\HasherInterface'),
-            $this->getMock('Tomahawk\Session\SessionInterface'),
-            $this->getMock('Tomahawk\Encryption\CryptInterface'),
-            $this->getMock('Tomahawk\Cache\CacheInterface'),
-            $this->getMock('Tomahawk\HttpCore\ResponseBuilderInterface'),
-            $this->getMock('Symfony\Component\Templating\EngineInterface'),
-            $this->getMock('Tomahawk\Config\ConfigInterface'),
-            $container,
-            $this->getMock('Tomahawk\Database\DatabaseManager', array(), array(), '', false),
-            $this->getMock('Tomahawk\Url\UrlGeneratorInterface'),
-            $this->getMock('Tomahawk\Input\InputInterface', array(), array(), '', false)
-        );
+        $controller = new Controller();
+        $controller->setContainer($container);
 
         return $controller;
     }

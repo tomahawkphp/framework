@@ -15,8 +15,8 @@
 
 namespace Tomahawk\Routing\Controller;
 
-use Psr\Log\LoggerInterface;
 use ReflectionClass;
+use Psr\Log\LoggerInterface;
 use Tomahawk\DI\ContainerAwareInterface;
 use Tomahawk\DI\ContainerInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseController
 class ControllerResolver extends BaseControllerResolver
 {
     /**
-     * @var \Tomahawk\DI\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -36,7 +36,7 @@ class ControllerResolver extends BaseControllerResolver
     /**
      * Constructor.
      *
-     * @param \Tomahawk\DI\ContainerInterface $container
+     * @param ContainerInterface $container
      * @param LoggerInterface $logger A LoggerInterface instance
      * @param ControllerNameParser $parser
      */
