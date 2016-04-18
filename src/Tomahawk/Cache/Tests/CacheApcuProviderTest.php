@@ -2,17 +2,16 @@
 
 namespace Tomahawk\Cache\Tests;
 
-use Doctrine\Common\Cache\ApcCache;
-use Tomahawk\Cache\Provider\ApcProvider;
 use Tomahawk\Test\TestCase;
+use Tomahawk\Cache\Provider\ApcuProvider;
 
-class CacheApcProviderTest extends TestCase
+class CacheApcuProviderTest extends TestCase
 {
     public function testGetNameReturnsArray()
     {
         $cache = $this->getCacheMock();
 
-        $arrayProvider = new ApcProvider($cache);
+        $arrayProvider = new ApcuProvider($cache);
 
         $this->assertEquals('apc', $arrayProvider->getName());
     }
@@ -25,7 +24,7 @@ class CacheApcProviderTest extends TestCase
             ->method('save')
             ->will($this->returnValue(true));
 
-        $arrayProvider = new ApcProvider($cache);
+        $arrayProvider = new ApcuProvider($cache);
         
         $this->assertTrue($arrayProvider->save('foo', 'bar'));
     }
@@ -38,7 +37,7 @@ class CacheApcProviderTest extends TestCase
             ->method('save')
             ->will($this->returnValue(false));
 
-        $arrayProvider = new ApcProvider($cache);
+        $arrayProvider = new ApcuProvider($cache);
 
         $this->assertFalse($arrayProvider->save('foo', 'bar'));
     }
@@ -55,7 +54,7 @@ class CacheApcProviderTest extends TestCase
             ->method('contains')
             ->will($this->returnValue(true));
 
-        $arrayProvider = new ApcProvider($cache);
+        $arrayProvider = new ApcuProvider($cache);
 
         $arrayProvider->save('foo', 'bar');
 
@@ -74,7 +73,7 @@ class CacheApcProviderTest extends TestCase
             ->method('fetch')
             ->will($this->returnValue('bar'));
 
-        $arrayProvider = new ApcProvider($cache);
+        $arrayProvider = new ApcuProvider($cache);
 
         $arrayProvider->save('foo', 'bar');
 
@@ -96,7 +95,7 @@ class CacheApcProviderTest extends TestCase
             ->method('contains')
             ->will($this->returnValue(false));
 
-        $arrayProvider = new ApcProvider($cache);
+        $arrayProvider = new ApcuProvider($cache);
 
         $arrayProvider->save('foo', 'bar');
 
@@ -120,7 +119,7 @@ class CacheApcProviderTest extends TestCase
             ->method('contains')
             ->will($this->returnValue(false));
 
-        $arrayProvider = new ApcProvider($cache);
+        $arrayProvider = new ApcuProvider($cache);
 
         $arrayProvider->save('foo', 'bar');
         $arrayProvider->save('baz', 'boom');
@@ -133,7 +132,7 @@ class CacheApcProviderTest extends TestCase
 
     protected function getCacheMock()
     {
-        $cache = $this->getMockBuilder('Doctrine\Common\Cache\ApcCache')
+        $cache = $this->getMockBuilder('Doctrine\Common\Cache\ApcuCache')
             ->disableOriginalConstructor()
             ->getMock();
 

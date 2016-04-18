@@ -11,18 +11,18 @@
 
 namespace Tomahawk\Cache\Provider;
 
-use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ApcuCache;
 
-class ApcProvider implements CacheProviderInterface
+class ApcuProvider implements CacheProviderInterface
 {
     /**
-     * @var \Doctrine\Common\Cache\ApcCache
+     * @var \Doctrine\Common\Cache\ApcuCache
      */
-    protected $apcCache;
+    protected $apcuCache;
 
-    public function __construct(ApcCache $apcCache)
+    public function __construct(ApcuCache $apcuCache)
     {
-        $this->apcCache = $apcCache;
+        $this->apcuCache = $apcuCache;
     }
 
     /**
@@ -39,7 +39,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function fetch($id)
     {
-        return $this->apcCache->fetch($id);
+        return $this->apcuCache->fetch($id);
     }
 
     /**
@@ -50,7 +50,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function save($id, $value, $lifetime = false)
     {
-        return $this->apcCache->save($id, $value, $lifetime);
+        return $this->apcuCache->save($id, $value, $lifetime);
     }
 
     /**
@@ -59,7 +59,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function contains($id)
     {
-        return $this->apcCache->contains($id);
+        return $this->apcuCache->contains($id);
     }
 
     /**
@@ -68,7 +68,7 @@ class ApcProvider implements CacheProviderInterface
      */
     public function delete($id)
     {
-        return $this->apcCache->delete($id);
+        return $this->apcuCache->delete($id);
     }
 
     /**
@@ -76,6 +76,6 @@ class ApcProvider implements CacheProviderInterface
      */
     public function flush()
     {
-        return $this->apcCache->flushAll();
+        return $this->apcuCache->flushAll();
     }
 }
