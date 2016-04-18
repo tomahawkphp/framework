@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\HttpCore\Tests;
+namespace Tomahawk\HttpCore\Tests\Response;
 
 use Tomahawk\Test\TestCase;
 use Tomahawk\HttpCore\Response\Cookies;
@@ -13,18 +13,15 @@ class CookiesTest extends TestCase
      */
     protected $request;
 
-    protected $key;
-
     public function setUp()
     {
-        $this->key = str_repeat('a', 32);
         $this->request = Request::createFromGlobals();
         parent::setUp();
     }
 
     public function testSet()
     {
-        $cookies = new Cookies($this->request, $this->key);
+        $cookies = new Cookies($this->request);
         $cookies->set('name', 'Tom');
 
         $this->assertCount(1, $cookies->getQueued());
@@ -33,30 +30,19 @@ class CookiesTest extends TestCase
 
     public function testHas()
     {
-        $value = hash_hmac('sha1', 'Tom', $this->key) .'+Tom';
+        $value = 'Tom';
 
         $request = new Request(array(), array(), array(), array('name' => $value));
-        $cookies = new Cookies($request, $this->key);
+        $cookies = new Cookies($request);
 
         $this->assertTrue($cookies->has('name'));
         $this->assertEquals('Tom', $cookies->get('name'));
     }
 
-    public function testHasFailsWithInvalidCookie()
-    {
-        $value = hash_hmac('sha1', 'Tom', $this->key);
-
-        $request = new Request(array(), array(), array(), array('name' => $value));
-        $cookies = new Cookies($request, $this->key);
-
-        $this->assertTrue($cookies->has('name'));
-        $this->assertEquals(null, $cookies->get('name'));
-    }
-
     public function testHasNotExists()
     {
         $request = new Request();
-        $cookies = new Cookies($request, $this->key);
+        $cookies = new Cookies($request);
 
         $this->assertFalse($cookies->has('name'));
         $this->assertEquals(null, $cookies->get('name'));
@@ -66,11 +52,10 @@ class CookiesTest extends TestCase
     public function testExpire()
     {
         $request = new Request(array(), array(), array(), array('name' => 'Tom'));
-        $cookies = new Cookies($request, $this->key);
+        $cookies = new Cookies($request);
 
         $this->assertTrue($cookies->has('name'));
         $cookies->expire('name');
         $this->assertFalse($cookies->has('name'));
     }
-
 }

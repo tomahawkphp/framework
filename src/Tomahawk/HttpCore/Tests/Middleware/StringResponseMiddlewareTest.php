@@ -1,21 +1,18 @@
 <?php
 
-namespace Tomahawk\HttpCore\Tests;
+namespace Tomahawk\HttpCore\Tests\Middleware;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Tomahawk\DI\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\HttpCore\Middleware\StringResponse as StringResponseMiddleware;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class StringResponseMiddlewareTest extends TestCase
 {
-
     public function testMiddlewareName()
     {
         $middleware = new StringResponseMiddleware();
@@ -50,7 +47,6 @@ class StringResponseMiddlewareTest extends TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals('Hello world', $response->getContent());
-
     }
 
     /**
@@ -71,5 +67,4 @@ class StringResponseMiddlewareTest extends TestCase
         
         return $kernel;
     }
-
 }

@@ -1,21 +1,20 @@
 <?php
 
-namespace Tomahawk\HttpCore\Tests;
+namespace Tomahawk\HttpCore\Tests\Middleware;
 
+use Tomahawk\DI\Container;
+use Tomahawk\Test\TestCase;
+use Tomahawk\HttpCore\Middleware\HeaderCookies;
+use Tomahawk\HttpCore\Response\Cookies;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\DI\Container;
-use Tomahawk\Test\TestCase;
-use Tomahawk\HttpCore\Middleware\HeaderCookies;
-use Tomahawk\HttpCore\Response\Cookies;
 
 class HeaderCookiesMiddlewareTest extends TestCase
 {
-
     public function testMiddlewareName()
     {
         $middleware = new HeaderCookies();
@@ -59,7 +58,6 @@ class HeaderCookiesMiddlewareTest extends TestCase
         $response = $event->getResponse();
 
         $this->assertCount(1, $response->headers->getCookies());
-
     }
 
     /**
@@ -81,5 +79,4 @@ class HeaderCookiesMiddlewareTest extends TestCase
         
         return $kernel;
     }
-
 }
