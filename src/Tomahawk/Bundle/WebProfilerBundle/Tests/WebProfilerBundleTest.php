@@ -58,65 +58,13 @@ class WebProfilerBundleTest extends TestCase
 
         $container['templating'] = $engine;
 
-
-        $connection = $this->getConnectionMock();
-
-        $databaseManager = $this->getDatabaseManagerMock();
-
-        $databaseManager->expects($this->once())
-            ->method('connection')
-            ->will($this->returnValue($connection));
-
-        $connection->expects($this->once())
-            ->method('getQueryLog')
-            ->will($this->returnValue(array()));
-
-        $database = $this->getDatabaseMock();
-
-        $database->expects($this->exactly(2))
-            ->method('getDatabaseManager')
-            ->will($this->returnValue($databaseManager));
-
-
-
-        $container['illuminate_database'] = $database;
-
         $this->container = $container;
         return $httpKernel;
-    }
-
-    protected function getDatabaseMock()
-    {
-        return $this->getMockBuilder('Illuminate\Database\Capsule\Manager')
-            ->disableOriginalConstructor()
-            ->setMethods(array('getDatabaseManager'))
-            ->getMock();
-    }
-
-    protected function getDatabaseManagerMock()
-    {
-        return $this->getMockBuilder('Illuminate\Database\DatabaseManager')
-            ->disableOriginalConstructor()
-            ->setMethods(array('connection'))
-            ->getMock();
-    }
-
-    protected function getConnectionMock()
-    {
-        $connection = $this->getMockBuilder('Illuminate\Database\Connection')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $connection;
     }
 
     protected function getConfigMock()
     {
         $config = $this->getMock('Tomahawk\Config\ConfigInterface');
-        $config->expects($this->any())
-            ->method('get')
-            ->with('database.enabled')
-            ->will($this->returnValue(true));
 
         return $config;
     }

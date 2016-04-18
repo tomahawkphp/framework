@@ -16,14 +16,7 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
         $assetsPath = $this->getPath() .'/Resources/assets/';
 
         $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
-            $databaseManager = null;
-
-            // Check if we're using Illuminate Database
-            if (true === $c['config']->get('database.enabled')) {
-                $databaseManager =  $c->get('illuminate_database')->getDatabaseManager();
-            }
-
-            return new Profiler($c['templating'], $databaseManager, $assetsPath);
+            return new Profiler($c['templating'], $assetsPath);
         });
     }
 
@@ -42,8 +35,6 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
 
         $dispatcher->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) use($c) {
 
-            //$event->getRequest()->
-
             if ($response = $event->getResponse()) {
                 $content = $response->getContent();
 
@@ -51,15 +42,6 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
                 $webProfiler = $c['web_profiler'];
 
                 $webProfiler->setRequest($event->getRequest());
-
-                // If we're not using Illuminate DB we don't need to do this
-                if (true === $c->get('config')->get('database.enabled')) {
-
-                    $manager = $c->get('illuminate_database')->getDatabaseManager()->connection();
-                    $queryLog = $manager->getQueryLog();
-
-                    $webProfiler->addQueries($queryLog);
-                }
 
                 // Check if we have the query stack from doctrine
                 $debugStack = $c->has('doctrine.query_stack') ? $c->get('doctrine.query_stack') : null;

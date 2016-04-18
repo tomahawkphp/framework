@@ -12,7 +12,6 @@
 namespace Tomahawk\Bundle\WebProfilerBundle;
 
 use Tomahawk\HttpKernel\Kernel;
-use Illuminate\Database\DatabaseManager;
 use Doctrine\DBAL\Logging\DebugStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Templating\EngineInterface;
@@ -56,25 +55,18 @@ class Profiler
     protected $assetsPath;
 
     /**
-     * @var DatabaseManager
-     */
-    protected $manager;
-
-    /**
      * @var Request|null
      */
     protected $request;
 
     /**
      * @param EngineInterface $engine
-     * @param DatabaseManager $manager
      * @param $assetsPath
      */
-    public function __construct(EngineInterface $engine, DatabaseManager $manager = null, $assetsPath)
+    public function __construct(EngineInterface $engine, $assetsPath)
     {
         $this->engine = $engine;
         $this->assetsPath = $assetsPath;
-        $this->manager = $manager;
     }
 
     /**
@@ -348,11 +340,6 @@ class Profiler
      */
     protected function escape($value)
     {
-        // If we have no manager fallback
-        if (!$this->manager) {
-            return sprintf("%s", str_replace('"', '\"', $value));
-        }
-
-        return $this->manager->connection()->getPdo()->quote($value);
+        return sprintf("%s", str_replace('"', '\"', $value));
     }
 }
