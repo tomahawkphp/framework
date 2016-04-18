@@ -15,6 +15,7 @@ use Tomahawk\DI\ServiceProviderInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -27,6 +28,10 @@ class SessionProvider implements ServiceProviderInterface
             $config = $c['config']->get('session');
             $nativeFileSessionHandler = new NativeFileSessionHandler($config['directory']);
             return new NativeSessionStorage(array(), $nativeFileSessionHandler);
+        });
+
+        $container->set('session.storage.null', function(ContainerInterface $c) {
+            return new NativeSessionStorage(array(), new NullSessionHandler());
         });
 
         $container->set('session.storage.array', function(ContainerInterface $c) {
@@ -52,15 +57,15 @@ class SessionProvider implements ServiceProviderInterface
 
         $container->set('session.storage.database', function(ContainerInterface $c) {
 
-            $pdo = $c['database']->connection()->getPdo();
-
             $config = $c['config']->get('session');
 
-            $pdoSessionHandler = new PdoSessionHandler($pdo, array(
+            $pdoSessionHandler = new PdoSessionHandler($config['dsn'], array(
                 'db_table'    => $config['table'],
                 'db_id_col'   => $config['id_column'],
                 'db_data_col' => $config['data_column'],
                 'db_time_col' => $config['date_column'],
+                'db_username' => $config['db_username'],
+                'db_password' => $config['db_password'],
             ));
 
             $session_settings = array(
@@ -78,7 +83,7 @@ class SessionProvider implements ServiceProviderInterface
 
         $container->set('Tomahawk\Session\SessionInterface', function(ContainerInterface $c) {
             $session = $c['config']->get('session.driver','array');
-            if (!$c->has('session.storage.' .$session)) {
+            if ( ! $c->has('session.storage.' .$session)) {
                 throw new \Exception(sprintf('Session storage %d does not exist or has not been set.', $session));
             }
             return new Session($c['session.storage.' .$session]);

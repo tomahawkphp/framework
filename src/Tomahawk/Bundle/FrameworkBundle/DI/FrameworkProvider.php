@@ -11,27 +11,19 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\DI;
 
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\RotatingFileHandler;
-use Monolog\Logger;
-use Illuminate\Database\Capsule\Manager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener;
 use Tomahawk\DI\ServiceProviderInterface;
 use Tomahawk\DI\ContainerInterface;
 use Tomahawk\HttpCore\ResponseBuilder;
-use Tomahawk\Encryption\Crypt;
-use Tomahawk\Database\DatabaseManager;
 use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\Input\InputManager;
 use Tomahawk\Html\HtmlBuilder;
 use Tomahawk\Asset\AssetManager;
 use Tomahawk\Forms\FormsManager;
 use Tomahawk\HttpCore\Response\Cookies;
-use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Hashing\Hasher;
 use Tomahawk\Url\UrlGenerator;
 
@@ -45,28 +37,6 @@ class FrameworkProvider implements ServiceProviderInterface
 
     protected function registerServices(ContainerInterface $container)
     {
-        $container->set('Illuminate\Database\Capsule\Manager', function(ContainerInterface $c) {
-
-            /** @var ConfigInterface $config */
-            $config = $c['config'];
-
-            $manager = new Manager();
-
-            $connections = $config->get('database.connections');
-
-            foreach ($connections as $name => $connection) {
-                $manager->addConnection($connection, $name);
-            }
-
-            $manager->setFetchMode($config->get('database.fetch'));
-            $manager->getDatabaseManager()->setDefaultConnection($config->get('database.default'));
-
-            $manager->bootEloquent();
-            $manager->setAsGlobal();
-
-            return $manager;
-        });
-
         $container->set('Symfony\Component\EventDispatcher\EventDispatcherInterface', new EventDispatcher());
 
         $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $c) {
@@ -81,18 +51,10 @@ class FrameworkProvider implements ServiceProviderInterface
             return new Filesystem();
         });
 
-        $container->set('Tomahawk\Database\DatabaseManager', function(ContainerInterface $c) {
-            return new DatabaseManager($c['illuminate_database']->getDatabaseManager());
-        });
-
-        $container->set('Tomahawk\Encryption\CryptInterface', function(ContainerInterface $c) {
-            return new Crypt($c['config']->get('security.key'));
-        });
-
         $container->set('Tomahawk\Forms\FormsManagerInterface', new FormsManager());
 
         $container->set('Tomahawk\Input\InputInterface', function(ContainerInterface $c) {
-            return new InputManager($c['request'], $c['session']);
+            return new InputManager($c['request_stack']->getCurrentRequest(), $c['session']);
         });
 
         $container->set('Tomahawk\Html\HtmlBuilderInterface', new HtmlBuilder());
@@ -103,39 +65,8 @@ class FrameworkProvider implements ServiceProviderInterface
 
         $container->set('Tomahawk\HttpCore\ResponseBuilderInterface', new ResponseBuilder());
 
-        $container->set('Tomahawk\HttpCore\Response\CookiesInterface', $container->factory(function(ContainerInterface $c) {
-            return new Cookies($c['request'], array());
-        }));
-
-        $container->set('Psr\Log\LoggerInterface', function(ContainerInterface $c) {
-
-            $config = $c['config'];
-            $kernel = $c['kernel'];
-            $defaultLogName = 'tomahawk.log';
-            $defaultLogPath = $kernel->getRootDir() .'/app/storage/logs/';
-
-            // We do this check without adding a default to the config call so we can test it
-            $logPath = $config->get('monolog.path');
-            $logName = $config->get('monolog.name');
-
-            $stream = $logPath . $logName;
-
-            // Check if we have a stream from the config above
-            // if not use default
-            if ( ! $stream) {
-                $stream =  $defaultLogPath . $defaultLogName;
-            }
-
-            $formatter = new LineFormatter(null, null, true, true);
-
-            $handler = new RotatingFileHandler($stream, 0, Logger::WARNING);
-            $handler->setFormatter($formatter);
-
-            // Create a log channel
-            $log = new Logger('tomahawk_logger');
-            $log->pushHandler($handler);
-
-            return $log;
+        $container->set('Tomahawk\HttpCore\Response\CookiesInterface', function(ContainerInterface $c) {
+            return new Cookies($c['request_stack']->getCurrentRequest());
         });
 
         $container->set('locale_listener', function(ContainerInterface $c) {
@@ -146,10 +77,6 @@ class FrameworkProvider implements ServiceProviderInterface
         });
 
         $container->set('Symfony\Component\HttpFoundation\RequestStack', new RequestStack());
-
-        $container->set('Symfony\Component\HttpFoundation\Request', function(ContainerInterface $c) {
-            return $c['request_stack']->getCurrentRequest() ?: Request::createFromGlobals();
-        });
 
         $container->set('Tomahawk\Url\UrlGeneratorInterface', function(ContainerInterface $c) {
             $urlGenerator  = new UrlGenerator($c['route_collection'], $c['request_context']);
@@ -176,11 +103,7 @@ class FrameworkProvider implements ServiceProviderInterface
         $container->addAlias('http_kernel', 'Tomahawk\HttpKernel\HttpKernelInterface');
         $container->addAlias('input', 'Tomahawk\Input\InputInterface');
         $container->addAlias('illuminate_database', 'Illuminate\Database\Capsule\Manager');
-        $container->addAlias('monolog_logger', 'Psr\Log\LoggerInterface');
-        $container->addAlias('logger', 'Psr\Log\LoggerInterface');
         $container->addAlias('response_builder', 'Tomahawk\HttpCore\ResponseBuilderInterface');
-        // Request might not be needed....
-        $container->addAlias('request', 'Symfony\Component\HttpFoundation\Request');
         $container->addAlias('request_stack', 'Symfony\Component\HttpFoundation\RequestStack');
         $container->addAlias('input', 'Tomahawk\Input\InputInterface');
         $container->addAlias('url_generator', 'Tomahawk\Url\UrlGeneratorInterface');

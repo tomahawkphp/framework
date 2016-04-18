@@ -21,6 +21,7 @@ class SessionProviderTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.file'));
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.cookie'));
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.database'));
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage', $container->get('session.storage.null'));
     }
 
     /**
@@ -43,7 +44,6 @@ class SessionProviderTest extends TestCase
     {
         $container = new Container();
         $container->set('config', $this->getConfig($sessionDriver));
-        $container->set('database', $this->getDatabaseManager());
 
         return $container;
     }
@@ -88,10 +88,17 @@ class SessionProviderTest extends TestCase
                     'cookie_domain'    => 'localhost',
                     'cookie_secure'    => true,
                     'cookie_http_only' => true,
-                    'table'         => 'tomahawk_sessions',
-                    'id_column'     => 'id',
-                    'data_column'   => 'data',
-                    'date_column'   => 'date'
+
+                    // Database specific
+                    'table'             => 'tomahawk_sessions',
+                    'id_column'         => 'id',
+                    'data_column'       => 'data',
+                    'date_column'       => 'date',
+
+                    'dsn'               => 'mysql:dbname=testdb;host=127.0.0.1',
+                    'db_username'       => 'username',
+                    'db_password'       => 'password',
+
                 )),
             )));
 

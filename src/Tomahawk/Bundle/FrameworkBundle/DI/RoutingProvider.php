@@ -27,7 +27,7 @@ class RoutingProvider implements ServiceProviderInterface
     public function register(ContainerInterface $container)
     {
         $container->set('route_listener', function(ContainerInterface $c) {
-            return new RouterListener($c['url_matcher'], $c['request_context'], $c['route_logger'], $c['request_stack']);
+            return new RouterListener($c['url_matcher'], $c['request_stack'], $c['request_context'], $c['route_logger']);
         });
 
         $container->set('route_locator', $container->factory(function(ContainerInterface $c) {

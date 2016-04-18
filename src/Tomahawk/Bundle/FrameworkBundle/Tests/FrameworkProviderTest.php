@@ -3,6 +3,8 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Tests\RequestStackTest;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
@@ -21,14 +23,12 @@ class FrameworkProviderTest extends TestCase
         $frameworkProvider = new FrameworkProvider();
         $frameworkProvider->register($container);
 
+        $container->get('request_stack')->push(new Request());
 
-        $this->assertInstanceOf('Illuminate\Database\Capsule\Manager', $container->get('illuminate_database'));
         $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventDispatcherInterface', $container->get('event_dispatcher'));
         $this->assertInstanceOf('Tomahawk\Asset\AssetManagerInterface', $container->get('asset_manager'));
         $this->assertSame($container, $container->get('Tomahawk\DI\ContainerInterface'));
         $this->assertInstanceOf('Symfony\Component\Filesystem\Filesystem', $container->get('filesystem'));
-        $this->assertInstanceOf('Tomahawk\Database\DatabaseManager', $container->get('database'));
-        $this->assertInstanceOf('Tomahawk\Encryption\CryptInterface', $container->get('encrypter'));
         $this->assertInstanceOf('Tomahawk\Forms\FormsManagerInterface', $container->get('form_manager'));
         $this->assertInstanceOf('Tomahawk\Input\InputInterface', $container->get('input'));
         $this->assertInstanceOf('Tomahawk\Html\HtmlBuilderInterface', $container->get('html_builder'));
@@ -51,7 +51,6 @@ class FrameworkProviderTest extends TestCase
         $container->set('route_collection', new RouteCollection());
         $container->set('request_context', new RequestContext());
         $container->set('session', $this->getMock('Tomahawk\Session\SessionInterface'));
-        $container->set('request', new Request());
         $container->set('controller_resolver', $this->getMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface'));
         return $container;
     }
@@ -60,7 +59,7 @@ class FrameworkProviderTest extends TestCase
     {
         $config = $this->getMock('Tomahawk\Config\ConfigInterface');
 
-        $config->method('get')
+        /*$config->method('get')
             ->will($this->returnValueMap(array(
                 array('database.connections', null, array(
                     'default' => array(
@@ -92,7 +91,7 @@ class FrameworkProviderTest extends TestCase
                 array('monolog.path', null),
                 array('monolog.name', null),
                 array('translation.locale', null, 'en'),
-            )));
+            )));*/
 
         return $config;
     }

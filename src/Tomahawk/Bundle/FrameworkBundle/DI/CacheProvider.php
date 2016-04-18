@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\DI;
 
-use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\MemcacheCache;
@@ -19,7 +19,7 @@ use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
 use Tomahawk\Cache\CacheManager;
-use Tomahawk\Cache\Provider\ApcProvider;
+use Tomahawk\Cache\Provider\ApcuProvider;
 use Tomahawk\Cache\Provider\ArrayProvider;
 use Tomahawk\Cache\Provider\FilesystemProvider;
 use Tomahawk\Cache\Provider\MemcachedProvider;
@@ -33,10 +33,10 @@ class CacheProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
     {
-        $container->set('cache.providers.apc', function(ContainerInterface $c) {
-            $cache = new ApcCache();
+        $container->set('cache.providers.apcu', function(ContainerInterface $c) {
+            $cache = new ApcuCache();
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
-            return new ApcProvider($cache);
+            return new ApcuProvider($cache);
         });
 
         $container->set('cache.providers.array', function(ContainerInterface $c) {
