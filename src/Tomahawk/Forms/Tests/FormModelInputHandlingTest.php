@@ -10,7 +10,7 @@ use Tomahawk\Validation\Constraints\Required;
 use Tomahawk\Forms\Test\Model;
 use Tomahawk\Forms\Test\Model2;
 
-class FormModelBindingTest extends TestCase
+class FormModelInputHandlingTest extends TestCase
 {
 
     public function testValuesAreTakenFromModelWhenRendering()
@@ -20,7 +20,8 @@ class FormModelBindingTest extends TestCase
         $peep->setName('Tom Ellis');
         $peep->setAge(27);
 
-        $form = new Form('/', 'POST', $peep);
+        $form = new Form('/', 'POST');
+        $form->setModel($peep);
 
         $form->add(new Text('name'));
 
@@ -30,14 +31,15 @@ class FormModelBindingTest extends TestCase
 
     }
 
-    public function testBindNoGetSetMethods()
+    public function testHandleInputNoGetSetMethods()
     {
         $peep = new Model2();
 
         $peep->name = 'Tom Ellis';
         $peep->age = 27;
 
-        $form = new Form('/', 'POST', $peep);
+        $form = new Form('/', 'POST');
+        $form->setModel($peep);
 
         $form->add(new Text('name'));
         $form->add(new Text('age'));
@@ -52,14 +54,16 @@ class FormModelBindingTest extends TestCase
 
     }
 
-    public function testOldInputIsUsedWhenRendering()
+    public function testInputIsUsedWhenRendering()
     {
         $peep = new Model();
 
         $peep->setName('Tom Ellis');
         $peep->setAge(27);
 
-        $form = new Form('/', 'POST', $peep, array(
+        $form = new Form('/', 'POST');
+        $form->setModel($peep);
+        $form->setInput( array(
             'name' => 'Tommy'
         ));
 
@@ -70,7 +74,13 @@ class FormModelBindingTest extends TestCase
         $this->assertEquals('<input type="text" name="name" value="Tommy">', $html);
     }
 
-    public function testBindWithFailedValidation()
+    public function testIsValidWithNoValidation()
+    {
+        $form = new Form('/', 'POST');
+        $this->assertTrue($form->isValid());
+    }
+
+    public function testHandleInputWithFailedValidation()
     {
         $input = array();
 
@@ -84,38 +94,15 @@ class FormModelBindingTest extends TestCase
         $peep->setName('Tom Ellis');
         $peep->setAge(27);
 
-        $form = new Form('/', 'POST', $peep);
+        $form = new Form('/', 'POST');
+        $form->setModel($peep);
         $form->setValidator($validator);
         $form->add(new Text('name'));
-        $form->bind($input);
+        $form->handleInput($input);
         $this->assertFalse($form->isValid());
     }
 
-    public function testBindWithValidValidation()
-    {
-        $input = array(
-            'name' => 'Tommy Ellis'
-        );
-
-        $validator = new Validator();
-        $validator->add('name', array(
-            new Required()
-        ));
-
-        $peep = new Model();
-
-        $peep->setName('Tom Ellis');
-        $peep->setAge(27);
-
-        $form = new Form('/', 'POST', $peep);
-        $form->setValidator($validator);
-        $form->add(new Text('name'));
-        $form->bind($input);
-        $this->assertTrue($form->isValid());
-        $this->assertEquals('Tommy Ellis', $peep->getName());
-    }
-
-    public function testLateBinding()
+    public function testhandleInputWithValidValidation()
     {
         $input = array(
             'name' => 'Tommy Ellis'
@@ -135,7 +122,34 @@ class FormModelBindingTest extends TestCase
         $form->setModel($peep);
         $form->setValidator($validator);
         $form->add(new Text('name'));
-        $form->bind($input);
+
+        $form->handleInput($input);
+
+        $this->assertTrue($form->isValid());
+        $this->assertEquals('Tommy Ellis', $peep->getName());
+    }
+
+    public function testLatehandleInputing()
+    {
+        $input = array(
+            'name' => 'Tommy Ellis'
+        );
+
+        $validator = new Validator();
+        $validator->add('name', array(
+            new Required()
+        ));
+
+        $peep = new Model();
+
+        $peep->setName('Tom Ellis');
+        $peep->setAge(27);
+
+        $form = new Form('/', 'POST');
+        $form->setModel($peep);
+        $form->setValidator($validator);
+        $form->add(new Text('name'));
+        $form->handleInput($input);
 
 
         $this->assertInstanceOf('Tomahawk\Forms\Test\Model', $form->getModel());
@@ -143,7 +157,7 @@ class FormModelBindingTest extends TestCase
         $this->assertEquals('Tommy Ellis', $peep->getName());
     }
 
-    public function testBindWithValidValidationNoSetter()
+    public function testhandleInputWithValidValidationNoSetter()
     {
         $input = array(
             'name' => 'Tommy Ellis'
@@ -159,26 +173,14 @@ class FormModelBindingTest extends TestCase
         $peep->name = 'Tom Ellis';
         $peep->age = 27;
 
-        $form = new Form('/', 'POST', $peep);
+        $form = new Form('/', 'POST');
+        $form->setModel($peep);
+
         $form->setValidator($validator);
         $form->add(new Text('name'));
-        $form->bind($input);
+        $form->handleInput($input);
         $this->assertTrue($form->isValid());
         $this->assertEquals('Tommy Ellis', $peep->name);
-    }
-
-    public function testExceptionWhenCheckingIfFormIsValid()
-    {
-        $this->setExpectedException('Exception');
-
-        $input = array(
-            'name' => 'Tommy Ellis'
-        );
-
-        $form = new Form('/', 'POST');
-        $form->bind($input);
-
-        $form->isValid();
     }
 
 }

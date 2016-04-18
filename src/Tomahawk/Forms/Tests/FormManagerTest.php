@@ -7,7 +7,7 @@ use Tomahawk\Forms\Form;
 use Tomahawk\Forms\FormsManager;
 use Tomahawk\Forms\Test\TestForm;
 
-class FormManagerTest extends TestCase
+class FormManagerTes2t extends TestCase
 {
     /**
      * @var \Tomahawk\Forms\FormsManager
