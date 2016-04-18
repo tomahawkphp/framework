@@ -116,8 +116,8 @@ class TokenSubscriberTest extends TestCase
         $mock->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap(array(
-                array('filter_csrf', null, false, $filterCsrf),
-                array($tokenName, null, false, $token),
+                array('filter_csrf', null, $filterCsrf),
+                array($tokenName, null, $token),
             )));
 
         $mock->expects($this->any())
