@@ -15,11 +15,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Tomahawk\Auth\AuthInterface;
-use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\Hashing\HasherInterface;
 use Tomahawk\Forms\FormsManagerInterface;
 use Tomahawk\Asset\AssetManagerInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\Session\SessionInterface;
 use Tomahawk\HttpCore\Response\CookiesInterface;
 use Tomahawk\Cache\CacheInterface;
@@ -31,7 +31,7 @@ use Tomahawk\Input\InputInterface;
 class Controller implements ContainerAwareInterface
 {
     /**
-     * @var \Tomahawk\DI\ContainerInterface
+     * @var \Tomahawk\DependencyInjection\ContainerInterface
      */
     protected $container;
 

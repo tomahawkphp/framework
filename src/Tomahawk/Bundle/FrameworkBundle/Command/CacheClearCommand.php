@@ -11,8 +11,8 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Command;
 
-use Tomahawk\DI\ContainerInterface;
-use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -172,6 +172,14 @@ interface SessionInterface
      */
     public function reflashInput();
 
+
+    /**
+     * Save Session
+     *
+     * @return $this
+     */
+    public function save();
+
     /**
      * Clear new input
      *
@@ -192,12 +200,4 @@ interface SessionInterface
      * @return $this
      */
     public function mergeNewInput();
-
-    /**
-     * Save Session
-     *
-     * @return $this
-     */
-    public function save();
-
 }

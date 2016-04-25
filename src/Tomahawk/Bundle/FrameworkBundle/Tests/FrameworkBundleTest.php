@@ -2,11 +2,9 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Bundle\FrameworkBundle\FrameworkBundle;
-use Tomahawk\HttpKernel\Kernel;
 
 class FrameworkBundleTest extends TestCase
 {
@@ -67,7 +65,7 @@ class FrameworkBundleTest extends TestCase
 
     public function getContainerMock()
     {
-        $container = $this->getMockBuilder('Tomahawk\DI\Container')
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\Container')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -103,7 +101,7 @@ class FrameworkBundleTest extends TestCase
 
     public function getLocaleListener()
     {
-        $listener = $this->getMockBuilder('Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener')
+        $listener = $this->getMockBuilder('Tomahawk\Bundle\FrameworkBundle\EventListener\LocaleListener')
             ->disableOriginalConstructor()
             ->getMock();
 

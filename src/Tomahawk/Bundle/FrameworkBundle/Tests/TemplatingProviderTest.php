@@ -3,13 +3,13 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
-use Tomahawk\Bundle\FrameworkBundle\DI\TemplatingProvider;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingProvider;
 
 class TemplatingProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\TemplatingProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingProvider
      */
     public function testProvider()
     {

@@ -3,13 +3,13 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
-use Tomahawk\Bundle\FrameworkBundle\DI\CacheProvider;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheProvider;
 
 class CacheProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\CacheProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheProvider
      */
     public function testProvider()
     {

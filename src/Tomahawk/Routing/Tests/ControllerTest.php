@@ -5,7 +5,7 @@ namespace Tomahawk\Routing\Tests;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Routing\Controller;
 
@@ -17,7 +17,7 @@ class ControllerTest extends TestCase
 
         $templating->expects($this->once())->method('render');
 
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->at(0))->method('get')->will($this->returnValue($templating));
 
         $controller = $this->getController($container);
@@ -34,7 +34,7 @@ class ControllerTest extends TestCase
         $response->expects($this->once())->method('setContent');
 
 
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->at(0))->method('get')->will($this->returnValue($templating));
 
         $controller = $this->getController($container);
@@ -47,7 +47,7 @@ class ControllerTest extends TestCase
         $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
         $templating->expects($this->once())->method('render')->will($this->returnValue('view content'));
 
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->at(0))->method('get')->will($this->returnValue($templating));
 
         $controller = $this->getController($container);
@@ -71,7 +71,7 @@ class ControllerTest extends TestCase
             return new Response($request->getRequestFormat().'--'.$request->getLocale());
         }));
 
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->at(0))->method('get')->will($this->returnValue($requestStack));
         $container->expects($this->at(1))->method('get')->will($this->returnValue($kernel));
 
@@ -99,7 +99,7 @@ class ControllerTest extends TestCase
     protected function getController($container = null)
     {
         if (null === $container) {
-            $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+            $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         }
 
         $controller = new Controller();

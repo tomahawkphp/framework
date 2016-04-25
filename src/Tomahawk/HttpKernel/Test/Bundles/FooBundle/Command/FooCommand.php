@@ -2,9 +2,9 @@
 
 namespace Tomahawk\HttpKernel\Test\Bundles\FooBundle\Command;
 
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
-use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
 
 class FooCommand extends Command implements ContainerAwareInterface
 {

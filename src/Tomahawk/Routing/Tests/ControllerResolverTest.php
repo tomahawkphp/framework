@@ -7,7 +7,7 @@ use TestBundle\Controller\HomeController;
 use TestBundle\Controller\InvokeController;
 use Tomahawk\Test\TestCase;
 use Tomahawk\HttpKernel\HttpKernel;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Routing\Router;
 use Tomahawk\Routing\Controller\ControllerResolver;
 use Tomahawk\Routing\Controller;
@@ -40,7 +40,7 @@ class ControllerResolverTest extends TestCase
     protected $eventDispatcher;
 
     /**
-     * @var \Tomahawk\DI\Container
+     * @var \Tomahawk\DependencyInjection\Container
      */
     protected $container;
 
@@ -57,7 +57,7 @@ class ControllerResolverTest extends TestCase
 
         $this->container['Tomahawk\View\ViewGeneratorInterface'] = $this->getMock('Tomahawk\View\ViewGeneratorInterface');
         $this->container['Tomahawk\HttpCore\ResponseBuilderInterface'] = $this->getMock('Tomahawk\HttpCore\ResponseBuilderInterface');
-        $this->container['Tomahawk\DI\ContainerInterface'] = $this->container;
+        $this->container['Tomahawk\DependencyInjection\ContainerInterface'] = $this->container;
         $this->container['Tomahawk\Forms\FormsManagerInterface'] = $this->getMock('Tomahawk\Forms\FormsManagerInterface');
         $this->container['Tomahawk\HttpCore\Response\CookiesInterface'] = $this->getMock('Tomahawk\HttpCore\Response\CookiesInterface');
         $this->container['Tomahawk\Asset\AssetManagerInterface'] = $this->getMock('Tomahawk\Asset\AssetManagerInterface');

@@ -13,7 +13,7 @@ namespace Tomahawk\HttpKernel;
 
 use Tomahawk\Middleware\Middleware;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 interface KernelInterface extends HttpKernelInterface, \Serializable

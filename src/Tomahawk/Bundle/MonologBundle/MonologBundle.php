@@ -11,15 +11,15 @@
 
 namespace Tomahawk\Bundle\MonologBundle;
 
-use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Tomahawk\Bundle\MonologBundle\DI\MonologProvider;
+use Tomahawk\Bundle\MonologBundle\DependencyInjection\MonologProvider;
 
 class MonologBundle extends Bundle implements ContainerAwareInterface
 {
     public function boot()
     {
-        //$this->container->register(new MonologProvider());
+        $this->container->register(new MonologProvider());
     }
 
 }

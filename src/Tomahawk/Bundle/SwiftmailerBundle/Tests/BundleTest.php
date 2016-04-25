@@ -9,7 +9,7 @@ class BundleTest extends TestCase
 {
     public function testBundle()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
 
         $bundle = new SwiftmailerBundle();
         $bundle->setContainer($container);

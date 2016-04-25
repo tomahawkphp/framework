@@ -13,17 +13,19 @@ namespace Tomahawk\Session;
 
 use Symfony\Component\HttpFoundation\Session\Session as BaseSession;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 class Session implements SessionInterface
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\Session
+     * @var BaseSession
      */
     protected $session;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface
+     * @var SessionStorageInterface
      */
     protected $storage;
 
@@ -56,8 +58,8 @@ class Session implements SessionInterface
         $this->session->registerBag($oldInput);
         $this->session->registerBag($newInput);
 
-        // PHP Sessions auto start in 5.4
-        if (version_compare(phpversion(), '5.4.0', '>=') && \PHP_SESSION_ACTIVE !== session_status()) {
+        // PHP Sessions can auto start from version 5.4+
+        if (\PHP_SESSION_ACTIVE !== session_status()) {
             $this->session->start();
         }
     }
@@ -65,7 +67,7 @@ class Session implements SessionInterface
     /**
      * Get session storage
      *
-     * @return \Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface
+     * @return SessionStorageInterface
      */
     public function getStorage()
     {
@@ -75,7 +77,7 @@ class Session implements SessionInterface
     /**
      * Get old input bag
      *
-     * @return \Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface
+     * @return AttributeBagInterface
      */
     public function getOldInputBag()
     {
@@ -119,7 +121,7 @@ class Session implements SessionInterface
     /**
      * Get default session bag
      *
-     * @return \Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface
+     * @return AttributeBagInterface
      */
     public function getNewInputBag()
     {
@@ -232,7 +234,7 @@ class Session implements SessionInterface
      * @param array $default
      * @return array
      */
-    public function getFlash($name, $default = array())
+    public function getFlash($name, $default = [])
     {
         return $this->getFlashBag()->get($name, $default);
     }
@@ -254,7 +256,7 @@ class Session implements SessionInterface
     /**
      * Get Flash Bag
      *
-     * @return \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface
+     * @return FlashBagInterface
      */
     public function getFlashBag()
     {
@@ -345,6 +347,15 @@ class Session implements SessionInterface
      */
     public function save()
     {
+        // Clear old input data
+        //$this->clearOldInput();
+
+        // Add queued old input
+        //$this->mergeNewInput();
+
+        // Clear new input data
+        //$this->clearNewInput();
+
         // We only update the session if the session data has changed
         if ($this->isDirty()) {
             $this->session->save();

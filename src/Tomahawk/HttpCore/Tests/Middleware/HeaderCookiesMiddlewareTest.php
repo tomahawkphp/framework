@@ -2,7 +2,7 @@
 
 namespace Tomahawk\HttpCore\Tests\Middleware;
 
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\HttpCore\Middleware\HeaderCookies;
 use Tomahawk\HttpCore\Response\Cookies;

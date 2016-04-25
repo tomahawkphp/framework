@@ -16,8 +16,8 @@ namespace Tomahawk\Bundle\DoctrineBundle\Command;
 
 use Doctrine\ORM\Tools\EntityGenerator;
 use Symfony\Component\Console\Command\Command;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for Doctrine console commands to extend from.

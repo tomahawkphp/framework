@@ -15,7 +15,7 @@ namespace Tomahawk\Bundle\DoctrineBundle;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 
 class Registry extends AbstractManagerRegistry implements RegistryInterface
 {

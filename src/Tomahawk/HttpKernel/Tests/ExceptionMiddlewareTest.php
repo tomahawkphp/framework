@@ -12,7 +12,7 @@
 namespace Tomahawk\HttpKernel\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\HttpKernel\Middleware\ExceptionMiddleware;
 
 class ExceptionMiddlewareTest extends TestCase
@@ -58,7 +58,7 @@ class ExceptionMiddlewareTest extends TestCase
                 '::Error:404'
             )));
 
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
 
         $container->expects($this->any())
             ->method('get')

@@ -5,8 +5,8 @@ namespace Tomahawk\Bundle\FrameworkBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 
 class ConfigCompileCommand extends Command implements ContainerAwareInterface
 {

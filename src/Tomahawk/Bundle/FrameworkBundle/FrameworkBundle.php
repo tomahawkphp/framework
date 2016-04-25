@@ -11,17 +11,17 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
-use Tomahawk\Bundle\FrameworkBundle\DI\AuthProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\CommandBusProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\ConfigProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\RoutingProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\SessionProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\TranslatorProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorProvider;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Tomahawk\Bundle\FrameworkBundle\DI\CacheProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\TemplatingProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -65,7 +65,6 @@ class FrameworkBundle extends Bundle
      *
      * This is called after all bundles have been boot so you get access
      * to all the services
-     *
      *
      * @param EventDispatcherInterface $dispatcher
      */

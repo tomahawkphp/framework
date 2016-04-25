@@ -47,7 +47,7 @@ class CommandHandlerResolverTest extends TestCase
 
     protected function getContainer()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         return $container;
     }
 

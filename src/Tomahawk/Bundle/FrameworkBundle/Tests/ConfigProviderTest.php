@@ -3,13 +3,13 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
-use Tomahawk\Bundle\FrameworkBundle\DI\ConfigProvider;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigProvider;
 
 class ConfigProviderTest extends TestCase
 {
     /**
-     * @covers Tomahawk\Bundle\FrameworkBundle\DI\ConfigProvider
+     * @covers Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigProvider
      */
     public function testProvider()
     {

@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle;
 
-use Tomahawk\Bundle\DoctrineBundle\DI\DoctrineProvider;
+use Tomahawk\Bundle\DoctrineBundle\DependencyInjection\DoctrineProvider;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 
 class DoctrineBundle extends Bundle

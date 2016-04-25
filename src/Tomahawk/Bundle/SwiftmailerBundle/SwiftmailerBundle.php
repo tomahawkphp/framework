@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Bundle\SwiftmailerBundle;
 
-use Tomahawk\Bundle\SwiftmailerBundle\DI\SwiftmailerBundleProvider;
+use Tomahawk\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerBundleProvider;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 
 class SwiftmailerBundle extends Bundle

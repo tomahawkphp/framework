@@ -3,18 +3,16 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Tests\RequestStackTest;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
-use Tomahawk\DI\Container;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkProvider;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
 
 class FrameworkProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkProvider
      */
     public function testProvider()
     {
@@ -27,7 +25,7 @@ class FrameworkProviderTest extends TestCase
 
         $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventDispatcherInterface', $container->get('event_dispatcher'));
         $this->assertInstanceOf('Tomahawk\Asset\AssetManagerInterface', $container->get('asset_manager'));
-        $this->assertSame($container, $container->get('Tomahawk\DI\ContainerInterface'));
+        $this->assertSame($container, $container->get('Tomahawk\DependencyInjection\ContainerInterface'));
         $this->assertInstanceOf('Symfony\Component\Filesystem\Filesystem', $container->get('filesystem'));
         $this->assertInstanceOf('Tomahawk\Forms\FormsManagerInterface', $container->get('form_manager'));
         $this->assertInstanceOf('Tomahawk\Input\InputInterface', $container->get('input'));
@@ -35,8 +33,7 @@ class FrameworkProviderTest extends TestCase
         $this->assertInstanceOf('Tomahawk\Hashing\HasherInterface', $container->get('hasher'));
         $this->assertInstanceOf('Tomahawk\HttpCore\ResponseBuilderInterface', $container->get('response_builder'));
         $this->assertInstanceOf('Tomahawk\HttpCore\Response\CookiesInterface', $container->get('cookies'));
-        $this->assertInstanceOf('Psr\Log\LoggerInterface', $container->get('logger'));
-        $this->assertInstanceOf('Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener', $container->get('locale_listener'));
+        $this->assertInstanceOf('Tomahawk\Bundle\FrameworkBundle\EventListener\LocaleListener', $container->get('locale_listener'));
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RequestStack', $container->get('request_stack'));
         $this->assertInstanceOf('Tomahawk\Url\UrlGeneratorInterface', $container->get('url_generator'));
         $this->assertInstanceOf('Symfony\Component\HttpKernel\HttpKernelInterface', $container->get('http_kernel'));
@@ -58,40 +55,6 @@ class FrameworkProviderTest extends TestCase
     protected function getConfig()
     {
         $config = $this->getMock('Tomahawk\Config\ConfigInterface');
-
-        /*$config->method('get')
-            ->will($this->returnValueMap(array(
-                array('database.connections', null, array(
-                    'default' => array(
-                        'driver'    => 'mysql',
-                        'host'      => 'localhost',
-                        'port'      => '3306',
-                        'database'  => 'test',
-                        'username'  => 'root',
-                        'password'  => '',
-                        'charset'   => 'utf8',
-                        'collation' => 'utf8_unicode_ci',
-                        'prefix'    => '',
-                    ),
-                    'laravel' => array(
-                        'driver'    => 'mysql',
-                        'host'      => 'localhost',
-                        'port'      => '3306',
-                        'database'  => 'laravel',
-                        'username'  => 'root',
-                        'password'  => '',
-                        'charset'   => 'utf8',
-                        'collation' => 'utf8_unicode_ci',
-                        'prefix'    => '',
-                    )
-                )),
-                array('database.default', null, 'default'),
-                array('database.fetch', null, \PDO::FETCH_CLASS),
-                array('security.key', null, 'asdasdasdadsas'),
-                array('monolog.path', null),
-                array('monolog.name', null),
-                array('translation.locale', null, 'en'),
-            )));*/
 
         return $config;
     }

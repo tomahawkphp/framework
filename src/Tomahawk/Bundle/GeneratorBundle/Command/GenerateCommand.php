@@ -12,8 +12,8 @@
 namespace Tomahawk\Bundle\GeneratorBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Kernel;
 
 abstract class GenerateCommand extends Command implements ContainerAwareInterface

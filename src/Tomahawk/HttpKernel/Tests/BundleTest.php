@@ -9,7 +9,7 @@ use Tomahawk\HttpKernel\Kernel;
 use Tomahawk\HttpKernel\Test\Bundles\FooBundle\FooBundle;
 use Tomahawk\HttpKernel\Test\Bundles\FooBundle\Command\FooCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
@@ -35,7 +35,7 @@ class BundleTest extends TestCase
     protected $eventDispatcher;
 
     /**
-     * @var \Tomahawk\DI\ContainerInterface
+     * @var \Tomahawk\DependencyInjection\ContainerInterface
      */
     protected $container;
 

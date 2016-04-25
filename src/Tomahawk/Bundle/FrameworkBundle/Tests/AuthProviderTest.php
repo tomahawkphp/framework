@@ -3,8 +3,8 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
-use Tomahawk\Bundle\FrameworkBundle\DI\AuthProvider;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthProvider;
 
 class AuthProviderTest extends TestCase
 {
@@ -18,7 +18,7 @@ class AuthProviderTest extends TestCase
     ];
 
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\AuthProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthProvider
      */
     public function testProvider()
     {

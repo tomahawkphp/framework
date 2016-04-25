@@ -12,7 +12,7 @@
 namespace Tomahawk\HttpKernel\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\HttpKernel\Event\ExceptionListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;

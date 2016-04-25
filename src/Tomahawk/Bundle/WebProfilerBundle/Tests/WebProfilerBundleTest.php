@@ -12,7 +12,7 @@ use Tomahawk\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\Routing\Router;
 

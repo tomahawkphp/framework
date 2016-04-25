@@ -19,6 +19,6 @@ class DoctrineBundleTest extends TestCase
 
     public function getContainerMock()
     {
-        return $this->getMock('Tomahawk\DI\ContainerInterface');
+        return $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
     }
 }

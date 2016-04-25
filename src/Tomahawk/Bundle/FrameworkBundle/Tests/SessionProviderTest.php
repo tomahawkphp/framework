@@ -3,13 +3,13 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
-use Tomahawk\Bundle\FrameworkBundle\DI\SessionProvider;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionProvider;
 
 class SessionProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\SessionProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionProvider
      */
     public function testProvider()
     {
@@ -26,7 +26,7 @@ class SessionProviderTest extends TestCase
 
     /**
      * @expectedException \Exception
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\SessionProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionProvider
      */
     public function testProviderNoDriver()
     {

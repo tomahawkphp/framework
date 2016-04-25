@@ -4,8 +4,8 @@ namespace Tomahawk\Bundle\WebProfilerBundle;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

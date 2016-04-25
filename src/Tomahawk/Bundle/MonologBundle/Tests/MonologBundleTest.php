@@ -3,8 +3,8 @@
 namespace Tomahawk\Bundle\MonologBundle\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\Bundle\MonologBundle\MonologBundle;
 
 class MonologBundleTest extends TestCase
@@ -16,6 +16,7 @@ class MonologBundleTest extends TestCase
             ->method('register');
 
         $monologBundle = new MonologBundle();
+        $monologBundle->setContainer($container);
         $monologBundle->boot();
 
     }

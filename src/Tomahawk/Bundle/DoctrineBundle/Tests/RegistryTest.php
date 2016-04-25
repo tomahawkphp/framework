@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests;
 
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Bundle\DoctrineBundle\Registry;
 
@@ -10,14 +10,14 @@ class RegistryTest extends TestCase
 {
     public function testGetDefaultConnectionName()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->assertEquals('default', $registry->getDefaultConnectionName());
     }
 
     public function testGetDefaultEntityManagerName()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->assertEquals('default', $registry->getDefaultManagerName());
     }
@@ -25,7 +25,7 @@ class RegistryTest extends TestCase
     public function testGetDefaultConnection()
     {
         $conn = $this->getMock('Doctrine\DBAL\Connection', array(), array(), '', false);
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->once())
             ->method('get')
             ->with($this->equalTo('doctrine.dbal.default_connection'))
@@ -37,7 +37,7 @@ class RegistryTest extends TestCase
     public function testGetConnection()
     {
         $conn = $this->getMock('Doctrine\DBAL\Connection', array(), array(), '', false);
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->once())
             ->method('get')
             ->with($this->equalTo('doctrine.dbal.default_connection'))
@@ -48,7 +48,7 @@ class RegistryTest extends TestCase
 
     public function testGetUnknownConnection()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->setExpectedException('InvalidArgumentException', 'Doctrine ORM Connection named "default" does not exist.');
         $registry->getConnection('default');
@@ -56,7 +56,7 @@ class RegistryTest extends TestCase
 
     public function testGetConnectionNames()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array('default' => 'doctrine.dbal.default_connection'), array(), 'default', 'default');
         $this->assertEquals(array('default' => 'doctrine.dbal.default_connection'), $registry->getConnectionNames());
     }
@@ -64,7 +64,7 @@ class RegistryTest extends TestCase
     public function testGetDefaultEntityManager()
     {
         $em = new \stdClass();
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->once())
             ->method('get')
             ->with($this->equalTo('doctrine.orm.default_entity_manager'))
@@ -76,7 +76,7 @@ class RegistryTest extends TestCase
     public function testGetEntityManager()
     {
         $em = new \stdClass();
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->once())
             ->method('get')
             ->with($this->equalTo('doctrine.orm.default_entity_manager'))
@@ -87,7 +87,7 @@ class RegistryTest extends TestCase
 
     public function testGetUnknownEntityManager()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->setExpectedException('InvalidArgumentException', 'Doctrine ORM Manager named "default" does not exist.');
         $registry->getManager('default');
@@ -95,7 +95,7 @@ class RegistryTest extends TestCase
 
     public function testResetDefaultEntityManager()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->once())
             ->method('set')
             ->with($this->equalTo('doctrine.orm.default_entity_manager'), $this->equalTo(null));
@@ -105,7 +105,7 @@ class RegistryTest extends TestCase
 
     public function testResetEntityManager()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $container->expects($this->once())
             ->method('set')
             ->with($this->equalTo('doctrine.orm.default_entity_manager'), $this->equalTo(null));
@@ -115,7 +115,7 @@ class RegistryTest extends TestCase
 
     public function testResetUnknownEntityManager()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->setExpectedException('InvalidArgumentException', 'Doctrine ORM Manager named "default" does not exist.');
         $registry->resetManager('default');
@@ -123,14 +123,14 @@ class RegistryTest extends TestCase
 
     public function testGetManagers()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
         $this->assertCount(1, $registry->getManagers());
     }
 
     public function testGetEntityManagerNames()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array('default' => 'doctrine.orm.default_entity_manager'), 'default', 'default');
         $this->assertEquals(array('default' => 'doctrine.orm.default_entity_manager'), $registry->getManagerNames());
     }

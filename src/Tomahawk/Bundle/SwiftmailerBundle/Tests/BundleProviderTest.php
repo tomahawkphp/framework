@@ -2,9 +2,9 @@
 
 namespace Tomahawk\Bundle\SwiftmailerBundle\Tests;
 
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
-use Tomahawk\Bundle\SwiftmailerBundle\DI\SwiftmailerBundleProvider;
+use Tomahawk\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerBundleProvider;
 
 class BundleProviderTest extends TestCase
 {

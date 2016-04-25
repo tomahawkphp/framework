@@ -4,7 +4,7 @@ namespace Tomahawk\Console\Tests;
 
 use Tomahawk\Test\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;

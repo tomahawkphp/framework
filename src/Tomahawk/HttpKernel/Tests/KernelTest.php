@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\HttpKernel\Test\KernelWithBundleEvents;
 use Tomahawk\HttpKernel\Test\KernelWithRoutes;
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\HttpKernel\Test\Kernel;
 use Tomahawk\HttpKernel\Test\Kernel as KernelForTest;

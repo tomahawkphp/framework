@@ -11,8 +11,8 @@
 
 namespace Tomahawk\HttpKernel;
 
-use Tomahawk\DI\Container;
-use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -253,7 +253,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * @param \Tomahawk\DI\ContainerInterface $container
+     * @param \Tomahawk\DependencyInjection\ContainerInterface $container
      */
     public function setContainer($container)
     {

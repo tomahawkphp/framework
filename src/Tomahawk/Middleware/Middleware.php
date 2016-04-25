@@ -11,8 +11,8 @@
 
 namespace Tomahawk\Middleware;
 
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 
 abstract class Middleware implements ContainerAwareInterface
 {

@@ -11,7 +11,7 @@
 
 namespace Tomahawk\CommandBus;
 
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerInterface;
 
 class CommandHandlerResolver implements CommandHandlerResolverInterface
 {

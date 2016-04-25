@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Bundle\GeneratorBundle;
 
-use Tomahawk\Bundle\GeneratorBundle\DI\GeneratorBundleProvider;
+use Tomahawk\Bundle\GeneratorBundle\DependencyInjection\GeneratorBundleProvider;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 
 class GeneratorBundle extends Bundle

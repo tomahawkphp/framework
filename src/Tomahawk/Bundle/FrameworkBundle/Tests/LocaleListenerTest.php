@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
-use Tomahawk\Bundle\FrameworkBundle\Events\LocaleListener;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\LocaleListener;
 use Tomahawk\Test\TestCase;
 
 class LocaleListenerTest extends TestCase

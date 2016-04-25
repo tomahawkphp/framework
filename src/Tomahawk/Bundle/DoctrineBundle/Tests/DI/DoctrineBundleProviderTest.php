@@ -2,9 +2,9 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests\DI;
 
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
-use Tomahawk\Bundle\DoctrineBundle\DI\DoctrineProvider;
+use Tomahawk\Bundle\DoctrineBundle\DependencyInjection\DoctrineProvider;
 
 class DoctrineBundleProviderTest extends TestCase
 {

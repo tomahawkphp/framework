@@ -13,7 +13,7 @@ namespace Tomahawk\Console;
 
 use Tomahawk\HttpKernel\KernelInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Tomahawk\DI\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Console\Shell;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;

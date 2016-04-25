@@ -19,9 +19,11 @@ class HashingTest extends TestCase
         $this->assertTrue($hasher->needsRehash($value, array('rounds' => 2)));
     }
 
+    /**
+     * @expectedException \RunTimeException
+     */
     public function testException()
     {
-        $this->setExpectedException('RuntimeException');
         $hasher = new TestHasher();
         $value = $hasher->make('hashmebitch');
     }

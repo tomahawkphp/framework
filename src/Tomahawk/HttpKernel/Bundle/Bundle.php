@@ -22,7 +22,7 @@ namespace Tomahawk\HttpKernel\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Tomahawk\Console\Application;
 use Symfony\Component\Finder\Finder;
-use Tomahawk\DI\ContainerAware;
+use Tomahawk\DependencyInjection\ContainerAware;
 
 abstract class Bundle extends ContainerAware implements BundleInterface
 {
