@@ -362,37 +362,32 @@ class KernelTest extends TestCase
     public function testTerminateDelegatesTerminationOnlyForTerminableInterface()
     {
         // does not implement TerminableInterface
-        $httpKernelMock = $this->getMockBuilder('Tomahawk\HttpKernel\HttpKernelInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        // @TODO - Fix this
-        /*$httpKernelMock
-            ->expects($this->never())
-            ->method('terminate');*/
+        $httpKernel = new TestKernel();
 
         $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
         $kernel->expects($this->once())
             ->method('getHttpKernel')
-            ->will($this->returnValue($httpKernelMock));
+            ->will($this->returnValue($httpKernel));
+
+        $this->assertFalse($httpKernel->terminateCalled, 'terminate() is never called if the kernel class does not implement TerminableInterface');
 
         $kernel->boot();
         $kernel->terminate(Request::create('/'), new Response());
 
         // implements TerminableInterface
-        $httpKernelMock = $this->getMockBuilder('Tomahawk\HttpKernel\HttpKernel')
+        $httpKernel = $this->getMockBuilder('Tomahawk\HttpKernel\HttpKernel')
             ->disableOriginalConstructor()
             ->setMethods(array('terminate'))
             ->getMock();
 
-        $httpKernelMock
+        $httpKernel
             ->expects($this->once())
             ->method('terminate');
 
         $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
         $kernel->expects($this->exactly(2))
             ->method('getHttpKernel')
-            ->will($this->returnValue($httpKernelMock));
+            ->will($this->returnValue($httpKernel));
 
         $kernel->boot();
         $kernel->terminate(Request::create('/'), new Response());
@@ -801,4 +796,17 @@ class KernelTest extends TestCase
         return $kernel;
     }
 
+}
+
+
+class TestKernel implements HttpKernelInterface
+{
+    public $terminateCalled = false;
+    public function terminate()
+    {
+        $this->terminateCalled = true;
+    }
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    {
+    }
 }
