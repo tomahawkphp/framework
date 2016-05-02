@@ -12,28 +12,13 @@
 namespace Tomahawk\Routing;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Tomahawk\Auth\AuthInterface;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
-use Tomahawk\Hashing\HasherInterface;
-use Tomahawk\Forms\FormsManagerInterface;
-use Tomahawk\Asset\AssetManagerInterface;
-use Tomahawk\DependencyInjection\ContainerInterface;
-use Tomahawk\Session\SessionInterface;
-use Tomahawk\HttpCore\Response\CookiesInterface;
-use Tomahawk\Cache\CacheInterface;
-use Tomahawk\HttpCore\ResponseBuilderInterface;
-use Tomahawk\Config\ConfigInterface;
-use Tomahawk\Url\UrlGeneratorInterface;
-use Tomahawk\Input\InputInterface;
+use Tomahawk\DependencyInjection\ContainerAwareTrait;
 
 class Controller implements ContainerAwareInterface
 {
-    /**
-     * @var \Tomahawk\DependencyInjection\ContainerInterface
-     */
-    protected $container;
+    use ContainerAwareTrait;
 
     public function forward($controller, array $path = array(), array $query = array())
     {
@@ -56,6 +41,14 @@ class Controller implements ContainerAwareInterface
         return $this->container->get('templating')->render($view, $parameters);
     }
 
+    /**
+     * Returns a response
+     *
+     * @param $view
+     * @param array $parameters
+     * @param Response|null $response
+     * @return Response
+     */
     public function render($view, array $parameters = array(), Response $response = null)
     {
         $content = $this->renderView($view, $parameters);
@@ -91,15 +84,5 @@ class Controller implements ContainerAwareInterface
     public function get($id)
     {
         return $this->container->get($id);
-    }
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 }

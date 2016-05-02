@@ -11,17 +11,17 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorProvider;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthenticationServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -29,23 +29,23 @@ class FrameworkBundle extends Bundle
 {
     public function boot()
     {
-        $this->container->register(new FrameworkProvider());
+        $this->container->register(new FrameworkServiceProvider());
 
-        $this->container->register(new AuthProvider());
+        $this->container->register(new AuthenticationServiceProvider());
 
-        $this->container->register(new CacheProvider());
+        $this->container->register(new CacheServiceProvider());
 
-        $this->container->register(new CommandBusProvider());
+        $this->container->register(new CommandBusServiceProvider());
 
-        $this->container->register(new ConfigProvider());
+        $this->container->register(new ConfigServiceProvider());
 
-        $this->container->register(new TemplatingProvider());
+        $this->container->register(new TemplatingServiceProvider());
 
-        $this->container->register(new TranslatorProvider());
+        $this->container->register(new TranslatorServiceProvider());
 
-        $this->container->register(new RoutingProvider());
+        $this->container->register(new RoutingServiceProvider());
 
-        $this->container->register(new SessionProvider());
+        $this->container->register(new SessionServiceProvider());
 
         if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);

@@ -40,8 +40,7 @@ class SessionExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('session_get', array($this, 'get')),
             new \Twig_SimpleFunction('session_has', array($this, 'has')),
-            new \Twig_SimpleFunction('flash_get', array($this, 'getFlash')),
-            new \Twig_SimpleFunction('flash_has', array($this, 'hasFlash')),
+            new \Twig_SimpleFunction('flash_get', array($this, 'getFlashBag')),
         );
     }
 
@@ -69,26 +68,13 @@ class SessionExtension extends \Twig_Extension
     }
 
     /**
-     * Check if flash value exists
+     * Get flash bag
      *
-     * @param $name
-     * @return bool
-     */
-    public function hasFlash($name)
-    {
-        return $this->session->hasFlash($name);
-    }
-
-    /**
-     * Get flash values
-     *
-     * @param $name
-     * @param array $default
      * @return array
      */
-    public function getFlash($name, $default = array())
+    public function getFlashBag()
     {
-        return $this->session->getFlash($name, $default);
+        return $this->session->getFlashBag();
     }
 
     /**

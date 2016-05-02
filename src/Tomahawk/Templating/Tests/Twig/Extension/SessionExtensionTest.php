@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Templating\Tests\Twig\Extension;
 
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Templating\Twig\Extension\SessionExtension;
 
@@ -17,7 +18,7 @@ class SessionExtensionTest extends TestCase
     public function testCorrectNumberOfFunctionsAreReturned()
     {
         $sessionExtension = new SessionExtension($this->getSessionMock());
-        $this->assertCount(4, $sessionExtension->getFunctions());
+        $this->assertCount(3, $sessionExtension->getFunctions());
     }
 
     public function testGetFunctionReturnsCorrectValue()
@@ -32,21 +33,16 @@ class SessionExtensionTest extends TestCase
         $this->assertTrue($sessionExtension->has('name'));
     }
 
-    public function testGetFlashFunctionReturnsCorrectValue()
+    public function testGetFlashBagFunctionReturnsCorrectValue()
     {
         $sessionExtension = new SessionExtension($this->getSessionMock());
-        $this->assertEquals(26, $sessionExtension->getFlash('age'));
-    }
-
-    public function testHasFlashFunctionReturnsCorrectValue()
-    {
-        $sessionExtension = new SessionExtension($this->getSessionMock());
-        $this->assertTrue($sessionExtension->hasFlash('age'));
+        $this->assertInstanceOf(FlashBagInterface::class, $sessionExtension->getFlashBag());
     }
 
     protected function getSessionMock()
     {
         $session = $this->getMock('Tomahawk\Session\SessionInterface');
+        $flashBag = $this->getMock(FlashBagInterface::class);
 
         $session->expects($this->any())
             ->method('get')
@@ -57,8 +53,8 @@ class SessionExtensionTest extends TestCase
             ->will($this->returnValue(true));
 
         $session->expects($this->any())
-            ->method('getFlash')
-            ->will($this->returnValue('26'));
+            ->method('getFlashBag')
+            ->will($this->returnValue($flashBag));
 
         $session->expects($this->any())
             ->method('hasFlash')

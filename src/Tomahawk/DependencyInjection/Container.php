@@ -30,12 +30,12 @@ class Container implements \ArrayAccess, ContainerInterface
     /**
      * @var array
      */
-    private $serviceTags = array();
+    private $serviceTags = [];
 
     /**
      * @var array
      */
-    private $values = array();
+    private $values = [];
 
     /**
      * @var \SplObjectStorage
@@ -50,22 +50,22 @@ class Container implements \ArrayAccess, ContainerInterface
     /**
      * @var array
      */
-    private $frozen = array();
+    private $frozen = [];
 
     /**
      * @var array
      */
-    private $raw = array();
+    private $raw = [];
 
     /**
      * @var array
      */
-    private $keys = array();
+    private $keys = [];
 
     /**
      * @var array Aliases of something in the DIC
      */
-    protected $aliases = array();
+    protected $aliases = [];
 
     /**
      * Instantiate the container.
@@ -74,7 +74,7 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @param array $values The parameters or objects.
      */
-    public function __construct(array $values = array())
+    public function __construct(array $values = [])
     {
         $this->factories = new \SplObjectStorage();
         $this->protected = new \SplObjectStorage();
@@ -84,17 +84,16 @@ class Container implements \ArrayAccess, ContainerInterface
         }
     }
 
-    public function build($class, $parameters = array())
+    public function build($class, $parameters = [])
     {
-
         $reflector = new ReflectionClass($class);
 
         // If the class is not instantiable, error
-        if (!$reflector->isInstantiable()) {
+        if ( ! $reflector->isInstantiable()) {
             throw new InstantiateException(sprintf('Class %s is not instantiable.', $class));
         }
 
-        if (!$constructor = $reflector->getConstructor()) {
+        if ( ! $constructor = $reflector->getConstructor()) {
             return new $class;
         }
 
@@ -118,19 +117,16 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     protected function getDependencies($parameters)
     {
-        $dependencies = array();
+        $dependencies = [];
 
-        foreach ($parameters as $parameter)
-        {
+        foreach ($parameters as $parameter) {
             // If the class is null, it means the dependency is a string or some other
             // primitive type which we can not resolve since it is not a class and
             // we'll just bomb out with an error since we have no-where to go.
-            if (!$parameter->getClass())
-            {
+            if ( ! $parameter->getClass()) {
                 $dependencies[] = $this->resolveNonClass($parameter);
             }
-            else
-            {
+            else {
                 $dependencies[] = $this->resolveClass($parameter);
             }
         }
@@ -348,6 +344,10 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function offsetExists($id)
     {
+        if ($this->hasAlias($id)) {
+            $id = $this->getAlias($id);
+        }
+
         return isset($this->keys[$id]);
     }
 
@@ -358,6 +358,12 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function offsetUnset($id)
     {
+        if ($this->hasAlias($id)) {
+            $alias = $id;
+            $id = $this->getAlias($id);
+            $this->removeAlias($alias);
+        }
+
         if (isset($this->keys[$id])) {
             if (is_object($this->values[$id])) {
                 unset($this->factories[$this->values[$id]], $this->protected[$this->values[$id]]);
@@ -378,7 +384,7 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function factory($callable)
     {
-        if (!is_object($callable) || !method_exists($callable, '__invoke')) {
+        if ( ! is_object($callable) || !method_exists($callable, '__invoke')) {
             throw new \InvalidArgumentException('Service definition is not a Closure or invokable object.');
         }
 
@@ -400,7 +406,7 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function protect($callable)
     {
-        if (!is_object($callable) || !method_exists($callable, '__invoke')) {
+        if ( ! is_object($callable) || ! method_exists($callable, '__invoke')) {
             throw new \InvalidArgumentException('Callable is not a Closure or invokable object.');
         }
 
@@ -420,7 +426,7 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function raw($id)
     {
-        if (!isset($this->keys[$id])) {
+        if ( ! isset($this->keys[$id])) {
             throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
         }
 
@@ -446,15 +452,15 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function extend($id, $callable)
     {
-        if (!isset($this->keys[$id])) {
+        if ( ! isset($this->keys[$id])) {
             throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
         }
 
-        if (!is_object($this->values[$id]) || !method_exists($this->values[$id], '__invoke')) {
+        if ( ! is_object($this->values[$id]) || ! method_exists($this->values[$id], '__invoke')) {
             throw new \InvalidArgumentException(sprintf('Identifier "%s" does not contain an object definition.', $id));
         }
 
-        if (!is_object($callable) || !method_exists($callable, '__invoke')) {
+        if ( ! is_object($callable) || ! method_exists($callable, '__invoke')) {
             throw new \InvalidArgumentException('Extension service definition is not a Closure or invokable object.');
         }
 
@@ -491,7 +497,7 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @return static
      */
-    public function register(ServiceProviderInterface $provider, array $values = array())
+    public function register(ServiceProviderInterface $provider, array $values = [])
     {
         $provider->register($this);
 
@@ -511,9 +517,10 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function tag($id, $tag)
     {
-        if (!isset($this->serviceTags[$id])) {
-            $this->serviceTags[$id] = array();
+        if ( ! isset($this->serviceTags[$id])) {
+            $this->serviceTags[$id] = [];
         }
+
         $this->serviceTags[$id][] = $tag;
         return $this;
     }
@@ -526,7 +533,7 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function findTaggedServiceIds($tag)
     {
-        $ids = array();
+        $ids = [];
 
         foreach ($this->serviceTags as $id => $tags) {
             if (in_array($tag, $tags)) {
@@ -537,6 +544,11 @@ class Container implements \ArrayAccess, ContainerInterface
         return $ids;
     }
 
+    /**
+     * Get all service tags
+     *
+     * @return array
+     */
     public function getServiceTags()
     {
         return $this->serviceTags;

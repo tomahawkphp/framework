@@ -11,13 +11,13 @@
 
 namespace Tomahawk\Bundle\GeneratorBundle;
 
-use Tomahawk\Bundle\GeneratorBundle\DependencyInjection\GeneratorBundleProvider;
+use Tomahawk\Bundle\GeneratorBundle\DependencyInjection\GeneratorServiceProvider;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 
 class GeneratorBundle extends Bundle
 {
     public function boot()
     {
-        $this->container->register(new GeneratorBundleProvider($this->getPath() . '/Resources/skeleton'));
+        $this->container->register(new GeneratorServiceProvider($this->getPath() . '/Resources/skeleton'));
     }
 }

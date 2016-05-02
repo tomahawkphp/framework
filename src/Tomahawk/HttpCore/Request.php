@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Request extends SymfonyRequest
 {
-    public function old($name, $default = null)
+    public function getOld($name, $default = null)
     {
-        return $this->getSession()->getBag('old_input')->get($name, $default);
+        return $this->getSession()->getOldInputBag()->get($name, $default);
     }
 }

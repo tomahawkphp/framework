@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\SwiftmailerBundle\Tests;
 
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
-use Tomahawk\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerBundleProvider;
+use Tomahawk\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerServiceProvider;
 
 class BundleProviderTest extends TestCase
 {
@@ -21,7 +21,7 @@ class BundleProviderTest extends TestCase
         $container = new Container();
         $container->set('config', $config);
 
-        $provider = new SwiftmailerBundleProvider();
+        $provider = new SwiftmailerServiceProvider();
         $provider->register($container);
 
         $this->assertTrue($container->has('mailer.transport'));

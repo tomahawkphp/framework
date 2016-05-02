@@ -95,6 +95,8 @@ class ContainerTest extends TestCase
         $container->addAlias('my_service', 'ServiceInterface');
         $service = $container->get('my_service');
 
+        $this->assertTrue($container->has('my_service'));
+
         $this->assertInstanceOf('Tomahawk\DependencyInjection\Test\Service', $service);
 
         $service = $container['my_service'];
@@ -102,6 +104,18 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf('Tomahawk\DependencyInjection\Test\Service', $service);
 
         $container->removeAlias('my_service');
+        $this->assertFalse($container->hasAlias('my_service'));
+    }
+
+    public function testRemoveServiceWithAlias()
+    {
+        $container = new Container();
+        $container['ServiceInterface'] = new Service();
+        $container->addAlias('my_service', 'ServiceInterface');
+
+        $container->remove('my_service');
+
+        $this->assertFalse($container->has('ServiceInterface'));
         $this->assertFalse($container->hasAlias('my_service'));
     }
 
@@ -458,7 +472,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage Cannot override frozen service "foo".
      */
     public function testOverridingServiceAfterFreeze()
