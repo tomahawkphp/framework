@@ -348,6 +348,10 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function offsetExists($id)
     {
+        if ($this->hasAlias($id)) {
+            $id = $this->getAlias($id);
+        }
+
         return isset($this->keys[$id]);
     }
 
@@ -358,6 +362,12 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function offsetUnset($id)
     {
+        if ($this->hasAlias($id)) {
+            $alias = $id;
+            $id = $this->getAlias($id);
+            $this->removeAlias($alias);
+        }
+
         if (isset($this->keys[$id])) {
             if (is_object($this->values[$id])) {
                 unset($this->factories[$this->values[$id]], $this->protected[$this->values[$id]]);
