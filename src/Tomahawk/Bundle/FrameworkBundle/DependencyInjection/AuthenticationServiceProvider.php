@@ -26,7 +26,7 @@ class AuthenticationServiceProvider implements ServiceProviderInterface
      * @var array
      */
     private $defaultUserProviders = [
-        'memory' => 'auth.provider.memory',
+        'memory' => 'authentication.provider.memory',
     ];
 
     public function register(ContainerInterface $container)
@@ -68,7 +68,7 @@ class AuthenticationServiceProvider implements ServiceProviderInterface
             return $c[$userProviderService];
         });
 
-        $container->set('auth.provider.memory', function(ContainerInterface $c) {
+        $container->set('authentication.provider.memory', function(ContainerInterface $c) {
             $config = $c['config']->get('security.providers.memory');
 
             $users = isset($config['users']) ? $config['users'] : [];
@@ -78,16 +78,16 @@ class AuthenticationServiceProvider implements ServiceProviderInterface
 
         $container->set('Tomahawk\Authentication\AuthenticationProviderInterface', function(ContainerInterface $c) {
             return new AuthenticationProvider(
-                $c['auth.user.provider'],
-                $c['auth.password.encoder'],
-                $c['auth.storage']
+                $c['authentication.user.provider'],
+                $c['authentication.password.encoder'],
+                $c['authentication.storage']
             );
         });
 
-        $container->addAlias('auth.storage', 'Tomahawk\Authentication\Storage\StorageInterface');
-        $container->addAlias('auth.password.encoder', 'Tomahawk\Authentication\Encoder\PasswordEncoderInterface');
-        $container->addAlias('auth.password.encoder.bcrypt', 'Tomahawk\Authentication\Encoder\PasswordEncoderInterface');
-        $container->addAlias('auth.user.provider', 'Tomahawk\Authentication\User\UserProviderInterface');
-        $container->addAlias('auth', 'Tomahawk\Authentication\AuthenticationProviderInterface');
+        $container->addAlias('authentication.storage', 'Tomahawk\Authentication\Storage\StorageInterface');
+        $container->addAlias('authentication.password.encoder', 'Tomahawk\Authentication\Encoder\PasswordEncoderInterface');
+        $container->addAlias('authentication.password.encoder.bcrypt', 'Tomahawk\Authentication\Encoder\PasswordEncoderInterface');
+        $container->addAlias('authentication.user.provider', 'Tomahawk\Authentication\User\UserProviderInterface');
+        $container->addAlias('authentication', 'Tomahawk\Authentication\AuthenticationProviderInterface');
     }
 }

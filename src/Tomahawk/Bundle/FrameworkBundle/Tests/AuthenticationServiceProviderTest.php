@@ -29,15 +29,15 @@ class AuthenticationServiceProviderTest extends TestCase
         $this->assertTrue($container->has('Tomahawk\Authentication\AuthenticationProviderInterface'));
         $this->assertTrue($container->has('Tomahawk\Authentication\User\UserProviderInterface'));
         $this->assertTrue($container->has('Tomahawk\Authentication\Encoder\PasswordEncoderInterface'));
-        $this->assertTrue($container->has('auth.provider.memory'));
+        $this->assertTrue($container->has('authentication.provider.memory'));
 
-        $this->assertTrue($container->hasAlias('auth'));
-        $this->assertTrue($container->hasAlias('auth.user.provider'));
-        $this->assertTrue($container->hasAlias('auth.password.encoder'));
-        $this->assertTrue($container->hasAlias('auth.password.encoder.bcrypt'));
+        $this->assertTrue($container->hasAlias('authentication'));
+        $this->assertTrue($container->hasAlias('authentication.user.provider'));
+        $this->assertTrue($container->hasAlias('authentication.password.encoder'));
+        $this->assertTrue($container->hasAlias('authentication.password.encoder.bcrypt'));
 
         // Try and get provider out of container
-        $inMemoryProvider = $container->get('auth.provider.memory');
+        $inMemoryProvider = $container->get('authentication.provider.memory');
 
         $this->assertInstanceOf('Tomahawk\Authentication\Encoder\PasswordEncoderInterface', $container->get('Tomahawk\Authentication\Encoder\PasswordEncoderInterface'));
 
@@ -46,7 +46,7 @@ class AuthenticationServiceProviderTest extends TestCase
         // Check that users have been added
         $this->assertNotNull($inMemoryProvider->findUserByUsername('tommy'));
 
-        $this->assertInstanceOf('Tomahawk\Authentication\AuthenticationProviderInterface', $container->get('auth'));
+        $this->assertInstanceOf('Tomahawk\Authentication\AuthenticationProviderInterface', $container->get('authentication'));
     }
 
     /**
@@ -59,7 +59,7 @@ class AuthenticationServiceProviderTest extends TestCase
         $authenticationServiceProvider = new AuthenticationServiceProvider();
         $authenticationServiceProvider->register($container);
 
-        $container->get('auth.user.provider');
+        $container->get('authentication.user.provider');
     }
 
     public function testCustomUserProvider()
@@ -68,12 +68,12 @@ class AuthenticationServiceProviderTest extends TestCase
         $authenticationServiceProvider = new AuthenticationServiceProvider();
         $authenticationServiceProvider->register($container);
 
-        $container->get('auth.user.provider');
+        $container->get('authentication.user.provider');
     }
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage User provider "my_non_existent_provider" not registered under "auth.my_non_existent_provider"
+     * @expectedExceptionMessage User provider "my_non_existent_provider" not registered under "authentication.my_non_existent_provider"
      */
     public function testExistentUserProviderWithNoServiceId()
     {
@@ -81,7 +81,7 @@ class AuthenticationServiceProviderTest extends TestCase
         $authenticationServiceProvider = new AuthenticationServiceProvider();
         $authenticationServiceProvider->register($container);
 
-        $container->get('auth.user.provider');
+        $container->get('authentication.user.provider');
     }
 
     protected function getContainer($defaultProvider = 'memory')
@@ -89,7 +89,7 @@ class AuthenticationServiceProviderTest extends TestCase
         $container = new Container();
         $container->set('config', $this->getConfig($defaultProvider));
         $container->set('session', $this->getMock('Tomahawk\Session\SessionInterface'));
-        $container->set('auth.my_provider', $this->getMock('Tomahawk\Authentication\User\UserProviderInterface'));
+        $container->set('authentication.my_provider', $this->getMock('Tomahawk\Authentication\User\UserProviderInterface'));
 
         return $container;
     }
@@ -104,8 +104,8 @@ class AuthenticationServiceProviderTest extends TestCase
                 ['security.providers', null,
                     [
                         'memory' => ['users' => $this->users],
-                        'my_provider' => ['service' => 'auth.my_provider'],
-                        'my_non_existent_provider' => ['service' => 'auth.my_non_existent_provider'],
+                        'my_provider' => ['service' => 'authentication.my_provider'],
+                        'my_non_existent_provider' => ['service' => 'authentication.my_non_existent_provider'],
                     ]
                 ],
                 ['security.providers.memory', null, [
