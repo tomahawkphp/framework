@@ -18,7 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateModelCommand extends GenerateCommand
 {
-
+    /**
+     * @var string
+     */
     protected $resourcesDirectory;
 
     protected function configure()
