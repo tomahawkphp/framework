@@ -23,7 +23,7 @@ class ModelGeneratorTest extends GeneratorTest
 
         $content = file_get_contents($this->tmpDir.'/Entity/User.php');
         $strings = array(
-            'namespace Foo\\BarBundle\\Model',
+            'namespace Foo\\BarBundle\\Entity',
             'class User',
         );
         foreach ($strings as $string) {

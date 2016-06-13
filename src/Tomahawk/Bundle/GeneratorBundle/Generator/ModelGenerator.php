@@ -26,11 +26,11 @@ class ModelGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate(BundleInterface $bundle, $model)
+    public function generate(BundleInterface $bundle, $model, $modelDir = 'Entity')
     {
         $dir = $bundle->getPath();
 
-        $modelFile = $dir.'/Entity/'.$model.'.php';
+        $modelFile = $dir.'/'.$modelDir.'/'.$model.'.php';
         if (file_exists($modelFile)) {
             throw new \RuntimeException(sprintf('Model "%s" already exists', $model));
         }
@@ -39,6 +39,7 @@ class ModelGenerator extends Generator
             'namespace'  => $bundle->getNamespace(),
             'bundle'     => $bundle->getName(),
             'model'      => $model,
+            'model_dir'  => $modelDir,
         );
 
         $this->renderFile('model/Model.php.twig', $modelFile, $parameters);

@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Bundle\GeneratorBundle\Command;
 
+use Symfony\Component\Console\Input\InputOption;
 use Tomahawk\Bundle\GeneratorBundle\Generator\ModelGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +29,8 @@ class GenerateModelCommand extends GenerateCommand
         $this->setName('generate:model')
             ->setDescription('Generate Model.')
             ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
-            ->addArgument('model', InputArgument::REQUIRED, 'Name of model to create');
+            ->addArgument('model', InputArgument::REQUIRED, 'Name of model to create')
+            ->addOption('model-dir', 'md', InputOption::VALUE_OPTIONAL, 'Name of model directory to create',  'Entity');
 
         $this->resourcesDirectory = __DIR__ . '/resources/';
     }
@@ -39,12 +41,13 @@ class GenerateModelCommand extends GenerateCommand
 
         $model = $input->getArgument('model');
         $bundleName = $input->getArgument('bundle');
+        $modelDir = $input->getOption('model-dir');
 
         $bundle = $this->getKernel()->getBundle($bundleName);
 
-        $modelGenerator->generate($bundle, $model);
+        $modelGenerator->generate($bundle, $model, $modelDir);
 
-        $output->writeln(sprintf('Generated new model class to "<info>%s</info>"', $bundle->getPath() . '/Entity/' . $model . '.php'));
+        $output->writeln(sprintf('Generated new model class to "<info>%s</info>"', $bundle->getPath() . '/'.$modelDir.'/' . $model . '.php'));
 
     }
 

@@ -38,8 +38,6 @@ class ModelCommandTest extends TestCase
         $commandTester = $this->getCommandTester($command, $this->getGenerator());
 
         $commandTester->execute(array('command' => $command->getName(), 'bundle' => 'FooBundle', 'model' => 'User'));
-
-        //$this->assertRegExp('/Error writing to/', $commandTester->getDisplay());
     }
 
     protected function getGenerator()
