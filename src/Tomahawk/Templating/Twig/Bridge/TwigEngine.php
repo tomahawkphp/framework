@@ -17,7 +17,14 @@ use Symfony\Component\Templating\TemplateReferenceInterface;
 
 class TwigEngine implements EngineInterface
 {
+    /**
+     * @var \Twig_Environment
+     */
     protected $environment;
+
+    /**
+     * @var TemplateNameParserInterface
+     */
     protected $parser;
 
     /**

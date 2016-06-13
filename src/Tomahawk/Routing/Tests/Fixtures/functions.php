@@ -8,11 +8,6 @@ class TestApp extends Kernel
     {
         return array();
     }
-
-    public function registerMiddleware()
-    {
-        return array();
-    }
 }
 
 class TestController extends \Tomahawk\Routing\Controller

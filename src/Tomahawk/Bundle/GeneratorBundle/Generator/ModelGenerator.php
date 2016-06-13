@@ -30,7 +30,7 @@ class ModelGenerator extends Generator
     {
         $dir = $bundle->getPath();
 
-        $modelFile = $dir.'/Model/'.$model.'.php';
+        $modelFile = $dir.'/Entity/'.$model.'.php';
         if (file_exists($modelFile)) {
             throw new \RuntimeException(sprintf('Model "%s" already exists', $model));
         }

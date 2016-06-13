@@ -3,11 +3,10 @@
 namespace {{ namespace }}\Model;
 
 {% block use_statements %}
-use Illuminate\Database\Eloquent\Model;
 {% endblock use_statements %}
 
 {% block class_definition %}
-class {{ model }} extends Model
+class {{ model }}
 {% endblock class_definition %}
 {
 {% block class_body %}

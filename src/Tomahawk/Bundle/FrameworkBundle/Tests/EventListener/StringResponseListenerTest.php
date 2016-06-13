@@ -1,47 +1,29 @@
 <?php
 
-namespace Tomahawk\HttpCore\Tests\Middleware;
+namespace Tomahawk\Bundle\FrameworkBundle\Tests\EventListener;
 
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
-use Tomahawk\HttpCore\Middleware\StringResponse as StringResponseMiddleware;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\StringResponseListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class StringResponseMiddlewareTest extends TestCase
+class StringResponseListenerTest extends TestCase
 {
-    public function testMiddlewareName()
+
+    public function testListener()
     {
-        $middleware = new StringResponseMiddleware();
-        $middleware->setContainer($this->getContainer());
+        $container = $this->getContainer();
 
-        $this->assertEquals('StringResponse', $middleware->getName());
-
-        // Check again so it pulls from cache
-        $this->assertEquals('StringResponse', $middleware->getName());
-    }
-
-    public function testGetEventDispatcher()
-    {
-        $middleware = new StringResponseMiddleware();
-        $middleware->setContainer($this->getContainer());
-
-        $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventDispatcher', $middleware->getEventDispatcher());
-    }
-
-    public function testDispatchEvent()
-    {
-        $middleware = new StringResponseMiddleware();
-        $middleware->setContainer($this->getContainer());
-        $middleware->boot();
+        $container->get('event_dispatcher')->addSubscriber(new StringResponseListener());
 
         $controllerResult = 'Hello world';
         $event = new GetResponseForControllerResultEvent($this->getKernel(), new Request(), HttpKernelInterface::MASTER_REQUEST, $controllerResult);
 
-        $middleware->getEventDispatcher()->dispatch(KernelEvents::VIEW, $event);
+        $container->get('event_dispatcher')->dispatch(KernelEvents::VIEW, $event);
 
         $response = $event->getResponse();
 

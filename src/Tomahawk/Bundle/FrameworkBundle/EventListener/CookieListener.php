@@ -10,6 +10,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CookieListener implements EventSubscriberInterface
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
     public function __construct(ContainerInterface $container)

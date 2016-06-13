@@ -2,8 +2,7 @@
 
 namespace Tomahawk\Bundle\WebProfilerBundle;
 
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Tomahawk\Bundle\WebProfilerBundle\EventListener\InjectWebProfilerListener;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
@@ -31,32 +30,7 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
      */
     public function registerEvents(EventDispatcherInterface $dispatcher)
     {
-        $c = $this->container;
-
-        $dispatcher->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event) use($c) {
-
-            if ($response = $event->getResponse()) {
-                $content = $response->getContent();
-
-                /** @var Profiler $webProfiler */
-                $webProfiler = $c['web_profiler'];
-
-                $webProfiler->setRequest($event->getRequest());
-
-                // Check if we have the query stack from doctrine
-                $debugStack = $c->has('doctrine.query_stack') ? $c->get('doctrine.query_stack') : null;
-
-                if ($debugStack) {
-                    $webProfiler->addDoctrineQueries($debugStack);
-                }
-
-                $content .= $webProfiler->render();
-
-                $response->setContent($content);
-                $event->setResponse($response);
-            }
-
-        });
+        $dispatcher->addSubscriber(new InjectWebProfilerListener($this->container));
     }
 
     public function shutdown()

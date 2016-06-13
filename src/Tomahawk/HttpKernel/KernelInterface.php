@@ -28,13 +28,6 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     public function registerBundles();
 
     /**
-     * Returns an array of middleware to register
-     *
-     * @return Middleware[] An array of middleware instances
-     */
-    public function registerMiddleware();
-
-    /**
      * Boots the current kernel.
      *
      * @api

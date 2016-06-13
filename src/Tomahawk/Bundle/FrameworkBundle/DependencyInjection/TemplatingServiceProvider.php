@@ -13,6 +13,7 @@ namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
 
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
+use Tomahawk\Templating\GlobalVariables;
 use Tomahawk\Templating\Twig\TwigEngine;
 use Tomahawk\Templating\Helper\BlocksHelper;
 use Tomahawk\Templating\Helper\InputHelper;
@@ -37,52 +38,126 @@ class TemplatingServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
     {
-        $container->set('templating.php.helpers', function(ContainerInterface $c) {
-
-            return array(
-                new SlotsHelper(),
-                new BlocksHelper(),
-                new TranslatorHelper($c['translator']),
-                new UrlHelper($c['url_generator']),
-                new RequestHelper($c['request_stack']),
-                new SessionHelper($c['session']),
-                new InputHelper($c['input']),
-            );
+        $container->set('php.helper.slots', function(ContainerInterface $c) {
+            return new SlotsHelper();
         });
 
-        $container->set('templating.twig.extensions', function(ContainerInterface $c) {
-
-            return array(
-                new TranslatorExtension($c['translator']),
-                new UrlExtension($c['url_generator']),
-                new RequestExtension($c['request_stack']),
-                new SessionExtension($c['session']),
-            );
+        $container->set('php.helper.blocks', function(ContainerInterface $c) {
+            return new BlocksHelper();
         });
+
+        $container->set('php.helper.translator', function(ContainerInterface $c) {
+            return new TranslatorHelper($c['translator']);
+        });
+
+        $container->set('php.helper.url_generator', function(ContainerInterface $c) {
+            return new UrlHelper($c['url_generator']);
+        });
+
+        $container->tag('php.helper.slots', 'php.helper');
+        $container->tag('php.helper.blocks', 'php.helper');
+        $container->tag('php.helper.translator', 'php.helper');
+        $container->tag('php.helper.url_generator', 'php.helper');
+
+        $container->set('twig.extension.translator', function(ContainerInterface $c) {
+            return new TranslatorExtension($c['translator']);
+        });
+
+        $container->set('twig.extension.url_generator', function(ContainerInterface $c) {
+            return new UrlExtension($c['url_generator']);
+        });
+
+        $container->tag('twig.extension.translator', 'twig.extension');
+        $container->tag('twig.extension.url_generator', 'twig.extension');
 
         $container->set('templating.engine.php', function(ContainerInterface $c) {
             $kernel = $c['kernel'];
+            $config = $c['config'];
+
             $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
             $templateLocator = new TemplateLocator($locator);
             $loader = new FilesystemLoader($templateLocator);
             $parser = new TemplateNameParser($kernel);
-            return new PhpEngine($parser, $loader, $c['templating.php.helpers']);
+
+            $helpers = [];
+            $helperServiceIds = $c->findTaggedServiceIds('php.helper');
+
+            foreach ($helperServiceIds as $helperServiceId) {
+                $helpers[] = $c[$helperServiceId];
+            }
+
+            $phpEngine = new PhpEngine($parser, $loader, $helpers);
+            $phpEngine->setCharset($config->get('templating.charset', 'UTF-8'));
+
+            // Add global variables
+            $phpEngine->addGlobal('app', new GlobalVariables($c));
+
+            // Add globals from config
+            $globals = $config->get('templating.globals', []);
+
+            foreach ($globals as $name => $value) {
+                $phpEngine->addGlobal($name, $value);
+            }
+
+            $globalServiceIds = $c->findTaggedServiceIds('php.global');
+
+            foreach ($globalServiceIds as $globalServiceId) {
+                $global = $c[$globalServiceId];
+                $phpEngine->addGlobal($globalServiceId, $global);
+            }
+
+            return $phpEngine;
         });
 
         $container->set('templating.engine.twig', function(ContainerInterface $c) {
             $kernel = $c['kernel'];
+            $config = $c['config'];
+
             $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
             $templateLocator = new TemplateLocator($locator);
             $parser = new TemplateNameParser($kernel);
 
             $loader = new TwigFilesystemLoader($templateLocator, $parser);
 
-            $twig = new \Twig_Environment($loader);
+            $twig = new \Twig_Environment($loader, array(
+                'debug'            => $config->get('templating.twig.debug', false),
+                'auto_reload'      => $config->get('templating.twig.auto_reload', false),
+                'charset'          => $config->get('templating.twig.charset', 'UTF-8'),
+                'cache'            => $config->get('templating.twig.cache', ''),
+                'strict_variables' => $config->get('templating.twig.strict_variables', false),
+                'autoescape'       => $config->get('templating.twig.autoescape', 'html'),
+                'optimizations'    => $config->get('templating.twig.optimizations', -1),
+            ));
 
-            $extensions = $c['templating.twig.extensions'];
+            // Add global variables
+            $twig->addGlobal('app', new GlobalVariables($c));
 
-            foreach ($extensions as $extension) {
+            // Add globals from config
+            $globals = $config->get('templating.globals', array());
+
+            foreach ($globals as $name => $value) {
+                $twig->addGlobal($name, $value);
+            }
+
+            $globalServiceIds = $c->findTaggedServiceIds('twig.global');
+
+            foreach ($globalServiceIds as $globalServiceId) {
+                $global = $c[$globalServiceId];
+                $twig->addGlobal($globalServiceId, $global);
+            }
+
+            $extensionServiceIds = $c->findTaggedServiceIds('twig.extension');
+
+            foreach ($extensionServiceIds as $extensionServiceId) {
+                $extension = $c[$extensionServiceId];
                 $twig->addExtension($extension);
+            }
+
+            $filterServiceIds = $c->findTaggedServiceIds('twig.filter');
+
+            foreach ($filterServiceIds as $filterServiceId) {
+                $filter = $c[$filterServiceId];
+                $twig->addFilter($filter);
             }
 
             return new TwigEngine($twig, $parser, $locator);
@@ -103,6 +178,8 @@ class TemplatingServiceProvider implements ServiceProviderInterface
 
             return new DelegatingEngine($engines);
         }));
+
+        $container->addAlias('twig', 'templating.engine.twig');
 
         $container->addAlias('templating', 'Symfony\Component\Templating\EngineInterface');
     }

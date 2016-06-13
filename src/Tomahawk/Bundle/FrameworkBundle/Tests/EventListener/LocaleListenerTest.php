@@ -1,7 +1,9 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Tests;
+namespace Tomahawk\Bundle\FrameworkBundle\Tests\EventListener;
 
+use Tomahawk\Test\TestCase;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\LocaleListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
@@ -9,8 +11,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
-use Tomahawk\Bundle\FrameworkBundle\EventListener\LocaleListener;
-use Tomahawk\Test\TestCase;
 
 class LocaleListenerTest extends TestCase
 {

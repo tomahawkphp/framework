@@ -92,9 +92,29 @@ class OldInputBagTest extends TestCase
     {
         $array = ['name' => 'Tom', 'age' => 29];
         $bag = new OldInputBag();
-        $bag->initialize($array);
+        $bag->setAll($array);
 
         $this->assertEquals($array, $bag->all());
         $this->assertEmpty($bag->all());
+    }
+
+    public function testKeys()
+    {
+        $array = ['name' => 'Tom', 'age' => 29];
+        $bag = new OldInputBag();
+        $bag->setAll($array);
+
+        $this->assertEquals(['name', 'age'], $bag->keys());
+    }
+
+    public function testClear()
+    {
+        $array = ['name' => 'Tom', 'age' => 29];
+        $bag = new OldInputBag();
+        $bag->initialize($array);
+        $bag->clear();
+
+        $this->assertEmpty($bag->all());
+
     }
 }

@@ -31,11 +31,6 @@ class KernelWithRoutes extends BaseKernel
         return $this->bundleMap;
     }
 
-    public function registerMiddleware()
-    {
-        return array();
-    }
-
     public function isBooted()
     {
         return $this->booted;

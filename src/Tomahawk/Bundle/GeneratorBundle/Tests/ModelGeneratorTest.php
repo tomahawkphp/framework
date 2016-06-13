@@ -14,14 +14,14 @@ class ModelGeneratorTest extends GeneratorTest
         $generator->generate($this->getBundle(), 'User');
 
         $files = array(
-            'Model/User.php',
+            'Entity/User.php',
         );
 
         foreach ($files as $file) {
             $this->assertTrue(file_exists($this->tmpDir.'/'.$file), sprintf('%s has been generated', $file));
         }
 
-        $content = file_get_contents($this->tmpDir.'/Model/User.php');
+        $content = file_get_contents($this->tmpDir.'/Entity/User.php');
         $strings = array(
             'namespace Foo\\BarBundle\\Model',
             'class User',
@@ -36,8 +36,8 @@ class ModelGeneratorTest extends GeneratorTest
      */
     public function testGenerateModelFileExists()
     {
-        $this->filesystem->mkdir($this->tmpDir.'/Model');
-        $this->filesystem->touch($this->tmpDir.'/Model/Page.php');
+        $this->filesystem->mkdir($this->tmpDir.'/Entity');
+        $this->filesystem->touch($this->tmpDir.'/Entity/Page.php');
 
         $this->getGenerator()->generate($this->getBundle(), 'Page');
 

@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as SymfonySession
 
 class SessionListener extends SymfonySessionListener
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
     public function __construct(ContainerInterface $container)

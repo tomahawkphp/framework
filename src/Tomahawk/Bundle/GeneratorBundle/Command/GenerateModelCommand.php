@@ -42,7 +42,7 @@ class GenerateModelCommand extends GenerateCommand
 
         $modelGenerator->generate($bundle, $model);
 
-        $output->writeln(sprintf('Generated new model class to "<info>%s</info>"', $bundle->getPath() . '/Model/' . $model . '.php'));
+        $output->writeln(sprintf('Generated new model class to "<info>%s</info>"', $bundle->getPath() . '/Entity/' . $model . '.php'));
 
     }
 

@@ -11,8 +11,11 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
-use Tomahawk\Config\ConfigInterface;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\SessionListener;
 use Tomahawk\HttpKernel\Bundle\Bundle;
+use Tomahawk\Config\ConfigInterface;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\CookieListener;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\StringResponseListener;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthenticationServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider;
@@ -24,6 +27,7 @@ use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingServiceProvide
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
 
 class FrameworkBundle extends Bundle
 {
@@ -73,6 +77,14 @@ class FrameworkBundle extends Bundle
         $dispatcher->addSubscriber($this->container->get('route_listener'));
 
         $dispatcher->addSubscriber($this->container->get('locale_listener'));
+
+        $dispatcher->addSubscriber(new CookieListener($this->container));
+
+        $dispatcher->addSubscriber(new StringResponseListener());
+
+        $dispatcher->addSubscriber(new SessionListener($this->container));
+
+        $dispatcher->addSubscriber(new SaveSessionListener());
     }
 
     /**

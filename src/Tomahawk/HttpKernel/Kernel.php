@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Tomahawk\Middleware\Middleware;
 
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
@@ -28,18 +27,54 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     protected $bundles = array();
 
+    /**
+     * @var BundleInterface[]
+     */
     protected $bundleMap;
+
     /**
      * @var Container
      */
     protected $container;
+
+    /**
+     * @var mixed|string
+     */
     protected $rootDir;
+
+    /**
+     * @var string
+     */
     protected $environment;
+
+    /**
+     * @var bool
+     */
     protected $debug;
+
+    /**
+     * @var bool
+     */
     protected $booted = false;
+
+    /**
+     * @var mixed|string
+     */
     protected $name;
+
+    /**
+     * @var mixed
+     */
     protected $startTime;
+
+    /**
+     * @var array
+     */
     protected $paths = array();
+
+    /**
+     * @var array
+     */
     protected $routePaths = array();
 
     const VERSION         = '2.0.0';
@@ -89,13 +124,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     abstract public function registerBundles();
 
     /**
-     * Returns an array of middleware to register
-     *
-     * @return Middleware[] An array of middleware instances
-     */
-    abstract public function registerMiddleware();
-
-    /**
      * Boots the current kernel.
      *
      * @api
@@ -127,9 +155,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
 
         // Register events from Bundles
         $this->registerEvents();
-
-        // Setup any middleware registered
-        $this->initializeMiddleware();
     }
 
     /**
@@ -322,14 +347,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         $this->container['kernel'] = $this;
 
         $this->getKernelParameters();
-    }
-
-    public function initializeMiddleware()
-    {
-        foreach ($this->registerMiddleware() as $middleware) {
-            $middleware->setContainer($this->container);
-            $middleware->boot();
-        }
     }
 
     /**

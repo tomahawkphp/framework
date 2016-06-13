@@ -16,11 +16,6 @@ class KernelStub extends BaseKernel
         return $bundles;
     }
 
-    public function registerMiddleware()
-    {
-        return array();
-    }
-
     public function getParameters()
     {
         return $this->getKernelParameters();

@@ -16,11 +16,6 @@ class Kernel extends BaseKernel
         return array();
     }
 
-    public function registerMiddleware()
-    {
-        return array();
-    }
-
     public function isBooted()
     {
         return $this->booted;

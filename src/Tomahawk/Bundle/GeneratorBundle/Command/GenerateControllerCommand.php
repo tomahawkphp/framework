@@ -60,9 +60,9 @@ class GenerateControllerCommand extends GenerateCommand
         return $this->container->get('controller_generator');
     }
 
-    public function getPlaceholdersFromRoute($route)
+    public function getActionParametersFromRaw($rawParameters)
     {
-        preg_match_all('/{(.*?)}/', $route, $placeholders);
+        preg_match_all('/{(.*?)}/', $rawParameters, $placeholders);
         $placeholders = $placeholders[1];
 
         return $placeholders;
@@ -83,11 +83,11 @@ class GenerateControllerCommand extends GenerateCommand
             // name
             $name = array_shift($data);
 
-            // route parameters
-            $route = (isset($data[0]) && '' != $data[0]) ? array_shift($data) : null;
+            // action parameters
+            $rawParameters = (isset($data[0]) && '' != $data[0]) ? array_shift($data) : null;
 
-            if ($route) {
-                $placeholders = $this->getPlaceholdersFromRoute($route);
+            if ($rawParameters) {
+                $placeholders = $this->getActionParametersFromRaw($rawParameters);
             }
             else {
                 $placeholders = array();

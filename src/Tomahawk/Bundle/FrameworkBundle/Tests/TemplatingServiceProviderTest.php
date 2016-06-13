@@ -18,6 +18,8 @@ class TemplatingServiceProviderTest extends TestCase
         $templatingProvider = new TemplatingProvider();
         $templatingProvider->register($container);
 
+        $this->assertCount(4, $container->findTaggedServiceIds('php.helper'));
+        $this->assertCount(2, $container->findTaggedServiceIds('twig.extension'));
         $this->assertInstanceOf('Symfony\Component\Templating\EngineInterface', $container->get('templating'));
     }
 
@@ -46,6 +48,14 @@ class TemplatingServiceProviderTest extends TestCase
                 array('request.scheme', 'http', 'http'),
                 array('request.http_port', 80, 80),
                 array('request.https_port', 443, 443),
+                array('templating.globals', [], ['foo' => 'bar']),
+                array('templating.charset', 'UTF-8', 'UTF-8'),
+                array('templating.twig.debug', false, false),
+                array('templating.twig.auto_reload', false, false),
+                array('templating.twig.cache', '', ''),
+                array('templating.twig.strict_variables', false, false),
+                array('templating.twig.autoescape', 'html', 'html'),
+                array('templating.twig.optimizations', -1, -1),
             )));
 
         return $config;

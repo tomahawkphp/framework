@@ -18,11 +18,6 @@ class KernelForTestWithBundles extends BaseKernel
         return $bundles;
     }
 
-    public function registerMiddleware()
-    {
-        return array();
-    }
-
     protected function registerEvents()
     {
 

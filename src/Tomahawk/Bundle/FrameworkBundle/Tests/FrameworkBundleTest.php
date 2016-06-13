@@ -25,7 +25,7 @@ class FrameworkBundleTest extends TestCase
         $container = $this->getContainerMock();
 
         $eventDispatcher = $this->getEventDispatcherMock();
-        $eventDispatcher->expects($this->exactly(2))->method('addSubscriber');
+        $eventDispatcher->expects($this->exactly(6))->method('addSubscriber');
 
         $config = $this->getConfigMock();
 

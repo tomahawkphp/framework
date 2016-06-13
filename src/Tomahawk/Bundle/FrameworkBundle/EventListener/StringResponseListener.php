@@ -2,20 +2,13 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\EventListener;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StringResponseListener implements EventSubscriberInterface
 {
-    private $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         if (is_string($event->getControllerResult())) {
