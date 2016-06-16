@@ -70,14 +70,26 @@ class TemplatingServiceProvider implements ServiceProviderInterface
         $container->tag('twig.extension.translator', 'twig.extension');
         $container->tag('twig.extension.url_generator', 'twig.extension');
 
+
+        $container->set('template_locator', function(ContainerInterface $c) {
+            $locator = new FileLocator($c['kernel'], $c['kernel']->getRootDir() . '/Resources/');
+
+            return new TemplateLocator($locator);
+        });
+
+        $container->set('template_file_locator', function(ContainerInterface $c) {
+            return new FileLocator($c['kernel'], $c['kernel']->getRootDir() . '/Resources/');
+        });
+
+        $container->set('template_name_parser', function(ContainerInterface $c) {
+            return new TemplateNameParser($c['kernel']);
+        });
+
         $container->set('templating.engine.php', function(ContainerInterface $c) {
-            $kernel = $c['kernel'];
             $config = $c['config'];
 
-            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
-            $templateLocator = new TemplateLocator($locator);
-            $loader = new FilesystemLoader($templateLocator);
-            $parser = new TemplateNameParser($kernel);
+            $loader = new FilesystemLoader($c['template_locator']);
+            $parser = $c['template_name_parser'];
 
             $helpers = [];
             $helperServiceIds = $c->findTaggedServiceIds('php.helper');
@@ -109,15 +121,11 @@ class TemplatingServiceProvider implements ServiceProviderInterface
             return $phpEngine;
         });
 
-        $container->set('templating.engine.twig', function(ContainerInterface $c) {
-            $kernel = $c['kernel'];
+        $container->set('Twig_Environment', function(ContainerInterface $c) {
+
             $config = $c['config'];
 
-            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
-            $templateLocator = new TemplateLocator($locator);
-            $parser = new TemplateNameParser($kernel);
-
-            $loader = new TwigFilesystemLoader($templateLocator, $parser);
+            $loader = new TwigFilesystemLoader($c['template_locator'], $c['template_name_parser']);
 
             $twig = new \Twig_Environment($loader, array(
                 'debug'            => $config->get('templating.twig.debug', false),
@@ -160,6 +168,17 @@ class TemplatingServiceProvider implements ServiceProviderInterface
                 $twig->addFilter($filter);
             }
 
+            return $twig;
+        });
+
+        $container->set('templating.engine.twig', function(ContainerInterface $c) {
+            $kernel = $c['kernel'];
+
+            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
+            $parser = $c['template_name_parser'];
+
+            $twig = $c['twig'];
+
             return new TwigEngine($twig, $parser, $locator);
         });
 
@@ -179,7 +198,7 @@ class TemplatingServiceProvider implements ServiceProviderInterface
             return new DelegatingEngine($engines);
         }));
 
-        $container->addAlias('twig', 'templating.engine.twig');
+        $container->addAlias('twig', 'Twig_Environment');
 
         $container->addAlias('templating', 'Symfony\Component\Templating\EngineInterface');
     }
