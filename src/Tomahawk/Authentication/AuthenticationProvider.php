@@ -53,6 +53,11 @@ class AuthenticationProvider implements AuthenticationProviderInterface
      */
     private $user;
 
+    /**
+     * @var bool
+     */
+    private $loggedIn;
+
     public function __construct(
         UserProviderInterface $userProvider,
         PasswordEncoderInterface $passwordEncoder,
@@ -92,6 +97,8 @@ class AuthenticationProvider implements AuthenticationProviderInterface
 
         $this->user = $user;
 
+        $this->loggedIn = true;
+
         return $user;
     }
 
@@ -102,7 +109,12 @@ class AuthenticationProvider implements AuthenticationProviderInterface
      */
     function isLoggedIn()
     {
-        return null !== $this->storage->getIdentifier($this->storageKey);
+        if (null === $this->loggedIn) {
+            $this->user = $this->loadUser();
+            $this->loggedIn = $this->user instanceof UserInterface;
+        }
+
+        return $this->loggedIn;
     }
 
     /**
@@ -133,6 +145,8 @@ class AuthenticationProvider implements AuthenticationProviderInterface
         $this->storage->setIdentifier($this->storageKey, $user->getUsername());
 
         $this->user = $user;
+
+        $this->loggedIn = true;
     }
 
     /**
@@ -142,6 +156,7 @@ class AuthenticationProvider implements AuthenticationProviderInterface
     {
         $this->storage->removeIdentifier($this->storageKey);
         $this->user = null;
+        $this->loggedIn = false;
     }
 
     /**
@@ -151,6 +166,28 @@ class AuthenticationProvider implements AuthenticationProviderInterface
      */
     public function getUser()
     {
-        return $this->user;
+        if ($this->isLoggedIn()) {
+            return $this->user;
+        }
+    }
+
+    /**
+     * Load user
+     *
+     * @return null|UserInterface
+     */
+    private function loadUser()
+    {
+        $user = null;
+
+        if ($username = $this->storage->getIdentifier($this->storageKey)) {
+            $user = $this->userProvider->findUserByUsername($username);
+        }
+
+        if ($user) {
+            $this->loggedIn = true;
+        }
+
+        return $user;
     }
 }

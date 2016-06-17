@@ -93,12 +93,20 @@ class AuthenticationProviderTest extends TestCase
     {
         $storage = $this->getStorage();
 
+        $user = $this->getUser();
+
         $storage->expects($this->once())
             ->method('getIdentifier')
             ->will($this->returnValue('tommy'));
 
+        $userProvider = $this->getUserProvider();
+
+        $userProvider->expects($this->once())
+            ->method('findUserByUsername')
+            ->will($this->returnValue($user));
+
         $authenticationProvider = new AuthenticationProvider(
-            $this->getUserProvider(),
+            $userProvider,
             $this->getPasswordEncoder(),
             $storage
         );
@@ -106,16 +114,67 @@ class AuthenticationProviderTest extends TestCase
         $this->assertTrue($authenticationProvider->isLoggedIn());
     }
 
-    public function testIsGuest()
+    public function testIsLoggedInUserCantBeLoaded()
     {
         $storage = $this->getStorage();
+
+        $user = null;
 
         $storage->expects($this->once())
             ->method('getIdentifier')
             ->will($this->returnValue('tommy'));
 
+        $userProvider = $this->getUserProvider();
+
+        $userProvider->expects($this->once())
+            ->method('findUserByUsername')
+            ->will($this->returnValue($user));
+
+        $authenticationProvider = new AuthenticationProvider(
+            $userProvider,
+            $this->getPasswordEncoder(),
+            $storage
+        );
+
+        $this->assertFalse($authenticationProvider->isLoggedIn());
+        $this->assertTrue($authenticationProvider->isGuest());
+    }
+
+    public function testIsGuestReturnsTrueOnNoUser()
+    {
+        $storage = $this->getStorage();
+
+        $storage->expects($this->once())
+            ->method('getIdentifier')
+            ->will($this->returnValue(null));
+
         $authenticationProvider = new AuthenticationProvider(
             $this->getUserProvider(),
+            $this->getPasswordEncoder(),
+            $storage
+        );
+
+        $this->assertTrue($authenticationProvider->isGuest());
+    }
+
+    public function testIsGuestReturnsFalseOnUser()
+    {
+        $storage = $this->getStorage();
+
+        $user = $this->getUser();
+
+        $storage->expects($this->once())
+            ->method('getIdentifier')
+            ->will($this->returnValue('tommy'));
+
+        $userProvider = $this->getUserProvider();
+
+        $userProvider->expects($this->once())
+            ->method('findUserByUsername')
+            ->will($this->returnValue($user));
+
+        $authenticationProvider = new AuthenticationProvider(
+            $userProvider,
             $this->getPasswordEncoder(),
             $storage
         );
