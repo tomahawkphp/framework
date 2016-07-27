@@ -71,25 +71,25 @@ class TemplatingServiceProvider implements ServiceProviderInterface
         $container->tag('twig.extension.url_generator', 'twig.extension');
 
 
-        $container->set('template_locator', function(ContainerInterface $c) {
-            $locator = new FileLocator($c['kernel'], $c['kernel']->getRootDir() . '/Resources/');
+        $container->set('template.locator', function(ContainerInterface $c) {
+            $locator = $c['file.locator'];
 
             return new TemplateLocator($locator);
         });
 
-        $container->set('template_file_locator', function(ContainerInterface $c) {
+        $container->set('file.locator', function(ContainerInterface $c) {
             return new FileLocator($c['kernel'], $c['kernel']->getRootDir() . '/Resources/');
         });
 
-        $container->set('template_name_parser', function(ContainerInterface $c) {
+        $container->set('template.name_parser', function(ContainerInterface $c) {
             return new TemplateNameParser($c['kernel']);
         });
 
         $container->set('templating.engine.php', function(ContainerInterface $c) {
             $config = $c['config'];
 
-            $loader = new FilesystemLoader($c['template_locator']);
-            $parser = $c['template_name_parser'];
+            $loader = new FilesystemLoader($c['template.locator']);
+            $parser = $c['template.name_parser'];
 
             $helpers = [];
             $helperServiceIds = $c->findTaggedServiceIds('php.helper');
@@ -125,7 +125,7 @@ class TemplatingServiceProvider implements ServiceProviderInterface
 
             $config = $c['config'];
 
-            $loader = new TwigFilesystemLoader($c['template_locator'], $c['template_name_parser']);
+            $loader = new TwigFilesystemLoader($c['template.locator'], $c['template.name_parser']);
 
             $twig = new \Twig_Environment($loader, array(
                 'debug'            => $config->get('templating.twig.debug', false),
@@ -175,7 +175,7 @@ class TemplatingServiceProvider implements ServiceProviderInterface
             $kernel = $c['kernel'];
 
             $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
-            $parser = $c['template_name_parser'];
+            $parser = $c['template.name_parser'];
 
             $twig = $c['twig'];
 
