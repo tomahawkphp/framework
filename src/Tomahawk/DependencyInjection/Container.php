@@ -297,10 +297,6 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     public function offsetGet($id)
     {
-        if (is_object($id)) {
-            return $id;
-        }
-
         if ($this->hasAlias($id)) {
             $id = $this->getAlias($id);
         }

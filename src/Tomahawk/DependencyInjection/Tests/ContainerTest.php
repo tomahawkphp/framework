@@ -119,12 +119,6 @@ class ContainerTest extends TestCase
         $this->assertFalse($container->hasAlias('my_service'));
     }
 
-    public function testWhenObjectIsPassesItIsReturned()
-    {
-        $container = new Container();
-        $this->assertInstanceOf('Tomahawk\DependencyInjection\Test\Service', $container->get(new Service()));
-    }
-
     public function testWithClosure()
     {
         $container = new Container();
