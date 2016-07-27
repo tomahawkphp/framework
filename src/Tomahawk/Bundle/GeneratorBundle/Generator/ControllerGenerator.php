@@ -46,6 +46,7 @@ class ControllerGenerator extends Generator
         $dir = $bundle->getPath();
 
         $controllerFile = $dir.'/Controller/'.$controller.'Controller.php';
+
         if (file_exists($controllerFile)) {
             throw new \RuntimeException(sprintf('Controller "%s" already exists', $controller));
         }

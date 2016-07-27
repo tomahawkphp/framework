@@ -42,7 +42,13 @@ class GenerateBundleCommand extends GenerateCommand
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
-            ));
+            ))
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command creates a new bundle.
+
+<info>php app/hatchet %command.name% --namespace="MyPackage\\Bundle" --bundle-name="UserBundle" --dir="./src"</info>
+EOT
+            );
     }
 
     /**

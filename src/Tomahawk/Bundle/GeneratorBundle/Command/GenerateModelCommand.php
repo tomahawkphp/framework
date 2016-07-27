@@ -30,7 +30,13 @@ class GenerateModelCommand extends GenerateCommand
             ->setDescription('Generate Model.')
             ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
             ->addArgument('model', InputArgument::REQUIRED, 'Name of model to create')
-            ->addOption('model-dir', 'md', InputOption::VALUE_OPTIONAL, 'Name of model directory to create',  'Entity');
+            ->addOption('model-dir', 'md', InputOption::VALUE_OPTIONAL, 'Name of model directory to create',  'Entity')
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command creates a new model for a given bundle.
+
+<info>php app/hatchet %command.name% UserBundle User --model-dir="Entity"</info>
+EOT
+        );
 
         $this->resourcesDirectory = __DIR__ . '/resources/';
     }

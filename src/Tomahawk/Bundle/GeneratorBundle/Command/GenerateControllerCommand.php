@@ -28,7 +28,22 @@ class GenerateControllerCommand extends GenerateCommand
             ->setDescription('Generate Controller.')
             ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
             ->addArgument('controller', InputArgument::REQUIRED, 'Name of controller to create')
-            ->addOption('actions', '', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller');
+            ->addOption('actions', '', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller')
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command creates a new controller for a given bundle.
+
+Running:
+<info>php app/hatchet %command.name% MyBundle Admin</info>
+
+Would create a controller named <info>AdminController</info> for the bundle <info>MyBundle</info>
+
+You can also optionally specify actions for the controller
+
+<info>php app/hatchet %command.name% MyBundle Admin --actions="find view:{id}"</info>
+
+<info>php app/hatchet %command.name% MyBundle Admin --actions="find" --actions="view:{id}"</info>
+EOT
+        );
 
         $this->resourcesDirectory = __DIR__ . '/resources/';
     }
@@ -48,7 +63,7 @@ class GenerateControllerCommand extends GenerateCommand
 
         $generator->generate($bundle, $controller, $actions);
 
-        $output->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . '.php'));
+        $output->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . 'Controller.php'));
 
     }
 
