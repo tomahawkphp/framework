@@ -23,7 +23,14 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class Application extends BaseApplication
 {
+    /**
+     * @var KernelInterface
+     */
     private $kernel;
+
+    /**
+     * @var bool
+     */
     private $commandsRegistered = false;
 
     /**
@@ -63,7 +70,7 @@ class Application extends BaseApplication
     {
         $this->kernel->boot();
 
-        if (!$this->commandsRegistered) {
+        if ( ! $this->commandsRegistered) {
             $this->registerCommands();
             $this->commandsRegistered = true;
         }
@@ -92,6 +99,9 @@ class Application extends BaseApplication
         // @codeCoverageIgnoreEnd
     }
 
+    /**
+     * Register commands from bundles
+     */
     protected function registerCommands()
     {
         foreach ($this->kernel->getBundles() as $bundle) {
