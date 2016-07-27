@@ -16,21 +16,41 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Output extends ConsoleOutput implements OutputInterface
 {
+    /**
+     * Write info message
+     *
+     * @param $string
+     */
     public function info($string)
     {
         $this->writeln('<fg=green>'.$string.'</fg=green>');
     }
 
+    /**
+     * Write success message
+     *
+     * @param $string
+     */
     public function success($string)
     {
         $this->writeln('<info>'.$string.'</info>');
     }
 
+    /**
+     * Write question
+     *
+     * @param $string
+     */
     public function question($string)
     {
         $this->writeln('<question>'.$string.'</question>');
     }
 
+    /**
+     * Write error
+     *
+     * @param $string
+     */
     public function error($string)
     {
         $this->writeln('<error>'.$string.'</error>');

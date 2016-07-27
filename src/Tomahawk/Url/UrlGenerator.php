@@ -34,20 +34,6 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
     );
 
     /**
-     * Constructor.
-     *
-     * @param RouteCollection      $routes  A RouteCollection instance
-     * @param RequestContext       $context The context
-     * @param LoggerInterface|null $logger  A logger instance
-     */
-    public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null)
-    {
-        $this->routes = $routes;
-        $this->context = $context;
-        $this->logger = $logger;
-    }
-
-    /**
      * @return string
      */
     public function getBaseUrl()
@@ -95,7 +81,7 @@ class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
         $host = $this->context->getHost();
         $base = '';
 
-        if (!$asset) {
+        if ( ! $asset) {
             $base = $this->context->getBaseUrl();
         }
         $port = '';

@@ -18,12 +18,12 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 class ConfigManager implements ConfigInterface
 {
     /**
-     * @var \Symfony\Component\Config\Loader\LoaderInterface
+     * @var LoaderInterface
      */
     protected $loader;
 
     /**
-     * @var \Symfony\Component\Finder\Finder
+     * @var Finder
      */
     protected $finder;
 
@@ -173,5 +173,3 @@ class ConfigManager implements ConfigInterface
         return $array;
     }
 }
-
-

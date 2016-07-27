@@ -26,7 +26,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param array $headers
      * @return Response
      */
-    public function content($content = '', $status = 200, $headers = array())
+    public function content($content = '', $status = 200, $headers = [])
     {
         $response = new Response($content, $status, $headers);
         return $response;
@@ -38,7 +38,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param array $headers
      * @return RedirectResponse
      */
-    public function redirect($url, $status = 302, $headers = array())
+    public function redirect($url, $status = 302, $headers = [])
     {
         $response = new RedirectResponse($url, $status, $headers);
         return $response;
@@ -50,7 +50,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param array $headers
      * @return StreamedResponse
      */
-    public function stream(Closure $callback, $status = 200, $headers = array())
+    public function stream(callable $callback, $status = 200, $headers = [])
     {
         $response = new StreamedResponse($callback, $status, $headers);
         return $response;
@@ -62,7 +62,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param array $headers
      * @return JsonResponse
      */
-    public function json(array $data, $status = 200, $headers = array())
+    public function json(array $data, $status = 200, $headers = [])
     {
         $response = new JsonResponse($data, $status, $headers);
         return $response;
@@ -78,7 +78,7 @@ class ResponseBuilder implements ResponseBuilderInterface
      * @param bool $autoLastModified
      * @return BinaryFileResponse
      */
-    public function download($file, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
+    public function download($file, $status = 200, $headers = [], $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
     {
         $response = new BinaryFileResponse($file, $status, $headers, $public, $contentDisposition, $autoEtag, $autoLastModified);
         return $response;

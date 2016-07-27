@@ -14,6 +14,13 @@ namespace Tomahawk\HttpCore\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
 
+/**
+ * Class Cookies
+ *
+ * Simple container for cookies that will be added to the current request
+ *
+ * @package Tomahawk\HttpCore\Response
+ */
 class Cookies implements CookiesInterface
 {
     /**
@@ -24,7 +31,7 @@ class Cookies implements CookiesInterface
     /**
      * @var Cookie[]
      */
-    protected $cookies = array();
+    protected $cookies = [];
 
     public function __construct(Request $request)
     {

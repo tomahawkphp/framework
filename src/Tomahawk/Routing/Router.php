@@ -66,7 +66,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function get($path, $name, $callback = null, array $schemes = array())
+    public function get($path, $name, $callback = null, array $schemes = [])
     {
         return $this->createRoute('GET', $path, $name, $callback, $schemes);
     }
@@ -80,7 +80,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function post($path, $name, $callback = null, array $schemes = array())
+    public function post($path, $name, $callback = null, array $schemes = [])
     {
         return $this->createRoute('POST', $path, $name, $callback, $schemes);
     }
@@ -94,7 +94,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function put($path, $name, $callback = null, array $schemes = array())
+    public function put($path, $name, $callback = null, array $schemes = [])
     {
         return $this->createRoute('PUT', $path, $name, $callback, $schemes);
     }
@@ -108,7 +108,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function patch($path, $name, $callback = null, array $schemes = array())
+    public function patch($path, $name, $callback = null, array $schemes = [])
     {
         return $this->createRoute('PATCH', $path, $name, $callback, $schemes);
     }
@@ -122,7 +122,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function options($path, $name, $callback = null, array $schemes = array())
+    public function options($path, $name, $callback = null, array $schemes = [])
     {
         return $this->createRoute('OPTIONS', $path, $name, $callback, $schemes);
     }
@@ -136,7 +136,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function delete($path, $name, $callback = null, array $schemes = array())
+    public function delete($path, $name, $callback = null, array $schemes = [])
     {
         return $this->createRoute('DELETE', $path, $name, $callback, $schemes);
     }
@@ -150,7 +150,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function any($path, $name, $callback = null, array $schemes = array())
+    public function any($path, $name, $callback = null, array $schemes = [])
     {
         return $this->createRoute(array(), $path, $name, $callback, $schemes);
     }
@@ -163,7 +163,7 @@ class Router
      * @param array $schemes
      * @return Route
      */
-    public function createRoute($method, $path, $name, $callback, array $schemes = array())
+    public function createRoute($method, $path, $name, $callback, array $schemes = [])
     {
         $methods = is_array($method) ? $method : explode('|', $method);
 
@@ -202,7 +202,7 @@ class Router
      * @param \Closure $callback
      * @return $this
      */
-    public function section($name, $options = array(), \Closure $callback)
+    public function section($name, $options = [], \Closure $callback)
     {
         $sub_collection = new RouteCollection();
 

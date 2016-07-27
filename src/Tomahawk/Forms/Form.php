@@ -170,7 +170,6 @@ class Form extends AttributeBuilder implements FormInterface
 
         if ($this->model) {
 
-            //$value = $this->applyReverseTransform($name, $value);
             foreach ($this->input as $name => $value) {
 
                 $value = $this->applyReverseTransform($name, $value);

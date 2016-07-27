@@ -20,7 +20,7 @@ class Controller implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    public function forward($controller, array $path = array(), array $query = array())
+    public function forward($controller, array $path = [], array $query = [])
     {
         $path['_controller'] = $controller;
         $subRequest = $this->container->get('http_kernel')->getCurrentRequest()->duplicate($query, null, $path);
@@ -36,7 +36,7 @@ class Controller implements ContainerAwareInterface
      *
      * @return string The rendered view
      */
-    public function renderView($view, array $parameters = array())
+    public function renderView($view, array $parameters = [])
     {
         return $this->container->get('templating')->render($view, $parameters);
     }
@@ -49,7 +49,7 @@ class Controller implements ContainerAwareInterface
      * @param Response|null $response
      * @return Response
      */
-    public function render($view, array $parameters = array(), Response $response = null)
+    public function render($view, array $parameters = [], Response $response = null)
     {
         $content = $this->renderView($view, $parameters);
 

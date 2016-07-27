@@ -15,6 +15,9 @@ use Symfony\Component\Config\Loader\FileLoader;
 
 class PhpConfigLoader extends FileLoader
 {
+    /**
+     * {@inheritdoc}
+     */
     public function load($resource, $type = null)
     {
         $configValues = require($resource);
@@ -22,6 +25,9 @@ class PhpConfigLoader extends FileLoader
         return $configValues;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supports($resource, $type = null)
     {
         return is_string($resource) && 'php' === pathinfo(

@@ -20,6 +20,12 @@ abstract class Element extends AttributeBuilder
      */
     protected $value;
 
+    /**
+     * Element constructor.
+     *
+     * @param $name
+     * @param null $value
+     */
     public function __construct($name, $value = null)
     {
         $this->name = $name;

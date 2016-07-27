@@ -26,7 +26,7 @@ interface ResponseBuilderInterface
      * @param array $headers
      * @return Response
      */
-    public function content($content = '', $status = 200, $headers = array());
+    public function content($content = '', $status = 200, $headers = []);
 
     /**
      * @param $url
@@ -34,7 +34,7 @@ interface ResponseBuilderInterface
      * @param array $headers
      * @return RedirectResponse
      */
-    public function redirect($url, $status = 302, $headers = array());
+    public function redirect($url, $status = 302, $headers = []);
 
     /**
      * @param callable $callback
@@ -42,7 +42,7 @@ interface ResponseBuilderInterface
      * @param array $headers
      * @return StreamedResponse
      */
-    public function stream(Closure $callback, $status = 200, $headers = array());
+    public function stream(callable $callback, $status = 200, $headers = []);
 
     /**
      * @param array $data
@@ -50,7 +50,7 @@ interface ResponseBuilderInterface
      * @param array $headers
      * @return JsonResponse
      */
-    public function json(array $data, $status = 200, $headers = array());
+    public function json(array $data, $status = 200, $headers = []);
 
     /**
      * @param $file
@@ -62,5 +62,5 @@ interface ResponseBuilderInterface
      * @param bool $autoLastModified
      * @return BinaryFileResponse
      */
-    public function download($file, $status = 200, $headers = array(), $public = true, $contentDisposition, $autoEtag = false, $autoLastModified = true);
+    public function download($file, $status = 200, $headers = [], $public = true, $contentDisposition, $autoEtag = false, $autoLastModified = true);
 }

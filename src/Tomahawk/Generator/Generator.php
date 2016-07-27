@@ -41,17 +41,17 @@ class Generator
      */
     public function setSkeletonDirs($skeletonDirs)
     {
-        $this->skeletonDirs = is_array($skeletonDirs) ? $skeletonDirs : array($skeletonDirs);
+        $this->skeletonDirs = is_array($skeletonDirs) ? $skeletonDirs : [$skeletonDirs];
     }
 
     protected function render($template, $parameters)
     {
-        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->skeletonDirs), array(
+        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->skeletonDirs), [
             'debug'            => true,
             'cache'            => false,
             'strict_variables' => true,
             'autoescape'       => false,
-        ));
+        ]);
 
         return $twig->render($template, $parameters);
     }
