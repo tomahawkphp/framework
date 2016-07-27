@@ -40,6 +40,28 @@ class WebProfilerBundleTest extends TestCase
 
     }
 
+    public function testBundleWithBodyInResponse()
+    {
+        $httpKernel = $this->getHttpKernel();
+
+        $eventDispatcher = $this->container['event_dispatcher'];
+
+        $response = new Response('<html><body></body></html>');
+        $event = new FilterResponseEvent($httpKernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
+
+        $webBundle = new WebProfilerBundle();
+        $webBundle->setContainer($this->container);
+        $webBundle->boot();
+        $webBundle->registerEvents($eventDispatcher);
+
+        $eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+
+        $webBundle->shutdown();
+
+    }
+
     protected function getHttpKernel()
     {
         $httpKernel = $this->getMockBuilder('Tomahawk\HttpKernel\HttpKernel')
