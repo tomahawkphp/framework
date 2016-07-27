@@ -22,8 +22,14 @@ namespace Tomahawk\Forms;
  */
 class CallableDataTransformer implements DataTransformerInterface
 {
+    /**
+     * @var callable
+     */
     private $transform;
 
+    /**
+     * @var callable
+     */
     private $reverseTransform;
 
     /**
