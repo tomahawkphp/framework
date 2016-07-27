@@ -22,11 +22,17 @@ use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 
 /**
+ * Based of the DisconnectedMetadataFactory from the DoctrineBundle
+ *
+ * This class provides methods to access Doctrine entity class metadata for a
+ * given bundle, namespace or entity class, for generation purposes
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class DisconnectedMetadataFactory
 {
     private $registry;
+
     /**
      * Constructor.
      *
@@ -36,6 +42,7 @@ class DisconnectedMetadataFactory
     {
         $this->registry = $registry;
     }
+
     /**
      * Gets the metadata of all classes of a bundle.
      *
@@ -52,11 +59,15 @@ class DisconnectedMetadataFactory
         if (!$metadata->getMetadata()) {
             throw new \RuntimeException(sprintf('Bundle "%s" does not contain any mapped entities.', $bundle->getName()));
         }
+
         $path = $this->getBasePathForClass($bundle->getName(), $bundle->getNamespace(), $bundle->getPath());
+
         $metadata->setPath($path);
         $metadata->setNamespace($bundle->getNamespace());
+
         return $metadata;
     }
+
     /**
      * Gets the metadata of a class.
      *
@@ -73,9 +84,12 @@ class DisconnectedMetadataFactory
         if (!$metadata->getMetadata()) {
             throw MappingException::classIsNotAValidEntityOrMappedSuperClass($class);
         }
+
         $this->findNamespaceAndPathForMetadata($metadata, $path);
+
         return $metadata;
     }
+
     /**
      * Gets the metadata of all classes of a namespace.
      *
@@ -92,9 +106,12 @@ class DisconnectedMetadataFactory
         if (!$metadata->getMetadata()) {
             throw new \RuntimeException(sprintf('Namespace "%s" does not contain any mapped entities.', $namespace));
         }
+
         $this->findNamespaceAndPathForMetadata($metadata, $path);
+
         return $metadata;
     }
+
     /**
      * Find and configure path and namespace for the metadata collection.
      *
@@ -109,12 +126,22 @@ class DisconnectedMetadataFactory
         if (class_exists($all[0]->name)) {
             $r = new \ReflectionClass($all[0]->name);
             $path = $this->getBasePathForClass($r->getName(), $r->getNamespaceName(), dirname($r->getFilename()));
-        } elseif (!$path) {
+            $ns = $r->getNamespaceName();
+
+        } elseif ($path) {
+            // Get namespace by removing the last component of the FQCN
+            $nsParts = explode('\\', $all[0]->name);
+            array_pop($nsParts);
+            $ns = implode('\\', $nsParts);
+
+        } else {
             throw new \RuntimeException(sprintf('Unable to determine where to save the "%s" class (use the --path option).', $all[0]->name));
         }
+
         $metadata->setPath($path);
-        $metadata->setNamespace(isset($r) ? $r->getNamespaceName() : $all[0]->name);
+        $metadata->setNamespace($ns);
     }
+
     /**
      * Get a base path for a class
      *
@@ -130,11 +157,14 @@ class DisconnectedMetadataFactory
         $namespace = str_replace('\\', '/', $namespace);
         $search = str_replace('\\', '/', $path);
         $destination = str_replace('/'.$namespace, '', $search, $c);
+
         if ($c != 1) {
             throw new \RuntimeException(sprintf('Can\'t find base path for "%s" (path: "%s", destination: "%s").', $name, $path, $destination));
         }
+
         return $destination;
     }
+
     /**
      * @param string $namespace
      *
@@ -148,8 +178,10 @@ class DisconnectedMetadataFactory
                 $metadata[] = $m;
             }
         }
+
         return new ClassMetadataCollection($metadata);
     }
+
     /**
      * @param string $entity
      *
@@ -160,12 +192,15 @@ class DisconnectedMetadataFactory
         foreach ($this->registry->getManagers() as $em) {
             $cmf = new DisconnectedClassMetadataFactory();
             $cmf->setEntityManager($em);
+
             if (!$cmf->isTransient($entity)) {
                 return new ClassMetadataCollection(array($cmf->getMetadataFor($entity)));
             }
         }
+
         return new ClassMetadataCollection(array());
     }
+
     /**
      * @return array
      */
@@ -179,6 +214,7 @@ class DisconnectedMetadataFactory
                 $metadata[] = $m;
             }
         }
+
         return $metadata;
     }
 }

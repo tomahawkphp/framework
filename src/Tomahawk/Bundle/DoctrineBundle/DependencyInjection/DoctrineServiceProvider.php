@@ -11,8 +11,8 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\DependencyInjection;
 
+use Tomahawk\Bundle\DoctrineBundle\Authentication\User\DoctrineUserProvider;
 use Tomahawk\Bundle\DoctrineBundle\Registry;
-use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Doctrine\Common\Cache\ApcuCache;
@@ -66,7 +66,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             $doctrineConfig = $c->get('config')->get('doctrine');
             $defaultConnection = $doctrineConfig['default_connection'];
 
-            $registry = new Registry($c, $c['doctrine.connections'], array('default' => $c['doctrine.entitymanager']), $defaultConnection, 'default');
+            $registry = new Registry($c, $c['doctrine.connections'], array('default' => 'doctrine.entitymanager'), $defaultConnection, 'default');
             return $registry;
         });
 
@@ -113,20 +113,14 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return DriverManager::getConnection($allConnections[$defaultConnection]);
         });
 
-        /*$container->set('doctrine_auth_handler', function(ContainerInterface $c) {
+        $container->set('authentication.provider.doctrine', function(ContainerInterface $c) {
 
             $config = $c['config'];
 
-            $s = $config->get('security.handlers.doctrine');
+            $doctrineConfig = $config->get('security.providers.doctrine');
 
-            return new DoctrineAuthHandler(
-                $c['hasher'],
-                $c['doctrine'],
-                $s['model'],
-                $s['username'],
-                isset($s['password']) ? $s['password'] : null
-            );
-        });*/
+            return new DoctrineUserProvider($c['doctrine'], $doctrineConfig['user_class'], $doctrineConfig['username']);
+        });
     }
 
     public function registerCache(ContainerInterface $container)
@@ -157,31 +151,55 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return $cache;
         });
 
+        /**
+         * @codeCoverageIgnoreStart
+         */
         $container->set('doctrine.cache.memcached', function(ContainerInterface $c) {
             $cache = new MemcachedCache();
             $cache->setMemcached(new \Memcached());
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
             return $cache;
         });
+        /**
+         * @codeCoverageIgnoreEnd
+         */
 
+        /**
+         * @codeCoverageIgnoreStart
+         */
         $container->set('doctrine.cache.memcache', function(ContainerInterface $c) {
             $cache = new MemcacheCache();
             $cache->setMemcache(new \Memcache());
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
             return $cache;
         });
+        /**
+         * @codeCoverageIgnoreEnd
+         */
 
+        /**
+         * @codeCoverageIgnoreStart
+         */
         $container->set('doctrine.cache.redis', function(ContainerInterface $c) {
             $cache = new RedisCache();
             $cache->setRedis(new \Redis());
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
             return $cache;
         });
+        /**
+         * @codeCoverageIgnoreEnd
+         */
 
+        /**
+         * @codeCoverageIgnoreStart
+         */
         $container->set('doctrine.cache.xcache', function(ContainerInterface $c) {
             $cache = new XcacheCache();
             $cache->setNamespace($c['config']->get('cache.namespace', ''));
             return $cache;
         });
+        /**
+         * @codeCoverageIgnoreEnd
+         */
     }
 }

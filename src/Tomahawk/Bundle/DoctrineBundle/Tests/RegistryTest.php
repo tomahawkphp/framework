@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests;
 
+use Doctrine\ORM\ORMException;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Bundle\DoctrineBundle\Registry;
@@ -13,6 +14,73 @@ class RegistryTest extends TestCase
         $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
         $registry = new Registry($container, array(), array(), 'default', 'default');
         $this->assertEquals('default', $registry->getDefaultConnectionName());
+    }
+
+    public function testGetAliasNamespace()
+    {
+        $configuration = $this->getMock('Doctrine\ORM\Configuration');
+
+        $configuration->expects($this->any())
+            ->method('getEntityNamespace')
+            ->will($this->returnValue('Path\To\Namespace'));
+
+        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+
+        $manager->expects($this->once())
+            ->method('getConfiguration')
+            ->will($this->returnValue($configuration));
+
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+
+        $container->expects($this->any())
+            ->method('get')
+            ->with('__manager__')
+            ->will($this->returnValue($manager));
+
+        $registry = new Registry($container, array(), array('default' => '__manager__'), 'default', 'default');
+
+        $this->assertEquals('Path\To\Namespace', $registry->getAliasNamespace('foo'));
+    }
+
+    /**
+     * @expectedException \Doctrine\ORM\ORMException
+     */
+    public function testGetAliasNamespaceWithManagerThrowsException()
+    {
+        $configuration = $this->getMock('Doctrine\ORM\Configuration');
+
+        $configuration->expects($this->any())
+            ->method('getEntityNamespace')
+            ->will($this->returnValue('Path\To\Namespace'));
+
+        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+
+        $manager->expects($this->once())
+            ->method('getConfiguration')
+            ->will($this->throwException(new ORMException()));
+
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+
+        $container->expects($this->any())
+            ->method('get')
+            ->with('__manager__')
+            ->will($this->returnValue($manager));
+
+        $registry = new Registry($container, array(), array('default' => '__manager__'), 'default', 'default');
+
+        $this->assertEquals('Path\To\Namespace', $registry->getAliasNamespace('foo'));
+    }
+
+    /**
+     * @expectedException \Doctrine\ORM\ORMException
+     */
+    public function testGetAliasNamespaceThrowsException()
+    {
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+
+        $registry = new Registry($container, array(), array(), 'default', 'default');
+
+        $registry->getAliasNamespace('foo');
     }
 
     public function testGetDefaultEntityManagerName()

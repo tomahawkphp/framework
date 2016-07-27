@@ -37,19 +37,4 @@ class DoctrineUserProviderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
     }
-
-    protected function getConfig($defaultProvider = 'memory')
-    {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
-
-        $config->method('get')
-            ->will($this->returnValueMap([
-                ['security.providers.memory', null, [
-                        'users' => $this->users,
-                    ]
-                ]
-            ]));
-
-        return $config;
-    }
 }
