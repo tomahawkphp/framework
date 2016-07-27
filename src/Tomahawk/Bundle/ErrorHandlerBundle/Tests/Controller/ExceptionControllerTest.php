@@ -20,6 +20,10 @@ class ExceptionControllerTest extends TestCase
 
         $kernel = $this->getKernel(true);
         $twig = $this->getTwig();
+
+        $twig->expects($this->never())
+            ->method('render');
+
         $container = $this->getContainer($kernel, $twig);
 
         $exceptionController = new ExceptionController($container->get('twig'), $kernel->isDebug());
@@ -46,6 +50,10 @@ class ExceptionControllerTest extends TestCase
 
         $twig->expects($this->once())
             ->method('render')
+            ->with(
+                $this->equalTo('ErrorHandlerBundle:Error:error404.twig'),
+                ['exception' => $exception]
+            )
             ->will($this->returnValue('404 file note found'));
 
 
@@ -80,6 +88,10 @@ class ExceptionControllerTest extends TestCase
 
         $twig->expects($this->once())
             ->method('render')
+            ->with(
+                $this->equalTo('ErrorHandlerBundle:Error:exception.twig'),
+                ['exception' => $exception]
+            )
             ->will($this->returnValue('404 file note found'));
 
         $container = $this->getContainer($kernel, $twig);
@@ -106,6 +118,10 @@ class ExceptionControllerTest extends TestCase
 
         $kernel = $this->getKernel(false);
         $twig = $this->getTwig($loader);
+
+        $twig->expects($this->never())
+            ->method('render');
+
         $container = $this->getContainer($kernel, $twig);
 
         $exceptionController = new ExceptionController($container->get('twig'), $kernel->isDebug());

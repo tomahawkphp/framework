@@ -67,13 +67,13 @@ class ExceptionController extends Controller
 
         if ($this->templateExists($template)) {
             return new Response($this->twig->render($template, array(
-                $exception,
+                'exception' => $exception,
             )), $code);
         }
 
         if ($this->templateExists($exceptionTemplate)) {
             return new Response($this->twig->render($exceptionTemplate, array(
-                $exception,
+                'exception' => $exception,
             )), $code);
         }
 
