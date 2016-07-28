@@ -107,4 +107,12 @@ class Cookies implements CookiesInterface
     {
         return $this->cookies;
     }
+
+    /**
+     * Clear all cookies queued up
+     */
+    public function clearQueued()
+    {
+        $this->cookies = [];
+    }
 }

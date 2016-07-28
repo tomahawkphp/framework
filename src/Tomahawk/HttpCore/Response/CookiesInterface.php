@@ -59,4 +59,9 @@ interface CookiesInterface
      * @return Cookie[]
      */
     public function getQueued();
+
+    /**
+     * Clear all cookies queued up
+     */
+    public function clearQueued();
 }

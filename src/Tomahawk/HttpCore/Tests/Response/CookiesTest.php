@@ -58,4 +58,17 @@ class CookiesTest extends TestCase
         $cookies->expire('name');
         $this->assertFalse($cookies->has('name'));
     }
+
+    public function testClear()
+    {
+        $request = new Request(array(), array(), array(), array());
+        $cookies = new Cookies($request);
+        $cookies->set('name', 'Tom');
+
+        $this->assertCount(1, $cookies->getQueued());
+
+        $cookies->clearQueued();
+
+        $this->assertCount(0, $cookies->getQueued());
+    }
 }

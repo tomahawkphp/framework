@@ -31,6 +31,8 @@ class CookieListener implements EventSubscriberInterface
         foreach ($cookies->getQueued() as $cookie) {
             $event->getResponse()->headers->setCookie($cookie);
         }
+
+        $cookies->clearQueued();
     }
 
     /**
