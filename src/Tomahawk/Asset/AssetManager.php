@@ -21,8 +21,6 @@ use Tomahawk\Asset\Exception\SelfDependencyException;
  *
  * @package Tomahawk
  * @author Tom Ellis
- * @version 1.0
- * @since 1.0
  */
 
 class AssetManager implements AssetManagerInterface
