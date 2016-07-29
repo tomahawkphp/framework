@@ -87,6 +87,22 @@ class ConfigTest extends TestCase
         $this->assertEquals('pdo', $config->get('auth.driver'));
     }
 
+    public function testCompiledConfigIsIgnoredOnForce()
+    {
+        $configDirectories = array(
+            __DIR__ .'/Resources/compiledconfigs',
+        );
+
+        $cacheFile = __DIR__ .'/Resources/compiledconfigs/config_prod.php';
+
+        $loader = $this->getLoader($configDirectories);
+
+        $config = $this->getConfig($loader, $configDirectories, $cacheFile);
+
+        $config->load(true);
+
+        $this->assertEquals('pdo', $config->get('auth.driver'));
+    }
 
     public function testArraySetAndGet()
     {

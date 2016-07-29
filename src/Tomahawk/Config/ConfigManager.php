@@ -75,12 +75,30 @@ class ConfigManager implements ConfigInterface
         return $this;
     }
 
-    public function load()
+    /**
+     * Check if a config value exists
+     *
+     * @param $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        $default = time();
+
+        return $default !== $this->get($key, $default);
+    }
+
+    /**
+     * Load config files
+     *
+     * @param bool|false $force
+     */
+    public function load($force = false)
     {
         $this->config = array();
 
         // Check if we have a compiled cached file
-        if ($this->cacheFile && file_exists($this->cacheFile)) {
+        if ( ! $force && $this->cacheFile && file_exists($this->cacheFile)) {
             $this->config = include($this->cacheFile);
             return;
         }

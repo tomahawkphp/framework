@@ -26,5 +26,19 @@ interface ConfigInterface
      * @return $this
      */
     public function set($key, $value);
-}
 
+    /**
+     * Check if a config value exists
+     *
+     * @param $key
+     * @return bool
+     */
+    public function has($key);
+
+    /**
+     * Load config files
+     *
+     * @param bool|false $force
+     */
+    public function load($force = false);
+}
