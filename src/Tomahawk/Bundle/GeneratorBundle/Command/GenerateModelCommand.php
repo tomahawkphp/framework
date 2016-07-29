@@ -16,6 +16,7 @@ use Tomahawk\Bundle\GeneratorBundle\Generator\ModelGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class GenerateModelCommand extends GenerateCommand
 {
@@ -43,6 +44,8 @@ EOT
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $modelGenerator = $this->getGenerator();
 
         $model = $input->getArgument('model');
@@ -53,7 +56,7 @@ EOT
 
         $modelGenerator->generate($bundle, $model, $modelDir);
 
-        $output->writeln(sprintf('Generated new model class to "<info>%s</info>"', $bundle->getPath() . '/'.$modelDir.'/' . $model . '.php'));
+        $io->writeln(sprintf('Generated new model class to "<info>%s</info>"', $bundle->getPath() . '/'.$modelDir.'/' . $model . '.php'));
 
     }
 

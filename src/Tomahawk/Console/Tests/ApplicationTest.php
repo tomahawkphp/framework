@@ -4,21 +4,10 @@ namespace Tomahawk\Console\Tests;
 
 use Tomahawk\Test\TestCase;
 use Tomahawk\HttpKernel\TestKernel;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Routing\Router;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Tomahawk\Routing\Controller\ControllerResolver;
-use Symfony\Component\HttpFoundation\Response;
-use Tomahawk\HttpKernel\HttpKernel;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Tomahawk\Console\Application;
 use Tomahawk\Console\Tests\Commands\ACommand;
 use Tomahawk\Console\Tests\Commands\BCommand;
-
 
 class ApplicationTest extends TestCase
 {

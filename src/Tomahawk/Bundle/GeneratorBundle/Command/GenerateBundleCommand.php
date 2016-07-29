@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Tomahawk\Bundle\GeneratorBundle\Generator\BundleGenerator;
-use Tomahawk\Bundle\GeneratorBundle\Command\Validators;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Generates bundles.
@@ -29,7 +29,6 @@ use Tomahawk\Bundle\GeneratorBundle\Command\Validators;
  */
 class GenerateBundleCommand extends GenerateCommand
 {
-
     /**
      * @see Command
      */
@@ -60,6 +59,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         foreach (array('namespace', 'dir') as $option) {
             if (null === $input->getOption($option)) {
                 throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
@@ -75,7 +76,7 @@ EOT
         $bundle = Validators::validateBundleName($bundle);
         $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
 
-        $output->writeln('Bundle generation');
+        $io->writeln('Bundle generation');
 
         if (!$this->container->get('filesystem')->isAbsolutePath($dir)) {
             $dir = getcwd().'/'.$dir;
@@ -84,15 +85,20 @@ EOT
         $generator = $this->getGenerator();
         $generator->generate($namespace, $bundle, $dir);
 
-        $output->writeln('Generating the bundle code: <info>OK</info>');
+        $io->writeln('Generating the bundle code: <info>OK</info>');
 
-        if ($msg = $this->checkAutoloader($output, $namespace, $bundle, $dir))
-        {
-            $output->writeln($msg);
+        if ($msg = $this->checkAutoloader($output, $namespace, $bundle, $dir)) {
+            $io->writeln($msg);
         }
     }
 
     /**
+     * @param OutputInterface $output
+     * @param $namespace
+     * @param $bundle
+     * @param $dir
+     * @return array
+     *
      * @codeCoverageIgnore
      */
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)

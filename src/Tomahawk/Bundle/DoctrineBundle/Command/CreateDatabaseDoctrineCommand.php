@@ -14,6 +14,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Command;
 
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -55,6 +56,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $connection = $this->getDoctrineConnection($input->getOption('connection'));
 
         $params = $connection->getParams();
@@ -79,10 +82,10 @@ EOT
         $error = false;
         try {
             $tmpConnection->getSchemaManager()->createDatabase($name);
-            $output->writeln(sprintf('<info>Created database for connection named <comment>%s</comment></info>', $name));
+            $io->writeln(sprintf('<info>Created database for connection named <comment>%s</comment></info>', $name));
         } catch (\Exception $e) {
-            $output->writeln(sprintf('<error>Could not create database for connection named <comment>%s</comment></error>', $name));
-            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            $io->writeln(sprintf('<error>Could not create database for connection named <comment>%s</comment></error>', $name));
+            $io->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             $error = true;
         }
 

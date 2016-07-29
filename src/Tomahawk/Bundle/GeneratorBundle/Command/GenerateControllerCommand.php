@@ -16,6 +16,7 @@ use Tomahawk\Bundle\GeneratorBundle\Generator\ControllerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class GenerateControllerCommand extends GenerateCommand
 {
@@ -50,6 +51,8 @@ EOT
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $controller = $input->getArgument('controller');
         $bundleName = $input->getArgument('bundle');
 
@@ -63,7 +66,7 @@ EOT
 
         $generator->generate($bundle, $controller, $actions);
 
-        $output->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . 'Controller.php'));
+        $io->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . 'Controller.php'));
 
     }
 

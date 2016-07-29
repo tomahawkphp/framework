@@ -17,6 +17,7 @@ namespace Tomahawk\Bundle\DoctrineBundle\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Database tool allows you to easily drop and create your configured databases.
@@ -64,6 +65,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $connection = $this->getDoctrineConnection($input->getOption('connection'));
 
         $params = $connection->getParams();
@@ -88,19 +91,19 @@ EOT
 
             try {
                 $connection->getSchemaManager()->dropDatabase($name);
-                $output->writeln(sprintf('<info>Dropped database for connection named <comment>%s</comment></info>', $name));
+                $io->writeln(sprintf('<info>Dropped database for connection named <comment>%s</comment></info>', $name));
             } catch (\Exception $e) {
-                $output->writeln(sprintf('<error>Could not drop database for connection named <comment>%s</comment></error>', $name));
-                $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+                $io->writeln(sprintf('<error>Could not drop database for connection named <comment>%s</comment></error>', $name));
+                $io->error($e->getMessage());
 
                 return self::RETURN_CODE_NOT_DROP;
             }
         } else {
-            $output->writeln('<error>ATTENTION:</error> This operation should not be executed in a production environment.');
-            $output->writeln('');
-            $output->writeln(sprintf('<info>Would drop the database named <comment>%s</comment>.</info>', $name));
-            $output->writeln('Please run the operation with --force to execute');
-            $output->writeln('<error>All data will be lost!</error>');
+            $io->writeln('<error>ATTENTION:</error> This operation should not be executed in a production environment.');
+            $io->writeln('');
+            $io->writeln(sprintf('<info>Would drop the database named <comment>%s</comment>.</info>', $name));
+            $io->writeln('Please run the operation with --force to execute');
+            $io->error('All data will be lost!');
 
             return self::RETURN_CODE_NO_FORCE;
         }

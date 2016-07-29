@@ -17,7 +17,7 @@ namespace Tomahawk\Bundle\DoctrineBundle\Command;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Symfony\Component\Console\Command\Command;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
-use Tomahawk\DependencyInjection\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Base class for Doctrine console commands to extend from.
@@ -26,20 +26,7 @@ use Tomahawk\DependencyInjection\ContainerInterface;
  */
 abstract class DoctrineCommand extends Command implements ContainerAwareInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
-    }
+    use ContainerAwareTrait;
 
     /**
      * get a doctrine entity generator
@@ -67,7 +54,7 @@ abstract class DoctrineCommand extends Command implements ContainerAwareInterfac
      */
     protected function getEntityManager($name)
     {
-        return $this->getContainer()->get('doctrine')->getManager($name);
+        return $this->container->get('doctrine')->getManager($name);
     }
 
     /**
@@ -78,6 +65,6 @@ abstract class DoctrineCommand extends Command implements ContainerAwareInterfac
      */
     protected function getDoctrineConnection($name)
     {
-        return $this->getContainer()->get('doctrine')->getConnection($name);
+        return $this->container->get('doctrine')->getConnection($name);
     }
 }
