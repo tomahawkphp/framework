@@ -24,7 +24,7 @@ class TranslatorServiceProviderTest extends TestCase
                 array('translation.locale', null, 'en'),
                 array('translation.fallback_locale', null, 'en'),
                 array('translation.translation_dirs', null, $tranlationsDir),
-                array('translation.cache_dir', null, null),
+                array('translation.cache', null, false),
             )));
 
         $container = new Container();

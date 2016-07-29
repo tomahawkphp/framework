@@ -29,7 +29,11 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $locale = $config->get('translation.locale');
             $fallbackLocale = $config->get('translation.fallback_locale');
             $translationDirs = $config->get('translation.translation_dirs');
-            $cacheDir = $config->get('translation.cache_dir');
+            $cacheDir = $config->get('translation.cache');
+
+            if (false === $cacheDir) {
+                $cacheDir = null;
+            }
 
             $translator = new Translator($locale, new MessageSelector(), $cacheDir);
             $translator->setFallbackLocales(array($fallbackLocale));
