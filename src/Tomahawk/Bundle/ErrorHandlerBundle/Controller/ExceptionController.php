@@ -16,7 +16,7 @@ use Symfony\Component\Debug\ExceptionHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Tomahawk\HttpCore\Request;
-use Tomahawk\Routing\Controller;
+use Tomahawk\Routing\Controller\Controller;
 
 /**
  * Class ExceptionController

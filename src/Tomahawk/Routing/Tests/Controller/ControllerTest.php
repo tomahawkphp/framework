@@ -1,13 +1,13 @@
 <?php
 
-namespace Tomahawk\Routing\Tests;
+namespace Tomahawk\Routing\Tests\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
-use Tomahawk\Routing\Controller;
+use Tomahawk\Routing\Controller\Controller;
 
 class ControllerTest extends TestCase
 {

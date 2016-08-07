@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Routing\Tests;
+namespace Tomahawk\Routing\Tests\Controller;
 
 use Psr\Log\LoggerInterface;
 use TestBundle\Controller\HomeController;
@@ -46,7 +46,7 @@ class ControllerResolverTest extends TestCase
 
     public function setup()
     {
-        require_once(__DIR__.'/Fixtures/functions.php');
+        require_once(__DIR__.'/../Fixtures/functions.php');
 
         $this->request = Request::create('/', 'GET');
         $this->context = new RequestContext();
@@ -86,7 +86,7 @@ class ControllerResolverTest extends TestCase
         $this->loader = new ClassLoader();
 
         $this->loader->addPrefixes(array(
-            'TestBundle'      => __DIR__.'/Fixtures',
+            'TestBundle'      => __DIR__.'/../Fixtures',
         ));
 
         $this->loader->register();

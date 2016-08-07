@@ -21,13 +21,14 @@ use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Tomahawk\Routing\Matcher\RedirectableUrlMatcher;
 
 class RoutingServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
     {
         $container->set('route_listener', function(ContainerInterface $c) {
-            return new RouterListener($c['url_matcher'], $c['request_stack'], $c['request_context'], $c['route_logger']);
+            return new RouterListener($c['redirect_url_matcher'], $c['request_stack'], $c['request_context'], $c['route_logger']);
         });
 
         $container->set('route_locator', $container->factory(function(ContainerInterface $c) {
@@ -79,6 +80,10 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
         $container->set('url_matcher', $container->factory(function(ContainerInterface $c) {
             return new UrlMatcher($c['route_collection'], $c['request_context']);
+        }));
+
+        $container->set('redirect_url_matcher', $container->factory(function(ContainerInterface $c) {
+            return new RedirectableUrlMatcher($c['route_collection'], $c['request_context']);
         }));
 
         $container->set('route_logger', null);

@@ -5,6 +5,7 @@ namespace Tomahawk\Bundle\ErrorHandlerBundle\Tests;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\EventListener\DebugHandlersListener;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
@@ -19,11 +20,12 @@ class ErrorHandlerBundleTest extends TestCase
     {
         $container = $this->getMock(ContainerInterface::class);
 
-        $container->expects($this->exactly(2))
+        $container->expects($this->exactly(3))
             ->method('set')
             ->withConsecutive(
                 [$this->equalTo('exception_listener')],
-                [$this->equalTo('exception_controller')]
+                [$this->equalTo('exception_controller')],
+                [$this->equalTo('debug_handlers_listener')]
             );
 
 
@@ -36,24 +38,24 @@ class ErrorHandlerBundleTest extends TestCase
     {
         $eventDispatcher = $this->getMock(EventDispatcherInterface::class);
 
-        $eventDispatcher->expects($this->once())
+        $eventDispatcher->expects($this->exactly(2))
             ->method('addSubscriber');
 
         $exceptionListener = $this->getMockBuilder(ExceptionListener::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $exceptionController = $this->getMockBuilder(ExceptionController::class)
+        $debugHandlersListener = $this->getMockBuilder(DebugHandlersListener::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $container = $this->getMock(ContainerInterface::class);
 
-        $container->expects($this->once())
+        $container->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValueMap([
                 ['exception_listener', $exceptionListener],
-                ['exception_controller', $exceptionController],
+                ['debug_handlers_listener', $debugHandlersListener],
             ]));
 
         $bundle = new ErrorHandlerBundle();
@@ -99,6 +101,19 @@ class ErrorHandlerBundleTest extends TestCase
         $this->assertInstanceOf(ExceptionListener::class, $container->get('exception_listener'));
     }
 
+    public function testDebugListenerIsBuiltCorrectly()
+    {
+        $logger = $this->getMock(LoggerInterface::class);
+
+        $container = $this->getContainer();
+        $container->set('logger', $logger);
+
+        $bundle = new ErrorHandlerBundle();
+        $bundle->setContainer($container);
+        $bundle->boot();
+
+        $this->assertInstanceOf(DebugHandlersListener::class, $container->get('debug_handlers_listener'));
+    }
 
     protected function getContainer()
     {

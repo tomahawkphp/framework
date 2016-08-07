@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Routing;
+namespace Tomahawk\Routing\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;

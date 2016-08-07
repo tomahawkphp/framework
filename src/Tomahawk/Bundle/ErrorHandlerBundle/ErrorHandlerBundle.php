@@ -16,6 +16,7 @@ use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
+use Symfony\Component\HttpKernel\EventListener\DebugHandlersListener;
 
 class ErrorHandlerBundle extends Bundle
 {
@@ -31,6 +32,10 @@ class ErrorHandlerBundle extends Bundle
         $this->container->set('exception_controller', function(ContainerInterface $c) {
             return new ExceptionController($c['twig'], $c['kernel']->isDebug());
         });
+
+        $this->container->set('debug_handlers_listener', function(ContainerInterface $c) {
+            return new DebugHandlersListener(null, $c['logger']);
+        });
     }
 
     /**
@@ -44,5 +49,6 @@ class ErrorHandlerBundle extends Bundle
     public function registerEvents(EventDispatcherInterface $dispatcher)
     {
         $dispatcher->addSubscriber($this->container->get('exception_listener'));
+        $dispatcher->addSubscriber($this->container->get('debug_handlers_listener'));
     }
 }

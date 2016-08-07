@@ -13,7 +13,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Routing\Tests;
+namespace Tomahawk\Routing\Tests\Controller;
 
 use Tomahawk\Test\TestCase;
 use Tomahawk\Routing\Controller\ControllerNameParser;
@@ -26,9 +26,9 @@ class ControllerNameParserTest extends TestCase
     {
         $this->loader = new ClassLoader();
         $this->loader->addPrefixes(array(
-            'TestBundle'      => __DIR__.'/Fixtures',
-            'FooBundle'       => __DIR__.'/Fixtures',
-            'TestApplication' => __DIR__.'/Fixtures',
+            'TestBundle'      => __DIR__.'/../Fixtures',
+            'FooBundle'       => __DIR__.'/../Fixtures',
+            'TestApplication' => __DIR__.'/../Fixtures',
         ));
         $this->loader->register();
     }

@@ -12,7 +12,7 @@
 namespace Tomahawk\Routing\Test;
 
 use Tomahawk\Cache\CacheInterface;
-use Tomahawk\Routing\Controller as BaseController;
+use Tomahawk\Routing\Controller\Controller as BaseController;
 
 class Controller extends BaseController
 {

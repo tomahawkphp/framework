@@ -25,6 +25,7 @@ use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorServiceProvide
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider;
+use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
@@ -33,6 +34,8 @@ class FrameworkBundle extends Bundle
 {
     public function boot()
     {
+        ErrorHandler::register(null, false)->throwAt(0, true);
+
         $this->container->register(new FrameworkServiceProvider());
 
         $this->container->register(new AuthenticationServiceProvider());

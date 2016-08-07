@@ -10,7 +10,7 @@ class TestApp extends Kernel
     }
 }
 
-class TestController extends \Tomahawk\Routing\Controller
+class TestController extends \Tomahawk\Routing\Controller\Controller
 {
     public function get_index()
     {
