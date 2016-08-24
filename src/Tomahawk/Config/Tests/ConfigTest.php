@@ -104,6 +104,23 @@ class ConfigTest extends TestCase
         $this->assertEquals('pdo', $config->get('auth.driver'));
     }
 
+    public function testHas()
+    {
+        $configDirectories = array(__DIR__ .'/Resources/configs');
+        $loader = $this->getLoader($configDirectories);
+
+        $config = $this->getConfig($loader, $configDirectories);
+
+        $config->set(null, array(
+            'foo' => array(
+                'bar' => 'baz'
+            )
+        ));
+
+        $this->assertTrue($config->has('foo.bar'));
+        $this->assertFalse($config->has('foo.test'));
+    }
+
     public function testArraySetAndGet()
     {
         $configDirectories = array(__DIR__ .'/Resources/configs');
