@@ -5,7 +5,7 @@ namespace Tomahawk\Routing\Matcher;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcherInterface;
-use Tomahawk\Routing\Route;
+use Symfony\Component\Routing\Route;
 
 /**
  * Class RedirectableUrlMatcher
