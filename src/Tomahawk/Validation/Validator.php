@@ -11,8 +11,8 @@
 
 namespace Tomahawk\Validation;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tomahawk\Validation\Constraints\ConstraintInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class Validator implements ValidatorInterface
@@ -54,7 +54,7 @@ class Validator implements ValidatorInterface
      */
     public function add($name, $constraints)
     {
-        if (!isset($this->constraints[$name])) {
+        if ( ! isset($this->constraints[$name])) {
             $this->constraints[$name] = [];
         }
 

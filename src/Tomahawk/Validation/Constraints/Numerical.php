@@ -13,13 +13,16 @@ namespace Tomahawk\Validation\Constraints;
 
 use Tomahawk\Validation\Validator;
 
-class Numeric extends Constraint
+class Numerical extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The value is not a valid number';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!is_numeric($value)) {
+        if ( ! is_numeric($value)) {
             $this->fail($attribute, $validator);
             return false;
         }

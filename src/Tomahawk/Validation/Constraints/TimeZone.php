@@ -15,6 +15,9 @@ use Tomahawk\Validation\Validator;
 
 class TimeZone extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The timezone is incorrect';
 
     public function validate(Validator $validator, $attribute, $value)

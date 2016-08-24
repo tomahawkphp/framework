@@ -15,11 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class Integer extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The value is not a valid integer number';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!filter_var($value, FILTER_VALIDATE_INT)) {
+        if ( ! filter_var($value, FILTER_VALIDATE_INT)) {
             $this->fail($attribute, $validator);
             return false;
         }

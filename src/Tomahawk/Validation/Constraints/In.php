@@ -15,7 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class In extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'Please choose from the following: %choices%';
+
+    /**
+     * @var array
+     */
     protected $choices = array();
 
     public function getData()

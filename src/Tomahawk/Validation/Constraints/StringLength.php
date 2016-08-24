@@ -16,9 +16,24 @@ use Tomahawk\Validation\Message;
 
 class StringLength extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $min_message = 'The minimum length is %min_length%';
+
+    /**
+     * @var string
+     */
     protected $max_message = 'The maximum length is %max_length%';
+
+    /**
+     * @var int
+     */
     protected $min_length = 100;
+
+    /**
+     * @var int
+     */
     protected $max_length = 100;
 
     public function validate(Validator $validator, $attribute, $value)

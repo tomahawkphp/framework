@@ -15,12 +15,19 @@ use Tomahawk\Validation\Validator;
 
 class Alpha extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $expression = '/^[\pL\pM]+$/u';
+
+    /**
+     * @var string
+     */
     protected $message = 'The field is must only container alphabetic characters';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        if ( ! preg_match($this->expression, $value)) {
             $this->fail($attribute, $validator);
 
             return false;

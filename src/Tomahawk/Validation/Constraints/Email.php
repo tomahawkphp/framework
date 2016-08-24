@@ -15,11 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class Email extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The value is not a valid email';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if ( ! filter_var($value, FILTER_VALIDATE_EMAIL)) {
             $this->fail($attribute, $validator);
             return false;
         }

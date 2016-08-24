@@ -15,10 +15,19 @@ use Tomahawk\Validation\Validator;
 
 class RequiredWith extends AbstractRequired
 {
+    /**
+     * @var string
+     */
     protected $message = 'The field is required with %with%';
 
+    /**
+     * @var
+     */
     protected $with;
 
+    /**
+     * @var null
+     */
     protected $with_name = null;
 
     public function validate(Validator $validator, $attribute, $value)

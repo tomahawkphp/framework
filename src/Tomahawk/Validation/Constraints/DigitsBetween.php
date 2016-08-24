@@ -15,8 +15,19 @@ use Tomahawk\Validation\Validator;
 
 class DigitsBetween extends Constraint
 {
+    /**
+     * @var int
+     */
     protected $start = 0;
+
+    /**
+     * @var int
+     */
     protected $end = 10;
+
+    /**
+     * @var string
+     */
     protected $message = 'The field must be between %start% and %end%';
 
     public function getData()
