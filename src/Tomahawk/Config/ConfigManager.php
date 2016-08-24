@@ -83,7 +83,7 @@ class ConfigManager implements ConfigInterface
      */
     public function has($key)
     {
-        $default = time();
+        $default = get_class() . time();
 
         return $default !== $this->get($key, $default);
     }
