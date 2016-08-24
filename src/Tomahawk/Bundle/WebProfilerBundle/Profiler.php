@@ -60,13 +60,20 @@ class Profiler
     protected $request;
 
     /**
-     * @param EngineInterface $engine
-     * @param $assetsPath
+     * @var int
      */
-    public function __construct(EngineInterface $engine, $assetsPath)
+    protected $startTime;
+
+    /**
+     * @param EngineInterface $engine
+     * @param string $assetsPath
+     * @param int $startTime
+     */
+    public function __construct(EngineInterface $engine, $assetsPath, $startTime)
     {
         $this->engine = $engine;
         $this->assetsPath = $assetsPath;
+        $this->startTime = $startTime;
     }
 
     /**
@@ -245,7 +252,7 @@ class Profiler
 
         $memory      = $this->getFileSize(memory_get_usage(true));
         $memory_peak = $this->getFileSize(memory_get_peak_usage(true));
-        $time        = number_format((microtime(true) - TOMAHAWKPHP_START) * 1000, 2);
+        $time        = number_format((microtime(true) - $this->startTime) * 1000, 2);
         $timers      = $this->timers;
         foreach ($timers as &$timer) {
             $timer['running_time'] = number_format((microtime(true) - $timer['start'] ) * 1000, 2);

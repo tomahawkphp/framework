@@ -11,18 +11,23 @@ use Tomahawk\Bundle\WebProfilerBundle\Profiler;
 
 class ProfilerTest extends TestCase
 {
+    /**
+     * @var
+     */
     protected $container;
 
-    public static function setUpBeforeClass()
+    protected $startTime;
+    
+    public function setUp()
     {
-        define('TOMAHAWKPHP_START', time());
+        $this->startTime = time();
     }
 
     public function testBundleEnabled()
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->enable();
 
@@ -33,7 +38,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->disable();
 
@@ -44,7 +49,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->disable();
 
@@ -55,7 +60,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, null, 'dir');
+        $profiler = new Profiler($engine, null, 'dir', $this->startTime);
 
         $debugStack = $this->getDebugStack();
 
@@ -69,7 +74,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addLogs(array(
             'A log'
@@ -82,7 +87,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addTimers(array(
             array(
@@ -111,7 +116,7 @@ class ProfilerTest extends TestCase
             ->method('render')
             ->will($this->returnValue($response));
 
-        $profiler = new Profiler($engine, 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addTimers(array(
             array(

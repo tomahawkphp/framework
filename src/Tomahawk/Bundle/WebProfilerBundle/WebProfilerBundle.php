@@ -15,7 +15,7 @@ class WebProfilerBundle extends Bundle implements ContainerAwareInterface
         $assetsPath = $this->getPath() .'/Resources/assets/';
 
         $this->container->set('web_profiler', function(ContainerInterface $c) use ($assetsPath) {
-            return new Profiler($c['templating'], $assetsPath);
+            return new Profiler($c['templating'], $assetsPath, $c['kernel']->getStartTime());
         });
     }
 
