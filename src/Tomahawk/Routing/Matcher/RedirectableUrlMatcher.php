@@ -2,10 +2,49 @@
 
 namespace Tomahawk\Routing\Matcher;
 
-use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseRedirectableUrlMatcher;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\RedirectableUrlMatcherInterface;
+use Tomahawk\Routing\Route;
 
-class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
+/**
+ * Class RedirectableUrlMatcher
+ *
+ * Tries to match routes with and without an ending slash
+ *
+ * Based (heavily) on the RedirectableUrlMatcher from the Symfony FrameworkBundle
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @package Tomahawk\Routing\Matcher
+ */
+class RedirectableUrlMatcher extends UrlMatcher implements RedirectableUrlMatcherInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function match($pathinfo)
+    {
+        try {
+            $parameters = parent::match($pathinfo);
+        } catch (ResourceNotFoundException $e) {
+            if ('/' !== substr($pathinfo, -1) || !in_array($this->context->getMethod(), array('HEAD', 'GET'))) {
+                throw $e;
+            }
+
+            // If the path ends with a slash see if a route exists without it
+            try {
+                parent::match(rtrim($pathinfo, '/'));
+
+                return $this->redirect(rtrim($pathinfo, '/'), null);
+            } catch (ResourceNotFoundException $e2) {
+                throw $e;
+            }
+        }
+
+        return $parameters;
+    }
+
     /**
      * Redirects the user to another URL.
      *
@@ -26,5 +65,25 @@ class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
             'httpsPort' => $this->context->getHttpsPort(),
             '_route' => $route,
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function handleRouteRequirements($pathinfo, $name, Route $route)
+    {
+        // expression condition
+        if ($route->getCondition() && !$this->getExpressionLanguage()->evaluate($route->getCondition(), array('context' => $this->context, 'request' => $this->request))) {
+            return array(self::REQUIREMENT_MISMATCH, null);
+        }
+
+        // check HTTP scheme requirement
+        $scheme = $this->context->getScheme();
+        $schemes = $route->getSchemes();
+        if ($schemes && !$route->hasScheme($scheme)) {
+            return array(self::ROUTE_MATCH, $this->redirect($pathinfo, $name, current($schemes)));
+        }
+
+        return array(self::REQUIREMENT_MATCH, null);
     }
 }
