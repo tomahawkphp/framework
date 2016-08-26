@@ -52,7 +52,9 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                     $dFinder->in($directory->getPathname())->files()->name('*.php');
 
                     foreach ($dFinder as $file) {
-                        $translator->addResource('php', $file->getPathname(), $directory->getFileName());
+
+                        $domain = basename($file->getPathname(), '.php');
+                        $translator->addResource('php', $file->getPathname(), $directory->getFileName(), $domain);
                     }
                 }
             }
