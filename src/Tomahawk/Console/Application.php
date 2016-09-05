@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Console;
 
+use Tomahawk\HttpKernel\Kernel;
 use Tomahawk\HttpKernel\KernelInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
@@ -18,7 +19,6 @@ use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpKernel\Kernel;
 
 class Application extends BaseApplication
 {
@@ -43,7 +43,6 @@ class Application extends BaseApplication
 
         parent::__construct('Tomahawk', Kernel::VERSION.' - '.$kernel->getName().'/'.$kernel->getEnvironment().($kernel->isDebug() ? '/debug' : ''));
 
-        $this->getDefinition()->addOption(new InputOption('--process-isolation', null, InputOption::VALUE_NONE, 'Launch commands from shell as a separate process.'));
         $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
         $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
     }
