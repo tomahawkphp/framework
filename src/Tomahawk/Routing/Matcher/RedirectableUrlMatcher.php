@@ -72,10 +72,14 @@ class RedirectableUrlMatcher extends UrlMatcher implements RedirectableUrlMatche
      */
     protected function handleRouteRequirements($pathinfo, $name, Route $route)
     {
+        //@codeCoverageIgnoreStart
+
+        // Ignoring as this is already tested by Symfony
         // expression condition
         if ($route->getCondition() && !$this->getExpressionLanguage()->evaluate($route->getCondition(), array('context' => $this->context, 'request' => $this->request))) {
             return array(self::REQUIREMENT_MISMATCH, null);
         }
+        //@codeCoverageIgnoreEnd
 
         // check HTTP scheme requirement
         $scheme = $this->context->getScheme();

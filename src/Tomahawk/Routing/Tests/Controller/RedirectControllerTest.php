@@ -102,6 +102,26 @@ class RedirectControllerTest extends TestCase
         $this->assertRedirectUrl($returnValue, $expectedUrl);
     }
 
+    public function testUrlRedirectNoScheme()
+    {
+        $scheme = null;
+        $httpPort = 80;
+        $httpsPort = 443;
+        $requestScheme = 'http';
+        $requestPort = 80;
+        $expectedPort = '';
+
+        $host = 'www.example.com';
+        $baseUrl = '/base';
+        $path = '/redirect-path';
+        $expectedUrl = "$requestScheme://$host$expectedPort$baseUrl$path";
+
+        $request = $this->createRequestObject($requestScheme, $host, $requestPort, $baseUrl);
+        $controller = $this->createRedirectController();
+        $returnValue = $controller->urlRedirectAction($request, $path, false, $scheme, $httpPort, $httpsPort);
+        $this->assertRedirectUrl($returnValue, $expectedUrl);
+    }
+
     public function pathQueryParamsProvider()
     {
         return array(

@@ -2,6 +2,7 @@
 
 namespace Tomahawk\Routing\Tests\Matcher;
 
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Tomahawk\Routing\Matcher\RedirectableUrlMatcher;
@@ -38,6 +39,34 @@ class RedirectableUrlMatcherTest extends TestCase
         ),
             $matcher->match('/foo')
         );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
+     */
+    public function testRedirectWhenNoSlashThrowsException()
+    {
+        $coll = new RouteCollection();
+
+        $matcher = new RedirectableUrlMatcher($coll, $context = new RequestContext());
+
+        $matcher->match('/foo');
+
+        $this->fail();
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
+     */
+    public function testRedirectWhenSlashThrowsException()
+    {
+        $coll = new RouteCollection();
+
+        $matcher = new RedirectableUrlMatcher($coll, $context = new RequestContext());
+
+        $matcher->match('/foo/');
+
+        $this->fail();
     }
 
     public function testSchemeRedirect()
