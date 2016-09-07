@@ -30,6 +30,7 @@
                 <directory>./src/Tomahawk/*/*/Tests</directory>
                 <directory>./src/Tomahawk/DependencyInjection/Test</directory>
                 <directory>./src/Tomahawk/Test</directory>
+                <directory>./src/Tomahawk/Console/Test</directory>
                 <directory>./src/Tomahawk/Forms/Test</directory>
                 <directory>./src/Tomahawk/Routing/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Test</directory>

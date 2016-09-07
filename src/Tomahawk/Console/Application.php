@@ -20,6 +20,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Application.
+ *
+ * Based on the Symfony FrameworkBundle Console Application
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ */
 class Application extends BaseApplication
 {
     /**
@@ -67,11 +74,6 @@ class Application extends BaseApplication
     {
         $this->kernel->boot();
 
-        if ( ! $this->commandsRegistered) {
-            $this->registerCommands();
-            $this->commandsRegistered = true;
-        }
-
         $container = $this->kernel->getContainer();
 
         foreach ($this->all() as $command) {
@@ -86,10 +88,38 @@ class Application extends BaseApplication
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function get($name)
+    {
+        $this->registerCommands();
+
+        return parent::get($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function all($namespace = null)
+    {
+        $this->registerCommands();
+
+        return parent::all($namespace);
+    }
+
+    /**
      * Register commands from bundles
      */
     protected function registerCommands()
     {
+        if ($this->commandsRegistered) {
+            return;
+        }
+
+        $this->commandsRegistered = true;
+
+        $this->kernel->boot();
+
         foreach ($this->kernel->getBundles() as $bundle) {
             if ($bundle instanceof Bundle) {
                 $bundle->registerCommands($this);
