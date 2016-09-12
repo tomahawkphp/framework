@@ -44,10 +44,10 @@ abstract class DoctrineCommand extends BaseCommand
         $defaultNamespace = 'DoctrineMigrations';
         $migrationName = 'Migration';
 
-        if (!$configuration->getMigrationsDirectory()) {
+        if ( ! $configuration->getMigrationsDirectory()) {
             $dir = $config->get('doctrine.migrations_directory', $defaultMigrationsDirectory);
 
-            if (!file_exists($dir)) {
+            if ( ! file_exists($dir)) {
                 mkdir($dir, 0777, true);
             }
             $configuration->setMigrationsDirectory($dir);
@@ -55,21 +55,23 @@ abstract class DoctrineCommand extends BaseCommand
         else {
             $dir = $configuration->getMigrationsDirectory();
 
-            if (!file_exists($dir)) {
+            if ( ! file_exists($dir)) {
                 mkdir($dir, 0777, true);
             }
 
             $configuration->setMigrationsDirectory($dir);
         }
-        if (!$configuration->getMigrationsNamespace()) {
+
+        if ( ! $configuration->getMigrationsNamespace()) {
             $configuration->setMigrationsNamespace($config->get('doctrine.migration_namespace', $defaultNamespace));
         }
-        if (!$configuration->getName()) {
+
+        if ( ! $configuration->getName()) {
             $configuration->setName($config->get('doctrine.migration_name', $migrationName));
         }
 
         // Migrations is not register from configuration loader
-        if (!($configuration instanceof AbstractFileConfiguration)) {
+        if ( ! ($configuration instanceof AbstractFileConfiguration)) {
             $configuration->registerMigrationsFromDirectory($configuration->getMigrationsDirectory());
         }
 

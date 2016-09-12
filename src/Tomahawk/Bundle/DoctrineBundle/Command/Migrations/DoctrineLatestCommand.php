@@ -36,16 +36,27 @@ class DoctrineLatestCommand extends LatestCommand
     protected function configure()
     {
         parent::configure();
+
         $this
             ->setName('doctrine:migrations:latest')
-            ->addOption('em', null, InputOption::VALUE_OPTIONAL, 'The entity manager to use for this command.')
-        ;
+            ->addOption('db', null, InputOption::VALUE_REQUIRED, 'The database connection to use for this command.')
+            ->addOption('em', null, InputOption::VALUE_REQUIRED, 'The entity manager to use for this command.')
+            ->addOption('shard', null, InputOption::VALUE_REQUIRED, 'The shard connection to use for this command.');
     }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        // EM and DB options cannot be set at same time
+        if (null !== $input->getOption('em') && null !== $input->getOption('db')) {
+            throw new InvalidArgumentException('Cannot set both "em" and "db" for command execution.');
+        }
+
         CommandHelper::setApplicationEntityManager($this->getApplication(), $input->getOption('em'));
+
         $configuration = $this->getMigrationConfiguration($input, $output);
+
         DoctrineCommand::configureMigrations($this->getApplication()->getKernel()->getContainer(), $configuration);
+
         parent::execute($input, $output);
     }
 }
