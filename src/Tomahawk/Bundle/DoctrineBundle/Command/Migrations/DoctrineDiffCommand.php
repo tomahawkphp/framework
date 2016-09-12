@@ -17,7 +17,6 @@ use LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Tomahawk\Bundle\DoctrineBundle\Command\Proxy\CommandHelper;
 use Doctrine\DBAL\Sharding\PoolingShardConnection;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand;
 
@@ -46,7 +45,7 @@ class DoctrineDiffCommand extends DiffCommand
     }
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        CommandHelper::setApplicationEntityManager($this->getApplication(), $input->getOption('em'));
+        Helper\CommandHelper::setApplicationHelper($this->getApplication(), $input);
 
         if ($input->getOption('shard')) {
             $connection = $this->getApplication()->getHelperSet()->get('db')->getConnection();

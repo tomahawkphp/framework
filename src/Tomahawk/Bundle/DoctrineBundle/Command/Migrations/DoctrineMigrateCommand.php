@@ -52,7 +52,7 @@ class DoctrineMigrateCommand extends MigrateCommand
             throw new InvalidArgumentException('Cannot set both "em" and "db" for command execution.');
         }
 
-        CommandHelper::setApplicationEntityManager($this->getApplication(), $input->getOption('em'));
+        Helper\CommandHelper::setApplicationHelper($this->getApplication(), $input);
 
         $configuration = $this->getMigrationConfiguration($input, $output);
 
