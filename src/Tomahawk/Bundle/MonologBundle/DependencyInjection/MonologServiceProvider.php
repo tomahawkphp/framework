@@ -129,6 +129,12 @@ class MonologServiceProvider implements ServiceProviderInterface
 
     }
 
+    /**
+     * Convert level to mongo constant
+     *
+     * @param $level
+     * @return int|mixed
+     */
     private function levelToMonologConst($level)
     {
         return is_int($level) ? $level : constant('Monolog\Logger::' . strtoupper($level));

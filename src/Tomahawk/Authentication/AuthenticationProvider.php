@@ -107,7 +107,7 @@ class AuthenticationProvider implements AuthenticationProviderInterface
      *
      * @return bool
      */
-    function isLoggedIn()
+    public function isLoggedIn()
     {
         if (null === $this->loggedIn) {
             $this->user = $this->loadUser();
@@ -122,7 +122,7 @@ class AuthenticationProvider implements AuthenticationProviderInterface
      *
      * @return bool
      */
-    function isGuest()
+    public function isGuest()
     {
         return ! $this->isLoggedIn();
     }
