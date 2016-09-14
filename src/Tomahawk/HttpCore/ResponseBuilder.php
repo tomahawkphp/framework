@@ -11,7 +11,6 @@
 
 namespace Tomahawk\HttpCore;
 
-use Closure;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;

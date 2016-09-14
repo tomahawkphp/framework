@@ -12,9 +12,6 @@
 namespace Tomahawk\Url;
 
 use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RequestContext;
-use Psr\Log\LoggerInterface;
 
 class UrlGenerator extends SymfonyUrlGenerator implements UrlGeneratorInterface
 {
