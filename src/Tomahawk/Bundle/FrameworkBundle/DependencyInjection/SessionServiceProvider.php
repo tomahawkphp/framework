@@ -14,8 +14,6 @@ namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\Session\Session;
-//use Symfony\Component\HttpFoundation\Session\Session;
-//use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;

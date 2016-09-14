@@ -30,7 +30,7 @@ class Router
     /**
      * @param RouteCollection $routes
      */
-    function __construct(RouteCollection $routes = null)
+    public function __construct(RouteCollection $routes = null)
     {
         $this->routes = $routes ?: new RouteCollection();
     }

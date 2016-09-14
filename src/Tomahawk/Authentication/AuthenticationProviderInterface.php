@@ -38,14 +38,14 @@ interface AuthenticationProviderInterface
      *
      * @return bool
      */
-    function isLoggedIn();
+    public function isLoggedIn();
 
     /**
      * Check if user is a guest
      *
      * @return bool
      */
-    function isGuest();
+    public function isGuest();
 
     /**
      * Login a given user
