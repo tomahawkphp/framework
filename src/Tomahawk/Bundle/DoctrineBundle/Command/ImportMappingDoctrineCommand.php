@@ -26,6 +26,8 @@ use Doctrine\ORM\Tools\Console\MetadataFilter;
 /**
  * Import Doctrine ORM metadata mapping information from an existing database.
  *
+ * Based on the ImportMappingDoctrineCommand from the Symfony DoctrineBundle
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jonathan H. Wage <jonwage@gmail.com>
  */
@@ -41,6 +43,7 @@ class ImportMappingDoctrineCommand extends DoctrineCommand
             ->addArgument('bundle', InputArgument::REQUIRED, 'The bundle to import the mapping information to')
             ->addArgument('mapping-type', InputArgument::OPTIONAL, 'The mapping type to export the imported mapping information to')
             ->addOption('em', null, InputOption::VALUE_OPTIONAL, 'The entity manager to use for this command')
+            ->addOption('shard', null, InputOption::VALUE_REQUIRED, 'The shard connection to use for this command')
             ->addOption('filter', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A string pattern used to match entities that should be mapped.')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Force to overwrite existing mapping files.')
             ->setDescription('Imports mapping information from an existing database')
@@ -74,7 +77,6 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $bundle = $this->getApplication()->getKernel()->getBundle($input->getArgument('bundle'));
-
         $destPath = $bundle->getPath();
         $type = $input->getArgument('mapping-type') ? $input->getArgument('mapping-type') : 'xml';
         if ('annotation' === $type) {
@@ -85,24 +87,18 @@ EOT
         if ('yaml' === $type) {
             $type = 'yml';
         }
-
         $cme = new ClassMetadataExporter();
         $exporter = $cme->getExporter($type);
         $exporter->setOverwriteExistingFiles($input->getOption('force'));
-
         if ('annotation' === $type) {
             $entityGenerator = $this->getEntityGenerator();
             $exporter->setEntityGenerator($entityGenerator);
         }
-
-        $em = $this->getEntityManager($input->getOption('em'));
-
+        $em = $this->getEntityManager($input->getOption('em'), $input->getOption('shard'));
         $databaseDriver = new DatabaseDriver($em->getConnection()->getSchemaManager());
         $em->getConfiguration()->setMetadataDriverImpl($databaseDriver);
-
         $emName = $input->getOption('em');
         $emName = $emName ? $emName : 'default';
-
         $cmf = new DisconnectedClassMetadataFactory();
         $cmf->setEntityManager($em);
         $metadata = $cmf->getAllMetadata();
@@ -113,20 +109,23 @@ EOT
                 $className = $class->name;
                 $class->name = $bundle->getNamespace().'\\Entity\\'.$className;
                 if ('annotation' === $type) {
-                    $path = $destPath.'/'.$className.'.php';
+                    $path = $destPath.'/'.str_replace('\\', '.', $className).'.php';
                 } else {
-                    $path = $destPath.'/'.$className.'.orm.'.$type;
+                    $path = $destPath.'/'.str_replace('\\', '.', $className).'.orm.'.$type;
                 }
                 $output->writeln(sprintf('  > writing <comment>%s</comment>', $path));
                 $code = $exporter->exportClassMetadata($class);
                 if (!is_dir($dir = dirname($path))) {
-                    mkdir($dir, 0777, true);
+                    mkdir($dir, 0775, true);
                 }
                 file_put_contents($path, $code);
+                chmod($path, 0664);
             }
+            return 0;
         } else {
             $output->writeln('Database does not have any mapping information.', 'ERROR');
             $output->writeln('', 'ERROR');
+            return 1;
         }
     }
 }

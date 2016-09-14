@@ -25,6 +25,7 @@ interface FormInterface
      * @return ValidatorInterface
      */
     public function getValidator();
+
     /**
      * @param mixed $model
      * @return $this
@@ -35,6 +36,7 @@ interface FormInterface
      * @return mixed
      */
     public function getModel();
+
     /**
      * @param Element $element
      * @return $this
@@ -60,15 +62,93 @@ interface FormInterface
      * @param array $attributes
      * @return mixed
      */
-    public function render($name, array $attributes = array());
+    public function render($name, array $attributes = []);
 
     /**
-     * @return boolean
+     * @param $input
+     * @return $this
+     */
+    public function handleInput($input);
+
+    /**
+     * @return bool
      */
     public function isValid();
+
+    /**
+     * @return mixed
+     */
+    public function getUrl();
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl($url);
+
+    /**
+     * @return string
+     */
+    public function getMethod();
+
+    /**
+     * @param string $method
+     * @return $this
+     */
+    public function setMethod($method);
+
+    /**
+     * @return array
+     */
+    public function getInput();
+
+    /**
+     * @param array $input
+     * @return $this
+     */
+    public function setInput($input);
+
+    /**
+     * @return array
+     */
+    public function getAttributes();
+
+    /**
+     * @param array $attributes
+     * @return $this
+     */
+    public function setAttributes(array $attributes);
 
     /**
      * @return Element[]
      */
     public function getElements();
+
+    /**
+     * Add a group of datra transformers
+     *
+     * array (
+     *  'date' => DataTransformerInterface
+     * )
+     *
+     * @param array $dataTransformers
+     * @return $this
+     */
+    public function addTransformers(array $dataTransformers);
+
+    /**
+     * Add a data transformer
+     *
+     * @param $type
+     * @param DataTransformerInterface $dataTransformer
+     * @return $this
+     */
+    public function addTransformer($type, DataTransformerInterface $dataTransformer);
+
+    /**
+     * Get all data tranformers
+     *
+     * @return DataTransformerInterface[]
+     */
+    public function getTransformers();
 }

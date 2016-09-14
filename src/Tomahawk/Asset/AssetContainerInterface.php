@@ -17,6 +17,7 @@ interface AssetContainerInterface
      * Set name of container
      *
      * @param string $name
+     * @return $this
      */
     public function setName($name);
 
@@ -34,7 +35,7 @@ interface AssetContainerInterface
      * @param  string           $source
      * @param  array            $dependencies
      * @param  array            $attributes
-     * @return AssetContainerInterface
+     * @return $this
      */
     public function addCss($name, $source, $dependencies = array(), $attributes = array());
 
@@ -45,9 +46,8 @@ interface AssetContainerInterface
      * @param  string           $source
      * @param  array            $dependencies
      * @param  array            $attributes
-     * @return AssetContainerInterface
+     * @return $this
      */
     public function addJs($name, $source, $dependencies = array(), $attributes = array());
 
 }
-

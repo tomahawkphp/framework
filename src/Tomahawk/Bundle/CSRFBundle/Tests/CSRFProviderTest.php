@@ -2,14 +2,14 @@
 
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
-use Tomahawk\Bundle\CSRFBundle\DI\CSRFProvider;
+use Tomahawk\Bundle\CSRFBundle\DependencyInjection\CSRFProvider;
 
 class CSRFProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\CSRFBundle\DI\CSRFProvider
+     * @covers \Tomahawk\Bundle\CSRFBundle\DependencyInjection\CSRFProvider
      */
     public function testProvider()
     {

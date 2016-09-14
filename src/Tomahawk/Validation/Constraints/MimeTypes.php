@@ -28,14 +28,14 @@ class MimeTypes extends Constraint
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!$value instanceof File) {
+        if ( ! $value instanceof File) {
             $valid = false;
         }
         else {
             $valid = in_array($value->getMimeType(), $this->types);
         }
 
-        if (!$valid) {
+        if ( ! $valid) {
             $this->fail($attribute, $validator);
         }
 

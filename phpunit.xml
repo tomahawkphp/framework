@@ -25,10 +25,14 @@
                 <directory>./src/Tomahawk/*/*/Resources</directory>
                 <directory>./src/Tomahawk/Bundle/*/Resources</directory>
                 <directory>./src/Tomahawk/Bundle/DoctrineBundle/Command/Proxy</directory>
+                <directory>./src/Tomahawk/Bundle/WebProfilerBundle/Test</directory>
                 <directory>./src/Tomahawk/*/Tests</directory>
                 <directory>./src/Tomahawk/*/*/Tests</directory>
-                <directory>./src/Tomahawk/DI/Test</directory>
+                <directory>./src/Tomahawk/DependencyInjection/Test</directory>
+                <directory>./src/Tomahawk/Test</directory>
+                <directory>./src/Tomahawk/Console/Test</directory>
                 <directory>./src/Tomahawk/Forms/Test</directory>
+                <directory>./src/Tomahawk/Routing/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Test</directory>
                 <directory>./src/Tomahawk/HttpKernel/Resources</directory>
                 <directory>./src/Tomahawk/HttpKernel/Fixtures</directory>

@@ -15,8 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class MinLength extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The minimum length is %min_length%';
 
+    /**
+     * @var int
+     */
     protected $min_length = 1;
 
     public function validate(Validator $validator, $attribute, $value)

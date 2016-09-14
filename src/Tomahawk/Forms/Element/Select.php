@@ -13,13 +13,16 @@ namespace Tomahawk\Forms\Element;
 
 class Select extends Element
 {
+    /**
+     * @var array
+     */
     protected $list = array();
 
     public function __construct($name, array $list = array(), $selected = null)
     {
-        $this->name = $name;
+        parent::__construct($name, $selected);
+
         $this->list = $list;
-        $this->value = $selected;
     }
 
     /**

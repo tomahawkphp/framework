@@ -15,8 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class RequiredWithout extends AbstractRequired
 {
+    /**
+     * @var string
+     */
     protected $message = 'The field is required';
 
+    /**
+     * @var null
+     */
     protected $without = null;
 
     public function validate(Validator $validator, $attribute, $value)

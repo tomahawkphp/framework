@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Tomahawk\Bundle\GeneratorBundle\Generator\BundleGenerator;
-use Tomahawk\Bundle\GeneratorBundle\Command\Validators;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Generates bundles.
@@ -29,7 +29,6 @@ use Tomahawk\Bundle\GeneratorBundle\Command\Validators;
  */
 class GenerateBundleCommand extends GenerateCommand
 {
-
     /**
      * @see Command
      */
@@ -42,7 +41,13 @@ class GenerateBundleCommand extends GenerateCommand
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
-            ));
+            ))
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command creates a new bundle.
+
+<info>php app/hatchet %command.name% --namespace="MyPackage\\Bundle" --bundle-name="UserBundle" --dir="./src"</info>
+EOT
+            );
     }
 
     /**
@@ -54,6 +59,8 @@ class GenerateBundleCommand extends GenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         foreach (array('namespace', 'dir') as $option) {
             if (null === $input->getOption($option)) {
                 throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
@@ -69,7 +76,7 @@ class GenerateBundleCommand extends GenerateCommand
         $bundle = Validators::validateBundleName($bundle);
         $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
 
-        $output->writeln('Bundle generation');
+        $io->writeln('Bundle generation');
 
         if (!$this->container->get('filesystem')->isAbsolutePath($dir)) {
             $dir = getcwd().'/'.$dir;
@@ -78,15 +85,20 @@ class GenerateBundleCommand extends GenerateCommand
         $generator = $this->getGenerator();
         $generator->generate($namespace, $bundle, $dir);
 
-        $output->writeln('Generating the bundle code: <info>OK</info>');
+        $io->writeln('Generating the bundle code: <info>OK</info>');
 
-        if ($msg = $this->checkAutoloader($output, $namespace, $bundle, $dir))
-        {
-            $output->writeln($msg);
+        if ($msg = $this->checkAutoloader($output, $namespace, $bundle, $dir)) {
+            $io->writeln($msg);
         }
     }
 
     /**
+     * @param OutputInterface $output
+     * @param $namespace
+     * @param $bundle
+     * @param $dir
+     * @return array
+     *
      * @codeCoverageIgnore
      */
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)

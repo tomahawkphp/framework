@@ -15,13 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class Required extends AbstractRequired
 {
+    /**
+     * @var string
+     */
     protected $message = 'The field is required';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        $valid = $this->hasRequiredValue($value);
-
-        if (!$valid) {
+        if ( ! $valid = $this->hasRequiredValue($value)) {
             $this->fail($attribute, $validator);
         }
 

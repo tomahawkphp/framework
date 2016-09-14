@@ -24,7 +24,7 @@ class CSRFBundleTest extends TestCase
 
     protected function getContainer()
     {
-        $container = $this->getMock('Tomahawk\DI\ContainerInterface');
+        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
 
         $container->expects($this->once())
             ->method('register');

@@ -11,41 +11,48 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
-use Tomahawk\Bundle\FrameworkBundle\DI\AuthProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\CommandBusProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\ConfigProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\RoutingProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\SessionProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\TranslatorProvider;
-use Tomahawk\Config\ConfigInterface;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\SessionListener;
 use Tomahawk\HttpKernel\Bundle\Bundle;
-use Tomahawk\Bundle\FrameworkBundle\DI\CacheProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\TemplatingProvider;
-use Tomahawk\Bundle\FrameworkBundle\DI\FrameworkProvider;
+use Tomahawk\Config\ConfigInterface;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\CookieListener;
+use Tomahawk\Bundle\FrameworkBundle\EventListener\StringResponseListener;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthenticationServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingServiceProvider;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider;
+use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
 
 class FrameworkBundle extends Bundle
 {
     public function boot()
     {
-        $this->container->register(new FrameworkProvider());
+        ErrorHandler::register(null, false)->throwAt(0, true);
 
-        $this->container->register(new AuthProvider());
+        $this->container->register(new FrameworkServiceProvider());
 
-        $this->container->register(new CacheProvider());
+        $this->container->register(new AuthenticationServiceProvider());
 
-        $this->container->register(new CommandBusProvider());
+        $this->container->register(new CacheServiceProvider());
 
-        $this->container->register(new ConfigProvider());
+        $this->container->register(new CommandBusServiceProvider());
 
-        $this->container->register(new TemplatingProvider());
+        $this->container->register(new ConfigServiceProvider());
 
-        $this->container->register(new TranslatorProvider());
+        $this->container->register(new TemplatingServiceProvider());
 
-        $this->container->register(new RoutingProvider());
+        $this->container->register(new TranslatorServiceProvider());
 
-        $this->container->register(new SessionProvider());
+        $this->container->register(new RoutingServiceProvider());
+
+        $this->container->register(new SessionServiceProvider());
 
         if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies);
@@ -66,7 +73,6 @@ class FrameworkBundle extends Bundle
      * This is called after all bundles have been boot so you get access
      * to all the services
      *
-     *
      * @param EventDispatcherInterface $dispatcher
      */
     public function registerEvents(EventDispatcherInterface $dispatcher)
@@ -74,6 +80,14 @@ class FrameworkBundle extends Bundle
         $dispatcher->addSubscriber($this->container->get('route_listener'));
 
         $dispatcher->addSubscriber($this->container->get('locale_listener'));
+
+        $dispatcher->addSubscriber(new CookieListener($this->container));
+
+        $dispatcher->addSubscriber(new StringResponseListener());
+
+        $dispatcher->addSubscriber(new SessionListener($this->container));
+
+        $dispatcher->addSubscriber(new SaveSessionListener());
     }
 
     /**

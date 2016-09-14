@@ -16,6 +16,7 @@ use Tomahawk\Bundle\GeneratorBundle\Generator\ControllerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class GenerateControllerCommand extends GenerateCommand
 {
@@ -28,13 +29,30 @@ class GenerateControllerCommand extends GenerateCommand
             ->setDescription('Generate Controller.')
             ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
             ->addArgument('controller', InputArgument::REQUIRED, 'Name of controller to create')
-            ->addOption('actions', '', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller');
+            ->addOption('actions', '', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller')
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command creates a new controller for a given bundle.
+
+Running:
+<info>php app/hatchet %command.name% MyBundle Admin</info>
+
+Would create a controller named <info>AdminController</info> for the bundle <info>MyBundle</info>
+
+You can also optionally specify actions for the controller
+
+<info>php app/hatchet %command.name% MyBundle Admin --actions="find view:{id}"</info>
+
+<info>php app/hatchet %command.name% MyBundle Admin --actions="find" --actions="view:{id}"</info>
+EOT
+        );
 
         $this->resourcesDirectory = __DIR__ . '/resources/';
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $controller = $input->getArgument('controller');
         $bundleName = $input->getArgument('bundle');
 
@@ -48,7 +66,7 @@ class GenerateControllerCommand extends GenerateCommand
 
         $generator->generate($bundle, $controller, $actions);
 
-        $output->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . '.php'));
+        $io->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . 'Controller.php'));
 
     }
 
@@ -60,9 +78,9 @@ class GenerateControllerCommand extends GenerateCommand
         return $this->container->get('controller_generator');
     }
 
-    public function getPlaceholdersFromRoute($route)
+    public function getActionParametersFromRaw($rawParameters)
     {
-        preg_match_all('/{(.*?)}/', $route, $placeholders);
+        preg_match_all('/{(.*?)}/', $rawParameters, $placeholders);
         $placeholders = $placeholders[1];
 
         return $placeholders;
@@ -83,11 +101,11 @@ class GenerateControllerCommand extends GenerateCommand
             // name
             $name = array_shift($data);
 
-            // route parameters
-            $route = (isset($data[0]) && '' != $data[0]) ? array_shift($data) : null;
+            // action parameters
+            $rawParameters = (isset($data[0]) && '' != $data[0]) ? array_shift($data) : null;
 
-            if ($route) {
-                $placeholders = $this->getPlaceholdersFromRoute($route);
+            if ($rawParameters) {
+                $placeholders = $this->getActionParametersFromRaw($rawParameters);
             }
             else {
                 $placeholders = array();

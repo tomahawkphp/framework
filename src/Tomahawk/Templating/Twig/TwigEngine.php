@@ -11,16 +11,20 @@
 
 namespace Tomahawk\Templating\Twig;
 
+use Tomahawk\Templating\TemplateReference;
 use Tomahawk\Templating\Twig\Bridge\TwigEngine as BaseEngine;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\FileLocatorInterface;
-use Tomahawk\Templating\TemplateReference;
 use Symfony\Component\Templating\EngineInterface;
 
 class TwigEngine extends BaseEngine implements EngineInterface
 {
+    /**
+     * @var FileLocatorInterface
+     */
     protected $locator;
+
     /**
      * Constructor.
      *

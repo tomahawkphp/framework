@@ -15,12 +15,19 @@ use Tomahawk\Validation\Validator;
 
 class Regex extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The field is not in the correct format';
+
+    /**
+     * @var
+     */
     protected $expression;
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        if ( ! preg_match($this->expression, $value)) {
             $this->fail($attribute, $validator);
             return false;
         }

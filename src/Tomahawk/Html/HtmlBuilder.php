@@ -33,7 +33,7 @@ class HtmlBuilder implements HtmlBuilderInterface
      * @param array $attributes
      * @return string
      */
-    public function script($url, array $attributes = array())
+    public function script($url, array $attributes = [])
     {
         return sprintf('<script src="%s"%s></script>', $url, $this->attributes($attributes));
     }
@@ -43,7 +43,7 @@ class HtmlBuilder implements HtmlBuilderInterface
      * @param array $attributes
      * @return string
      */
-    public function style($url, array $attributes = array())
+    public function style($url, array $attributes = [])
     {
         return sprintf('<link rel="stylesheet" type="text/css" href="%s"%s>', $url, $this->attributes($attributes));
     }
@@ -54,7 +54,7 @@ class HtmlBuilder implements HtmlBuilderInterface
      * @param array $attributes
      * @return string
      */
-    public function link($url, $text, array $attributes = array())
+    public function link($url, $text, array $attributes = [])
     {
         return sprintf('<a href="%s"%s>%s</a>', $url, $this->attributes($attributes), $text);
     }
@@ -65,7 +65,7 @@ class HtmlBuilder implements HtmlBuilderInterface
      */
     public function attributes(array $attributes)
     {
-        $html = array();
+        $html = [];
 
         // For numeric keys we will assume that the key and the value are the same
         // as this will convert HTML attributes such as "required" to a correct
@@ -94,7 +94,7 @@ class HtmlBuilder implements HtmlBuilderInterface
             $key = $value;
         }
 
-        if (!is_null($value)) {
+        if ( ! is_null($value)) {
             return $key.'="'.$this->entities($value).'"';
         }
     }

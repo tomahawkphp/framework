@@ -16,13 +16,18 @@ use Symfony\Component\Yaml\Yaml;
 
 class YamlConfigLoader extends FileLoader
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public function load($resource, $type = null)
     {
         $configValues = Yaml::parse($resource);
         return $configValues;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supports($resource, $type = null)
     {
         return is_string($resource) && 'yml' === pathinfo(

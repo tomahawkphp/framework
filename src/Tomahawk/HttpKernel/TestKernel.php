@@ -30,14 +30,8 @@ class TestKernel extends Kernel
         return $bundles;
     }
 
-    public function registerMiddleware()
-    {
-        return array();
-    }
-
     protected function registerEvents()
     {
 
     }
-
 }

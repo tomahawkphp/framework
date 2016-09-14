@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Routing\Controller\ControllerResolver;
 use Tomahawk\Routing\Controller;
 use Tomahawk\Routing\Router;
@@ -140,17 +140,6 @@ class HttpKernelTest extends TestCase
         $kernel = new HttpKernel($dispatcher, $this->getResolver(function () { return 'foo'; }));
 
         $this->assertEquals('foo', $kernel->handle(new Request())->getContent());
-    }
-
-    /**
-     * @expectedException \LogicException
-     */
-    public function testHandleWhenTheControllerIsNotACallable()
-    {
-        $dispatcher = new EventDispatcher();
-        $kernel = new HttpKernel($dispatcher, $this->getResolver('foobar'));
-
-        $kernel->handle(new Request());
     }
 
     public function testHandleWithAResponseListener()
@@ -279,7 +268,7 @@ class HttpKernelTest extends TestCase
 
         $request_stack = new \Symfony\Component\HttpFoundation\RequestStack();
 
-        $routeListener = new RouterListener($matcher, $context, null, $request_stack);
+        $routeListener = new RouterListener($matcher, $request_stack, $context, null);
 
         $eventDispatcher->addSubscriber($routeListener);
 
@@ -308,13 +297,13 @@ class HttpKernelTest extends TestCase
         $this->assertFalse($response->headers->has('X-Status-Code'));
     }
 
-    public function testFormatPath()
+    /*public function testFormatPath()
     {
         $httpRequest = $this->getHttpKernel();
 
         $this->assertEquals('/', $httpRequest->formatPath('/'));
         $this->assertEquals('/test/', $httpRequest->formatPath('/test/'));
-    }
+    }*/
 
     public function getStatusCodes()
     {

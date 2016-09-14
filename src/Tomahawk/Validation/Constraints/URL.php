@@ -15,6 +15,9 @@ use Tomahawk\Validation\Validator;
 
 class URL extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The URL is invalid';
 
     public function validate(Validator $validator, $attribute, $value)

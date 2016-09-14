@@ -12,13 +12,14 @@
 namespace Tomahawk\Forms;
 
 use Tomahawk\Forms\Element\Element;
+use Tomahawk\Forms\Exception\InvalidDataTransformerException;
 use Tomahawk\Validation\ValidatorInterface;
 use Tomahawk\Forms\Element\CheckableInterface;
 
 class Form extends AttributeBuilder implements FormInterface
 {
     /**
-     * @var \Tomahawk\Forms\Element\Element[]
+     * @var Element[]
      */
     protected $elements;
 
@@ -30,27 +31,37 @@ class Form extends AttributeBuilder implements FormInterface
     /**
      * @var array
      */
-    protected $input = array();
+    protected $input = [];
 
+    /**
+     * @var string
+     */
     protected $url;
 
+    /**
+     * @var string
+     */
     protected $method;
 
-    protected $oldInput = array();
-
-    protected $attributes = array();
+    /**
+     * @var array
+     */
+    protected $attributes = [];
 
     /**
      * @var ValidatorInterface
      */
     protected $validator;
 
-    public function __construct($url, $method = 'POST', $model = null, array $oldInput = array(), array $attributes = array())
+    /**
+     * @var DataTransformerInterface[]
+     */
+    protected $transformers = [];
+
+    public function __construct($url, $method = 'POST', array $attributes = [])
     {
         $this->url = $url;
         $this->method = $method;
-        $this->model = $model;
-        $this->oldInput = $oldInput;
         $this->attributes = $attributes;
     }
 
@@ -105,10 +116,10 @@ class Form extends AttributeBuilder implements FormInterface
      */
     public function open()
     {
-        $attributes = array(
+        $attributes = [
             'method' => $this->method,
             'action' => $this->url
-        );
+        ];
 
         $attributes = array_merge($attributes, $this->attributes);
 
@@ -130,17 +141,22 @@ class Form extends AttributeBuilder implements FormInterface
      * @param array $attributes
      * @return mixed
      */
-    public function render($name, array $attributes = array())
+    public function render($name, array $attributes = [])
     {
         $element = $this->elements[$name];
 
+        $value = $this->getValue($name);
+
+        $value = $this->applyTransform($name, $value);
+
         // Only set the value of an Element that isn't checkable
-        if (($element instanceof CheckableInterface) && ($value = $this->getValue($name))) {
+        if (($element instanceof CheckableInterface) && $value) {
             $element->setChecked($element->getValue() == $this->getValue($name));
         }
-        else if (!($element instanceof CheckableInterface) && ($value = $this->getValue($name))) {
+        else if ($value) {
             $element->setValue($value);
         }
+
         return $element->render($attributes);
     }
 
@@ -148,16 +164,18 @@ class Form extends AttributeBuilder implements FormInterface
      * @param $input
      * @return $this
      */
-    public function bind($input)
+    public function handleInput($input)
     {
-        if (!$this->model) {
-            return $this;
-        }
+        $this->setInput($input);
 
-        $this->input = $input;
+        if ($this->model) {
 
-        foreach ($this->input as $name => $value) {
-            $this->setValue($name, $value);
+            foreach ($this->input as $name => $value) {
+
+                $value = $this->applyReverseTransform($name, $value);
+
+                $this->setValue($name, $value);
+            }
         }
 
         return $this;
@@ -165,12 +183,11 @@ class Form extends AttributeBuilder implements FormInterface
 
     /**
      * @return bool
-     * @throws \Exception
      */
     public function isValid()
     {
-        if (!$this->getValidator()) {
-            throw new \Exception('Validator not present on Form');
+        if ( ! $this->getValidator()) {
+            return true;
         }
 
         return $this->getValidator()->validate($this->input);
@@ -185,7 +202,7 @@ class Form extends AttributeBuilder implements FormInterface
     }
 
     /**
-     * @param mixed $url
+     * @param string $url
      * @return $this
      */
     public function setUrl($url)
@@ -215,18 +232,19 @@ class Form extends AttributeBuilder implements FormInterface
     /**
      * @return array
      */
-    public function getOldInput()
+    public function getInput()
     {
-        return $this->oldInput;
+        return $this->input;
     }
 
     /**
-     * @param array $oldInput
+     * @param array $input
      * @return $this
      */
-    public function setOldInput(array $oldInput)
+    public function setInput($input)
     {
-        $this->oldInput = $oldInput;
+        $this->input = $input;
+
         return $this;
     }
 
@@ -256,14 +274,60 @@ class Form extends AttributeBuilder implements FormInterface
         return $this->elements;
     }
 
+    /**
+     * Add a group of data transformers
+     *
+     * array (
+     *  'date' => DataTransformerInterface
+     * )
+     *
+     * @param array $dataTransformers
+     * @return $this
+     */
+    public function addTransformers(array $dataTransformers)
+    {
+        foreach ($dataTransformers as $type => $dataTransformer) {
+
+            if ( ! $dataTransformer instanceof DataTransformerInterface) {
+                throw new InvalidDataTransformerException();
+            }
+
+            $this->addTransformer($type, $dataTransformer);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a data transformer
+     *
+     * @param $type
+     * @param DataTransformerInterface $dataTransformer
+     * @return $this
+     */
+    public function addTransformer($type, DataTransformerInterface $dataTransformer)
+    {
+        $this->transformers[$type] = $dataTransformer;
+
+        return $this;
+    }
+
+    /**
+     * Get all data tranformers
+     *
+     * @return DataTransformerInterface[]
+     */
+    public function getTransformers()
+    {
+        return $this->transformers;
+    }
+
     protected function getValue($name)
     {
-        $method = $this->getElementGetMethod($name);
-
-        if (isset($this->oldInput[$name])) {
-            return $this->oldInput[$name];
+        if (isset($this->input[$name])) {
+            return $this->input[$name];
         }
-        else if ($this->model && method_exists($this->model, $method)) {
+        else if ($this->model && method_exists($this->model, $method = $this->getElementGetMethod($name))) {
             return $this->model->$method();
         }
         else if ($this->model && property_exists($this->model, $name)) {
@@ -275,9 +339,7 @@ class Form extends AttributeBuilder implements FormInterface
 
     protected function setValue($name, $value)
     {
-        $method = $this->getElementSetMethod($name);
-
-        if ($this->model && method_exists($this->model, $method)) {
+        if ($this->model && method_exists($this->model, $method = $this->getElementSetMethod($name))) {
             $this->model->$method($value);
         }
         else if ($this->model && property_exists($this->model, $name)) {
@@ -289,15 +351,33 @@ class Form extends AttributeBuilder implements FormInterface
 
     protected function getElementGetMethod($element)
     {
-        $method = ucwords(str_replace(array('_', '-'), ' ', $element));
+        $method = ucwords(str_replace(['_', '-'], ' ', $element));
 
         return 'get' .str_replace(' ', '', $method);
     }
 
     protected function getElementSetMethod($element)
     {
-        $method = ucwords(str_replace(array('_', '-'), ' ', $element));
+        $method = ucwords(str_replace(['_', '-'], ' ', $element));
 
         return 'set' .str_replace(' ', '', $method);
+    }
+
+    protected function applyTransform($name, $value)
+    {
+        if ( ! isset($this->transformers[$name])) {
+            return $value;
+        }
+
+        return $this->transformers[$name]->transform($value);
+    }
+
+    protected function applyReverseTransform($name, $value)
+    {
+        if ( ! isset($this->transformers[$name])) {
+            return $value;
+        }
+
+        return $this->transformers[$name]->reverseTransform($value);
     }
 }

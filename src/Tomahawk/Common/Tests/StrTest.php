@@ -1,10 +1,10 @@
 <?php
 namespace Tomahawk\Common\Tests;
 
-use Tomahawk\Common\TestOpenStr;
 use Tomahawk\Test\TestCase;
 use Tomahawk\Common\Str;
-use Tomahawk\Common\TestStr;
+use Tomahawk\Common\Test\Str as TestStr;
+use Tomahawk\Common\Test\OpenStr as TestOpenStr;
 
 class StrTest extends TestCase
 {

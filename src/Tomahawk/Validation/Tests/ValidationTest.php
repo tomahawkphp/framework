@@ -22,7 +22,7 @@ use Tomahawk\Validation\Constraints\Required;
 use Tomahawk\Validation\Constraints\RequiredWith;
 use Tomahawk\Validation\Constraints\Identical;
 use Tomahawk\Validation\Constraints\StringLength;
-use Tomahawk\Validation\Constraints\Numeric;
+use Tomahawk\Validation\Constraints\Numerical;
 use Tomahawk\Validation\Constraints\Integer;
 use Tomahawk\Validation\Constraints\MinLength;
 use Tomahawk\Validation\Constraints\MaxLength;
@@ -423,10 +423,10 @@ class ValidationTest extends TestCase
         $this->assertCount(0, $this->validator->getMessages());
     }
 
-    public function testNumeric()
+    public function testNumerical()
     {
         $this->validator->add('number', array(
-            new Numeric()
+            new Numerical()
         ));
 
         $input = array(
@@ -470,7 +470,7 @@ class ValidationTest extends TestCase
 
 
         $this->validator->add('number', array(
-            new Numeric()
+            new Numerical()
         ));
 
         $input = array(
@@ -929,7 +929,7 @@ class ValidationTest extends TestCase
         $this->validator->setTranslator($this->translator);
 
         $this->validator->add('number', array(
-            new Numeric()
+            new Numerical()
         ));
 
         $input = array(

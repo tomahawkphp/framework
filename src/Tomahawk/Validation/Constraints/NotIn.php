@@ -15,7 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class NotIn extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'Please choose a value that is not from the following: %choices%';
+
+    /**
+     * @var array
+     */
     protected $choices = array();
 
     public function getData()

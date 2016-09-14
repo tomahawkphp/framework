@@ -11,18 +11,23 @@ use Tomahawk\Bundle\WebProfilerBundle\Profiler;
 
 class ProfilerTest extends TestCase
 {
+    /**
+     * @var
+     */
     protected $container;
 
-    public static function setUpBeforeClass()
+    protected $startTime;
+    
+    public function setUp()
     {
-        define('TOMAHAWKPHP_START', time());
+        $this->startTime = time();
     }
 
     public function testBundleEnabled()
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->enable();
 
@@ -33,7 +38,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->disable();
 
@@ -44,53 +49,18 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->disable();
 
         $this->assertEquals('', $profiler->render());
     }
 
-    public function testAddQueries()
-    {
-        $engine = $this->getTemplatingEngineMock();
-
-        $databaseManager = $this->getDatabaseManagerMock();
-
-        $pdoMock = new MockPdo();
-
-        $connection = $this->getMockBuilder('Illuminate\Database\Connection')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $connection->expects($this->once())
-            ->method('getPdo')
-            ->will($this->returnValue($pdoMock));
-
-        $databaseManager->expects($this->once())
-            ->method('connection')
-            ->will($this->returnValue($connection));
-
-
-        $profiler = new Profiler($engine, $databaseManager, 'dir');
-
-
-        $profiler->addQueries(array(
-            array(
-                'bindings' => array(1),
-                'query'    => 'select * from users where id = ?'
-            )
-        ));
-
-        $this->assertCount(1, $profiler->getQueries());
-
-    }
-
     public function testAddDoctrineQueries()
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, null, 'dir');
+        $profiler = new Profiler($engine, null, 'dir', $this->startTime);
 
         $debugStack = $this->getDebugStack();
 
@@ -104,7 +74,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addLogs(array(
             'A log'
@@ -117,7 +87,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addTimers(array(
             array(
@@ -146,7 +116,7 @@ class ProfilerTest extends TestCase
             ->method('render')
             ->will($this->returnValue($response));
 
-        $profiler = new Profiler($engine, $this->getDatabaseManagerMock(), 'dir');
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addTimers(array(
             array(
@@ -172,15 +142,6 @@ class ProfilerTest extends TestCase
             ->getMock();
 
         return $engine;
-    }
-
-    protected function getDatabaseManagerMock()
-    {
-        $manager = $this->getMockBuilder('Illuminate\Database\DatabaseManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $manager;
     }
 
     protected function getDebugStack()

@@ -14,32 +14,23 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Command;
 
-use Doctrine\ORM\Tools\EntityGenerator;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerAwareTrait;
+use Doctrine\DBAL\Sharding\PoolingShardConnection;
+use Doctrine\ORM\Tools\EntityGenerator;
 
 /**
  * Base class for Doctrine console commands to extend from.
+ *
+ * Based on the DoctrineCommand from the Symfony DoctrineBundle
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 abstract class DoctrineCommand extends Command implements ContainerAwareInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
-    }
+    use ContainerAwareTrait;
 
     /**
      * get a doctrine entity generator
@@ -63,11 +54,22 @@ abstract class DoctrineCommand extends Command implements ContainerAwareInterfac
      * Get a doctrine entity manager by symfony name.
      *
      * @param string $name
+     * @param null $shardId
      * @return \Doctrine\ORM\EntityManager
      */
-    protected function getEntityManager($name)
+    protected function getEntityManager($name, $shardId = null)
     {
-        return $this->getContainer()->get('doctrine')->getManager($name);
+        /** @var EntityManager $manager */
+        $manager = $this->container->get('doctrine')->getManager($name);
+
+        if ($shardId) {
+            if ( ! $manager->getConnection() instanceof PoolingShardConnection) {
+                throw new \LogicException(sprintf("Connection of EntityManager '%s' must implement shards configuration.", $name));
+            }
+            $manager->getConnection()->connect($shardId);
+        }
+
+        return $manager;
     }
 
     /**
@@ -78,6 +80,6 @@ abstract class DoctrineCommand extends Command implements ContainerAwareInterfac
      */
     protected function getDoctrineConnection($name)
     {
-        return $this->getContainer()->get('doctrine')->getConnection($name);
+        return $this->container->get('doctrine')->getConnection($name);
     }
 }

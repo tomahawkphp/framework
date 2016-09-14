@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\GeneratorBundle\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Tomahawk\Bundle\GeneratorBundle\GeneratorBundle;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Test\TestCase;
 
 class GeneratorBundleTest extends TestCase
@@ -25,7 +25,7 @@ class GeneratorBundleTest extends TestCase
 
     public function getContainerMock()
     {
-        $container = $this->getMockBuilder('Tomahawk\DI\ContainerInterface')
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')
             ->disableOriginalConstructor()
             ->getMock();
 

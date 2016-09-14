@@ -18,12 +18,12 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 class ConfigManager implements ConfigInterface
 {
     /**
-     * @var \Symfony\Component\Config\Loader\LoaderInterface
+     * @var LoaderInterface
      */
     protected $loader;
 
     /**
-     * @var \Symfony\Component\Finder\Finder
+     * @var Finder
      */
     protected $finder;
 
@@ -75,12 +75,30 @@ class ConfigManager implements ConfigInterface
         return $this;
     }
 
-    public function load()
+    /**
+     * Check if a config value exists
+     *
+     * @param $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        $default = get_class() . time();
+
+        return $default !== $this->get($key, $default);
+    }
+
+    /**
+     * Load config files
+     *
+     * @param bool|false $force
+     */
+    public function load($force = false)
     {
         $this->config = array();
 
         // Check if we have a compiled cached file
-        if ($this->cacheFile && file_exists($this->cacheFile)) {
+        if ( ! $force && $this->cacheFile && file_exists($this->cacheFile)) {
             $this->config = include($this->cacheFile);
             return;
         }
@@ -127,6 +145,7 @@ class ConfigManager implements ConfigInterface
         $keys = explode('.', $key);
 
         while (count($keys) > 1) {
+
             $key = array_shift($keys);
 
             // If the key doesn't exist at this depth, we will just create an empty array

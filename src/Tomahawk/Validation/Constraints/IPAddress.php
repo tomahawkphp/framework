@@ -15,11 +15,13 @@ use Tomahawk\Validation\Validator;
 
 class IPAddress extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $message = 'The IP Address is invalid';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-
         if (false === ip2long($value)) {
             $this->fail($attribute, $validator);
             return false;

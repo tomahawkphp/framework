@@ -15,12 +15,19 @@ use Tomahawk\Validation\Validator;
 
 class AlphaNumeric extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $expression = '/^[\pL\pM\pN]+$/u';
+
+    /**
+     * @var string
+     */
     protected $message = 'The field is must only container alphanumeric characters';
 
     public function validate(Validator $validator, $attribute, $value)
     {
-        if (!preg_match($this->expression, $value)) {
+        if ( ! preg_match($this->expression, $value)) {
             $this->fail($attribute, $validator);
 
             return false;

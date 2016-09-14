@@ -15,7 +15,14 @@ use Tomahawk\Validation\Validator;
 
 class DateFormat extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $format = 'Y-m-d';
+
+    /**
+     * @var string
+     */
     protected $message = 'The date format of the field is incorrect. Must be in format: %date_format%';
 
     public function getData()

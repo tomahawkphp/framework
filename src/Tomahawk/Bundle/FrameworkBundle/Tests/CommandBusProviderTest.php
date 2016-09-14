@@ -3,13 +3,13 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
-use Tomahawk\Bundle\FrameworkBundle\DI\CommandBusProvider;
+use Tomahawk\DependencyInjection\Container;
+use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusServiceProvider as CommandBusProvider;
 
 class CommandBusProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DI\CommandBusProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusServiceProvider
      */
     public function testProvider()
     {

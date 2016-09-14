@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\HttpKernel\Test\KernelWithBundleEvents;
 use Tomahawk\HttpKernel\Test\KernelWithRoutes;
 use Tomahawk\Test\TestCase;
-use Tomahawk\DI\Container;
+use Tomahawk\DependencyInjection\Container;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\HttpKernel\Test\Kernel;
 use Tomahawk\HttpKernel\Test\Kernel as KernelForTest;
@@ -68,13 +68,11 @@ class KernelTest extends TestCase
 
     public function testBootInitializesBundlesAndContainer()
     {
-        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'initializeMiddleware'));
+        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer'));
         $kernel->expects($this->once())
             ->method('initializeBundles');
         $kernel->expects($this->once())
             ->method('initializeContainer');
-        $kernel->expects($this->once())
-            ->method('initializeMiddleware');
 
         $kernel->boot();
     }
@@ -84,7 +82,7 @@ class KernelTest extends TestCase
         $bundle->expects($this->once())
             ->method('setContainer');
 
-        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'initializeMiddleware', 'getBundles'));
+        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'getBundles'));
         $kernel->expects($this->exactly(2))
             ->method('getBundles')
             ->will($this->returnValue(array($bundle)));
@@ -95,7 +93,7 @@ class KernelTest extends TestCase
     public function testBootSetsTheBootedFlagToTrue()
     {
         // use test kernel to access isBooted()
-        $kernel = $this->getKernelForTest(array('initializeBundles', 'initializeContainer', 'initializeMiddleware'));
+        $kernel = $this->getKernelForTest(array('initializeBundles', 'initializeContainer'));
         $kernel->boot();
 
         $this->assertTrue($kernel->isBooted());
@@ -103,7 +101,7 @@ class KernelTest extends TestCase
 
     public function testBootKernelSeveralTimesOnlyInitializesBundlesOnce()
     {
-        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer', 'initializeMiddleware'));
+        $kernel = $this->getKernel(array('initializeBundles', 'initializeContainer'));
         $kernel->expects($this->once())
             ->method('initializeBundles');
 
@@ -117,7 +115,7 @@ class KernelTest extends TestCase
         $bundle->expects($this->once())
             ->method('shutdown');
 
-        $kernel = $this->getKernel(array('initializeMiddleware'), array($bundle));
+        $kernel = $this->getKernel(array(), array($bundle));
 
         $kernel->boot();
         $kernel->shutdown();
@@ -133,7 +131,7 @@ class KernelTest extends TestCase
             ->method('setContainer')
             ->with(null);
 
-        $kernel = $this->getKernel(array('initializeMiddleware', 'getBundles'));
+        $kernel = $this->getKernel(array('getBundles'));
         $kernel->expects($this->any())
             ->method('getBundles')
             ->will($this->returnValue(array($bundle)));
@@ -156,7 +154,7 @@ class KernelTest extends TestCase
             ->method('handle')
             ->with($request, $type, $catch);
 
-        $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
+        $kernel = $this->getKernel(array('getHttpKernel'));
         $kernel->expects($this->once())
             ->method('getHttpKernel')
             ->will($this->returnValue($httpKernelMock));
@@ -183,13 +181,6 @@ class KernelTest extends TestCase
             ->method('boot');
 
         $kernel->handle($request, $type, $catch);
-    }
-
-    public function testIsClassInActiveBundleFalse()
-    {
-        //$kernel = $this->getKernelMockForIsClassInActiveBundleTest();
-
-        //$this->assertFalse($kernel->isClassInActiveBundle('Not\In\Active\Bundle'));
     }
 
     public function te2stLocateResourceOnDirectories()
@@ -362,36 +353,32 @@ class KernelTest extends TestCase
     public function testTerminateDelegatesTerminationOnlyForTerminableInterface()
     {
         // does not implement TerminableInterface
-        $httpKernelMock = $this->getMockBuilder('Tomahawk\HttpKernel\HttpKernelInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $httpKernel = new TestKernel();
 
-        $httpKernelMock
-            ->expects($this->never())
-            ->method('terminate');
-
-        $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
+        $kernel = $this->getKernel(array('getHttpKernel'));
         $kernel->expects($this->once())
             ->method('getHttpKernel')
-            ->will($this->returnValue($httpKernelMock));
+            ->will($this->returnValue($httpKernel));
+
+        $this->assertFalse($httpKernel->terminateCalled, 'terminate() is never called if the kernel class does not implement TerminableInterface');
 
         $kernel->boot();
         $kernel->terminate(Request::create('/'), new Response());
 
         // implements TerminableInterface
-        $httpKernelMock = $this->getMockBuilder('Tomahawk\HttpKernel\HttpKernel')
+        $httpKernel = $this->getMockBuilder('Tomahawk\HttpKernel\HttpKernel')
             ->disableOriginalConstructor()
             ->setMethods(array('terminate'))
             ->getMock();
 
-        $httpKernelMock
+        $httpKernel
             ->expects($this->once())
             ->method('terminate');
 
-        $kernel = $this->getKernel(array('initializeMiddleware', 'getHttpKernel'));
+        $kernel = $this->getKernel(array('getHttpKernel'));
         $kernel->expects($this->exactly(2))
             ->method('getHttpKernel')
-            ->will($this->returnValue($httpKernelMock));
+            ->will($this->returnValue($httpKernel));
 
         $kernel->boot();
         $kernel->terminate(Request::create('/'), new Response());
@@ -406,14 +393,6 @@ class KernelTest extends TestCase
         $circularRef = $this->getBundle(null, 'CircularRefBundle', 'CircularRefBundle');
 
         $kernel = $this->getKernel(array(), array($circularRef));
-        $kernel->boot();
-    }
-
-    public function testInitialiseMiddleware()
-    {
-        $middleware = $this->getMiddleware('AMiddleware');
-
-        $kernel = $this->getKernel(array(), array(), array($middleware));
         $kernel->boot();
     }
 
@@ -687,27 +666,6 @@ class KernelTest extends TestCase
         return $kernel;
     }
 
-    protected function getMiddleware($className)
-    {
-        $middleware = $this
-            ->getMockBuilder('Tomahawk\Middleware\Middleware')
-            ->setMethods(array('getName', 'boot', 'setContainer'))
-            ->disableOriginalConstructor();
-
-        if ($className) {
-            $middleware->setMockClassName($className);
-        }
-
-        $middleware = $middleware->getMockForAbstractClass();
-
-        $middleware
-            ->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue(null === $className ? get_class($middleware) : $className));
-
-        return $middleware;
-    }
-
     /**
      * Returns a mock for the BundleInterface
      *
@@ -754,10 +712,9 @@ class KernelTest extends TestCase
      * @param array $methods Additional methods to mock (besides the abstract ones)
      * @param array $bundles Bundles to register
      *
-     * @param array $middleware
      * @return Kernel
      */
-    protected function getKernel(array $methods = array(), array $bundles = array(), array $middleware = array())
+    protected function getKernel(array $methods = array(), array $bundles = array())
     {
         $methods[] = 'registerBundles';
         $methods[] = 'registerEvents';
@@ -771,10 +728,6 @@ class KernelTest extends TestCase
         $kernel->expects($this->any())
             ->method('registerBundles')
             ->will($this->returnValue($bundles));
-
-        $kernel->expects($this->any())
-            ->method('registerMiddleware')
-            ->will($this->returnValue($middleware));
 
         $kernel->expects($this->any())
             ->method('registerEvents');
@@ -800,4 +753,17 @@ class KernelTest extends TestCase
         return $kernel;
     }
 
+}
+
+
+class TestKernel implements HttpKernelInterface
+{
+    public $terminateCalled = false;
+    public function terminate()
+    {
+        $this->terminateCalled = true;
+    }
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    {
+    }
 }

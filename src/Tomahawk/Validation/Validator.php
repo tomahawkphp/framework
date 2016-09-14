@@ -11,8 +11,8 @@
 
 namespace Tomahawk\Validation;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tomahawk\Validation\Constraints\ConstraintInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class Validator implements ValidatorInterface
@@ -20,7 +20,7 @@ class Validator implements ValidatorInterface
     /**
      * @var ConstraintInterface array
      */
-    protected $constraints = array();
+    protected $constraints = [];
 
     /**
      * @var
@@ -30,7 +30,7 @@ class Validator implements ValidatorInterface
     /**
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * @var TranslatorInterface $translator
@@ -54,8 +54,8 @@ class Validator implements ValidatorInterface
      */
     public function add($name, $constraints)
     {
-        if (!isset($this->constraints[$name])) {
-            $this->constraints[$name] = array();
+        if ( ! isset($this->constraints[$name])) {
+            $this->constraints[$name] = [];
         }
 
         if (!is_array($constraints)) {
@@ -77,7 +77,7 @@ class Validator implements ValidatorInterface
      */
     public function validate($input)
     {
-        $this->messages = array();
+        $this->messages = [];
         $this->input = $input;
 
         /**
@@ -110,7 +110,7 @@ class Validator implements ValidatorInterface
     public function addMessage($field, Message $message)
     {
         if (!isset($this->messages[$field])) {
-            $this->messages[$field] = array();
+            $this->messages[$field] = [];
         }
 
         $this->messages[$field][] = $message;

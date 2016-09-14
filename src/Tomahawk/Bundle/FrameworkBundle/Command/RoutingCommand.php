@@ -15,13 +15,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
-use Tomahawk\DI\ContainerAwareInterface;
-use Tomahawk\DI\ContainerInterface;
+use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Tomahawk\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class RoutingCommand extends Command implements ContainerAwareInterface
 {
-    protected $container;
+    use ContainerAwareTrait;
 
     protected function configure()
     {
@@ -30,12 +31,13 @@ class RoutingCommand extends Command implements ContainerAwareInterface
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $routeCollection = $this->getRouteCollection();
 
         $routes = array();
 
-        foreach ($routeCollection->all() as $name => $route)
-        {
+        foreach ($routeCollection->all() as $name => $route) {
             $routes[] = array(
                 $name,
                 implode(',', $route->getMethods()),
@@ -43,26 +45,7 @@ class RoutingCommand extends Command implements ContainerAwareInterface
             );
         }
 
-        $table = new Table($output);
-
-        $table
-            ->setHeaders(array('Name', 'Method', 'Path'))
-            ->setRows($routes);
-
-        $table->render();
-
-    }
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
+        $io->table(array('Name', 'Method', 'Path'), $routes);
     }
 
     /**

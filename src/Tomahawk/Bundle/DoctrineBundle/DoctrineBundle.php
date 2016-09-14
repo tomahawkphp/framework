@@ -11,13 +11,13 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle;
 
-use Tomahawk\Bundle\DoctrineBundle\DI\DoctrineProvider;
 use Tomahawk\HttpKernel\Bundle\Bundle;
+use Tomahawk\Bundle\DoctrineBundle\DependencyInjection\DoctrineServiceProvider;
 
 class DoctrineBundle extends Bundle
 {
     public function boot()
     {
-        $this->container->register(new DoctrineProvider());
+        $this->container->register(new DoctrineServiceProvider());
     }
 }
