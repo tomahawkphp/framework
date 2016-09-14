@@ -17,7 +17,6 @@ use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Tomahawk\Bundle\DoctrineBundle\Command\Proxy\CommandHelper;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand;
 
 /**
