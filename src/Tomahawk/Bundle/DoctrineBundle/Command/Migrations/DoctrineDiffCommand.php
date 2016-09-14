@@ -19,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Doctrine\DBAL\Sharding\PoolingShardConnection;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand;
+use Tomahawk\Bundle\DoctrineBundle\Command\Proxy\CommandHelper;
 
 /**
  * Command for executing single migrations up or down manually.
@@ -45,7 +46,7 @@ class DoctrineDiffCommand extends DiffCommand
     }
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        Helper\CommandHelper::setApplicationHelper($this->getApplication(), $input);
+        CommandHelper::setApplicationEntityManager($this->getApplication(), $input->getOption('em'));
 
         if ($input->getOption('shard')) {
             $connection = $this->getApplication()->getHelperSet()->get('db')->getConnection();
