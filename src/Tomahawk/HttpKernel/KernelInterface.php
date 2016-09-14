@@ -11,7 +11,6 @@
 
 namespace Tomahawk\HttpKernel;
 
-use Tomahawk\Middleware\Middleware;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
