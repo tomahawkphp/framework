@@ -70,6 +70,17 @@ class ProfilerTest extends TestCase
 
     }
 
+    public function testLog()
+    {
+        $engine = $this->getTemplatingEngineMock();
+
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
+
+        $profiler->addLog('info', 'A log');
+
+        $this->assertCount(1, $profiler->getLogs());
+    }
+
     public function testLogs()
     {
         $engine = $this->getTemplatingEngineMock();
@@ -77,11 +88,17 @@ class ProfilerTest extends TestCase
         $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addLogs(array(
-            'type' => 'info',
-            'value' => 'A log'
+            array(
+                'type' => 'info',
+                'value' => 'A log'
+            ),
+            array(
+                'type' => 'info',
+                'value' => 'Another log'
+            )
         ));
 
-        $this->assertCount(1, $profiler->getLogs());
+        $this->assertCount(2, $profiler->getLogs());
     }
 
     public function testTimers()

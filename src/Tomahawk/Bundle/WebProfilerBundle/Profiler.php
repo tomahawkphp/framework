@@ -182,12 +182,35 @@ class Profiler
     }
 
     /**
+     * Add a log to the profiler
+     *
+     * ->addLog('info', 'Thing');
+     *
+     * @param $type
+     * @param $value
+     * @return $this
+     */
+    public function addLog($type, $value)
+    {
+        $this->logs[] = array(
+            'type'  => $type,
+            'value' => $value,
+        );
+
+        return $this;
+    }
+
+    /**
      * Add logs to the profiler
      *
      * ->addLogs(array(
      *       array(
      *          'type' => 'info',
      *          'value' => 'Value = bar'
+     *      ),
+     *      array(
+     *          'type' => 'error',
+     *          'value' => 'Value != bar'
      *      ),
      *   ));
      *
