@@ -185,8 +185,10 @@ class Profiler
      * Add logs to the profiler
      *
      * ->addLogs(array(
-     *       array('info', 'Value = bar'),
-     *       array('info', 'Value = foo'),
+     *       array(
+     *          'type' => 'info',
+     *          'value' => 'Value = bar'
+     *      ),
      *   ));
      *
      * @param array $logs

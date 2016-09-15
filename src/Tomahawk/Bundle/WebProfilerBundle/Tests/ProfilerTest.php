@@ -77,7 +77,8 @@ class ProfilerTest extends TestCase
         $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $profiler->addLogs(array(
-            'A log'
+            'type' => 'info',
+            'value' => 'A log'
         ));
 
         $this->assertCount(1, $profiler->getLogs());

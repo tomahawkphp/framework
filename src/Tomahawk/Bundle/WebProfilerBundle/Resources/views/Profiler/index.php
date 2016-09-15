@@ -14,10 +14,10 @@
                         <?php foreach ($logs as $log) : ?>
                         <tr>
                             <td class="axe-profiler-table-first">
-                                <?php echo $log[0] ?>
+                                <?php echo $log['type'] ?>
                             </td>
                             <td>
-                                <?php echo $log[1] ?>
+                                <?php echo $log['value'] ?>
                             </td>
                             <?php endforeach ?>
                         </tr>
