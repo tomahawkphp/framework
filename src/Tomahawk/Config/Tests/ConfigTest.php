@@ -22,7 +22,7 @@ class ConfigTest extends TestCase
 
         $config->load();
 
-        $this->assertCount(2, $config->get());
+        $this->assertCount(3, $config->get());
 
         $this->assertEquals('pdo', $config->get('auth.driver'));
         $this->assertEquals('database', $config->get('session.driver'));
@@ -52,6 +52,23 @@ class ConfigTest extends TestCase
 
         $this->assertEquals('eloquent', $config->get('auth.driver'));
         $this->assertEquals('cookie', $config->get('session.driver'));
+    }
+
+    public function testEnvConfigInheritsParent()
+    {
+        $configDirectories = array(
+            __DIR__ .'/Resources/configs',
+            __DIR__ .'/Resources/configs/develop',
+        );
+
+        $loader = $this->getLoader($configDirectories);
+
+        $config = $this->getConfig($loader, $configDirectories);
+
+        $config->load();
+
+        $this->assertEquals('UTF-8', $config->get('templating.charset'));
+        $this->assertFalse($config->get('templating.twig.cache'));
     }
 
     public function testConfigHasCompiledConfig()

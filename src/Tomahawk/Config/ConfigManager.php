@@ -118,9 +118,16 @@ class ConfigManager implements ConfigInterface
                     continue;
                 }
 
-                $key = substr($file->getFilename(), 0, -4);
+                $configName = substr($file->getFilename(), 0, -4);
+
                 $values = $this->loader->load($file->getRealPath());
-                $this->set($key, $values);
+
+                foreach ($values as $config => $value) {
+
+                    $key = sprintf('%s.%s', $configName, $config);
+
+                    $this->set($key, $value);
+                }
             }
         }
 
