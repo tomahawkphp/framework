@@ -156,21 +156,6 @@ class RouteTest extends TestCase
         $this->assertTrue($route->hasScheme('httpS'));
     }
 
-    public function testSchemeIsBC()
-    {
-        $route = new Route('/');
-        $route->setRequirement('_scheme', 'http|https');
-        $this->assertEquals('http|https', $route->getRequirement('_scheme'));
-        $this->assertEquals(array('http', 'https'), $route->getSchemes());
-        $this->assertTrue($route->hasScheme('https'));
-        $this->assertTrue($route->hasScheme('http'));
-        $this->assertFalse($route->hasScheme('ftp'));
-        $route->setSchemes(array('hTTp'));
-        $this->assertEquals('http', $route->getRequirement('_scheme'));
-        $route->setSchemes(array());
-        $this->assertNull($route->getRequirement('_scheme'));
-    }
-
     public function testMethod()
     {
         $route = new Route('/');
@@ -179,18 +164,6 @@ class RouteTest extends TestCase
         $this->assertEquals(array('GET'), $route->getMethods(), '->setMethods() accepts a single method string and uppercases it');
         $route->setMethods(array('gEt', 'PosT'));
         $this->assertEquals(array('GET', 'POST'), $route->getMethods(), '->setMethods() accepts an array of methods and uppercases them');
-    }
-
-    public function testMethodIsBC()
-    {
-        $route = new Route('/');
-        $route->setRequirement('_method', 'GET|POST');
-        $this->assertEquals('GET|POST', $route->getRequirement('_method'));
-        $this->assertEquals(array('GET', 'POST'), $route->getMethods());
-        $route->setMethods(array('gEt'));
-        $this->assertEquals('GET', $route->getRequirement('_method'));
-        $route->setMethods(array());
-        $this->assertNull($route->getRequirement('_method'));
     }
 
     public function testCondition()

@@ -92,14 +92,8 @@ class Route extends BaseRoute
         $this->setRequirements($requirements);
         $this->setOptions($options);
         $this->setHost($host);
-        // The conditions make sure that an initial empty $schemes/$methods does not override the corresponding requirement.
-        // They can be removed when the BC layer is removed.
-        if ($schemes) {
-            $this->setSchemes($schemes);
-        }
-        if ($methods) {
-            $this->setMethods($methods);
-        }
+        $this->setSchemes($schemes);
+        $this->setMethods($methods);
         $this->setCondition($condition);
     }
 
@@ -111,25 +105,26 @@ class Route extends BaseRoute
     public function serialize()
     {
         return serialize(array(
-            'path'         => $this->path,
-            'host'         => $this->host,
-            'defaults'     => $this->defaults,
+            'path' => $this->path,
+            'host' => $this->host,
+            'defaults' => $this->defaults,
             'requirements' => $this->requirements,
-            'options'      => $this->options,
-            'schemes'      => $this->schemes,
-            'methods'      => $this->methods,
-            'condition'    => $this->condition,
+            'options' => $this->options,
+            'schemes' => $this->schemes,
+            'methods' => $this->methods,
+            'condition' => $this->condition,
+            'compiled' => $this->compiled,
         ));
     }
 
     /**
      * Set route information from array of data
      *
-     * @param string $data
+     * @param string $serialized
      */
-    public function unserialize($data)
+    public function unserialize($serialized)
     {
-        $data = unserialize($data);
+        $data = unserialize($serialized);
         $this->path = $data['path'];
         $this->host = $data['host'];
         $this->defaults = $data['defaults'];
@@ -137,7 +132,13 @@ class Route extends BaseRoute
         $this->options = $data['options'];
         $this->schemes = $data['schemes'];
         $this->methods = $data['methods'];
-        $this->condition = $data['condition'];
+
+        if (isset($data['condition'])) {
+            $this->condition = $data['condition'];
+        }
+        if (isset($data['compiled'])) {
+            $this->compiled = $data['compiled'];
+        }
     }
 
     /**
@@ -167,34 +168,6 @@ class Route extends BaseRoute
         $this->compiled = null;
 
         return $this;
-    }
-
-    /**
-     * Returns the pattern for the path.
-     *
-     * @return string The pattern
-     *
-     * @deprecated Deprecated in 2.2, to be removed in 3.0. Use getPath instead.
-     */
-    public function getPattern()
-    {
-        return $this->path;
-    }
-
-    /**
-     * Sets the pattern for the path.
-     *
-     * This method implements a fluent interface.
-     *
-     * @param string $pattern The path pattern
-     *
-     * @return Route The current Route instance
-     *
-     * @deprecated Deprecated in 2.2, to be removed in 3.0. Use setPath instead.
-     */
-    public function setPattern($pattern)
-    {
-        return $this->setPath($pattern);
     }
 
     /**
@@ -248,14 +221,6 @@ class Route extends BaseRoute
     public function setSchemes($schemes)
     {
         $this->schemes = array_map('strtolower', (array) $schemes);
-
-        // this is to keep BC and will be removed in a future version
-        if ($this->schemes) {
-            $this->requirements['_scheme'] = implode('|', $this->schemes);
-        } else {
-            unset($this->requirements['_scheme']);
-        }
-
         $this->compiled = null;
 
         return $this;
@@ -266,18 +231,11 @@ class Route extends BaseRoute
      *
      * @param string $scheme
      *
-     * @return bool    true if the scheme requirement exists, otherwise false
+     * @return bool true if the scheme requirement exists, otherwise false
      */
     public function hasScheme($scheme)
     {
-        $scheme = strtolower($scheme);
-        foreach ($this->schemes as $requiredScheme) {
-            if ($scheme === $requiredScheme) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array(strtolower($scheme), $this->schemes, true);
     }
 
     /**
@@ -304,14 +262,6 @@ class Route extends BaseRoute
     public function setMethods($methods)
     {
         $this->methods = array_map('strtoupper', (array) $methods);
-
-        // this is to keep BC and will be removed in a future version
-        if ($this->methods) {
-            $this->requirements['_method'] = implode('|', $this->methods);
-        } else {
-            unset($this->requirements['_method']);
-        }
-
         $this->compiled = null;
 
         return $this;
@@ -630,12 +580,26 @@ class Route extends BaseRoute
         return $this->compiled = $class::compile($this);
     }
 
+    /**
+     * Set a pattern for a parameter
+     *
+     * @param $parameter
+     * @param $pattern
+     * @return $this
+     */
     public function where($parameter, $pattern)
     {
         $this->setRequirement($parameter, $pattern);
         return $this;
     }
 
+    /**
+     * Set a default for a parameter
+     *
+     * @param $name
+     * @param $value
+     * @return $this
+     */
     public function setDefaultParameter($name, $value)
     {
         $this->setDefault($name, $value);
@@ -658,13 +622,6 @@ class Route extends BaseRoute
 
         if ('' === $regex) {
             throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" cannot be empty.', $key));
-        }
-
-        // this is to keep BC and will be removed in a future version
-        if ('_scheme' === $key) {
-            $this->setSchemes(explode('|', $regex));
-        } elseif ('_method' === $key) {
-            $this->setMethods(explode('|', $regex));
         }
 
         return $regex;
