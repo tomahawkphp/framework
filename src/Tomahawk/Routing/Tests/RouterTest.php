@@ -23,9 +23,7 @@ class RouterTest extends TestCase
 
     public function testRoute()
     {
-        $routeCollection = new RouteCollection();
         $router = new Router();
-        $router->setRoutes($routeCollection);
         $router->get('/', 'home', function() {
             return 'Test';
         });
@@ -33,11 +31,19 @@ class RouterTest extends TestCase
         $this->assertCount(1, $router->getRoutes()->getIterator());
     }
 
+    public function testMatchRoute()
+    {
+        $router = new Router();
+        $route = $router->any('/', 'home', function() {
+            return 'Test';
+        });
+
+        $this->assertSame($route, $router->getRoutes()->get('home'));
+    }
+
     public function testPutRoute()
     {
-        $routeCollection = new RouteCollection();
         $router = new Router();
-        $router->setRoutes($routeCollection);
         $route = $router->put('/put', 'put', function() {
             return 'Test';
         });
@@ -47,9 +53,7 @@ class RouterTest extends TestCase
 
     public function testPatchRoute()
     {
-        $routeCollection = new RouteCollection();
         $router = new Router();
-        $router->setRoutes($routeCollection);
         $route = $router->patch('/patch', 'patch', function() {
             return 'Test';
         });
@@ -59,9 +63,7 @@ class RouterTest extends TestCase
 
     public function testOptionsRoute()
     {
-        $routeCollection = new RouteCollection();
         $router = new Router();
-        $router->setRoutes($routeCollection);
         $route = $router->options('/options', 'options', function() {
             return 'Test';
         });

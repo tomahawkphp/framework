@@ -156,6 +156,22 @@ class Router
     }
 
     /**
+     * Match a given path
+     *
+     * You would proceed this method call by setting allowed methods
+     *
+     * @param $path
+     * @param $name
+     * @param null $callback
+     * @param array $schemes
+     * @return Route
+     */
+    public function match($path, $name, $callback = null, array $schemes = [])
+    {
+        return $this->any($path, $name, $callback, $schemes);
+    }
+
+    /**
      * @param $method
      * @param $path
      * @param $name
