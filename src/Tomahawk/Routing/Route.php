@@ -11,7 +11,6 @@
 
 namespace Tomahawk\Routing;
 
-use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Route as BaseRoute;
 
 /**
@@ -33,8 +32,27 @@ class Route extends BaseRoute
      */
     public function setDefaultParameter($name, $value)
     {
-        $this->setDefault($name, $value);
-        return $this;
+        return $this->setDefault($name, $value);
+    }
+
+    /**
+     * Set route requires HTTP
+     *
+     * @return $this
+     */
+    public function requiresHttp()
+    {
+        return $this->setSchemes('http');
+    }
+
+    /**
+     * Set route requires HTTPS
+     *
+     * @return $this
+     */
+    public function requiresHttps()
+    {
+        return $this->setSchemes('https');
     }
 
     /**
@@ -46,14 +64,12 @@ class Route extends BaseRoute
      */
     public function where($parameter, $pattern)
     {
-        $this->setRequirement($parameter, $pattern);
-        return $this;
+        return $this->setRequirement($parameter, $pattern);
     }
 
     public function setPath($pattern)
     {
-        $pattern = $this->formatPath($pattern);
-        return parent::setPath($pattern);
+        return parent::setPath($this->formatPath($pattern));
     }
 
     /**
@@ -64,7 +80,6 @@ class Route extends BaseRoute
      */
     private function formatPath( $path )
     {
-        $path = '/' .trim(trim($path), '/');
-        return $path;
+        return '/' .trim(trim($path), '/');
     }
 }

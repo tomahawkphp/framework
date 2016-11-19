@@ -45,4 +45,20 @@ class RouteTest extends TestCase
 
     }
 
+    public function testRequiresHttp()
+    {
+        $route = new Route('/');
+        $route->requiresHttp();
+
+        $this->assertEquals(['http'], $route->getSchemes());
+    }
+
+    public function testRequiresHttps()
+    {
+        $route = new Route('/');
+        $route->requiresHttps();
+
+        $this->assertEquals(['https'], $route->getSchemes());
+    }
+
 }
