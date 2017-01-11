@@ -76,8 +76,12 @@ class TemplateNameParser extends BaseTemplateNameParser
             throw new \RuntimeException(sprintf('Template name "%s" contains invalid characters.', $name));
         }
 
-        if (!preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)$/', $name, $matches)) {
+        /*if (!preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)$/', $name, $matches)) {
             throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "bundle:section:template.engine").', $name));
+        }*/
+
+        if ($this->isAbsolutePath($name) || !preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)$/', $name, $matches) || 0 === strpos($name, '@')) {
+            return parent::parse($name);
         }
 
         $template = new TemplateReference($matches[1], $matches[2], $matches[3], $matches[4]);
@@ -92,5 +96,18 @@ class TemplateNameParser extends BaseTemplateNameParser
         }
 
         return $this->cache[$name] = $template;
+    }
+
+    /**
+     * @param $file
+     * @return bool
+     */
+    private function isAbsolutePath($file)
+    {
+        $isAbsolute = (bool) preg_match('#^(?:/|[a-zA-Z]:)#', $file);
+        if ($isAbsolute) {
+            @trigger_error('Absolute template path support is deprecated since Symfony 3.1 and will be removed in 4.0.', E_USER_DEPRECATED);
+        }
+        return $isAbsolute;
     }
 }

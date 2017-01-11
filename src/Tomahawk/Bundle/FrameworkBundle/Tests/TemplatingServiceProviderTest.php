@@ -37,11 +37,21 @@ class TemplatingServiceProviderTest extends TestCase
         $container->set('php_global', new \stdClass());
         $container->tag('php_global', 'php.global');
 
-        $twigFilter = $this->getMockBuilder(\Twig_SimpleFilter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        if (interface_exists('Twig_FilterInterface')) {
 
-        $twigFilter->expects($this->any())
+            $twigFilter = $this->getMockBuilder('Twig_SimpleFilter')
+                ->disableOriginalConstructor()
+                ->setMethods(['getName'])
+                ->getMock();
+        }
+        else {
+
+            $twigFilter = $this->getMockBuilder(\Twig_Filter::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        }
+
+        $twigFilter->expects($this->atLeastOnce())
             ->method('getName')
             ->will($this->returnValue('twig_filter'));
 

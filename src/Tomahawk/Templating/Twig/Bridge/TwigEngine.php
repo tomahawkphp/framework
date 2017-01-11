@@ -12,10 +12,20 @@
 namespace Tomahawk\Templating\Twig\Bridge;
 
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Templating\StreamingEngineInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
-class TwigEngine implements EngineInterface
+/**
+ * This engine knows how to render Twig templates.
+ *
+ * @author Tom Ellis
+ *
+ * Heavily based on the original by
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ */
+class TwigEngine implements EngineInterface, StreamingEngineInterface
 {
     /**
      * @var \Twig_Environment
@@ -55,6 +65,18 @@ class TwigEngine implements EngineInterface
      * {@inheritdoc}
      *
      * It also supports \Twig_Template as name parameter.
+     *
+     * @throws \Twig_Error if something went wrong like a thrown exception while rendering the template
+     */
+    public function stream($name, array $parameters = array())
+    {
+        $this->load($name)->display($parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * It also supports \Twig_Template as name parameter.
      */
     public function exists($name)
     {
@@ -64,16 +86,15 @@ class TwigEngine implements EngineInterface
 
         $loader = $this->environment->getLoader();
 
-        if ($loader instanceof \Twig_ExistsLoaderInterface) {
+        if ($loader instanceof \Twig_ExistsLoaderInterface || method_exists($loader, 'exists')) {
             return $loader->exists((string) $name);
         }
 
         try {
             // cast possible TemplateReferenceInterface to string because the
             // EngineInterface supports them but Twig_LoaderInterface does not
-            $loader->getSource((string) $name);
-        }
-        catch (\Twig_Error_Loader $e) {
+            $loader->getSourceContext((string) $name)->getCode();
+        } catch (\Twig_Error_Loader $e) {
             return false;
         }
 
@@ -114,7 +135,8 @@ class TwigEngine implements EngineInterface
 
         try {
             return $this->environment->loadTemplate((string) $name);
-        } catch (\Twig_Error_Loader $e) {
+        }
+        catch (\Twig_Error_Loader $e) {
             throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }

@@ -2,6 +2,7 @@
 
 use Tomahawk\Templating\TemplateReference;
 use Tomahawk\Templating\TemplateNameParser;
+use Symfony\Component\Templating\TemplateReference as BaseTemplateReference;
 
 class TemplateNameParserTest extends PHPUnit_Framework_TestCase
 {
@@ -33,15 +34,14 @@ class TemplateNameParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getLogicalNameToTemplateProvider
+     * @dataProvider parseProvider
      */
-    public function testParse($name, $ref)
+    public function testParse($name, $logicalName, $path, $ref)
     {
         $template = $this->parser->parse($name);
-
-        $this->assertEquals($template->getLogicalName(), $ref->getLogicalName());
-        $this->assertEquals($template->getLogicalName(), $name);
-
+        $this->assertSame($ref->getLogicalName(), $template->getLogicalName());
+        $this->assertSame($logicalName, $template->getLogicalName());
+        $this->assertSame($path, $template->getPath());
     }
 
     public function testParseCache()
@@ -79,35 +79,23 @@ class TemplateNameParserTest extends PHPUnit_Framework_TestCase
         $this->parser->parse($name);
     }
 
-    public function getLogicalNameToTemplateProvider()
+    public function parseProvider()
     {
         return array(
-            array('FooBundle:Post:index.php', new TemplateReference('FooBundle', 'Post', 'index', 'php')),
-            array('FooBundle:Post:index.twig', new TemplateReference('FooBundle', 'Post', 'index','twig')),
-            array('FooBundle:Post:index.php', new TemplateReference('FooBundle', 'Post', 'index', 'php')),
-            array('SensioFooBundle:Post:index.php', new TemplateReference('SensioFooBundle', 'Post', 'index','php')),
-            array('SensioCmsFooBundle:Post:index.php', new TemplateReference('SensioCmsFooBundle', 'Post', 'index','php')),
-            array(':Post:index.php', new TemplateReference('', 'Post', 'index', 'php')),
-            array('::index.php', new TemplateReference('', '', 'index', 'php')),
-            array('FooBundle:Post:foo.bar.index.php', new TemplateReference('FooBundle', 'Post', 'foo.bar.index','php')),
+            array('FooBundle:Post:index.php', 'FooBundle:Post:index.php', '@FooBundle/Resources/views/Post/index.php', new TemplateReference('FooBundle', 'Post', 'index', 'php')),
+            array('FooBundle:Post:index.twig', 'FooBundle:Post:index.twig', '@FooBundle/Resources/views/Post/index.twig', new TemplateReference('FooBundle', 'Post', 'index', 'twig')),
+            array('FooBundle:Post:index.php', 'FooBundle:Post:index.php', '@FooBundle/Resources/views/Post/index.php', new TemplateReference('FooBundle', 'Post', 'index', 'php')),
+            array('SensioFooBundle:Post:index.php', 'SensioFooBundle:Post:index.php', '@SensioFooBundle/Resources/views/Post/index.php', new TemplateReference('SensioFooBundle', 'Post', 'index', 'php')),
+            array('SensioCmsFooBundle:Post:index.php', 'SensioCmsFooBundle:Post:index.php', '@SensioCmsFooBundle/Resources/views/Post/index.php', new TemplateReference('SensioCmsFooBundle', 'Post', 'index', 'php')),
+            array(':Post:index.php', ':Post:index.php', 'views/Post/index.php', new TemplateReference('', 'Post', 'index', 'php')),
+            array('::index.php', '::index.php', 'views/index.php', new TemplateReference('', '', 'index', 'php')),
+            array('index.php', 'index.php', 'index.php', new BaseTemplateReference('index.php', 'php')),
+            array('FooBundle:Post:foo.bar.index.php', 'FooBundle:Post:foo.bar.index.php', '@FooBundle/Resources/views/Post/foo.bar.index.php', new TemplateReference('FooBundle', 'Post', 'foo.bar.index', 'php')),
+            array('@FooBundle/Resources/views/layout.twig', '@FooBundle/Resources/views/layout.twig', '@FooBundle/Resources/views/layout.twig', new BaseTemplateReference('@FooBundle/Resources/views/layout.twig', 'twig')),
+            array('@FooBundle/Foo/layout.twig', '@FooBundle/Foo/layout.twig', '@FooBundle/Foo/layout.twig', new BaseTemplateReference('@FooBundle/Foo/layout.twig', 'twig')),
+            array('name.twig', 'name.twig', 'name.twig', new BaseTemplateReference('name.twig', 'twig')),
+            array('name', 'name.php', 'name.php', new BaseTemplateReference('name.php', 'php')),
+            array('default/index.php', 'default/index.php', 'default/index.php', new BaseTemplateReference('default/index.php', 'php')),
         );
     }
-
-    /**
-     * @dataProvider      getInvalidLogicalNameProvider
-     * @expectedException \InvalidArgumentException
-     */
-    public function testParseInvalidName($name = null)
-    {
-        $this->parser->parse($name);
-    }
-
-    public function getInvalidLogicalNameProvider()
-    {
-        return array(
-            array('FooBundle:Post'),
-            array('FooBundle:Post:'),
-        );
-    }
-
 }

@@ -113,11 +113,11 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
 
     public function testSupportWithTwigExistsLoaderInterfaceThrowsExceptionAndReturnsFalse()
     {
-        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader = $this->getMock(Twig_Loader_Filesystem::class);
 
         $loader->expects($this->once())
-            ->method('getSource')
-            ->will($this->throwException(new \Twig_Error_Loader('error')));
+            ->method('exists')
+            ->will($this->returnValue(false));
 
         $twig = new \Twig_Environment($loader);
         $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
@@ -128,10 +128,11 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
 
     public function testSupportWithTwigExistsLoaderReturnsTrue()
     {
-        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader = $this->getMock(Twig_Loader_Filesystem::class);
 
         $loader->expects($this->once())
-            ->method('getSource');
+            ->method('exists')
+            ->will($this->returnValue(true));
 
         $twig = new \Twig_Environment($loader);
         $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
@@ -183,6 +184,9 @@ class TwigTemplateStub extends Twig_Template
     {}
 
     public function doDisplay(array $context, array $blocks = array())
+    {}
+
+    public function getDebugInfo()
     {}
 }
 

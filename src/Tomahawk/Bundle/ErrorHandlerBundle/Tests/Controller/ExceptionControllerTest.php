@@ -36,12 +36,20 @@ class ExceptionControllerTest extends TestCase
     {
         $request = new Request();
 
-        $loader = $this->getMockBuilder(\Twig_LoaderInterface::class)
+        $loader = $this->getMockBuilder(\Twig_Loader_Filesystem::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $loader->expects($this->once())
-            ->method('getSource');
+        if ($loader instanceof \Twig_ExistsLoaderInterface) {
+            $loader->expects($this->once())
+                ->method('exists')
+                ->will($this->returnValue(true));
+        }
+        else {
+
+            $loader->expects($this->once())
+                ->method('getSourceContext');
+        }
 
         $exception = FlattenException::create(new Exception('error'), 404);
 
@@ -106,13 +114,22 @@ class ExceptionControllerTest extends TestCase
     {
         $request = new Request();
 
-        $loader = $this->getMockBuilder(\Twig_LoaderInterface::class)
+        $loader = $this->getMockBuilder(\Twig_Loader_Filesystem::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $loader->expects($this->exactly(2))
-            ->method('getSource')
-            ->will($this->throwException(new \Twig_Error_Loader('error')));
+
+        if ($loader instanceof \Twig_ExistsLoaderInterface) {
+            $loader->expects($this->exactly(2))
+                ->method('exists')
+                ->will($this->returnValue(false));
+        }
+        else {
+
+            $loader->expects($this->exactly(2))
+                ->method('getSourceContext')
+                ->will($this->throwException(new \Twig_Error_Loader('error')));
+        }
 
         $exception = FlattenException::create(new Exception('error'), 404);
 

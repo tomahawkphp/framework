@@ -100,7 +100,7 @@ class ExceptionController extends Controller
             return $loader->exists($template);
         }
         try {
-            $loader->getSource($template);
+            $loader->getSourceContext($template);
             return true;
         } catch (\Twig_Error_Loader $e) {
 

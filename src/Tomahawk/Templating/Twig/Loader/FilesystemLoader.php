@@ -17,6 +17,8 @@ namespace Tomahawk\Templating\Twig\Loader;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
+use Twig_Error_Loader;
+use Twig_Source;
 
 /**
  * FilesystemLoader extends the default Twig filesystem loader
@@ -24,26 +26,37 @@ use Symfony\Component\Templating\TemplateReferenceInterface;
  *
  * @author Tom Ellis
  *
- * Based on the original by:
+ * Heavily based on the original by:
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class FilesystemLoader extends \Twig_Loader_Filesystem
 {
+    /**
+     * @var FileLocatorInterface
+     */
     protected $locator;
+
+    /**
+     * @var TemplateNameParserInterface
+     */
     protected $parser;
+
     /**
      * Constructor.
      *
-     * @param FileLocatorInterface        $locator A FileLocatorInterface instance
-     * @param TemplateNameParserInterface $parser  A TemplateNameParserInterface instance
+     * @param FileLocatorInterface        $locator  A FileLocatorInterface instance
+     * @param TemplateNameParserInterface $parser   A TemplateNameParserInterface instance
+     * @param string|null                 $rootPath The root path common to all relative paths (null for getcwd())
      */
-    public function __construct(FileLocatorInterface $locator, TemplateNameParserInterface $parser)
+    public function __construct(FileLocatorInterface $locator, TemplateNameParserInterface $parser, $rootPath = null)
     {
-        parent::__construct(array());
+        parent::__construct(array(), $rootPath);
+
         $this->locator = $locator;
         $this->parser = $parser;
     }
+
     /**
      * {@inheritdoc}
      *
@@ -53,6 +66,7 @@ class FilesystemLoader extends \Twig_Loader_Filesystem
     {
         return parent::exists((string) $name);
     }
+
     /**
      * Returns the path to the template file.
      *
@@ -61,34 +75,43 @@ class FilesystemLoader extends \Twig_Loader_Filesystem
      * Otherwise the template is located using the locator from the twig library.
      *
      * @param string|TemplateReferenceInterface $template The template
+     * @param bool                              $throw    When true, a \Twig_Error_Loader exception will be thrown if a template could not be found
      *
      * @return string The path to the template file
      *
      * @throws \Twig_Error_Loader if the template could not be found
      */
-    protected function findTemplate($template)
+    protected function findTemplate($template, $throw = true)
     {
         $logicalName = (string) $template;
+
         if (isset($this->cache[$logicalName])) {
             return $this->cache[$logicalName];
         }
+
         $file = null;
         $previous = null;
         try {
             $file = parent::findTemplate($logicalName);
         } catch (\Twig_Error_Loader $e) {
-            $previous = $e;
+            $twigLoaderException = $e;
+
             // for BC
             try {
                 $template = $this->parser->parse($template);
                 $file = $this->locator->locate($template);
             } catch (\Exception $e) {
-                $previous = $e;
             }
         }
+
         if (false === $file || null === $file) {
-            throw new \Twig_Error_Loader(sprintf('Unable to find template "%s".', $logicalName), -1, null, $previous);
+            if ($throw) {
+                throw $twigLoaderException;
+            }
+
+            return false;
         }
+
         return $this->cache[$logicalName] = $file;
     }
 }
