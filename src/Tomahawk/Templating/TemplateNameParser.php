@@ -11,13 +11,30 @@
 
 namespace Tomahawk\Templating;
 
-use Symfony\Component\Templating\TemplateNameParserInterface;
+use Symfony\Component\Templating\TemplateNameParser as BaseTemplateNameParser;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Tomahawk\HttpKernel\KernelInterface;
 
-class TemplateNameParser implements TemplateNameParserInterface
+/**
+ * Class TemplateNameParser
+ * @package Tomahawk\Templating
+ *
+ * @author Tom Ellis
+ *
+ * Based on the original by:
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ */
+class TemplateNameParser extends BaseTemplateNameParser
 {
+    /**
+     * @var KernelInterface
+     */
     protected $kernel;
+
+    /**
+     * @var array
+     */
     protected $cache = array();
 
     /**
@@ -38,15 +55,18 @@ class TemplateNameParser implements TemplateNameParserInterface
         if ($name instanceof TemplateReferenceInterface) {
             return $name;
         }
-        elseif (isset($this->cache[$name])) {
-            return $this->cache[$name];
-        }
 
         // No extension? Default to php
         $ext = pathinfo($name, PATHINFO_EXTENSION);
 
-        if (!$ext) {
+        // This is horrible and I don't know why I did it
+        // Will deprecate in a future version
+        if ( ! $ext) {
             $name .= '.php';
+        }
+
+        if (isset($this->cache[$name])) {
+            return $this->cache[$name];
         }
 
         // normalize name
