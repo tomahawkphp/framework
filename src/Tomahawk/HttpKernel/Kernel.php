@@ -77,11 +77,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     protected $routePaths = array();
 
-    const VERSION         = '2.0.2';
-    const VERSION_ID      = '20002';
+    const VERSION         = '2.0.3';
+    const VERSION_ID      = '20003';
     const MAJOR_VERSION   = '2';
     const MINOR_VERSION   = '0';
-    const RELEASE_VERSION = '2';
+    const RELEASE_VERSION = '3';
     const EXTRA_VERSION   = '';
 
     /**
