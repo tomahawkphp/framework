@@ -18,7 +18,6 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Twig_Error_Loader;
-use Twig_Source;
 
 /**
  * FilesystemLoader extends the default Twig filesystem loader
