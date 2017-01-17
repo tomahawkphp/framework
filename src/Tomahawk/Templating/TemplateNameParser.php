@@ -76,10 +76,6 @@ class TemplateNameParser extends BaseTemplateNameParser
             throw new \RuntimeException(sprintf('Template name "%s" contains invalid characters.', $name));
         }
 
-        /*if (!preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)$/', $name, $matches)) {
-            throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "bundle:section:template.engine").', $name));
-        }*/
-
         if ($this->isAbsolutePath($name) || !preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)$/', $name, $matches) || 0 === strpos($name, '@')) {
             return parent::parse($name);
         }
