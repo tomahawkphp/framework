@@ -27,7 +27,7 @@ use Symfony\Component\Templating\EngineInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class TwigEngine extends BaseEngine
+class TwigEngine extends BaseEngine implements EngineInterface
 {
     /**
      * @var FileLocatorInterface
