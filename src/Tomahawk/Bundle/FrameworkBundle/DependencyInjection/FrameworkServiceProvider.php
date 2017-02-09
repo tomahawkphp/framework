@@ -80,9 +80,8 @@ class FrameworkServiceProvider implements ServiceProviderInterface
         });
 
         $container->set('Tomahawk\HttpKernel\HttpKernelInterface', $container->factory(function(ContainerInterface $c) {
-            return new HttpKernel($c['event_dispatcher'], $c['controller_resolver'], $c['request_stack']);
+            return new HttpKernel($c['event_dispatcher'], $c['controller_resolver'], $c['request_stack'], $c['argument_resolver']);
         }));
-
     }
 
     protected function registerAliases(ContainerInterface $container)

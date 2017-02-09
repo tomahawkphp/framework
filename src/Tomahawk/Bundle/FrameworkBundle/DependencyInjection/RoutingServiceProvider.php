@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
 
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Config\FileLocator;
@@ -59,6 +60,10 @@ class RoutingServiceProvider implements ServiceProviderInterface
             }
 
             return $routes;
+        });
+
+        $container->set('argument_resolver', function() {
+            return new ArgumentResolver();
         });
 
         $container->set('controller_resolver', $container->factory(function(ContainerInterface $c) {

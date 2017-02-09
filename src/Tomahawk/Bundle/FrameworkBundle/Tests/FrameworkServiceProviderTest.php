@@ -25,7 +25,6 @@ class FrameworkServiceProviderTest extends TestCase
 
         $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventDispatcherInterface', $container->get('event_dispatcher'));
         $this->assertInstanceOf('Tomahawk\Asset\AssetManagerInterface', $container->get('asset_manager'));
-        $this->assertSame($container, $container->get('Tomahawk\DependencyInjection\ContainerInterface'));
         $this->assertInstanceOf('Symfony\Component\Filesystem\Filesystem', $container->get('filesystem'));
         $this->assertInstanceOf('Tomahawk\Forms\FormsManagerInterface', $container->get('form_manager'));
         $this->assertInstanceOf('Tomahawk\Html\HtmlBuilderInterface', $container->get('html_builder'));
@@ -36,6 +35,7 @@ class FrameworkServiceProviderTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RequestStack', $container->get('request_stack'));
         $this->assertInstanceOf('Tomahawk\Url\UrlGeneratorInterface', $container->get('url_generator'));
         $this->assertInstanceOf('Symfony\Component\HttpKernel\HttpKernelInterface', $container->get('http_kernel'));
+        $this->assertSame($container, $container->get('Tomahawk\DependencyInjection\ContainerInterface'));
 
     }
 
@@ -48,6 +48,8 @@ class FrameworkServiceProviderTest extends TestCase
         $container->set('request_context', new RequestContext());
         $container->set('session', $this->getMock('Tomahawk\Session\SessionInterface'));
         $container->set('controller_resolver', $this->getMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface'));
+        $container->set('argument_resolver', $this->getMock('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface'));
+        
         return $container;
     }
 
