@@ -23,6 +23,13 @@ class Router
     protected $inSection = false;
 
     /**
+     * Whether we're in a route group
+     *
+     * @var bool
+     */
+    protected $inGroup = false;
+
+    /**
      * @var RouteCollection
      */
     protected $routes;
@@ -216,6 +223,9 @@ class Router
      * @param $name
      * @param array $options
      * @param \Closure $callback
+     *
+     * @deprecated This method is deprecated as of 2.1 and will be removed in 3.0 use Router::group instead
+     *
      * @return $this
      */
     public function section($name, $options = [], \Closure $callback)
@@ -237,7 +247,34 @@ class Router
     }
 
     /**
+     * Create a route group
+     *
+     * @param $prefix
+     * @param \Closure $callback
+     * @return $this
+     */
+    public function group($prefix, \Closure $callback)
+    {
+        $subCollection = new RouteCollection();
+
+        $subRouter = new self();
+        $subRouter
+            ->setInGroup(true)
+            ->setRoutes($subCollection);
+
+        $callback($subRouter, $subCollection);
+
+        $subCollection->addPrefix($prefix);
+
+        $this->getRoutes()->addCollection($subCollection);
+
+        return $this;
+    }
+
+    /**
      * Set whether we are in a route section or not
+     *
+     * @deprecated This method is deprecated as of 2.1 and will be removed in 3.0
      *
      * @param boolean $inSection
      * @return $this
@@ -251,10 +288,34 @@ class Router
     /**
      * Get whether we are in a route section or not
      *
+     * @deprecated This method is deprecated as of 2.1 and will be removed in 3.0
+     *
      * @return boolean
      */
     public function getInSection()
     {
         return $this->inSection;
+    }
+
+    /**
+     * Set whether we are in a route group or not
+     *
+     * @param boolean $inGroup
+     * @return $this
+     */
+    public function setInGroup($inGroup)
+    {
+        $this->inGroup = $inGroup;
+        return $this;
+    }
+
+    /**
+     * Get whether we are in a route group or not
+     *
+     * @return boolean
+     */
+    public function getInGroup()
+    {
+        return $this->inGroup;
     }
 }

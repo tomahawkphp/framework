@@ -181,4 +181,30 @@ class RouterTest extends TestCase
         $this->assertEquals('/admin', $router->getRoutes()->get('admin_home')->getPath());
     }
 
+    public function testGroup()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+
+        $test = $this;
+
+        $router->group('admin', function(Router $router, RouteCollection $collection) use ($test) {
+
+            $test->assertTrue($router->getInGroup());
+
+            $router->any('/', 'admin_home', function() {
+                return 'Home';
+            });
+
+            $collection->setSchemes(array(
+                'https'
+            ));
+        });
+
+        $adminRoute = $router->getRoutes()->get('admin_home');
+
+        $this->assertEquals(array('https'), $adminRoute->getSchemes());
+        $this->assertEquals('/admin', $router->getRoutes()->get('admin_home')->getPath());
+    }
 }
