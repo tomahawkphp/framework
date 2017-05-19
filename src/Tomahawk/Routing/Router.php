@@ -257,6 +257,10 @@ class Router
     {
         $prefix = null;
 
+        if ( ! (is_string($options) || is_array($options))) {
+            throw new \RuntimeException('Options must either be a string or array');
+        }
+
         if (is_string($options)) {
             $prefix = $options;
             $options = [];

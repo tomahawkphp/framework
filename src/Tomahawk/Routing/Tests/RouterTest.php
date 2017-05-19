@@ -231,4 +231,27 @@ class RouterTest extends TestCase
         $this->assertEquals(array('https'), $adminRoute->getSchemes());
         $this->assertEquals('/admin', $router->getRoutes()->get('admin_home')->getPath());
     }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testGroupThrowsRuntimeException()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+
+        $test = $this;
+
+        $router->group(null, function(Router $router, RouteCollection $collection) use ($test) {
+
+            $router->any('/', 'admin_home', function() {
+                return 'Home';
+            });
+
+            $collection->setSchemes(array(
+                'https'
+            ));
+        });
+    }
 }
