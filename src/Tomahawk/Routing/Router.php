@@ -249,12 +249,22 @@ class Router
     /**
      * Create a route group
      *
-     * @param $prefix
+     * @param string|array $options
      * @param \Closure $callback
      * @return $this
      */
-    public function group($prefix, \Closure $callback)
+    public function group($options, \Closure $callback)
     {
+        $prefix = null;
+
+        if (is_string($options)) {
+            $prefix = $options;
+            $options = [];
+        }
+        else if (is_array($options) && isset($options['prefix'])) {
+            $prefix = $options['prefix'];
+        }
+
         $subCollection = new RouteCollection();
 
         $subRouter = new self();
@@ -264,7 +274,23 @@ class Router
 
         $callback($subRouter, $subCollection);
 
-        $subCollection->addPrefix($prefix);
+        if ($prefix) {
+            $subCollection->addPrefix($prefix);
+        }
+
+        if ($options) {
+            if (isset($options['domain'])) {
+                $subCollection->setHost($options['domain']);
+            }
+
+            if (isset($options['schemes'])) {
+                $subCollection->setSchemes($options['schemes']);
+            }
+
+            if (isset($options['methods'])) {
+                $subCollection->setMethods($options['methods']);
+            }
+        }
 
         $this->getRoutes()->addCollection($subCollection);
 
