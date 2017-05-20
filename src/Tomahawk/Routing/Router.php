@@ -294,6 +294,18 @@ class Router
             if (isset($options['methods'])) {
                 $subCollection->setMethods($options['methods']);
             }
+
+            if (isset($options['defaults'])) {
+                $subCollection->addDefaults($options['defaults']);
+            }
+
+            if (isset($options['options'])) {
+                $subCollection->addOptions($options['options']);
+            }
+
+            if (isset($options['requirements'])) {
+                $subCollection->addRequirements($options['requirements']);
+            }
         }
 
         $this->getRoutes()->addCollection($subCollection);
