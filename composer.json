@@ -52,7 +52,10 @@
     "autoload": {
         "psr-4": {
             "Tomahawk\\": "src/Tomahawk/"
-        }
+        },
+        "exclude-from-classmap": [
+            "**/Tests/"
+        ]
     },
     "minimum-stability": "stable",
     "extra": {
