@@ -14,7 +14,7 @@ namespace Tomahawk\Forms;
 class FormsManager implements FormsManagerInterface
 {
     /**
-     * @var Form array
+     * @var Form[]
      */
     protected $forms = array();
 

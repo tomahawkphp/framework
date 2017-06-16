@@ -68,6 +68,12 @@ class Hasher implements HasherInterface
         return password_needs_rehash($hashedValue, PASSWORD_BCRYPT, array('cost' => $cost));
     }
 
+    /**
+     * @param $value
+     * @param $algo
+     * @param array $options
+     * @return bool|string
+     */
     protected function doHash($value, $algo, array $options = array())
     {
         return password_hash($value, $algo, $options);

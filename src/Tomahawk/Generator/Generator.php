@@ -29,6 +29,9 @@ namespace Tomahawk\Generator;
  */
 class Generator
 {
+    /**
+     * @var array
+     */
     private $skeletonDirs;
 
     /**
@@ -44,6 +47,13 @@ class Generator
         $this->skeletonDirs = is_array($skeletonDirs) ? $skeletonDirs : [$skeletonDirs];
     }
 
+    /**
+     * Render twig template
+     *
+     * @param $template
+     * @param $parameters
+     * @return string
+     */
     protected function render($template, $parameters)
     {
         $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->skeletonDirs), [
@@ -56,6 +66,14 @@ class Generator
         return $twig->render($template, $parameters);
     }
 
+    /**
+     * Render file
+     *
+     * @param $template
+     * @param $target
+     * @param $parameters
+     * @return bool|int
+     */
     protected function renderFile($template, $target, $parameters)
     {
         if (!is_dir(dirname($target))) {

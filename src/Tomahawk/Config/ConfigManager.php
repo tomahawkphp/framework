@@ -11,7 +11,6 @@
 
 namespace Tomahawk\Config;
 
-use Tomahawk\Common\Str;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -114,7 +113,7 @@ class ConfigManager implements ConfigInterface
                  */
 
                 // If file starts with config_ its a compiled one so ignore
-                if (Str::is($file->getFilename(), '*config_*')) {
+                if ($this->isCompiledFileName($file->getFilename())) {
                     continue;
                 }
 
@@ -196,5 +195,16 @@ class ConfigManager implements ConfigInterface
         }
 
         return $array;
+    }
+
+    /**
+     * Check if a string matches passed pattern
+     *
+     * @param string $fileName
+     * @return bool
+     */
+    protected function isCompiledFileName($fileName)
+    {
+        return (bool) preg_match('/^.*config_.*/', $fileName);
     }
 }
