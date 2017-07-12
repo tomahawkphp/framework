@@ -2,7 +2,7 @@
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Tomahawk\HttpCore\Request;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Templating\GlobalVariables;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\Authentication\AuthenticationProviderInterface;

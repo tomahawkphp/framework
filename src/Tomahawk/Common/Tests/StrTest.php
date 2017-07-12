@@ -1,7 +1,7 @@
 <?php
 namespace Tomahawk\Common\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Common\Str;
 use Tomahawk\Common\Test\Str as TestStr;
 use Tomahawk\Common\Test\OpenStr as TestOpenStr;

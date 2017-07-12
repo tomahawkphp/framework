@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Session\Session;
 use Tomahawk\Session\Bag\OldInputBagInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;

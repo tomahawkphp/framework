@@ -9,7 +9,7 @@ use Tomahawk\Bundle\GeneratorBundle\Command\GenerateBundleCommand;
 use Tomahawk\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class BundleCommandTest extends TestCase
 {

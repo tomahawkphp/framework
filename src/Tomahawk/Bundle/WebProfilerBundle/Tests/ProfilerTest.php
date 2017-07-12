@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\WebProfilerBundle\Tests;
 
 use Doctrine\DBAL\Logging\DebugStack;
 use Tomahawk\Bundle\WebProfilerBundle\Test\MockPdo;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
 use Tomahawk\Bundle\WebProfilerBundle\Profiler;

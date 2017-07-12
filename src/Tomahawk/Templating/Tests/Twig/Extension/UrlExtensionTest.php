@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Templating\Tests\Twig\Extension;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Templating\Twig\Extension\UrlExtension;
 
 class UrlExtensionTest extends TestCase

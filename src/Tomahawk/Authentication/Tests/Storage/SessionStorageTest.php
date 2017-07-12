@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Authentication\Tests\Storage;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Authentication\Storage\SessionStorage;
 
 class SessionStorageTest extends TestCase

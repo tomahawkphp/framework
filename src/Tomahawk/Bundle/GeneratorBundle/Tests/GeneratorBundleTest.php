@@ -5,7 +5,7 @@ namespace Tomahawk\Bundle\GeneratorBundle\Tests;
 use Symfony\Component\Filesystem\Filesystem;
 use Tomahawk\Bundle\GeneratorBundle\GeneratorBundle;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class GeneratorBundleTest extends TestCase
 {

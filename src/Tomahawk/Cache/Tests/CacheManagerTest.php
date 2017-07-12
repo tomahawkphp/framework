@@ -3,7 +3,7 @@
 namespace Tomahawk\Cache\Tests;
 
 use Tomahawk\Cache\CacheManager;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class CacheManagerTest extends TestCase
 {

@@ -3,7 +3,7 @@
 namespace Tomahawk\HttpKernel\Tests;
 
 use Tomahawk\HttpKernel\Config\FileLocator;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class FileLocatorTest extends TestCase
 {

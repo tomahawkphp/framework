@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\FrameworkBundle\Tests\EventListener;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\SessionListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;

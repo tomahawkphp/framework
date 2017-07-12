@@ -3,7 +3,7 @@
 namespace Tomahawk\Forms\Tests;
 
 use Tomahawk\Forms\Test\Model;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Forms\Form;
 use Tomahawk\Forms\Element\Text;
 use Tomahawk\Forms\DataTransformerInterface;

@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Url\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Url\UrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;

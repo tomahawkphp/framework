@@ -4,7 +4,7 @@ namespace Tomahawk\Cache\Tests;
 
 use Doctrine\Common\Cache\XcacheCache;
 use Tomahawk\Cache\Provider\XcacheProvider;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class CacheXcacheProviderTest extends TestCase
 {

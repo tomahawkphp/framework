@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Authentication\Tests\User;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Authentication\User\Credentials;
 
 class CredentialsTest extends TestCase

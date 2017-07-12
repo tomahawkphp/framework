@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Tomahawk\Routing\Matcher\RedirectableUrlMatcher;
 use Tomahawk\Routing\Route;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class RedirectableUrlMatcherTest extends TestCase
 {

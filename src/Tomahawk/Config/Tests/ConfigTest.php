@@ -3,7 +3,7 @@
 namespace Tomahawk\Config\Tests;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Config\ConfigManager;
 use Tomahawk\Config\Loader\YamlConfigLoader;
 use Tomahawk\Config\Loader\PhpConfigLoader;

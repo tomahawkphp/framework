@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\SwiftmailerBundle\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\SwiftmailerBundle\TransportBuilder;
 
 class TransportBuilderTest extends TestCase

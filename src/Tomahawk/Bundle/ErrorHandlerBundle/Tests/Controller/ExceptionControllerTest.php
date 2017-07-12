@@ -5,7 +5,7 @@ namespace Tomahawk\Bundle\ErrorHandlerBundle\Tests\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\HttpCore\Request;
 use Tomahawk\Bundle\ErrorHandlerBundle\Controller\ExceptionController;

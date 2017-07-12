@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\CSRFBundle\Test;
 
 use Tomahawk\Bundle\CSRFBundle\Token\TokenManager;
 use Tomahawk\Bundle\CSRFBundle\Validation\CSRFToken;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Validation\Validator;
 
 class CSRFTokenValidationTest extends TestCase

@@ -24,7 +24,7 @@
         "phpunit/phpunit": "~5.3.0"
     },
     "suggest": {
-        "tomahawk/url": "To easier generate url to added assets"
+        "tomahawk/url": "To easily generate urls to added assets"
     },
     "autoload": {
         "psr-4": {

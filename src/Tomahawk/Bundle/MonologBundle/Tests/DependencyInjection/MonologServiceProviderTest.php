@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Handler\HandlerInterface;
 use Psr\Log\LoggerInterface;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\MonologBundle\DependencyInjection\MonologServiceProvider;
 use Tomahawk\Config\ConfigInterface;

@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Session\Bag\OldInputBag;
 
 class OldInputBagTest extends TestCase

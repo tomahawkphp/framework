@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Templating\Helper\TranslatorHelper;
 use Symfony\Component\Translation\TranslatorInterface;
 

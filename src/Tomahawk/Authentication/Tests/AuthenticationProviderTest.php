@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Authentication\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Authentication\AuthenticationProvider;
 
 class AuthenticationProviderTest extends TestCase

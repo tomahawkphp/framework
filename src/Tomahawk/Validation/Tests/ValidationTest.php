@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Validation\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Validation\Constraints\Alpha;
 use Tomahawk\Validation\Constraints\AlphaDash;
 use Tomahawk\Validation\Constraints\AlphaNumeric;

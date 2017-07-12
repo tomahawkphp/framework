@@ -3,7 +3,7 @@
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\CSRFBundle\EventListener\TokenListener;
 
 class TokenListenerTest extends TestCase

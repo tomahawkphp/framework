@@ -4,7 +4,7 @@ namespace Tomahawk\Cache\Tests;
 
 use Doctrine\Common\Cache\MemcacheCache;
 use Tomahawk\Cache\Provider\MemcacheProvider;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class CacheMemcacheProviderTest extends TestCase
 {

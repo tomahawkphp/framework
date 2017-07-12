@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\EventListener\DebugHandlersListener;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\ErrorHandlerBundle\ErrorHandlerBundle;
 use Tomahawk\Bundle\ErrorHandlerBundle\Controller\ExceptionController;
 use Tomahawk\DependencyInjection\ContainerInterface;

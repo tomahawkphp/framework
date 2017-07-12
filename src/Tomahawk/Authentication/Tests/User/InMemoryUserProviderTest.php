@@ -3,7 +3,7 @@
 namespace Tomahawk\Authentication\Tests\User;
 
 use Tomahawk\Authentication\User\User;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Authentication\User\InMemoryUserProvider;
 
 class InMemoryUserProviderTest extends TestCase

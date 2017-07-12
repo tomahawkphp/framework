@@ -11,7 +11,7 @@ use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\HttpKernel\KernelInterface;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\HttpKernel\TestKernel;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Tomahawk\Console\Application;

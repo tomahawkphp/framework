@@ -3,7 +3,7 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests\EventListener;
 
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\StringResponseListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;

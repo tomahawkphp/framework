@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Forms\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Forms\CallableDataTransformer;
 
 class CallableDataTransformerTest extends TestCase

@@ -15,7 +15,7 @@
 
 namespace Tomahawk\Routing\Tests\Controller;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Routing\Controller\ControllerNameParser;
 use Symfony\Component\ClassLoader\ClassLoader;
 

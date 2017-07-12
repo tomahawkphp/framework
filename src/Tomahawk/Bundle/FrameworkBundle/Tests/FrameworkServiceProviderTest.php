@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider as FrameworkProvider;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class FrameworkServiceProviderTest extends TestCase
 {

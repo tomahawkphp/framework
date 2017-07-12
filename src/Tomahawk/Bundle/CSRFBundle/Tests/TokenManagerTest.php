@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\CSRFBundle\Token\TokenManager;
 
 class TokenManagerTest extends TestCase

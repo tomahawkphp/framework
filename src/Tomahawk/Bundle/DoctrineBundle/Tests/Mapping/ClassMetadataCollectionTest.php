@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\DoctrineBundle\Tests;
 
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Tomahawk\Bundle\DoctrineBundle\Mapping\ClassMetadataCollection;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class ClassMetadataCollectionTest extends TestCase
 {

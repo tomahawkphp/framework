@@ -5,7 +5,7 @@ namespace Tomahawk\Bundle\DoctrineBundle\Tests\Mapping;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Tomahawk\Bundle\DoctrineBundle\Mapping\ClassMetadataCollection;
 use Tomahawk\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class DisconnectedMetadataFactoryTest extends TestCase
 {

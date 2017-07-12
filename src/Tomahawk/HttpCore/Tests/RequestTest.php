@@ -2,7 +2,7 @@
 
 namespace Tomahawk\HttpCore\Tests;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\HttpCore\Request;
 use Tomahawk\Session\SessionInterface;
 use Tomahawk\Session\Bag\OldInputBagInterface;

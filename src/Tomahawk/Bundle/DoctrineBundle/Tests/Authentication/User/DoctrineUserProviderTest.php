@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests\Authentication\User;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\DoctrineBundle\Authentication\User\DoctrineUserProvider;
 
 class DoctrineUserProviderTest extends TestCase

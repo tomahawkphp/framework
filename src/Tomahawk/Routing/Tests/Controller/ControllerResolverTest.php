@@ -5,7 +5,7 @@ namespace Tomahawk\Routing\Tests\Controller;
 use Psr\Log\LoggerInterface;
 use TestBundle\Controller\HomeController;
 use TestBundle\Controller\InvokeController;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Routing\Router;

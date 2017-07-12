@@ -11,7 +11,7 @@ use Tomahawk\Console\Application;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\TestKernel;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 
 class CacheClearCommandTest extends TestCase
 {

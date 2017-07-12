@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests\Command;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use Symfony\Component\Console\Command\Command;

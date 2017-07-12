@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Templating\Tests\Twig\Loader;
 
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Templating\TemplateReference;
 use Tomahawk\Templating\Twig\Loader\FilesystemLoader;
 

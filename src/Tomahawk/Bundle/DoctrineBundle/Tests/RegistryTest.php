@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\DoctrineBundle\Tests;
 
 use Doctrine\ORM\ORMException;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Test\TestCase;
+use PHPUnit_Framework_TestCase as TestCase;
 use Tomahawk\Bundle\DoctrineBundle\Registry;
 
 class RegistryTest extends TestCase
