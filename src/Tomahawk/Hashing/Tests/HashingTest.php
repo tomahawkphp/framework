@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Hashing\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Hashing\Hasher;
 use Tomahawk\Hashing\Test\Hasher as TestHasher;
 

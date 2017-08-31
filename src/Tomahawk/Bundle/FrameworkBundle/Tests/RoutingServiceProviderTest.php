@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingServiceProvider as RoutingProvider;
 
@@ -39,7 +39,7 @@ class RoutingServiceProviderTest extends TestCase
     protected function getContainer()
     {
         $container = new Container();
-        $container->set('request_stack', $this->getMock('Symfony\Component\HttpFoundation\RequestStack'));
+        $container->set('request_stack', $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock());
         $container->set('kernel', $this->getKernel());
         $container->set('config', $this->getConfig());
 
@@ -48,7 +48,7 @@ class RoutingServiceProviderTest extends TestCase
 
     protected function getConfig()
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
 
         $config->method('get')
             ->will($this->returnValueMap(array(

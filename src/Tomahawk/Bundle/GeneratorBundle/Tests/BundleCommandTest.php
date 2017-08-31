@@ -9,7 +9,7 @@ use Tomahawk\Bundle\GeneratorBundle\Command\GenerateBundleCommand;
 use Tomahawk\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class BundleCommandTest extends TestCase
 {
@@ -27,7 +27,7 @@ class BundleCommandTest extends TestCase
 
     public function testBundleGenerationWithBundleOption()
     {
-        $fileSystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
+        $fileSystem = $this->getMockBuilder('Symfony\Component\Filesystem\Filesystem')->getMock();
         $fileSystem->expects($this->once())
             ->method('isAbsolutePath')
             ->will($this->returnValue(false));
@@ -49,7 +49,7 @@ class BundleCommandTest extends TestCase
 
     public function testBundleGenerationWithoutBundleOption()
     {
-        $fileSystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
+        $fileSystem = $this->getMockBuilder('Symfony\Component\Filesystem\Filesystem')->getMock();
         $fileSystem->expects($this->once())
             ->method('isAbsolutePath')
             ->will($this->returnValue(false));

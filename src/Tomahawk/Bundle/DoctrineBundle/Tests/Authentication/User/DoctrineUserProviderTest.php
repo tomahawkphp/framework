@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests\Authentication\User;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\DoctrineBundle\Authentication\User\DoctrineUserProvider;
 
 class DoctrineUserProviderTest extends TestCase
@@ -15,7 +15,7 @@ class DoctrineUserProviderTest extends TestCase
 
         $repo->expects($this->atLeast(1))
             ->method('findOneBy')
-            ->will($this->returnValue($this->getMock('Tomahawk\Authentication\User\UserInterface')));
+            ->will($this->returnValue($this->getMockBuilder('Tomahawk\Authentication\User\UserInterface')->getMock()));
 
         $registry->expects($this->atLeast(1))
             ->method('getRepository')
@@ -28,7 +28,7 @@ class DoctrineUserProviderTest extends TestCase
 
     protected function getEntityRepo()
     {
-        return $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
+        return $this->getMockBuilder('Doctrine\Common\Persistence\ObjectRepository')->getMock();
     }
 
     protected function getRegistry()

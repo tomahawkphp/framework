@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Authentication\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Authentication\AuthenticationProvider;
 
 class AuthenticationProviderTest extends TestCase
@@ -241,27 +241,28 @@ class AuthenticationProviderTest extends TestCase
 
     private function getStorage()
     {
-        return $this->getMock('Tomahawk\Authentication\Storage\StorageInterface');
+        return $this->getMockBuilder('Tomahawk\Authentication\Storage\StorageInterface')->getMock();
     }
 
     private function getUser()
     {
-        return $this->getMock('Tomahawk\Authentication\User\UserInterface');
+        return $this->getMockBuilder('Tomahawk\Authentication\User\UserInterface')->getMock();
     }
 
     private function getUserProvider()
     {
-        return $this->getMock('Tomahawk\Authentication\User\UserProviderInterface');
+        return $this->getMockBuilder('Tomahawk\Authentication\User\UserProviderInterface')->getMock();
     }
 
     private function getPasswordEncoder()
     {
-        return $this->getMock('Tomahawk\Authentication\Encoder\PasswordEncoderInterface');
+        return $this->getMockBuilder('Tomahawk\Authentication\Encoder\PasswordEncoderInterface')->getMock();
     }
 
     private function getCredentials($username = 'tommy', $password = 'mypassword')
     {
-        $mock = $this->getMock('Tomahawk\Authentication\User\CredentialsInterface');
+        $mock = $this->getMockBuilder('Tomahawk\Authentication\User\CredentialsInterface')
+            ->getMock();
 
         $mock->expects($this->any())
             ->method('getUsername')

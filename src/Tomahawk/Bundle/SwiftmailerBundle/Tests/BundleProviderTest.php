@@ -3,14 +3,14 @@
 namespace Tomahawk\Bundle\SwiftmailerBundle\Tests;
 
 use Tomahawk\DependencyInjection\Container;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerServiceProvider;
 
 class BundleProviderTest extends TestCase
 {
     public function testBundleProvider()
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
         $config->expects($this->once())
             ->method('get')
             ->with('swiftmailer')

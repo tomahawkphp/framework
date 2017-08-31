@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\DoctrineBundle\DoctrineBundle;
 
 class DoctrineBundleTest extends TestCase
@@ -19,6 +19,6 @@ class DoctrineBundleTest extends TestCase
 
     public function getContainerMock()
     {
-        return $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        return $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
     }
 }

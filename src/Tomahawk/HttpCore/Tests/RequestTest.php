@@ -2,7 +2,7 @@
 
 namespace Tomahawk\HttpCore\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\HttpCore\Request;
 use Tomahawk\Session\SessionInterface;
 use Tomahawk\Session\Bag\OldInputBagInterface;
@@ -32,11 +32,11 @@ class RequestTest extends TestCase
 
     protected function getSession()
     {
-        return $this->getMock(SessionInterface::class);
+        return $this->getMockBuilder(SessionInterface::class)->getMock();
     }
 
     protected function getOldInputBag()
     {
-        return $this->getMock(OldInputBagInterface::class);
+        return $this->getMockBuilder(OldInputBagInterface::class)->getMock();
     }
 }

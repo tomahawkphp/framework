@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionServiceProvider as SessionProvider;
 
@@ -72,7 +72,7 @@ class SessionServiceProviderTest extends TestCase
 
     protected function getConfig($sessionDriver)
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
 
         $config->method('get')
             ->will($this->returnValueMap(array(

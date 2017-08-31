@@ -8,7 +8,7 @@ namespace Tomahawk\Test;
  * @deprecated To be removed in 3.0
  * @package Tomahawk\Test
  */
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
 
 }

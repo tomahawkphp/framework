@@ -3,7 +3,7 @@
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
 use Tomahawk\DependencyInjection\Container;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\CSRFBundle\DependencyInjection\CSRFProvider;
 
 class CSRFProviderTest extends TestCase
@@ -34,11 +34,11 @@ class CSRFProviderTest extends TestCase
 
     protected function getSession()
     {
-        return $this->getMock('Tomahawk\Session\SessionInterface');
+        return $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock();
     }
 
     protected function getConfig()
     {
-        return $this->getMock('Tomahawk\Session\SessionInterface');
+        return $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock();
     }
 }

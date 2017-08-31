@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthenticationServiceProvider;
 
@@ -88,15 +88,15 @@ class AuthenticationServiceProviderTest extends TestCase
     {
         $container = new Container();
         $container->set('config', $this->getConfig($defaultProvider));
-        $container->set('session', $this->getMock('Tomahawk\Session\SessionInterface'));
-        $container->set('authentication.my_provider', $this->getMock('Tomahawk\Authentication\User\UserProviderInterface'));
+        $container->set('session', $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock());
+        $container->set('authentication.my_provider', $this->getMockBuilder('Tomahawk\Authentication\User\UserProviderInterface')->getMock());
 
         return $container;
     }
 
     protected function getConfig($defaultProvider = 'memory')
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
 
         $config->method('get')
             ->will($this->returnValueMap([

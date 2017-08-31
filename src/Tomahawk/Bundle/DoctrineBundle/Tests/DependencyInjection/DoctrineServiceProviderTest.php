@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests\DI;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\DoctrineBundle\DependencyInjection\DoctrineServiceProvider;
 
@@ -242,7 +242,7 @@ class DoctrineServiceProviderTest extends TestCase
 
     protected function getConfig()
     {
-        return $this->getMock('Tomahawk\Config\ConfigInterface');
+        return $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
     }
 
     protected function getKernel()

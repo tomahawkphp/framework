@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Asset\Test;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Html\HtmlBuilder;
 use Tomahawk\Asset\AssetManager;
 use Tomahawk\Asset\AssetContainer;
@@ -111,10 +111,11 @@ class AssetsTest extends TestCase
         $this->assertEquals($result, $manager->outputCss());
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testSelfDependency()
     {
-        $this->setExpectedException('\Exception');
-
         $html = new HtmlBuilder();
 
         $manager = new AssetManager($html);
@@ -122,10 +123,11 @@ class AssetsTest extends TestCase
         $manager->outputCss();
     }
 
+    /**
+     * @expectedException \Tomahawk\Asset\Exception\CircularDependencyException
+     */
     public function testCircularDependency()
     {
-        $this->setExpectedException('\Tomahawk\Asset\Exception\CircularDependencyException');
-
         $html = new HtmlBuilder();
 
         $manager = new AssetManager($html);

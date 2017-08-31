@@ -3,7 +3,7 @@
 namespace Tomahawk\HttpKernel\Tests;
 
 use Tomahawk\HttpKernel\Test\Bundles\BarBundle\BarBundle;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\Kernel;
 use Tomahawk\HttpKernel\Test\Bundles\FooBundle\FooBundle;

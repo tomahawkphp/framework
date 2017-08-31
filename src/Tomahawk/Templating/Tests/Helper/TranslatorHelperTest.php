@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Templating\Helper\TranslatorHelper;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -38,6 +38,6 @@ class TranslatorHelperTest extends TestCase
 
     protected function getTranslator()
     {
-        return $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        return $this->createMock('Symfony\Component\Translation\TranslatorInterface');
     }
 }

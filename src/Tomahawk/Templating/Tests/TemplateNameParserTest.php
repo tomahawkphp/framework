@@ -4,7 +4,7 @@ use Tomahawk\Templating\TemplateReference;
 use Tomahawk\Templating\TemplateNameParser;
 use Symfony\Component\Templating\TemplateReference as BaseTemplateReference;
 
-class TemplateNameParserTest extends PHPUnit_Framework_TestCase
+class TemplateNameParserTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @var TemplateNameParser
@@ -13,7 +13,7 @@ class TemplateNameParserTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $kernel = $this->getMock('Tomahawk\HttpKernel\KernelInterface');
+        $kernel = $this->createMock('Tomahawk\HttpKernel\KernelInterface');
         $kernel
             ->expects($this->any())
             ->method('getBundle')

@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Handler\HandlerInterface;
 use Psr\Log\LoggerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\MonologBundle\DependencyInjection\MonologServiceProvider;
 use Tomahawk\Config\ConfigInterface;
@@ -116,14 +116,14 @@ class DependencyInjectionTest extends TestCase
     {
         $container = new Container();
         $container->set('kernel', $this->getKernel());
-        $container->set('logger.my.handler', $this->getMock(HandlerInterface::class));
+        $container->set('logger.my.handler', $this->getMockBuilder(HandlerInterface::class)->getMock());
 
         return $container;
     }
 
     protected function getConfig($defaultHandler = 'stream')
     {
-        $config = $this->getMock(ConfigInterface::class);
+        $config = $this->getMockBuilder(ConfigInterface::class)->getMock();
 
         $config->method('get')
             ->will($this->returnValueMap([

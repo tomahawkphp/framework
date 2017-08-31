@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Authentication\Tests\Encoder;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Authentication\Encoder\BCryptPasswordEncoder;
 
 class BCryptPasswordEncoderTest extends TestCase

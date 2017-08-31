@@ -6,13 +6,16 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Tomahawk\Templating\TemplateReference;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FilesystemLoaderTest extends PHPUnit_Framework_TestCase
+class FilesystemLoaderTest extends PHPUnit\Framework\TestCase
 {
     public function testLoadReturnFalseOnFailure()
     {
         $reference = new TemplateReference(null, null, 'index', 'php');
 
-        $locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')
+            ->setMethods(['locate'])
+            ->getMock();
+
         $locator->expects($this->any())
             ->method('locate')
             ->will($this->throwException(new InvalidArgumentException()));
@@ -27,7 +30,10 @@ class FilesystemLoaderTest extends PHPUnit_Framework_TestCase
         $reference = new TemplateReference(null, null, 'index', 'php');
         $fileStorage = new FileStorage(__DIR__ .'/Resources/index.php');
 
-        $locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')
+            ->setMethods(['locate'])
+            ->getMock();
+
         $locator->expects($this->any())
             ->method('locate')
             ->will($this->returnValue($fileStorage));
@@ -43,7 +49,10 @@ class FilesystemLoaderTest extends PHPUnit_Framework_TestCase
     {
         $reference = new TemplateReference(null, null, 'index', 'php');
 
-        $locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')
+            ->setMethods(['locate'])
+            ->getMock();
+
         $locator->expects($this->any())
             ->method('locate')
             ->will($this->throwException(new InvalidArgumentException()));
@@ -58,7 +67,10 @@ class FilesystemLoaderTest extends PHPUnit_Framework_TestCase
         $reference = new TemplateReference(null, null, 'foo', 'php');
         $fileStorage = new FileStorage(__DIR__ .'/Resources/foo.php');
 
-        $locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')
+            ->setMethods(['locate'])
+            ->getMock();
+
         $locator->expects($this->any())
             ->method('locate')
             ->will($this->returnValue($fileStorage));
@@ -76,7 +88,10 @@ class FilesystemLoaderTest extends PHPUnit_Framework_TestCase
         $reference = new TemplateReference(null, null, 'index', 'php');
         $fileStorage = new FileStorage(__DIR__ .'/Resources/index.php');
 
-        $locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface', array('locate'));
+        $locator = $this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')
+            ->setMethods(['locate'])
+            ->getMock();
+
         $locator->expects($this->any())
             ->method('locate')
             ->will($this->returnValue($fileStorage));

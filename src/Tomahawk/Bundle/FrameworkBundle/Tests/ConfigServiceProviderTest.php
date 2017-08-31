@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider as ConfigProvider;
 
@@ -23,7 +23,7 @@ class ConfigServiceProviderTest extends TestCase
     protected function getContainer()
     {
         $container = new Container();
-        $container->set('request_stack', $this->getMock('Symfony\Component\HttpFoundation\RequestStack'));
+        $container->set('request_stack', $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock());
         $container->set('kernel', $this->getKernel());
 
         return $container;

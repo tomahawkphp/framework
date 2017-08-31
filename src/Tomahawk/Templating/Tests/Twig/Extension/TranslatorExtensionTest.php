@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Templating\Tests\Twig\Extension;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Templating\Twig\Extension\TranslatorExtension;
 
 class TranslatorExtensionTest extends TestCase
@@ -37,7 +37,7 @@ class TranslatorExtensionTest extends TestCase
 
     protected function getTranslatorMock()
     {
-        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $translator = $this->createMock('Symfony\Component\Translation\TranslatorInterface');
 
         $translator->expects($this->any())
             ->method('trans')

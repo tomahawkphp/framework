@@ -1,7 +1,7 @@
 <?php
 namespace Tomahawk\Url\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Routing\Router;
 use Tomahawk\Url\UrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,15 +52,19 @@ class UrlGeneratorRoutesTest extends TestCase
         $this->assertEquals('http://symfony.devbox.com:8182/', $url);
     }
 
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     */
     public function testRouteNeedsParams()
     {
-        $this->setExpectedException('Symfony\Component\Routing\Exception\MissingMandatoryParametersException');
         $this->urlGenerator->route('user');
     }
 
+    /**
+     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     */
     public function testRouteWithParams()
     {
-        $this->setExpectedException('Symfony\Component\Routing\Exception\MissingMandatoryParametersException');
         $url = $this->urlGenerator->route('user', array('tom'));
         $this->assertEquals('http://symfony.devbox.com:8182/user/tom', $url);
     }

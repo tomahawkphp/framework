@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\CommandBus\CommandBus;
 
 class CommandBusTest extends TestCase
@@ -57,14 +57,16 @@ class CommandBusTest extends TestCase
 
     protected function getResolver()
     {
-        $resolver = $this->getMock('Tomahawk\CommandBus\CommandHandlerResolverInterface');
+        $resolver = $this->getMockBuilder('Tomahawk\CommandBus\CommandHandlerResolverInterface')
+            ->getMock();
 
         return $resolver;
     }
 
     protected function getCommand()
     {
-        $command = $this->getMock('Tomahawk\CommandBus\CommandInterface');
+        $command = $this->getMockBuilder('Tomahawk\CommandBus\CommandInterface')
+            ->getMock();
         return $command;
     }
 

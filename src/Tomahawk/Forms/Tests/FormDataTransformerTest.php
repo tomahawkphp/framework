@@ -3,7 +3,7 @@
 namespace Tomahawk\Forms\Tests;
 
 use Tomahawk\Forms\Test\Model;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Forms\Form;
 use Tomahawk\Forms\Element\Text;
 use Tomahawk\Forms\DataTransformerInterface;
@@ -119,6 +119,6 @@ class FormDataTransformerTest extends TestCase
 
     protected function getTransformer()
     {
-        return $this->getMock(DataTransformerInterface::class);
+        return $this->getMockBuilder(DataTransformerInterface::class)->getMock();
     }
 }

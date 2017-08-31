@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Authentication\Tests\Storage;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Authentication\Storage\SessionStorage;
 
 class SessionStorageTest extends TestCase
@@ -34,15 +34,7 @@ class SessionStorageTest extends TestCase
 
     protected function getSession()
     {
-        return $this->getMock('Tomahawk\Session\SessionInterface');
-
         $builder = $this->getMockBuilder('Tomahawk\Session\SessionInterface');
-
-        $builder->setMethods(array(
-            'set',
-            'get',
-            'remove',
-        ));
 
         return $builder->getMock();
     }

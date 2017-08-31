@@ -2,7 +2,7 @@
 
 namespace Tomahawk\HttpCore\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\HttpCore\ResponseBuilder;
 
 class ResponseTest extends TestCase

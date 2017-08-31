@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\DoctrineBundle\Tests\Command;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use Symfony\Component\Console\Command\Command;
@@ -68,7 +68,7 @@ class ProxyCommand extends TestCase
             ->method('getConfiguration')
             ->will($this->returnValue($this->getConfigMock()));
 
-        $metaDataFactory = $this->getMock('Doctrine\ORM\Mapping\ClassMetadataFactory');
+        $metaDataFactory = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadataFactory')->getMock();
 
         $metaDataFactory->expects($this->any())
             ->method('getAllMetadata')

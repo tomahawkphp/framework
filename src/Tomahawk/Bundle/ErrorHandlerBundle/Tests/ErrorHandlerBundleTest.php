@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\EventListener\DebugHandlersListener;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Tomahawk\DependencyInjection\Container;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\ErrorHandlerBundle\ErrorHandlerBundle;
 use Tomahawk\Bundle\ErrorHandlerBundle\Controller\ExceptionController;
 use Tomahawk\DependencyInjection\ContainerInterface;
@@ -18,7 +18,7 @@ class ErrorHandlerBundleTest extends TestCase
 {
     public function testBundleBoot()
     {
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container->expects($this->exactly(3))
             ->method('set')
@@ -36,7 +36,7 @@ class ErrorHandlerBundleTest extends TestCase
 
     public function testBundleRegisterEvents()
     {
-        $eventDispatcher = $this->getMock(EventDispatcherInterface::class);
+        $eventDispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
 
         $eventDispatcher->expects($this->exactly(2))
             ->method('addSubscriber');
@@ -49,7 +49,7 @@ class ErrorHandlerBundleTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container->expects($this->exactly(2))
             ->method('get')
@@ -89,7 +89,7 @@ class ErrorHandlerBundleTest extends TestCase
 
     public function testListenerIsBuiltCorrectly()
     {
-        $logger = $this->getMock(LoggerInterface::class);
+        $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
         $container = $this->getContainer();
         $container->set('logger', $logger);
@@ -103,7 +103,7 @@ class ErrorHandlerBundleTest extends TestCase
 
     public function testDebugListenerIsBuiltCorrectly()
     {
-        $logger = $this->getMock(LoggerInterface::class);
+        $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
         $container = $this->getContainer();
         $container->set('logger', $logger);

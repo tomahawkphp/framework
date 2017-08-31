@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\CSRFBundle\CSRFBundle;
 
 class CSRFBundleTest extends TestCase
@@ -24,7 +24,7 @@ class CSRFBundleTest extends TestCase
 
     protected function getContainer()
     {
-        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
 
         $container->expects($this->once())
             ->method('register');
@@ -32,7 +32,7 @@ class CSRFBundleTest extends TestCase
         $container->expects($this->once())
             ->method('get')
             ->will($this->returnValueMap(array(
-                array('security.csrf.tokenmanager', $this->getMock('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface')),
+                array('security.csrf.tokenmanager', $this->getMockBuilder('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface')->getMock()),
             )));
 
         return $container;
@@ -43,6 +43,6 @@ class CSRFBundleTest extends TestCase
      */
     protected function getEventDispatcher()
     {
-        return $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        return $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
     }
 }

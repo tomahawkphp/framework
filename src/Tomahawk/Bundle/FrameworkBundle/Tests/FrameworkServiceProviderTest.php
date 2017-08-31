@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider as FrameworkProvider;
 use Tomahawk\DependencyInjection\Container;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class FrameworkServiceProviderTest extends TestCase
 {
@@ -46,16 +46,16 @@ class FrameworkServiceProviderTest extends TestCase
         $container->set('kernel', $this->getKernel());
         $container->set('route_collection', new RouteCollection());
         $container->set('request_context', new RequestContext());
-        $container->set('session', $this->getMock('Tomahawk\Session\SessionInterface'));
-        $container->set('controller_resolver', $this->getMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface'));
-        $container->set('argument_resolver', $this->getMock('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface'));
+        $container->set('session', $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock());
+        $container->set('controller_resolver', $this->getMockBuilder('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface')->getMock());
+        $container->set('argument_resolver', $this->getMockBuilder('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface')->getMock());
         
         return $container;
     }
 
     protected function getConfig()
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
 
         return $config;
     }

@@ -5,7 +5,7 @@ namespace Tomahawk\Routing\Tests\Controller;
 use Psr\Log\LoggerInterface;
 use TestBundle\Controller\HomeController;
 use TestBundle\Controller\InvokeController;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\HttpKernel\HttpKernel;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Routing\Router;
@@ -55,15 +55,15 @@ class ControllerResolverTest extends TestCase
         $this->eventDispatcher = new EventDispatcher();
         $this->container = new Container();
 
-        $this->container['Tomahawk\View\ViewGeneratorInterface'] = $this->getMock('Tomahawk\View\ViewGeneratorInterface');
-        $this->container['Tomahawk\HttpCore\ResponseBuilderInterface'] = $this->getMock('Tomahawk\HttpCore\ResponseBuilderInterface');
+        $this->container['Tomahawk\View\ViewGeneratorInterface'] = $this->getMockBuilder('Tomahawk\View\ViewGeneratorInterface')->getMock();
+        $this->container['Tomahawk\HttpCore\ResponseBuilderInterface'] = $this->getMockBuilder('Tomahawk\HttpCore\ResponseBuilderInterface')->getMock();
         $this->container['Tomahawk\DependencyInjection\ContainerInterface'] = $this->container;
-        $this->container['Tomahawk\Forms\FormsManagerInterface'] = $this->getMock('Tomahawk\Forms\FormsManagerInterface');
-        $this->container['Tomahawk\HttpCore\Response\CookiesInterface'] = $this->getMock('Tomahawk\HttpCore\Response\CookiesInterface');
-        $this->container['Tomahawk\Asset\AssetManagerInterface'] = $this->getMock('Tomahawk\Asset\AssetManagerInterface');
-        $this->container['Symfony\Component\HttpFoundation\Request'] = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $this->container['Tomahawk\Session\SessionInterface'] = $this->getMock('Tomahawk\Session\SessionInterface');
-        $this->container['Tomahawk\Cache\CacheInterface'] = $this->getMock('Tomahawk\Cache\CacheInterface');
+        $this->container['Tomahawk\Forms\FormsManagerInterface'] = $this->getMockBuilder('Tomahawk\Forms\FormsManagerInterface')->getMock();
+        $this->container['Tomahawk\HttpCore\Response\CookiesInterface'] = $this->getMockBuilder('Tomahawk\HttpCore\Response\CookiesInterface')->getMock();
+        $this->container['Tomahawk\Asset\AssetManagerInterface'] = $this->getMockBuilder('Tomahawk\Asset\AssetManagerInterface')->getMock();
+        $this->container['Symfony\Component\HttpFoundation\Request'] = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $this->container['Tomahawk\Session\SessionInterface'] = $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock();
+        $this->container['Tomahawk\Cache\CacheInterface'] = $this->getMockBuilder('Tomahawk\Cache\CacheInterface')->getMock();
 
         $controllerResolver = new ControllerResolver($this->container);
 
@@ -98,10 +98,13 @@ class ControllerResolverTest extends TestCase
         $this->loader = null;
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Class "foobarbaz" does not exist.
+     */
     public function testInvalidController()
     {
         $controllerResolver = new ControllerResolver($this->container);
-        $this->setExpectedException('\InvalidArgumentException', 'Class "foobarbaz" does not exist.');
 
         $request = Request::create('/', 'GET');
         $request->attributes->set('_controller','foobarbaz::action');
@@ -109,10 +112,13 @@ class ControllerResolverTest extends TestCase
         $controllerResolver->getController($request);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Unable to find controller "foobarbaz".
+     */
     public function testInvalidController2()
     {
         $controllerResolver = new ControllerResolver($this->container);
-        $this->setExpectedException('\InvalidArgumentException', 'Unable to find controller "foobarbaz".');
 
         $request = Request::create('/', 'GET');
         $request->attributes->set('_controller','foobarbaz');

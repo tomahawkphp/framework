@@ -7,7 +7,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Tomahawk\Bundle\GeneratorBundle\Command\GenerateModelCommand;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ModelCommandTest extends TestCase
 {

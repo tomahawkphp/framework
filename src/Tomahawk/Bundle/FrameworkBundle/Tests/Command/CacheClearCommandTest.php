@@ -11,7 +11,7 @@ use Tomahawk\Console\Application;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\TestKernel;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class CacheClearCommandTest extends TestCase
 {
@@ -100,7 +100,7 @@ class CacheClearCommandTest extends TestCase
 
     protected function getCacheMock()
     {
-        $cache = $this->getMock(CacheInterface::class);
+        $cache = $this->getMockBuilder(CacheInterface::class)->getMock();
 
         $cache->expects($this->once())
             ->method('flush');
@@ -110,7 +110,7 @@ class CacheClearCommandTest extends TestCase
 
     public function getFilesystemMock()
     {
-        $filesystem = $this->getMock(Filesystem::class);
+        $filesystem = $this->getMockBuilder(Filesystem::class)->getMock();
 
         return $filesystem;
     }

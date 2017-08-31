@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Session\Session;
 use Tomahawk\Session\Bag\OldInputBagInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -33,7 +33,7 @@ class SessionTest extends TestCase
 
     protected function getOldInputBag()
     {
-        return $this->getMock(OldInputBagInterface::class);
+        return $this->getMockBuilder(OldInputBagInterface::class)->getMock();
     }
 
 }

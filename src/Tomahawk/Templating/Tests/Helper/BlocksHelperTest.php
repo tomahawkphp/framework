@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Templating\Helper\BlocksHelper;
 
 class BlocksHelperTest extends TestCase

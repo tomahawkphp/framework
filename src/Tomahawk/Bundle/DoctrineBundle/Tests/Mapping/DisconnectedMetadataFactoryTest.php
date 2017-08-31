@@ -5,7 +5,7 @@ namespace Tomahawk\Bundle\DoctrineBundle\Tests\Mapping;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Tomahawk\Bundle\DoctrineBundle\Mapping\ClassMetadataCollection;
 use Tomahawk\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class DisconnectedMetadataFactoryTest extends TestCase
 {
@@ -19,21 +19,21 @@ class DisconnectedMetadataFactoryTest extends TestCase
 
     public function testGetClassMetadata()
     {
-        $eventManager = $this->getMock('Doctrine\Common\EventManager');
+        $eventManager = $this->getMockBuilder('Doctrine\Common\EventManager')->getMock();
 
-        $driver = $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
+        $driver = $this->getMockBuilder('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver')->getMock();
 
         $driver->expects($this->any())
             ->method('isTransient')
             ->will($this->returnValue(false));
 
-        $configuration = $this->getMock('Doctrine\ORM\Configuration');
+        $configuration = $this->getMockBuilder('Doctrine\ORM\Configuration')->getMock();
 
         $configuration->expects($this->any())
             ->method('getMetadataDriverImpl')
             ->will($this->returnValue($driver));
 
-        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $manager = $this->getMockBuilder('Doctrine\ORM\EntityManagerInterface')->getMock();
 
         $manager->expects($this->any())
             ->method('getConfiguration')
@@ -43,7 +43,7 @@ class DisconnectedMetadataFactoryTest extends TestCase
             ->method('getEventManager')
             ->will($this->returnValue($eventManager));
 
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
 
         $registry->expects($this->any())
             ->method('getManagers')
@@ -61,21 +61,21 @@ class DisconnectedMetadataFactoryTest extends TestCase
      */
     public function testGetClassMetadataThrowsException()
     {
-        $eventManager = $this->getMock('Doctrine\Common\EventManager');
+        $eventManager = $this->getMockBuilder('Doctrine\Common\EventManager')->getMock();
 
-        $driver = $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
+        $driver = $this->getMockBuilder('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver')->getMock();
 
         $driver->expects($this->any())
             ->method('isTransient')
             ->will($this->returnValue(true));
 
-        $configuration = $this->getMock('Doctrine\ORM\Configuration');
+        $configuration = $this->getMockBuilder('Doctrine\ORM\Configuration')->getMock();
 
         $configuration->expects($this->any())
             ->method('getMetadataDriverImpl')
             ->will($this->returnValue($driver));
 
-        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $manager = $this->getMockBuilder('Doctrine\ORM\EntityManagerInterface')->getMock();
 
         $manager->expects($this->any())
             ->method('getConfiguration')
@@ -85,7 +85,7 @@ class DisconnectedMetadataFactoryTest extends TestCase
             ->method('getEventManager')
             ->will($this->returnValue($eventManager));
 
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
 
         $registry->expects($this->any())
             ->method('getManagers')
@@ -100,7 +100,7 @@ class DisconnectedMetadataFactoryTest extends TestCase
     {
         $class = new ClassMetadataInfo('\Vendor\Package\Class');
         $collection = new ClassMetadataCollection(array($class));
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
         $factory = new DisconnectedMetadataFactory($registry);
         $factory->findNamespaceAndPathForMetadata($collection, '/path/to/code');
         $this->assertEquals('\Vendor\Package', $collection->getNamespace());
@@ -108,7 +108,7 @@ class DisconnectedMetadataFactoryTest extends TestCase
 
     protected function getBundleMock()
     {
-        $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockBuilder('Tomahawk\HttpKernel\Bundle\BundleInterface')->getMock();
 
         $bundle->expects($this->any())
             ->method('getName')

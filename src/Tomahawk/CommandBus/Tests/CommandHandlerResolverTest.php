@@ -11,7 +11,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\CommandBus\CommandHandlerResolver;
 
 class CommandHandlerResolverTest extends TestCase
@@ -47,7 +47,7 @@ class CommandHandlerResolverTest extends TestCase
 
     protected function getContainer()
     {
-        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
         return $container;
     }
 

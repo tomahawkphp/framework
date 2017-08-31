@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Forms\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Forms\Form;
 use Tomahawk\Forms\Element\Text;
 use Tomahawk\Validation\Validator;

@@ -3,7 +3,7 @@
 use Tomahawk\Templating\Loader\TemplateLocator;
 use Tomahawk\Templating\TemplateReference;
 
-class TemplateLocatorTest extends PHPUnit_Framework_TestCase
+class TemplateLocatorTest extends PHPUnit\Framework\TestCase
 {
     public function testLocateATemplate()
     {

@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\GeneratorBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\GeneratorBundle\Command\Validators;
 
 class ValidatorsTest extends TestCase

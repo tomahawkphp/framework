@@ -9,7 +9,7 @@
 
 namespace Tomahawk\DependencyInjection\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\DependencyInjection\Test\Service;
 use Tomahawk\DependencyInjection\Test\Invokable;
@@ -293,7 +293,7 @@ class ContainerTest extends TestCase
     public function testFluentRegister()
     {
         $container = new Container;
-        $this->assertSame($container, $container->register($this->getMock('Tomahawk\DependencyInjection\ServiceProviderInterface')));
+        $this->assertSame($container, $container->register($this->getMockBuilder('Tomahawk\DependencyInjection\ServiceProviderInterface')->getMock()));
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\CSRFBundle\Token\TokenManager;
 
 class TokenManagerTest extends TestCase
@@ -64,7 +64,7 @@ class TokenManagerTest extends TestCase
      */
     protected function getSession()
     {
-        $session = $this->getMock('Tomahawk\Session\SessionInterface');
+        $session = $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock();
         return $session;
     }
 }

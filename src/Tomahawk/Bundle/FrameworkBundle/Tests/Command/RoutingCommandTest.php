@@ -9,7 +9,7 @@ use Tomahawk\Bundle\FrameworkBundle\Command\RoutingCommand;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use Tomahawk\Routing\Route;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class RoutingCommandTest extends TestCase
 {

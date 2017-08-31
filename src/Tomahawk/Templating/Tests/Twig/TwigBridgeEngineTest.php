@@ -3,7 +3,7 @@
 use Tomahawk\Templating\Twig\Bridge\TwigEngine;
 use Symfony\Component\Templating\TemplateReference;
 
-class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
+class TwigBridgeEngineTest extends PHPUnit\Framework\TestCase
 {
     public function testExistsWithTemplateInstances()
     {
@@ -76,7 +76,7 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
             ->method('loadTemplate')
             ->will($this->throwException(new \Twig_Error_Loader('error')));
 
-        $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
+        $parser = $this->createMock('Symfony\Component\Templating\TemplateNameParserInterface');
 
         $engine = new TwigEngine($twig, $parser);
         $engine->render(new TemplateReference('index'));
@@ -98,14 +98,14 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
 
     public function testSupportWithTwigExistsLoaderInterface()
     {
-        $loader = $this->getMock('Twig_Loader_Filesystem');
+        $loader = $this->createMock('Twig_Loader_Filesystem');
 
         $loader->expects($this->once())
             ->method('exists')
             ->will($this->returnValue(true));
 
         $twig = new \Twig_Environment($loader);
-        $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
+        $parser = $this->createMock('Symfony\Component\Templating\TemplateNameParserInterface');
 
         $engine = new TwigEngine($twig, $parser);
         $this->assertTrue($engine->exists(new TemplateReference('index')));
@@ -113,14 +113,14 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
 
     public function testSupportWithTwigExistsLoaderInterfaceThrowsExceptionAndReturnsFalse()
     {
-        $loader = $this->getMock(Twig_Loader_Filesystem::class);
+        $loader = $this->createMock(Twig_Loader_Filesystem::class);
 
         $loader->expects($this->once())
             ->method('exists')
             ->will($this->returnValue(false));
 
         $twig = new \Twig_Environment($loader);
-        $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
+        $parser = $this->createMock('Symfony\Component\Templating\TemplateNameParserInterface');
 
         $engine = new TwigEngine($twig, $parser);
         $this->assertFalse($engine->exists(new TemplateReference('index')));
@@ -128,14 +128,14 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
 
     public function testSupportWithTwigExistsLoaderReturnsTrue()
     {
-        $loader = $this->getMock(Twig_Loader_Filesystem::class);
+        $loader = $this->createMock(Twig_Loader_Filesystem::class);
 
         $loader->expects($this->once())
             ->method('exists')
             ->will($this->returnValue(true));
 
         $twig = new \Twig_Environment($loader);
-        $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
+        $parser = $this->createMock('Symfony\Component\Templating\TemplateNameParserInterface');
 
         $engine = new TwigEngine($twig, $parser);
         $this->assertTrue($engine->exists(new TemplateReference('index')));
@@ -152,7 +152,10 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
 
         $ref = new TemplateReference('index', 'twig');
 
-        $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface', array('parse'));
+        $parser = $this->getMockBuilder('Symfony\Component\Templating\TemplateNameParserInterface')
+            ->setMethods(['parse'])
+            ->getMock();
+
         $parser->expects($this->any())
                 ->method('parse')
                 ->will($this->returnValue($ref));
@@ -171,7 +174,8 @@ class TwigBridgeEngineTest extends PHPUnit_Framework_TestCase
             'foo.twig' => 'foo',
             'error' => '{{ foo }',
         )));
-        $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
+
+        $parser = $this->createMock('Symfony\Component\Templating\TemplateNameParserInterface');
 
         return new TwigEngine($twig, $parser);
     }

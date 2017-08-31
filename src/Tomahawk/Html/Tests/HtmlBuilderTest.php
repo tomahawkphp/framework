@@ -2,7 +2,7 @@
 
 use Tomahawk\Html\HtmlBuilder;
 
-class HtmlBuilderTest extends PHPUnit_Framework_TestCase
+class HtmlBuilderTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @var HtmlBuilder

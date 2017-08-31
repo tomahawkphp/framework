@@ -4,7 +4,7 @@ namespace Tomahawk\Cache\Tests;
 
 use Doctrine\Common\Cache\RedisCache;
 use Tomahawk\Cache\Provider\RedisProvider;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class CacheRedisProviderTest extends TestCase
 {

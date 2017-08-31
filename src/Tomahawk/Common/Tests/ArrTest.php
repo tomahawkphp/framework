@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Common\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Common\Arr;
 
 class ArrTest extends TestCase

@@ -6,18 +6,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Tomahawk\DependencyInjection\Container;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Routing\Controller\Controller;
 
 class ControllerTest extends TestCase
 {
     public function testRenderView()
     {
-        $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $templating = $this->getMockBuilder('Symfony\Component\Templating\EngineInterface')->getMock();
 
         $templating->expects($this->once())->method('render');
 
-        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
         $container->expects($this->at(0))->method('get')->will($this->returnValue($templating));
 
         $controller = $this->getController($container);
@@ -27,14 +27,14 @@ class ControllerTest extends TestCase
 
     public function testRenderWithResponse()
     {
-        $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $templating = $this->getMockBuilder('Symfony\Component\Templating\EngineInterface')->getMock();
         $templating->expects($this->once())->method('render');
 
-        $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+        $response = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')->getMock();
         $response->expects($this->once())->method('setContent');
 
 
-        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
         $container->expects($this->at(0))->method('get')->will($this->returnValue($templating));
 
         $controller = $this->getController($container);
@@ -44,10 +44,10 @@ class ControllerTest extends TestCase
 
     public function testRenderWithNoResponse()
     {
-        $templating = $this->getMock('Symfony\Component\Templating\EngineInterface');
+        $templating = $this->getMockBuilder('Symfony\Component\Templating\EngineInterface')->getMock();
         $templating->expects($this->once())->method('render')->will($this->returnValue('view content'));
 
-        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
         $container->expects($this->at(0))->method('get')->will($this->returnValue($templating));
 
         $controller = $this->getController($container);
@@ -66,12 +66,12 @@ class ControllerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
             return new Response($request->getRequestFormat().'--'.$request->getLocale());
         }));
 
-        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
         $container->expects($this->at(0))->method('get')->will($this->returnValue($requestStack));
         $container->expects($this->at(1))->method('get')->will($this->returnValue($kernel));
 
@@ -99,7 +99,7 @@ class ControllerTest extends TestCase
     protected function getController($container = null)
     {
         if (null === $container) {
-            $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+            $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
         }
 
         $controller = new Controller();

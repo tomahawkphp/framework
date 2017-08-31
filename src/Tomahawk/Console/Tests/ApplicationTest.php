@@ -11,7 +11,7 @@ use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\HttpKernel\KernelInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\HttpKernel\TestKernel;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Tomahawk\Console\Application;
@@ -36,7 +36,7 @@ class ApplicationTest extends TestCase
 
     public function testBundleInterfaceImplementation()
     {
-        $bundle = $this->getMock(BundleInterface::class);
+        $bundle = $this->getMockBuilder(BundleInterface::class)->getMock();
 
         $kernel = $this->getKernel(array($bundle), true);
 
@@ -46,7 +46,7 @@ class ApplicationTest extends TestCase
 
     public function testBundleCommandsAreRegistered()
     {
-        $bundle = $this->getMock(Bundle::class);
+        $bundle = $this->getMockBuilder(Bundle::class)->getMock();
         $bundle->expects($this->once())->method('registerCommands');
 
         $kernel = $this->getKernel(array($bundle), true);
@@ -60,7 +60,7 @@ class ApplicationTest extends TestCase
 
     public function testBundleCommandsAreRetrievable()
     {
-        $bundle = $this->getMock(Bundle::class);
+        $bundle = $this->getMockBuilder(Bundle::class)->getMock();
         $bundle->expects($this->once())->method('registerCommands');
 
         $kernel = $this->getKernel(array($bundle));
@@ -74,7 +74,7 @@ class ApplicationTest extends TestCase
 
     public function testBundleSingleCommandIsRetrievable()
     {
-        $bundle = $this->getMock(Bundle::class);
+        $bundle = $this->getMockBuilder(Bundle::class)->getMock();
         $bundle->expects($this->once())->method('registerCommands');
 
         $kernel = $this->getKernel(array($bundle));
@@ -89,7 +89,7 @@ class ApplicationTest extends TestCase
 
     public function testBundleCommandCanBeFound()
     {
-        $bundle = $this->getMock(Bundle::class);
+        $bundle = $this->getMockBuilder(Bundle::class)->getMock();
         $bundle->expects($this->once())->method('registerCommands');
 
         $kernel = $this->getKernel(array($bundle));
@@ -104,7 +104,7 @@ class ApplicationTest extends TestCase
 
     public function testBundleCommandCanBeFoundByAlias()
     {
-        $bundle = $this->getMock(Bundle::class);
+        $bundle = $this->getMockBuilder(Bundle::class)->getMock();
         $bundle->expects($this->once())->method('registerCommands');
 
         $kernel = $this->getKernel(array($bundle));
@@ -140,11 +140,11 @@ class ApplicationTest extends TestCase
 
     private function getKernel(array $bundles, $useDispatcher = false)
     {
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         if ($useDispatcher) {
 
-            $dispatcher = $this->getMock(EventDispatcherInterface::class);
+            $dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
             $dispatcher
                 ->expects($this->atLeastOnce())
                 ->method('dispatch');
@@ -156,7 +156,7 @@ class ApplicationTest extends TestCase
                 ->will($this->returnValue($dispatcher));
         }
 
-        $kernel = $this->getMock(KernelInterface::class);
+        $kernel = $this->getMockBuilder(KernelInterface::class)->getMock();
         $kernel
             ->expects($this->any())
             ->method('getBundles')

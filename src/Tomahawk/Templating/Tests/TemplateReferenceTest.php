@@ -2,7 +2,7 @@
 
 use Tomahawk\Templating\TemplateReference;
 
-class TemplateReferenceTest extends PHPUnit_Framework_TestCase
+class TemplateReferenceTest extends PHPUnit\Framework\TestCase
 {
     public function testGetPathWorksWithNamespacedControllers()
     {

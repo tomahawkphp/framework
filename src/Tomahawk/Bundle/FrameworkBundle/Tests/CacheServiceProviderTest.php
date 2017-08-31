@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheServiceProvider as CacheProvider;
 
@@ -36,7 +36,7 @@ class CacheServiceProviderTest extends TestCase
 
     protected function getConfig()
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
         return $config;
     }
 }

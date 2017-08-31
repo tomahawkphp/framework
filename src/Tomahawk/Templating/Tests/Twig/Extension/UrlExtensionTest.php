@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Templating\Tests\Twig\Extension;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Templating\Twig\Extension\UrlExtension;
 
 class UrlExtensionTest extends TestCase
@@ -65,7 +65,7 @@ class UrlExtensionTest extends TestCase
 
     protected function getUrlGenerator()
     {
-        $urlGenerator = $this->getMock('Tomahawk\Url\UrlGeneratorInterface');
+        $urlGenerator = $this->createMock('Tomahawk\Url\UrlGeneratorInterface');
 
         $urlGenerator->expects($this->any())
             ->method('route')

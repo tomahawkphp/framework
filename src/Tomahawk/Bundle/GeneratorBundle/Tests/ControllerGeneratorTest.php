@@ -100,7 +100,7 @@ class ControllerGeneratorTest extends GeneratorTest
      */
     protected function getBundle()
     {
-        $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockBuilder('Tomahawk\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle->expects($this->any())->method('getPath')->will($this->returnValue($this->tmpDir));
         $bundle->expects($this->any())->method('getName')->will($this->returnValue('FooBarBundle'));
         $bundle->expects($this->any())->method('getNamespace')->will($this->returnValue('Foo\BarBundle'));
@@ -114,7 +114,7 @@ class ControllerGeneratorTest extends GeneratorTest
     protected function getGenerator()
     {
         $generator = new ControllerGenerator($this->filesystem);
-        $generator->setSkeletonDirs(__DIR__.'/../Resources/skeleton');
+        $generator->setSkeletonDirs([__DIR__.'/../Resources/skeleton']);
 
         return $generator;
     }

@@ -7,7 +7,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Tomahawk\Bundle\FrameworkBundle\Command\ConfigCompileCommand;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ConfigCompileCommandTest extends TestCase
 {
@@ -49,7 +49,7 @@ class ConfigCompileCommandTest extends TestCase
 
     protected function getConfigMock()
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
 
         $config->expects($this->once())
             ->method('get')

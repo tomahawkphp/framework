@@ -4,7 +4,7 @@ namespace Tomahawk\Routing\Tests;
 
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\HttpCore\Request;
 use Tomahawk\Routing\Controller\RedirectController;
 use Symfony\Component\HttpFoundation\Response;
@@ -149,7 +149,7 @@ class RedirectControllerTest extends TestCase
 
     private function createRequestObject($scheme, $host, $port, $baseUrl, $queryString = '')
     {
-        $request = $this->getMock(Request::class);
+        $request = $this->getMockBuilder(Request::class)->getMock();
 
         $request
             ->expects($this->any())
@@ -177,8 +177,8 @@ class RedirectControllerTest extends TestCase
 
     private function createRedirectController($httpPort = null, $httpsPort = null)
     {
-        $container = $this->getMock(ContainerInterface::class);
-        $config = $this->getMock(ConfigInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
+        $config = $this->getMockBuilder(ConfigInterface::class)->getMock();
 
         if (null !== $httpPort) {
             $config

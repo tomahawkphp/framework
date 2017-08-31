@@ -2,14 +2,14 @@
 
 namespace Tomahawk\Bundle\SwiftmailerBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 
 class BundleTest extends TestCase
 {
     public function testBundle()
     {
-        $container = $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        $container = $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
 
         $bundle = new SwiftmailerBundle();
         $bundle->setContainer($container);

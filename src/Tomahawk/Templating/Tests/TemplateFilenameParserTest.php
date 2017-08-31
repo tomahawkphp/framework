@@ -3,7 +3,7 @@
 use Tomahawk\Templating\TemplateFilenameParser;
 use Tomahawk\Templating\TemplateReference;
 
-class TemplateFilenameParserTest extends PHPUnit_Framework_TestCase
+class TemplateFilenameParserTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @var TemplateFilenameParser

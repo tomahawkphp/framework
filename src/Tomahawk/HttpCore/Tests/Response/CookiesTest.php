@@ -2,7 +2,7 @@
 
 namespace Tomahawk\HttpCore\Tests\Response;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\HttpCore\Response\Cookies;
 use Symfony\Component\HttpFoundation\Request;
 

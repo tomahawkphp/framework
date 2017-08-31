@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\GeneratorBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 abstract class GeneratorTest extends TestCase

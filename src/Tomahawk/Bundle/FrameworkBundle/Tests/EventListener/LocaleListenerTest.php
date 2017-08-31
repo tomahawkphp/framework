@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests\EventListener;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\LocaleListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,12 +18,14 @@ class LocaleListenerTest extends TestCase
 
     public function setUp()
     {
-        $this->requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack', array(), array(), '', false);
+        $this->requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')
+        ->disableOriginalConstructor()
+        ->getMock();
     }
 
     public function testOnKernelRequestEvent()
     {
-        $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $request = Request::create('http://localhost/', 'get');
         $dispatcher = new EventDispatcher();
 
@@ -41,7 +43,7 @@ class LocaleListenerTest extends TestCase
 
     public function testOnKernelRequestEventWithSetParameter()
     {
-        $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $request = Request::create('http://localhost/', 'get');
         $dispatcher = new EventDispatcher();
 
@@ -66,7 +68,7 @@ class LocaleListenerTest extends TestCase
         $this->requestStack->expects($this->once())->method('getParentRequest')->will($this->returnValue($parentRequest));
 
         $requestContext = new RequestContext();
-        $kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $request = Request::create('http://localhost/', 'get');
         $dispatcher = new EventDispatcher();
 

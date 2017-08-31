@@ -4,7 +4,7 @@ namespace Tomahawk\HttpKernel\Tests;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -46,9 +46,11 @@ class HttpKernelTest extends TestCase
         $httpRequest->handle($request);
     }
 
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function testResourceNotFoundException()
     {
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $httpRequest = $this->getHttpKernel();
 
         $request = Request::create('doesnt-exist', 'GET');
@@ -56,10 +58,12 @@ class HttpKernelTest extends TestCase
         $httpRequest->handle($request);
 
     }
-    
+
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function testThrownNotFoundHttpException()
     {
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $httpRequest = $this->getHttpKernel();
 
         $request = Request::create('error', 'GET');
@@ -67,10 +71,11 @@ class HttpKernelTest extends TestCase
         $httpRequest->handle($request);
     }
 
-
+    /**
+     * @expectedException \Exception
+     */
     public function testException()
     {
-        $this->setExpectedException('Exception');
         $httpRequest = $this->getHttpKernel();
 
         $request = Request::create('/', 'GET');
@@ -78,9 +83,11 @@ class HttpKernelTest extends TestCase
         $httpRequest->handle($request);
     }
 
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function testExceptionCatchFalse()
     {
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $httpRequest = $this->getHttpKernel();
 
         $request = Request::create('/doesnt-exist', 'GET');
@@ -321,7 +328,7 @@ class HttpKernelTest extends TestCase
             $controller = function () { return new Response('Hello'); };
         }
 
-        $resolver = $this->getMock('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface');
+        $resolver = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface')->getMock();
         $resolver->expects($this->any())
             ->method('getController')
             ->will($this->returnValue($controller));

@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Routing\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Templating\Helper\UrlHelper;
 use Tomahawk\Url\UrlGeneratorInterface;
 
@@ -49,6 +49,6 @@ class UrlHelperTest extends TestCase
 
     protected function getUrlGenerator()
     {
-        return $this->getMock('Tomahawk\Url\UrlGeneratorInterface');
+        return $this->createMock('Tomahawk\Url\UrlGeneratorInterface');
     }
 }

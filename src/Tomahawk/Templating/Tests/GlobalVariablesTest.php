@@ -2,7 +2,7 @@
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Tomahawk\HttpCore\Request;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Templating\GlobalVariables;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\Authentication\AuthenticationProviderInterface;
@@ -16,15 +16,15 @@ class GlobalVariablesTest extends TestCase
 
     public function setUp()
     {
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
 
-        $auth = $this->getMock(AuthenticationProviderInterface::class);
+        $auth = $this->createMock(AuthenticationProviderInterface::class);
 
-        $session = $this->getMock(SessionInterface::class);
+        $session = $this->createMock(SessionInterface::class);
 
-        $request = $this->getMock(Request::class);
+        $request = $this->createMock(Request::class);
 
-        $kernel = $this->getMock(KernelInterface::class);
+        $kernel = $this->createMock(KernelInterface::class);
 
         $kernel->expects($this->any())
             ->method('getEnvironment')
@@ -39,7 +39,7 @@ class GlobalVariablesTest extends TestCase
             ->method('getSession')
             ->will($this->returnValue($session));
 
-        $requestStack = $this->getMock(RequestStack::class);
+        $requestStack = $this->createMock(RequestStack::class);
 
         $requestStack->expects($this->any())
             ->method('getCurrentRequest')
@@ -47,7 +47,7 @@ class GlobalVariablesTest extends TestCase
 
         $auth->expects($this->any())
             ->method('getUser')
-            ->will($this->returnValue($this->getMock(UserInterface::class)));
+            ->will($this->returnValue($this->createMock(UserInterface::class)));
 
         $container->expects($this->any())
             ->method('has')
@@ -119,7 +119,7 @@ class GlobalVariablesTest extends TestCase
 
     protected function getContainer()
     {
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
 
         return $container;
     }

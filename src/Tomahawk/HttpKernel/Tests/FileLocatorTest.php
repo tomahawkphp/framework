@@ -3,13 +3,16 @@
 namespace Tomahawk\HttpKernel\Tests;
 
 use Tomahawk\HttpKernel\Config\FileLocator;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class FileLocatorTest extends TestCase
 {
+    /**
+     * @expectedException \LogicException
+     */
     public function testLocate()
     {
-        $kernel = $this->getMock('Tomahawk\HttpKernel\KernelInterface');
+        $kernel = $this->getMockBuilder('Tomahawk\HttpKernel\KernelInterface')->getMock();
         $kernel
             ->expects($this->atLeastOnce())
             ->method('locateResource')
@@ -21,13 +24,12 @@ class FileLocatorTest extends TestCase
         $kernel
             ->expects($this->never())
             ->method('locateResource');
-        $this->setExpectedException('LogicException');
         $locator->locate('/some/path');
     }
 
     public function testLocateWithGlobalResourcePath()
     {
-        $kernel = $this->getMock('Tomahawk\HttpKernel\KernelInterface');
+        $kernel = $this->getMockBuilder('Tomahawk\HttpKernel\KernelInterface')->getMock();
         $kernel
             ->expects($this->atLeastOnce())
             ->method('locateResource')

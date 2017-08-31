@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\WebProfilerBundle\Tests;
 
 use Doctrine\DBAL\Logging\DebugStack;
 use Tomahawk\HttpKernel\KernelInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -95,7 +95,7 @@ class WebProfilerBundleTest extends TestCase
 
     protected function getConfigMock()
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
 
         return $config;
     }

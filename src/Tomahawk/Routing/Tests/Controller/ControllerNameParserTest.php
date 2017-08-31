@@ -15,7 +15,7 @@
 
 namespace Tomahawk\Routing\Tests\Controller;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Routing\Controller\ControllerNameParser;
 use Symfony\Component\ClassLoader\ClassLoader;
 
@@ -100,7 +100,7 @@ class ControllerNameParserTest extends TestCase
 
     protected function getKernel()
     {
-        $kernel = $this->getMock('Tomahawk\HttpKernel\KernelInterface');
+        $kernel = $this->getMockBuilder('Tomahawk\HttpKernel\KernelInterface')->getMock();
 
         return $kernel;
     }
@@ -113,7 +113,7 @@ class ControllerNameParserTest extends TestCase
             'BazBundle' => array($this->getBundle('FooBundle\BazBundle', 'BazBundle')),
         );
 
-        $kernel = $this->getMock('Tomahawk\HttpKernel\KernelInterface');
+        $kernel = $this->getMockBuilder('Tomahawk\HttpKernel\KernelInterface')->getMock();
         $kernel
             ->expects($this->any())
             ->method('getBundle')
@@ -140,7 +140,7 @@ class ControllerNameParserTest extends TestCase
 
     protected function getBundle($namespace, $name)
     {
-        $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockBuilder('Tomahawk\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle->expects($this->any())->method('getName')->will($this->returnValue($name));
         $bundle->expects($this->any())->method('getNamespace')->will($this->returnValue($namespace));
         return $bundle;

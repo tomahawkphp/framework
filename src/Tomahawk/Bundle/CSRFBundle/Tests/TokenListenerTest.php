@@ -3,7 +3,7 @@
 namespace Tomahawk\Bundle\CSRFBundle\Test;
 
 use Symfony\Component\HttpKernel\KernelEvents;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\CSRFBundle\EventListener\TokenListener;
 
 class TokenListenerTest extends TestCase
@@ -79,18 +79,18 @@ class TokenListenerTest extends TestCase
 
     protected function getSession()
     {
-        $session = $this->getMock('Tomahawk\Session\SessionInterface');
+        $session = $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock();
         return $session;
     }
 
     protected function getContainer()
     {
-        return $this->getMock('Tomahawk\DependencyInjection\ContainerInterface');
+        return $this->getMockBuilder('Tomahawk\DependencyInjection\ContainerInterface')->getMock();
     }
 
     protected function getTokenManager()
     {
-        $mock = $this->getMock('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface');
+        $mock = $this->getMockBuilder('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface')->getMock();
 
         $mock->expects($this->any())
             ->method('getTokenName')

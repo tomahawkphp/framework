@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingServiceProvider as TemplatingProvider;
 
@@ -26,11 +26,11 @@ class TemplatingServiceProviderTest extends TestCase
     protected function getContainer()
     {
         $container = new Container();
-        $container->set('input', $this->getMock('Tomahawk\Input\InputInterface'));
-        $container->set('translator', $this->getMock('Symfony\Component\Translation\TranslatorInterface'));
-        $container->set('url_generator', $this->getMock('Tomahawk\Url\UrlGeneratorInterface'));
-        $container->set('session', $this->getMock('Tomahawk\Session\SessionInterface'));
-        $container->set('request_stack', $this->getMock('Symfony\Component\HttpFoundation\RequestStack'));
+        $container->set('input', $this->getMockBuilder('Tomahawk\Input\InputInterface')->getMock());
+        $container->set('translator', $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')->getMock());
+        $container->set('url_generator', $this->getMockBuilder('Tomahawk\Url\UrlGeneratorInterface')->getMock());
+        $container->set('session', $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock());
+        $container->set('request_stack', $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->getMock());
         $container->set('kernel', $this->getKernel());
         $container->set('config', $this->getConfig());
 
@@ -66,7 +66,7 @@ class TemplatingServiceProviderTest extends TestCase
 
     protected function getConfig()
     {
-        $config = $this->getMock('Tomahawk\Config\ConfigInterface');
+        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
 
         $config->method('get')
             ->will($this->returnValueMap(array(

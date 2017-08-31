@@ -4,7 +4,7 @@ namespace Tomahawk\Cache\Tests;
 
 use Doctrine\Common\Cache\FilesystemCache;
 use Tomahawk\Cache\Provider\FilesystemProvider;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class CacheFilesystemProviderTest extends TestCase
 {

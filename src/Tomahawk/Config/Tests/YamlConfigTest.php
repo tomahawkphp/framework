@@ -2,7 +2,7 @@
 
 namespace Tomahawk\Config\Tests;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Config\ConfigManager;
 use Tomahawk\Config\Loader\YamlConfigLoader;
 use Tomahawk\Config\Loader\PhpConfigLoader;

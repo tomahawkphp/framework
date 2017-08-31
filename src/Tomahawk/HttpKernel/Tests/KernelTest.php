@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Tomahawk\HttpKernel\Test\KernelWithBundleEvents;
 use Tomahawk\HttpKernel\Test\KernelWithRoutes;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\HttpKernel\Test\Kernel;
@@ -78,7 +78,7 @@ class KernelTest extends TestCase
     }
     public function testBootSetsTheContainerToTheBundles()
     {
-        $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\Bundle');
+        $bundle = $this->getMockBuilder('Tomahawk\HttpKernel\Bundle\Bundle')->getMock();
         $bundle->expects($this->once())
             ->method('setContainer');
 
@@ -111,7 +111,7 @@ class KernelTest extends TestCase
 
     public function testShutdownCallsShutdownOnAllBundles()
     {
-        $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\Bundle');
+        $bundle = $this->getMockBuilder('Tomahawk\HttpKernel\Bundle\Bundle')->getMock();
         $bundle->expects($this->once())
             ->method('shutdown');
 
@@ -126,7 +126,7 @@ class KernelTest extends TestCase
 
     public function testShutdownGivesNullContainerToAllBundles()
     {
-        $bundle = $this->getMock('Tomahawk\HttpKernel\Bundle\Bundle');
+        $bundle = $this->getMockBuilder('Tomahawk\HttpKernel\Bundle\Bundle')->getMock();
         $bundle->expects($this->at(4))
             ->method('setContainer')
             ->with(null);

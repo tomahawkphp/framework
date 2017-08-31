@@ -4,7 +4,7 @@ namespace Tomahawk\Bundle\FrameworkBundle\Tests\EventListener;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\SessionListener;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,9 +18,9 @@ class SessionListenerTest extends TestCase
     {
         $eventDispatcher = new EventDispatcher();
 
-        $session = $this->getMock(SessionInterface::class);
+        $session = $this->getMockBuilder(SessionInterface::class)->getMock();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container->expects($this->once())
             ->method('get')

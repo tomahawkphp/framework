@@ -3,7 +3,7 @@
 namespace Tomahawk\Bundle\FrameworkBundle\Tests;
 
 use Tomahawk\DependencyInjection\Container;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Tomahawk\Bundle\FrameworkBundle\FrameworkBundle;
 
 class FrameworkBundleTest extends TestCase

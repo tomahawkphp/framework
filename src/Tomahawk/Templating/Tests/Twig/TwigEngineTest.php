@@ -3,7 +3,7 @@
 use Tomahawk\Templating\Twig\TwigEngine;
 use Tomahawk\Templating\TemplateReference;
 
-class TwigEngineTest extends PHPUnit_Framework_TestCase
+class TwigEngineTest extends PHPUnit\Framework\TestCase
 {
     public function testRenderResponse()
     {
@@ -51,9 +51,9 @@ class TwigEngineTest extends PHPUnit_Framework_TestCase
             'foo.twig' => 'foo',
             'error' => '{{ foo }',
         )));
-        $parser = $this->getMock('Symfony\Component\Templating\TemplateNameParserInterface');
+        $parser = $this->createMock('Symfony\Component\Templating\TemplateNameParserInterface');
 
-        $locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface');
+        $locator = $this->createMock('Symfony\Component\Config\FileLocatorInterface');
 
         return new TwigEngine($twig, $parser, $locator);
     }
