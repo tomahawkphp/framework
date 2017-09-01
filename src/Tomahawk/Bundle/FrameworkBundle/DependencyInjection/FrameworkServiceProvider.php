@@ -38,10 +38,6 @@ class FrameworkServiceProvider implements ServiceProviderInterface
     {
         $container->set('Symfony\Component\EventDispatcher\EventDispatcherInterface', new EventDispatcher());
 
-        $container->set('Tomahawk\Asset\AssetManagerInterface', function(ContainerInterface $c) {
-            return new AssetManager($c['html_builder'], $c['url_generator']);
-        });
-
         $container->set('Tomahawk\DependencyInjection\ContainerInterface', function(ContainerInterface $c) {
             return $c;
         });
@@ -86,10 +82,8 @@ class FrameworkServiceProvider implements ServiceProviderInterface
 
     protected function registerAliases(ContainerInterface $container)
     {
-        $container->addAlias('asset_manager', 'Tomahawk\Asset\AssetManagerInterface');
         $container->addAlias('hasher', 'Tomahawk\Hashing\HasherInterface');
         $container->addAlias('database', 'Tomahawk\Database\DatabaseManager');
-        $container->addAlias('encrypter', 'Tomahawk\Encryption\CryptInterface');
         $container->addAlias('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $container->addAlias('cookies', 'Tomahawk\HttpCore\Response\CookiesInterface');
         $container->addAlias('form_manager', 'Tomahawk\Forms\FormsManagerInterface');

@@ -24,7 +24,6 @@ class FrameworkServiceProviderTest extends TestCase
         $container->get('request_stack')->push(new Request());
 
         $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventDispatcherInterface', $container->get('event_dispatcher'));
-        $this->assertInstanceOf('Tomahawk\Asset\AssetManagerInterface', $container->get('asset_manager'));
         $this->assertInstanceOf('Symfony\Component\Filesystem\Filesystem', $container->get('filesystem'));
         $this->assertInstanceOf('Tomahawk\Forms\FormsManagerInterface', $container->get('form_manager'));
         $this->assertInstanceOf('Tomahawk\Html\HtmlBuilderInterface', $container->get('html_builder'));
