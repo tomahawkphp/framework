@@ -16,13 +16,6 @@ use Symfony\Component\Routing\RouteCollection;
 class Router
 {
     /**
-     * Whether we're in a route section
-     *
-     * @var bool
-     */
-    protected $inSection = false;
-
-    /**
      * Whether we're in a route group
      *
      * @var bool
@@ -218,35 +211,6 @@ class Router
     }
 
     /**
-     * Create a route section
-     *
-     * @param $name
-     * @param array $options
-     * @param \Closure $callback
-     *
-     * @deprecated This method is deprecated as of 2.1 and will be removed in 3.0 use Router::group instead
-     *
-     * @return $this
-     */
-    public function section($name, $options = [], \Closure $callback)
-    {
-        $sub_collection = new RouteCollection();
-
-        $sub_router = new self();
-        $sub_router->setInSection(true);
-        $sub_router->setRoutes($sub_collection);
-
-        $callback($sub_router, $sub_collection);
-
-        $sub_collection->addPrefix($name);
-        $sub_collection->addDefaults($options);
-
-        $this->getRoutes()->addCollection($sub_collection);
-
-        return $this;
-    }
-
-    /**
      * Create a route group
      *
      * @param string|array $options
@@ -311,32 +275,6 @@ class Router
         $this->getRoutes()->addCollection($subCollection);
 
         return $this;
-    }
-
-    /**
-     * Set whether we are in a route section or not
-     *
-     * @deprecated This method is deprecated as of 2.1 and will be removed in 3.0
-     *
-     * @param boolean $inSection
-     * @return $this
-     */
-    public function setInSection($inSection)
-    {
-        $this->inSection = $inSection;
-        return $this;
-    }
-
-    /**
-     * Get whether we are in a route section or not
-     *
-     * @deprecated This method is deprecated as of 2.1 and will be removed in 3.0
-     *
-     * @return boolean
-     */
-    public function getInSection()
-    {
-        return $this->inSection;
     }
 
     /**
