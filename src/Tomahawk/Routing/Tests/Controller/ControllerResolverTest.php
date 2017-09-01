@@ -15,7 +15,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\ClassLoader\ClassLoader;
+//use Symfony\Component\ClassLoader\ClassLoader;
+use Composer\Autoload\ClassLoader;
 
 class ControllerResolverTest extends TestCase
 {
@@ -60,7 +61,6 @@ class ControllerResolverTest extends TestCase
         $this->container['Tomahawk\DependencyInjection\ContainerInterface'] = $this->container;
         $this->container['Tomahawk\Forms\FormsManagerInterface'] = $this->getMockBuilder('Tomahawk\Forms\FormsManagerInterface')->getMock();
         $this->container['Tomahawk\HttpCore\Response\CookiesInterface'] = $this->getMockBuilder('Tomahawk\HttpCore\Response\CookiesInterface')->getMock();
-        $this->container['Tomahawk\Asset\AssetManagerInterface'] = $this->getMockBuilder('Tomahawk\Asset\AssetManagerInterface')->getMock();
         $this->container['Symfony\Component\HttpFoundation\Request'] = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
         $this->container['Tomahawk\Session\SessionInterface'] = $this->getMockBuilder('Tomahawk\Session\SessionInterface')->getMock();
         $this->container['Tomahawk\Cache\CacheInterface'] = $this->getMockBuilder('Tomahawk\Cache\CacheInterface')->getMock();
@@ -85,9 +85,7 @@ class ControllerResolverTest extends TestCase
 
         $this->loader = new ClassLoader();
 
-        $this->loader->addPrefixes(array(
-            'TestBundle'      => __DIR__.'/../Fixtures',
-        ));
+        $this->loader->addPsr4('TestBundle\\', __DIR__.'/../Fixtures/TestBundle');
 
         $this->loader->register();
     }

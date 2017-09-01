@@ -134,53 +134,6 @@ class RouterTest extends TestCase
         $this->assertCount(3, $router->getRoutes()->getIterator());
     }
 
-    public function testInSection()
-    {
-        $routeCollection = new RouteCollection();
-        $router = new Router();
-        $router->setRoutes($routeCollection);
-
-        $test = $this;
-
-        $router->section('admin', array(), function(Router $router) use ($test) {
-
-            $test->assertTrue($router->getInSection());
-
-            $router->any('/', 'admin_home', function() {
-                return 'Home';
-            });
-        });
-
-        $this->assertEquals('/admin', $router->getRoutes()->get('admin_home')->getPath());
-    }
-
-    public function testInSectionWithCollection()
-    {
-        $routeCollection = new RouteCollection();
-        $router = new Router();
-        $router->setRoutes($routeCollection);
-
-        $test = $this;
-
-        $router->section('admin', array(), function(Router $router, RouteCollection $collection) use ($test) {
-
-            $test->assertTrue($router->getInSection());
-
-            $router->any('/', 'admin_home', function() {
-                return 'Home';
-            });
-
-            $collection->setSchemes(array(
-                'https'
-            ));
-        });
-
-        $adminRoute = $router->getRoutes()->get('admin_home');
-
-        $this->assertEquals(array('https'), $adminRoute->getSchemes());
-        $this->assertEquals('/admin', $router->getRoutes()->get('admin_home')->getPath());
-    }
-
     public function testGroupAsString()
     {
         $routeCollection = new RouteCollection();
