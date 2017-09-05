@@ -166,22 +166,19 @@ class Container implements \ArrayAccess, ContainerInterface
      */
     protected function resolveClass(ReflectionParameter $parameter)
     {
-        try
-        {
+        try {
             return $this->get($parameter->getClass()->name);
         }
 
             // If we can not resolve the class instance, we will check to see if the value
             // is optional, and if it is we will return the optional parameter value as
             // the value of the dependency, similarly to how we do this with scalars.
-        catch (BindingResolutionException $e)
-        {
-            if ($parameter->isOptional())
-            {
+        catch (BindingResolutionException $e) {
+
+            if ($parameter->isOptional()) {
                 return $parameter->getDefaultValue();
             }
-            else
-            {
+            else {
                 throw $e;
             }
         }
@@ -301,16 +298,15 @@ class Container implements \ArrayAccess, ContainerInterface
             $id = $this->getAlias($id);
         }
 
-        if (!$this->has($id) && class_exists($id)) {
+        if ( ! $this->has($id) && class_exists($id)) {
             return $this->build($id);
         }
 
-        if (!isset($this->keys[$id])) {
+        if ( ! isset($this->keys[$id])) {
             throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
         }
 
-        if (
-            isset($this->raw[$id])
+        if (isset($this->raw[$id])
             || !is_object($this->values[$id])
             || isset($this->protected[$this->values[$id]])
             || !method_exists($this->values[$id], '__invoke')

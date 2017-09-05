@@ -11,6 +11,10 @@
 
 namespace Tomahawk\DependencyInjection;
 
+/**
+ * Interface ContainerInterface
+ * @package Tomahawk\DependencyInjection
+ */
 interface ContainerInterface extends \ArrayAccess
 {
     /**

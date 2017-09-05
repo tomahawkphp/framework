@@ -11,6 +11,10 @@
 
 namespace Tomahawk\DependencyInjection;
 
+/**
+ * Class ContainerAware
+ * @package Tomahawk\DependencyInjection
+ */
 abstract class ContainerAware implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

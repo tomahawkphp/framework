@@ -11,6 +11,10 @@
 
 namespace Tomahawk\DependencyInjection;
 
+/**
+ * Trait ContainerAwareTrait
+ * @package Tomahawk\DependencyInjection
+ */
 trait ContainerAwareTrait
 {
     /**

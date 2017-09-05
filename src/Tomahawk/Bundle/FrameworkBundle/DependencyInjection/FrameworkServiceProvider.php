@@ -70,7 +70,7 @@ class FrameworkServiceProvider implements ServiceProviderInterface
         $container->set('Symfony\Component\HttpFoundation\RequestStack', new RequestStack());
 
         $container->set('Tomahawk\Url\UrlGeneratorInterface', function(ContainerInterface $c) {
-            $urlGenerator  = new UrlGenerator($c['route_collection'], $c['request_context']);
+            $urlGenerator = new UrlGenerator($c['route_collection'], $c['request_context']);
             $urlGenerator->setSslOn($c['config']->get('request.ssl', true));
             return $urlGenerator;
         });

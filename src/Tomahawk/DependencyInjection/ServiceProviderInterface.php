@@ -11,6 +11,10 @@
 
 namespace Tomahawk\DependencyInjection;
 
+/**
+ * Interface ServiceProviderInterface
+ * @package Tomahawk\DependencyInjection
+ */
 interface ServiceProviderInterface
 {
     /**

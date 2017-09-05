@@ -11,6 +11,10 @@
 
 namespace Tomahawk\DependencyInjection;
 
+/**
+ * Interface ContainerAwareInterface
+ * @package Tomahawk\DependencyInjection
+ */
 interface ContainerAwareInterface
 {
     /**
