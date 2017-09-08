@@ -40,7 +40,8 @@
         "symfony/process": "~3.3",
         "twig/twig": "~1.28|~2.0",
         "predis/predis" : "~1.0",
-        "psr/log" : "~1.0.0"
+        "psr/log" : "~1.0.0",
+        "psr/container": "^1.0"
 
     },
     "require-dev": {

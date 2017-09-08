@@ -11,11 +11,13 @@
 
 namespace Tomahawk\DependencyInjection;
 
+use Psr\Container\ContainerInterface as PsrContainerInterface;
+
 /**
  * Interface ContainerInterface
  * @package Tomahawk\DependencyInjection
  */
-interface ContainerInterface extends \ArrayAccess
+interface ContainerInterface extends PsrContainerInterface, \ArrayAccess
 {
     /**
      * Registers a service provider.

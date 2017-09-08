@@ -14,6 +14,8 @@ use Tomahawk\DependencyInjection\Container;
 use Tomahawk\DependencyInjection\Test\Service;
 use Tomahawk\DependencyInjection\Test\Invokable;
 use Tomahawk\DependencyInjection\Test\NonInvokable;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Container\ContainerExceptionInterface;
 
 class ContainerTest extends TestCase
 {
@@ -196,7 +198,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Psr\Container\NotFoundExceptionInterface
      * @expectedExceptionMessage Identifier "foo" is not defined.
      */
     public function testOffsetGetValidatesKeyIsPresent()
@@ -297,7 +299,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Psr\Container\NotFoundExceptionInterface
      * @expectedExceptionMessage Identifier "foo" is not defined.
      */
     public function testRawValidatesKeyIsPresent()
@@ -354,7 +356,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Psr\Container\NotFoundExceptionInterface
      * @expectedExceptionMessage Identifier "foo" is not defined.
      */
     public function testExtendValidatesKeyIsPresent()
@@ -403,7 +405,7 @@ class ContainerTest extends TestCase
 
     /**
      * @dataProvider badServiceDefinitionProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Psr\Container\ContainerExceptionInterface
      * @expectedExceptionMessage Callable is not a Closure or invokable object.
      */
     public function testProtectFailsForInvalidServiceDefinitions($service)

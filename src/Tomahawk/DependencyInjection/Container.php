@@ -13,8 +13,12 @@ namespace Tomahawk\DependencyInjection;
 
 use ReflectionClass;
 use ReflectionParameter;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Tomahawk\DependencyInjection\Exception\BindingResolutionException;
+use Tomahawk\DependencyInjection\Exception\ContainerException;
 use Tomahawk\DependencyInjection\Exception\InstantiateException;
+use Tomahawk\DependencyInjection\Exception\NotFoundException;
 
 /**
  * Container main class.
@@ -25,7 +29,7 @@ use Tomahawk\DependencyInjection\Exception\InstantiateException;
  *
  * @author  Fabien Potencier
  */
-class Container implements \ArrayAccess, ContainerInterface
+class Container implements ContainerInterface
 {
     /**
      * @var array
@@ -287,10 +291,9 @@ class Container implements \ArrayAccess, ContainerInterface
      * Gets a parameter or an object.
      *
      * @param string $id The unique identifier for the parameter or object
-     *
      * @return mixed The value of the parameter or an object
      *
-     * @throws \InvalidArgumentException if the identifier is not defined
+     * @throws NotFoundExceptionInterface
      */
     public function offsetGet($id)
     {
@@ -303,7 +306,7 @@ class Container implements \ArrayAccess, ContainerInterface
         }
 
         if ( ! isset($this->keys[$id])) {
-            throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
+            throw new NotFoundException(sprintf('Identifier "%s" is not defined.', $id));
         }
 
         if (isset($this->raw[$id])
@@ -394,12 +397,12 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @return callable The passed callable
      *
-     * @throws \InvalidArgumentException Service definition has to be a closure of an invokable object
+     * @throws ContainerExceptionInterface Service definition has to be a closure of an invokable object
      */
     public function protect($callable)
     {
         if ( ! is_object($callable) || ! method_exists($callable, '__invoke')) {
-            throw new \InvalidArgumentException('Callable is not a Closure or invokable object.');
+            throw new ContainerException('Callable is not a Closure or invokable object.');
         }
 
         $this->protected->attach($callable);
@@ -414,12 +417,12 @@ class Container implements \ArrayAccess, ContainerInterface
      *
      * @return mixed The value of the parameter or the closure defining an object
      *
-     * @throws \InvalidArgumentException if the identifier is not defined
+     * @throws NotFoundExceptionInterface if the identifier is not defined
      */
     public function raw($id)
     {
         if ( ! isset($this->keys[$id])) {
-            throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
+            throw new NotFoundException(sprintf('Identifier "%s" is not defined.', $id));
         }
 
         if (isset($this->raw[$id])) {
@@ -435,17 +438,17 @@ class Container implements \ArrayAccess, ContainerInterface
      * Useful when you want to extend an existing object definition,
      * without necessarily loading that object.
      *
-     * @param string   $id       The unique identifier for the object
+     * @param string $id The unique identifier for the object
      * @param callable $callable A service definition to extend the original
-     *
      * @return callable The wrapped callable
      *
-     * @throws \InvalidArgumentException if the identifier is not defined or not a service definition
+     * @throws \InvalidArgumentException
+     * @throws NotFoundException
      */
     public function extend($id, $callable)
     {
         if ( ! isset($this->keys[$id])) {
-            throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $id));
+            throw new NotFoundException(sprintf('Identifier "%s" is not defined.', $id));
         }
 
         if ( ! is_object($this->values[$id]) || ! method_exists($this->values[$id], '__invoke')) {
