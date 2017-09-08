@@ -11,6 +11,8 @@
 
 namespace Tomahawk\Templating\Twig;
 
+use Twig\Environment;
+use Twig\Error\Error;
 use Tomahawk\Templating\TemplateReference;
 use Tomahawk\Templating\Twig\Bridge\TwigEngine as BaseEngine;
 use Symfony\Component\Templating\TemplateNameParserInterface;
@@ -37,11 +39,11 @@ class TwigEngine extends BaseEngine implements EngineInterface
     /**
      * Constructor.
      *
-     * @param \Twig_Environment           $environment A \Twig_Environment instance
+     * @param Environment           $environment A Environment instance
      * @param TemplateNameParserInterface $parser      A TemplateNameParserInterface instance
      * @param FileLocatorInterface        $locator     A FileLocatorInterface instance
      */
-    public function __construct(\Twig_Environment $environment, TemplateNameParserInterface $parser, FileLocatorInterface $locator)
+    public function __construct(Environment $environment, TemplateNameParserInterface $parser, FileLocatorInterface $locator)
     {
         parent::__construct($environment, $parser);
 
@@ -55,7 +57,7 @@ class TwigEngine extends BaseEngine implements EngineInterface
     {
         try {
             return parent::render($name, $parameters);
-        } catch (\Twig_Error $e) {
+        } catch (Error $e) {
             if ($name instanceof TemplateReference && !method_exists($e, 'setSourceContext')) {
                 try {
                     // try to get the real name of the template where the error occurred
@@ -73,7 +75,7 @@ class TwigEngine extends BaseEngine implements EngineInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Twig_Error if something went wrong like a thrown exception while rendering the template
+     * @throws Error if something went wrong like a thrown exception while rendering the template
      */
     public function renderResponse($view, array $parameters = array(), Response $response = null)
     {

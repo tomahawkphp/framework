@@ -69,11 +69,7 @@ class ControllerNameParser
             $allBundles = $this->kernel->getBundle($bundle, false);
         }
         catch (\InvalidArgumentException $e) {
-            $message = sprintf(
-                'The "%s" (from the _controller value "%s") does not exist or is not enabled in your kernel!',
-                $bundle,
-                $originalController
-            );
+            $message = sprintf('The "%s" (from the _controller value "%s") does not exist or is not enabled in your kernel!', $bundle, $originalController);
 
             throw new \InvalidArgumentException($message, 0, $e);
         }

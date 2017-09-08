@@ -34,7 +34,7 @@ class RouterTest extends TestCase
     public function testMatchRoute()
     {
         $router = new Router();
-        $route = $router->any('/', 'home', function() {
+        $route = $router->match('/', 'home', function() {
             return 'Test';
         });
 
@@ -170,7 +170,9 @@ class RouterTest extends TestCase
         $test = $this;
 
         $router->group(array(
+            'domain' => 'http:/example.com',
             'prefix' => '/admin',
+            'methods' => ['GET'],
             'schemes' => 'https',
             'requirements' => ['test' => "\d+"],
             'defaults' => ['version' => 1],
