@@ -11,7 +11,6 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle;
 
-use Tomahawk\Bundle\FrameworkBundle\EventListener\SessionListener;
 use Tomahawk\HttpKernel\Bundle\Bundle;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\CookieListener;
@@ -29,6 +28,7 @@ use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
+use Symfony\Component\HttpKernel\EventListener\SessionListener;
 
 class FrameworkBundle extends Bundle
 {
