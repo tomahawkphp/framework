@@ -9,7 +9,7 @@ class TwigBridgeEngineTest extends PHPUnit\Framework\TestCase
     {
         $engine = $this->getTwig();
 
-        $this->assertTrue($engine->exists($this->getMockForAbstractClass('Twig_Template', array(), '', false)));
+        $this->assertTrue($engine->exists($this->getMockForAbstractClass('\Twig\Template', array(), '', false)));
     }
 
     public function testExistsWithNonExistentTemplates()
@@ -51,6 +51,19 @@ class TwigBridgeEngineTest extends PHPUnit\Framework\TestCase
         )));
 
         $engine->render(new TwigTemplateStub($twig));
+    }
+
+    public function testStream()
+    {
+        $engine = $this->getTwig();
+
+        $twig = new \Twig_Environment(new \Twig_Loader_Array(array(
+            'index' => 'foo',
+            'foo.twig' => 'foo',
+            'error' => '{{ foo }',
+        )));
+
+        $engine->stream(new TwigTemplateStub($twig));
     }
 
     /**

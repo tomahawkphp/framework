@@ -29,9 +29,9 @@ class YamlConfigTest extends TestCase
         );
         $delegatingLoader = new DelegatingLoader($loaderResolver);
 
-        $ret = $delegatingLoader->load(__DIR__.'/Resources/configs/database.yml');
+        $this->assertTrue($delegatingLoader->supports(__DIR__.'/Resources/configs/database.yml'));
 
-        //var_dump($ret);
+        $delegatingLoader->load(__DIR__.'/Resources/configs/database.yml');
     }
 
     public function testCache()
@@ -52,20 +52,14 @@ class YamlConfigTest extends TestCase
 
         $configCache = new ConfigCache($cachePath, true);
 
-        //$configCache->
-
-        //$configValues = $loader->load($locator->locate('config.yml'));
         $configFilePath = $locator->locate($cachePath);
 
         $resources = array();
 
-        if (!$configCache->isFresh())
+        if ( ! $configCache->isFresh())
         {
 
-            //$code = $delegatingLoader->load($locator->locate('database.yml'));
             $code = $delegatingLoader->load($locator->locate('auth.php'));
-
-            //var_dump($code);
 
             $resources[] = new FileResource($configFilePath);
             // serialize the config array and save it

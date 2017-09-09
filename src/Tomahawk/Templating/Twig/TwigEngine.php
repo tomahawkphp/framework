@@ -52,28 +52,6 @@ class TwigEngine extends BaseEngine implements EngineInterface
 
     /**
      * {@inheritdoc}
-     */
-    public function render($name, array $parameters = array())
-    {
-        try {
-            return parent::render($name, $parameters);
-        } catch (Error $e) {
-            if ($name instanceof TemplateReference && !method_exists($e, 'setSourceContext')) {
-                try {
-                    // try to get the real name of the template where the error occurred
-                    $name = $e->getTemplateName();
-                    $path = (string) $this->locator->locate($this->parser->parse($name));
-                    $e->setTemplateName($path);
-                } catch (\Exception $e2) {
-                }
-            }
-
-            throw $e;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
      *
      * @throws Error if something went wrong like a thrown exception while rendering the template
      */

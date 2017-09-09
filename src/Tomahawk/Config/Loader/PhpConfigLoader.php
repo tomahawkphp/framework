@@ -30,9 +30,6 @@ class PhpConfigLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'php' === pathinfo(
-            $resource,
-            PATHINFO_EXTENSION
-        );
+        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 }

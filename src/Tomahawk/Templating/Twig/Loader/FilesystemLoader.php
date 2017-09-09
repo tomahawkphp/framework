@@ -14,10 +14,11 @@
 
 namespace Tomahawk\Templating\Twig\Loader;
 
+use Twig\Error\LoaderError;
+use Twig\Loader\FilesystemLoader as BaseFilesystemLoader;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use Twig_Error_Loader;
 
 /**
  * FilesystemLoader extends the default Twig filesystem loader
@@ -29,7 +30,7 @@ use Twig_Error_Loader;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class FilesystemLoader extends \Twig_Loader_Filesystem
+class FilesystemLoader extends BaseFilesystemLoader
 {
     /**
      * @var FileLocatorInterface
@@ -78,7 +79,7 @@ class FilesystemLoader extends \Twig_Loader_Filesystem
      *
      * @return string The path to the template file
      *
-     * @throws \Twig_Error_Loader if the template could not be found
+     * @throws LoaderError if the template could not be found
      */
     protected function findTemplate($template, $throw = true)
     {
@@ -91,7 +92,7 @@ class FilesystemLoader extends \Twig_Loader_Filesystem
         $file = null;
         try {
             $file = parent::findTemplate($logicalName);
-        } catch (\Twig_Error_Loader $e) {
+        } catch (LoaderError $e) {
             $twigLoaderException = $e;
 
             // for BC
@@ -107,7 +108,9 @@ class FilesystemLoader extends \Twig_Loader_Filesystem
                 throw $twigLoaderException;
             }
 
+            //@codeCoverageIgnoreStart
             return false;
+            //@codeCoverageIgnoreEnd
         }
 
         return $this->cache[$logicalName] = $file;

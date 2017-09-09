@@ -91,19 +91,7 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
 
         $loader = $this->environment->getLoader();
 
-        if ($loader instanceof ExistsLoaderInterface || method_exists($loader, 'exists')) {
-            return $loader->exists((string) $name);
-        }
-
-        try {
-            // cast possible TemplateReferenceInterface to string because the
-            // EngineInterface supports them but Twig_LoaderInterface does not
-            $loader->getSourceContext((string) $name)->getCode();
-        } catch (LoaderError $e) {
-            return false;
-        }
-
-        return true;
+        return $loader->exists((string) $name);
     }
 
     /**
