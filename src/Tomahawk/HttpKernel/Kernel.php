@@ -28,11 +28,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $bundles = array();
 
     /**
-     * @var BundleInterface[]
-     */
-    protected $bundleMap;
-
-    /**
      * @var Container
      */
     protected $container;
@@ -394,40 +389,27 @@ abstract class Kernel implements KernelInterface, TerminableInterface
 
     /**
      * @param string $name
-     * @param bool $first
-     * @return BundleInterface|Bundle\BundleInterface[]
+     * @return BundleInterface
      * @throws \InvalidArgumentException
      */
-    public function getBundle($name, $first = true)
+    public function getBundle($name)
     {
-        if (!isset($this->bundleMap[$name])) {
+        if (!isset($this->bundles[$name])) {
             throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist or it is not enabled. Maybe you forgot to add it in the registerBundles() method of your %s.php file?', $name, get_class($this)));
         }
 
-        if (true === $first) {
-            return $this->bundleMap[$name][0];
-        }
-
-        return $this->bundleMap[$name];
+        return $this->bundles[$name];
     }
 
     /**
-     * Initializes the data structures related to the bundle management.
-     *
-     *  - the bundles property maps a bundle name to the bundle instance,
-     *  - the bundleMap property maps a bundle name to the bundle inheritance hierarchy (most derived bundle first).
+     * Initializes bundles
      *
      * @throws \LogicException if two bundles share a common name
-     * @throws \LogicException if a bundle tries to extend a non-registered bundle
-     * @throws \LogicException if a bundle tries to extend itself
-     * @throws \LogicException if two bundles extend the same ancestor
      */
     protected function initializeBundles()
     {
         // init bundles
         $this->bundles = array();
-        $topMostBundles = array();
-        $directChildren = array();
 
         foreach ($this->registerBundles() as $bundle) {
             $name = $bundle->getName();
@@ -435,43 +417,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
                 throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s"', $name));
             }
             $this->bundles[$name] = $bundle;
-
-            if ($parentName = $bundle->getParent()) {
-                if (isset($directChildren[$parentName])) {
-                    throw new \LogicException(sprintf('Bundle "%s" is directly extended by two bundles "%s" and "%s".', $parentName, $name, $directChildren[$parentName]));
-                }
-                if ($parentName == $name) {
-                    throw new \LogicException(sprintf('Bundle "%s" can not extend itself.', $name));
-                }
-                $directChildren[$parentName] = $name;
-            } else {
-                $topMostBundles[$name] = $bundle;
-            }
-        }
-
-        // look for orphans
-        if (!empty($directChildren) && count($diff = array_diff_key($directChildren, $this->bundles))) {
-            $diff = array_keys($diff);
-
-            throw new \LogicException(sprintf('Bundle "%s" extends bundle "%s", which is not registered.', $directChildren[$diff[0]], $diff[0]));
-        }
-
-        // inheritance
-        $this->bundleMap = array();
-        foreach ($topMostBundles as $name => $bundle) {
-            $bundleMap = array($bundle);
-            $hierarchy = array($name);
-
-            while (isset($directChildren[$name])) {
-                $name = $directChildren[$name];
-                array_unshift($bundleMap, $this->bundles[$name]);
-                $hierarchy[] = $name;
-            }
-
-            foreach ($hierarchy as $bundle) {
-                $this->bundleMap[$bundle] = $bundleMap;
-                array_pop($bundleMap);
-            }
         }
 
     }
@@ -572,28 +517,26 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         $isResource = 0 === strpos($path, 'Resources') && null !== $dir;
         $overridePath = substr($path, 9);
         $resourceBundle = null;
-        $bundles = $this->getBundle($bundleName, false);
+        $bundle = $this->getBundle($bundleName);
         $files = array();
 
-        foreach ($bundles as $bundle) {
-            if ($isResource && file_exists($file = $dir.'/'.$bundle->getName().$overridePath)) {
-                if (null !== $resourceBundle) {
-                    throw new \RuntimeException(sprintf('"%s" resource is hidden by a resource from the "%s" derived bundle. Create a "%s" file to override the bundle resource.', $file, $resourceBundle, $dir.'/'.$bundles[0]->getName().$overridePath));
-                }
-
-                if ($first) {
-                    return $file;
-                }
-                $files[] = $file;
+        if ($isResource && file_exists($file = $dir.'/'.$bundle->getName().$overridePath)) {
+            if (null !== $resourceBundle) {
+                throw new \RuntimeException(sprintf('"%s" resource is hidden by a resource from the "%s" derived bundle. Create a "%s" file to override the bundle resource.', $file, $resourceBundle, $dir.'/'.$bundles[0]->getName().$overridePath));
             }
 
-            if (file_exists($file = $bundle->getPath().'/'.$path)) {
-                if ($first && !$isResource) {
-                    return $file;
-                }
-                $files[] = $file;
-                $resourceBundle = $bundle->getName();
+            if ($first) {
+                return $file;
             }
+            $files[] = $file;
+        }
+
+        if (file_exists($file = $bundle->getPath().'/'.$path)) {
+            if ($first && !$isResource) {
+                return $file;
+            }
+            $files[] = $file;
+            $resourceBundle = $bundle->getName();
         }
 
         if (count($files) > 0) {
@@ -608,7 +551,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     protected function getEventDispatcher()
     {
-        if (!$this->container) {
+        if ( ! $this->container) {
             return null;
         }
         return $this->container->get('event_dispatcher');
@@ -629,7 +572,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     {
         $eventDispatcher = $this->getEventDispatcher();
 
-        if (!$eventDispatcher) {
+        if ( ! $eventDispatcher) {
             return;
         }
 

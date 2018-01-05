@@ -90,18 +90,17 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     public function getBundles();
 
     /**
-     * Returns a bundle and optionally its descendants by its name.
+     * Returns a bundle
      *
      * @param string  $name  Bundle name
-     * @param bool    $first Whether to return the first bundle only or together with its descendants
      *
-     * @return BundleInterface|BundleInterface[] A BundleInterface instance or an array of BundleInterface instances if $first is false
+     * @return BundleInterface A BundleInterface instance
      *
      * @throws \InvalidArgumentException when the bundle is not enabled
      *
      * @api
      */
-    public function getBundle($name, $first = true);
+    public function getBundle($name);
 
     /**
      * Gets the name of the kernel.

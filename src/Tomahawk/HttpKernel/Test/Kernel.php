@@ -6,11 +6,6 @@ use Tomahawk\HttpKernel\Kernel as BaseKernel;
 
 class Kernel extends BaseKernel
 {
-    public function getBundleMap()
-    {
-        return $this->bundleMap;
-    }
-
     public function registerBundles()
     {
         return array();

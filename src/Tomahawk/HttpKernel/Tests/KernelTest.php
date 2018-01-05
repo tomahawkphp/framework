@@ -183,57 +183,21 @@ class KernelTest extends TestCase
         $kernel->handle($request, $type, $catch);
     }
 
-    public function te2stLocateResourceOnDirectories()
-    {
-        $kernel = $this->getKernel(array('getBundle'));
-        $kernel
-            ->expects($this->exactly(2))
-            ->method('getBundle')
-            ->will($this->returnValue(array($this->getBundle(__DIR__.'/Fixtures/FooBundle', null, null, 'FooBundle'))))
-        ;
-
-        $this->assertEquals(
-            __DIR__.'/Fixtures/Resources/FooBundle/',
-            $kernel->locateResource('@FooBundle/Resources/', __DIR__.'/Fixtures/Resources')
-        );
-        $this->assertEquals(
-            __DIR__.'/Fixtures/Resources/FooBundle',
-            $kernel->locateResource('@FooBundle/Resources', __DIR__.'/Fixtures/Resources')
-        );
-
-        $kernel = $this->getKernel(array('getBundle'));
-        $kernel
-            ->expects($this->exactly(2))
-            ->method('getBundle')
-            ->will($this->returnValue(array($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle', null, null, 'Bundle1Bundle'))))
-        ;
-
-        $this->assertEquals(
-            __DIR__.'/Fixtures/Bundle1Bundle/Resources/',
-            $kernel->locateResource('@Bundle1Bundle/Resources/')
-        );
-        $this->assertEquals(
-            __DIR__.'/Fixtures/Bundle1Bundle/Resources',
-            $kernel->locateResource('@Bundle1Bundle/Resources')
-        );
-    }
-
     public function testInitializeBundles()
     {
-        $parent = $this->getBundle(null, null, 'ParentABundle');
-        $child = $this->getBundle(null, 'ParentABundle', 'ChildABundle');
+        $bundle = $this->getBundle(null, 'ABundle');
 
         // use test kernel so we can access getBundleMap()
         $kernel = $this->getKernelForTest(array('registerBundles', 'registerEvents'));
         $kernel
             ->expects($this->once())
             ->method('registerBundles')
-            ->will($this->returnValue(array($parent, $child)))
+            ->will($this->returnValue([$bundle]))
         ;
         $kernel->boot();
 
-        $map = $kernel->getBundleMap();
-        $this->assertEquals(array($child, $parent), $map['ParentABundle']);
+        $map = $kernel->getBundles();
+        $this->assertEquals(['ABundle' => $bundle], $map);
     }
 
     /**
@@ -248,94 +212,14 @@ class KernelTest extends TestCase
 
     }
 
-    public function testBarBundle()
-    {
-        $kernel = new KernelForTestWithBundles('test', true);
-
-        $kernel->boot();
-
-        $bundle = $kernel->getBundle('BarBundle', false);
-        $this->assertTrue(is_array($bundle));
-
-        $bundle2 = $kernel->getBundle('BarBundle', true);
-        $this->assertInstanceOf('Tomahawk\HttpKernel\Test\Bundles\BarBundle\BarBundle', $bundle2);
-    }
-
-    public function testInitializeBundlesSupportInheritanceCascade()
-    {
-        $grandparent = $this->getBundle(null, null, 'GrandParentBBundle');
-        $parent = $this->getBundle(null, 'GrandParentBBundle', 'ParentBBundle');
-        $child = $this->getBundle(null, 'ParentBBundle', 'ChildBBundle');
-
-        // use test kernel so we can access getBundleMap()
-        $kernel = $this->getKernelForTest(array('registerBundles', 'registerEvents'));
-        $kernel
-            ->expects($this->once())
-            ->method('registerBundles')
-            ->will($this->returnValue(array($grandparent, $parent, $child)))
-        ;
-        $kernel->boot();
-
-        $map = $kernel->getBundleMap();
-        $this->assertEquals(array($child, $parent, $grandparent), $map['GrandParentBBundle']);
-        $this->assertEquals(array($child, $parent), $map['ParentBBundle']);
-        $this->assertEquals(array($child), $map['ChildBBundle']);
-    }
-
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Bundle "ChildCBundle" extends bundle "FooBar", which is not registered.
-     */
-    public function testInitializeBundlesThrowsExceptionWhenAParentDoesNotExists()
-    {
-        $child = $this->getBundle(null, 'FooBar', 'ChildCBundle');
-        $kernel = $this->getKernel(array(), array($child));
-        $kernel->boot();
-    }
-
-    public function testInitializeBundlesSupportsArbitraryBundleRegistrationOrder()
-    {
-        $grandparent = $this->getBundle(null, null, 'GrandParentCBundle');
-        $parent = $this->getBundle(null, 'GrandParentCBundle', 'ParentCBundle');
-        $child = $this->getBundle(null, 'ParentCBundle', 'ChildCBundle');
-
-        // use test kernel so we can access getBundleMap()
-        $kernel = $this->getKernelForTest(array('registerBundles', 'registerEvents'));
-        $kernel
-            ->expects($this->once())
-            ->method('registerBundles')
-            ->will($this->returnValue(array($parent, $grandparent, $child)))
-        ;
-        $kernel->boot();
-
-        $map = $kernel->getBundleMap();
-        $this->assertEquals(array($child, $parent, $grandparent), $map['GrandParentCBundle']);
-        $this->assertEquals(array($child, $parent), $map['ParentCBundle']);
-        $this->assertEquals(array($child), $map['ChildCBundle']);
-    }
-
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Bundle "ParentCBundle" is directly extended by two bundles "ChildC2Bundle" and "ChildC1Bundle".
-     */
-    public function testInitializeBundlesThrowsExceptionWhenABundleIsDirectlyExtendedByTwoBundles()
-    {
-        $parent = $this->getBundle(null, null, 'ParentCBundle');
-        $child1 = $this->getBundle(null, 'ParentCBundle', 'ChildC1Bundle');
-        $child2 = $this->getBundle(null, 'ParentCBundle', 'ChildC2Bundle');
-
-        $kernel = $this->getKernel(array(), array($parent, $child1, $child2));
-        $kernel->boot();
-    }
-
     /**
      * @expectedException \LogicException
      * @expectedExceptionMessage Trying to register two bundles with the same name "DuplicateName"
      */
     public function testInitializeBundleThrowsExceptionWhenRegisteringTwoBundlesWithTheSameName()
     {
-        $fooBundle = $this->getBundle(null, null, 'FooBundle', 'DuplicateName');
-        $barBundle = $this->getBundle(null, null, 'BarBundle', 'DuplicateName');
+        $fooBundle = $this->getBundle(null, 'FooBundle', 'DuplicateName');
+        $barBundle = $this->getBundle(null, 'BarBundle', 'DuplicateName');
 
         $kernel = $this->getKernel(array(), array($fooBundle, $barBundle));
         $kernel->boot();
@@ -382,18 +266,6 @@ class KernelTest extends TestCase
 
         $kernel->boot();
         $kernel->terminate(Request::create('/'), new Response());
-    }
-
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Bundle "CircularRefBundle" can not extend itself.
-     */
-    public function testInitializeBundleThrowsExceptionWhenABundleExtendsItself()
-    {
-        $circularRef = $this->getBundle(null, 'CircularRefBundle', 'CircularRefBundle');
-
-        $kernel = $this->getKernel(array(), array($circularRef));
-        $kernel->boot();
     }
 
     public function testPaths()
@@ -464,7 +336,7 @@ class KernelTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundle')
-            ->will($this->returnValue(array($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle'))))
+            ->will($this->returnValue($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle')))
         ;
 
         $kernel->locateResource('@Bundle1Bundle/config/routing.xml');
@@ -476,62 +348,10 @@ class KernelTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundle')
-            ->will($this->returnValue(array($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle'))))
+            ->will($this->returnValue($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle')))
         ;
 
         $this->assertEquals(__DIR__.'/Fixtures/Bundle1Bundle/foo.txt', $kernel->locateResource('@Bundle1Bundle/foo.txt'));
-    }
-
-    public function testLocateResourceReturnsTheFirstThatMatchesWithParent()
-    {
-        $parent = $this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle');
-        $child = $this->getBundle(__DIR__.'/Fixtures/Bundle2Bundle');
-
-        $kernel = $this->getKernel(array('getBundle'));
-        $kernel
-            ->expects($this->exactly(2))
-            ->method('getBundle')
-            ->will($this->returnValue(array($child, $parent)))
-        ;
-
-        $this->assertEquals(__DIR__.'/Fixtures/Bundle2Bundle/foo.txt', $kernel->locateResource('@ParentAABundle/foo.txt'));
-        $this->assertEquals(__DIR__.'/Fixtures/Bundle1Bundle/bar.txt', $kernel->locateResource('@ParentAABundle/bar.txt'));
-    }
-
-    public function testLocateResourceReturnsAllMatches()
-    {
-        $parent = $this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle');
-        $child = $this->getBundle(__DIR__.'/Fixtures/Bundle2Bundle');
-
-        $kernel = $this->getKernel(array('getBundle'));
-        $kernel
-            ->expects($this->once())
-            ->method('getBundle')
-            ->will($this->returnValue(array($child, $parent)))
-        ;
-
-        $this->assertEquals(array(
-                __DIR__.'/Fixtures/Bundle2Bundle/foo.txt',
-                __DIR__.'/Fixtures/Bundle1Bundle/foo.txt'),
-            $kernel->locateResource('@Bundle1Bundle/foo.txt', null, false));
-    }
-
-    public function testLocateResourceReturnsAllMatchesBis()
-    {
-        $kernel = $this->getKernel(array('getBundle'));
-        $kernel
-            ->expects($this->once())
-            ->method('getBundle')
-            ->will($this->returnValue(array(
-                $this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle'),
-                $this->getBundle(__DIR__.'/Foobar')
-            )))
-        ;
-
-        $this->assertEquals(
-            array(__DIR__.'/Fixtures/Bundle1Bundle/foo.txt'),
-            $kernel->locateResource('@Bundle1Bundle/foo.txt', null, false)
-        );
     }
 
     public function testLocateResourceIgnoresDirOnNonResource()
@@ -540,7 +360,7 @@ class KernelTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundle')
-            ->will($this->returnValue(array($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle'))))
+            ->will($this->returnValue($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle')))
         ;
 
         $this->assertEquals(
@@ -555,7 +375,7 @@ class KernelTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundle')
-            ->will($this->returnValue(array($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle', null, null, 'Bundle1Bundle'))))
+            ->will($this->returnValue($this->getBundle(__DIR__.'/Fixtures/Bundle1Bundle', null, 'Bundle1Bundle')))
         ;
 
         $this->assertEquals(array(
@@ -571,7 +391,7 @@ class KernelTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundle')
-            ->will($this->returnValue(array($this->getBundle(__DIR__.'/Fixtures/FooBundle', null, null, 'FooBundle'))))
+            ->will($this->returnValue($this->getBundle(__DIR__.'/Fixtures/FooBundle', null, 'FooBundle')))
         ;
 
         $this->assertEquals(
@@ -580,7 +400,7 @@ class KernelTest extends TestCase
         );
     }
 
-    public function testLocateResourceOverrideBundleAndResourcesFolders()
+    /*public function testLocateResourceOverrideBundleAndResourcesFolders()
     {
         $parent = $this->getBundle(__DIR__.'/Fixtures/BaseBundle', null, 'BaseBundle', 'BaseBundle');
         $child = $this->getBundle(__DIR__.'/Fixtures/ChildBundle', 'ParentBundle', 'ChildBundle', 'ChildBundle');
@@ -616,7 +436,7 @@ class KernelTest extends TestCase
             $this->fail('Hidden resources should raise an exception when returning the first matching path');
         } catch (\RuntimeException $e) {
         }
-    }
+    }*/
 
     public function testRoutesPaths()
     {
@@ -670,16 +490,15 @@ class KernelTest extends TestCase
      * Returns a mock for the BundleInterface
      *
      * @param null $dir
-     * @param null $parent
      * @param null $className
      * @param null $bundleName
      * @return BundleInterface
      */
-    protected function getBundle($dir = null, $parent = null, $className = null, $bundleName = null)
+    protected function getBundle($dir = null, $className = null, $bundleName = null)
     {
         $bundle = $this
             ->getMockBuilder('Tomahawk\HttpKernel\Bundle\BundleInterface')
-            ->setMethods(array('getPath', 'getParent', 'getName'))
+            ->setMethods(['getPath', 'getName'])
             ->disableOriginalConstructor();
 
         if ($className) {
@@ -697,11 +516,6 @@ class KernelTest extends TestCase
             ->expects($this->any())
             ->method('getPath')
             ->will($this->returnValue($dir));
-
-        $bundle
-            ->expects($this->any())
-            ->method('getParent')
-            ->will($this->returnValue($parent));
 
         return $bundle;
     }
