@@ -73,6 +73,10 @@ class RoutingServiceProviderTest extends TestCase
             ->will($this->returnValue(__DIR__ .'/'));
 
         $kernel->expects($this->any())
+            ->method('getProjectDir')
+            ->will($this->returnValue(__DIR__ .'/'));
+
+        $kernel->expects($this->any())
             ->method('getRoutePaths')
             ->will($this->returnValue(array(
                 __DIR__ .'/Resources/bundleroutes/routes.php'

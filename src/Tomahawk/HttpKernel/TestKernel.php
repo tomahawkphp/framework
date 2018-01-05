@@ -21,6 +21,12 @@ class TestKernel extends Kernel
         return $this;
     }
 
+    public function setProjectDir($projectDir)
+    {
+        $this->projectDir = $projectDir;
+        return $this;
+    }
+
     public function registerBundles()
     {
         $bundles = array(

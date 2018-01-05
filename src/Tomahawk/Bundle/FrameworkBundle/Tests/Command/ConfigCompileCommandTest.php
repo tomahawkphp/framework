@@ -30,6 +30,7 @@ class ConfigCompileCommandTest extends TestCase
     {
         $app = new TestKernel('prod', false);
         $app->setRootDir(__DIR__ .'/../Resources');
+        $app->setProjectDir(__DIR__ .'/../Resources');
         $app->boot();
         $application = new Application($app);
         $application->setAutoExit(false);
