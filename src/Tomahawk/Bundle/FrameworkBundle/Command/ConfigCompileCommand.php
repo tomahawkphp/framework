@@ -26,7 +26,7 @@ class ConfigCompileCommand extends Command implements ContainerAwareInterface
 
         $kernel = $this->container->get('kernel');
 
-        $rootPath = $kernel->getRootDir();
+        $rootPath = $kernel->getProjectDir();
 
         $env = $kernel->getEnvironment();
 

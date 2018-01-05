@@ -19,6 +19,7 @@ use Tomahawk\Config\ConfigManager;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\FileLocator;
+use Tomahawk\HttpKernel\KernelInterface;
 
 class ConfigServiceProvider implements ServiceProviderInterface
 {
@@ -26,8 +27,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
     {
         $container->set('Symfony\Component\Config\Loader\LoaderInterface', function(ContainerInterface $c) {
 
+            /** @var KernelInterface $kernel */
             $kernel = $c['kernel'];
-            $defaultPath = $kernel->getRootDir() .'/Resources/config';
+            $defaultPath = $kernel->getProjectDir() .'/config';
 
             $locator = new FileLocator(array($defaultPath));
 
@@ -45,15 +47,15 @@ class ConfigServiceProvider implements ServiceProviderInterface
 
             $kernel = $c['kernel'];
 
-            $cacheFile = sprintf($kernel->getRootDir(). '/config/config_%s.php', $kernel->getEnvironment());
+            $cacheFile = sprintf($kernel->getProjectDir(). '/config/config_%s.php', $kernel->getEnvironment());
 
             $paths = array(
-                $kernel->getRootDir() .'/config',
+                $kernel->getProjectDir() .'/config',
             );
 
             // Check if we have an environment config
-            if (file_exists($kernel->getRootDir() .'/config/' . $kernel->getEnvironment())) {
-                $paths[] = $kernel->getRootDir() .'/config/' . $kernel->getEnvironment();
+            if (file_exists($kernel->getProjectDir() .'/config/' . $kernel->getEnvironment())) {
+                $paths[] = $kernel->getProjectDir() .'/config/' . $kernel->getEnvironment();
             }
 
             $config = new ConfigManager($c['config_loader'], $paths, $cacheFile);

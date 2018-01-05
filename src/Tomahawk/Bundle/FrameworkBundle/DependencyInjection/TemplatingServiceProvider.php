@@ -73,7 +73,7 @@ class TemplatingServiceProvider implements ServiceProviderInterface
         });
 
         $container->set('file.locator', function(ContainerInterface $c) {
-            return new FileLocator($c['kernel'], $c['kernel']->getRootDir() . '/Resources/');
+            return new FileLocator($c['kernel'], $c['kernel']->getProjectDir());
         });
 
         $container->set('template.name_parser', function(ContainerInterface $c) {
@@ -169,7 +169,7 @@ class TemplatingServiceProvider implements ServiceProviderInterface
         $container->set('templating.engine.twig', function(ContainerInterface $c) {
             $kernel = $c['kernel'];
 
-            $locator = new FileLocator($kernel, $kernel->getRootDir() . '/Resources/');
+            $locator = new FileLocator($kernel, $kernel->getProjectDir());
             $parser = $c['template.name_parser'];
 
             $twig = $c['twig'];

@@ -36,7 +36,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
             $kernel = $c['kernel'];
 
-            $defaultPath = $kernel->getRootDir() .'/Resources';
+            $defaultPath = $kernel->getProjectDir() .'/config';
 
             $locator = new FileLocator($kernel, $defaultPath);
 

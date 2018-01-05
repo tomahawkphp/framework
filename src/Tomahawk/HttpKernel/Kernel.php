@@ -38,6 +38,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $rootDir;
 
     /**
+     * @var mixed|string
+     */
+    protected $projectDir;
+
+    /**
      * @var string
      */
     protected $environment;
@@ -260,6 +265,27 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         }
 
         return $this->rootDir;
+    }
+
+    /**
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir()
+    {
+        if (null === $this->projectDir) {
+            $r = new \ReflectionObject($this);
+            $dir = $rootDir = dirname($r->getFileName());
+            while (!file_exists($dir.'/composer.json')) {
+                if ($dir === dirname($dir)) {
+                    return $this->projectDir = $rootDir;
+                }
+                $dir = dirname($dir);
+            }
+            $this->projectDir = $dir;
+        }
+        return $this->projectDir;
     }
 
     /**

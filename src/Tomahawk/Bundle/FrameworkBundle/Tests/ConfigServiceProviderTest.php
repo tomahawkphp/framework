@@ -9,7 +9,7 @@ use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider as
 class ConfigServiceProviderTest extends TestCase
 {
     /**
-     * @covers Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider
+     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider
      */
     public function testProvider()
     {
@@ -37,6 +37,10 @@ class ConfigServiceProviderTest extends TestCase
 
         $kernel->expects($this->any())
             ->method('getRootDir')
+            ->will($this->returnValue(__DIR__ .'/Resources'));
+
+        $kernel->expects($this->any())
+            ->method('getProjectDir')
             ->will($this->returnValue(__DIR__ .'/Resources'));
 
         return $kernel;
