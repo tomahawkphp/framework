@@ -48,8 +48,6 @@ span.axe-profiler-count {
     display:inline-block !important;
     padding:0.1em 0.5em 0.2em 0.5em !important;
     color:#eee !important;
-    border-radius: 12px;
-    border-bottom-left-radius: 0;
     -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
 }
 
@@ -147,7 +145,6 @@ span.axe-profiler-count {
     color: #fff;
     background-color: #666;
     padding: 3px 6px;
-    border-radius: 3px;
     margin-bottom: 2px;
     vertical-align: middle;
     min-width: 6px;
@@ -155,8 +152,6 @@ span.axe-profiler-count {
 }
 
 .axe-toolbar-block .axe-toolbar-icon .axe-toolbar-status {
-    border-radius: 12px;
-    border-bottom-left-radius: 0;
     margin-top: 0;
 }
 
@@ -216,7 +211,6 @@ span.axe-profiler-count {
     word-wrap: break-word;
     border: 0 none;
     background: #ffffff;
-    border-radius: 0;
     padding: 5px 10px;
     margin: 0;
     color: #333333;
