@@ -108,9 +108,9 @@ class ControllerNameParserTest extends TestCase
     protected function createParser()
     {
         $bundles = array(
-            'TestBundle' => array($this->getBundle('TestBundle', 'TestBundle')),
-            'BarBundle' => array($this->getBundle('FooBundle\BarBundle', 'BarBundle'), $this->getBundle('FooTestBundle', 'FooTestBundle')),
-            'BazBundle' => array($this->getBundle('FooBundle\BazBundle', 'BazBundle')),
+            'TestBundle' => $this->getBundle('TestBundle', 'TestBundle'),
+            'BarBundle' => $this->getBundle('FooBundle\BarBundle', 'BarBundle'),
+            'BazBundle' => $this->getBundle('FooBundle\BazBundle', 'BazBundle'),
         );
 
         $kernel = $this->getMockBuilder('Tomahawk\HttpKernel\KernelInterface')->getMock();
