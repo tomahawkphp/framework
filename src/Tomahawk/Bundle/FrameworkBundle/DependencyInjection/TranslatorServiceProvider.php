@@ -11,12 +11,12 @@
 
 namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
 
+use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as TransPhpFileLoader;
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator;
 
 class TranslatorServiceProvider implements ServiceProviderInterface
@@ -35,7 +35,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                 $cacheDir = null;
             }
 
-            $translator = new Translator($locale, new MessageSelector(), $cacheDir);
+            $translator = new Translator($locale, new MessageFormatter(), $cacheDir);
             $translator->setFallbackLocales(array($fallbackLocale));
             $translator->addLoader('php', new TransPhpFileLoader());
             $translator->addLoader('array', new ArrayLoader());

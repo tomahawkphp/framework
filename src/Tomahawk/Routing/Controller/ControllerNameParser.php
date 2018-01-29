@@ -62,11 +62,9 @@ class ControllerNameParser
 
         $controller = str_replace('/', '\\', $controller);
 
-        $bundles = array();
-
         try {
             // this throws an exception if there is no such bundle
-            $allBundles = $this->kernel->getBundle($bundle, false);
+            $bundleClass = $this->kernel->getBundle($bundle);
         }
         catch (\InvalidArgumentException $e) {
             $message = sprintf('The "%s" (from the _controller value "%s") does not exist or is not enabled in your kernel!', $bundle, $originalController);
@@ -74,20 +72,13 @@ class ControllerNameParser
             throw new \InvalidArgumentException($message, 0, $e);
         }
 
-        foreach ($allBundles as $b) {
-            $try = $b->getNamespace().'\\Controller\\'.$controller.'Controller';
+        $try = $bundleClass->getNamespace().'\\Controller\\'.$controller.'Controller';
 
-            if (class_exists($try)) {
-                return $try.'::'.$action.'Action';
-            }
-
-            $bundles[] = $b->getName();
-            $msg = sprintf('The _controller value "%s:%s:%s" maps to a "%s" class, but this class was not found. Create this class or check the spelling of the class and its namespace.', $bundle, $controller, $action, $try);
+        if (class_exists($try)) {
+            return $try.'::'.$action.'Action';
         }
 
-        if (count($bundles) > 1) {
-            $msg = sprintf('Unable to find controller "%s:%s" in bundles %s.', $bundle, $controller, implode(', ', $bundles));
-        }
+        $msg = sprintf('The _controller value "%s:%s:%s" maps to a "%s" class, but this class was not found. Create this class or check the spelling of the class and its namespace.', $bundle, $controller, $action, $try);
 
         throw new \InvalidArgumentException($msg);
 
