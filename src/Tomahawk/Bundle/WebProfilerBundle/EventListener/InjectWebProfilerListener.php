@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Tomahawk\Bundle\WebProfilerBundle\Profiler;
 use Tomahawk\DependencyInjection\ContainerInterface;
+use Tomahawk\HttpKernel\KernelInterface;
 
 class InjectWebProfilerListener implements EventSubscriberInterface
 {
@@ -22,6 +23,11 @@ class InjectWebProfilerListener implements EventSubscriberInterface
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
+        // If we're in a sub request don't append web profiler bar
+        if (KernelInterface::SUB_REQUEST === $event->getRequestType()) {
+            return;
+        }
+
         if ($response = $event->getResponse()) {
             $content = $response->getContent();
 
