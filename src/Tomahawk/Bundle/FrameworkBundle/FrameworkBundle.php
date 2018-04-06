@@ -46,8 +46,6 @@ class FrameworkBundle extends Bundle
 
         $this->container->register(new ConfigServiceProvider());
 
-        $this->container->register(new TemplatingServiceProvider());
-
         $this->container->register(new TranslatorServiceProvider());
 
         $this->container->register(new RoutingServiceProvider());

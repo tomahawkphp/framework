@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
+namespace Tomahawk\Bundle\TemplatingBundle\DependencyInjection;
 
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
@@ -28,16 +28,17 @@ use Tomahawk\HttpKernel\Config\FileLocator;
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\Templating\PhpEngine;
+use Twig\Environment;
 
 class TemplatingServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
     {
-        $container->set('php.helper.slots', function(ContainerInterface $c) {
+        $container->set('php.helper.slots', function() {
             return new SlotsHelper();
         });
 
-        $container->set('php.helper.blocks', function(ContainerInterface $c) {
+        $container->set('php.helper.blocks', function() {
             return new BlocksHelper();
         });
 

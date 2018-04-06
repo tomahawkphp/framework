@@ -1,10 +1,10 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Tests;
+namespace Tomahawk\Bundle\TemplatingBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingServiceProvider as TemplatingProvider;
+use Tomahawk\Bundle\TemplatingBundle\DependencyInjection\TemplatingServiceProvider as TemplatingProvider;
 
 class TemplatingServiceProviderTest extends TestCase
 {
