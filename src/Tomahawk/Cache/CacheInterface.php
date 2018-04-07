@@ -11,6 +11,10 @@
 
 namespace Tomahawk\Cache;
 
+/**
+ * Interface CacheInterface
+ * @package Tomahawk\Cache
+ */
 interface CacheInterface
 {
 

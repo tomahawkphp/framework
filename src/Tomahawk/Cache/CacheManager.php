@@ -13,6 +13,10 @@ namespace Tomahawk\Cache;
 
 use Tomahawk\Cache\Provider\CacheProviderInterface;
 
+/**
+ * Class CacheManager
+ * @package Tomahawk\Cache
+ */
 class CacheManager implements CacheInterface
 {
     /**
@@ -49,7 +53,7 @@ class CacheManager implements CacheInterface
      */
     public function save($id, $value, $lifetime = false)
     {
-        $this->cacheProvider->save($id, $value, $lifetime);
+        return $this->cacheProvider->save($id, $value, $lifetime);
     }
 
     /**
@@ -71,7 +75,7 @@ class CacheManager implements CacheInterface
      */
     public function delete($id)
     {
-        $this->cacheProvider->delete($id);
+        return $this->cacheProvider->delete($id);
     }
 
     /**
@@ -81,7 +85,7 @@ class CacheManager implements CacheInterface
      */
     public function flush()
     {
-        $this->cacheProvider->flush();
+        return $this->cacheProvider->flush();
     }
 
     /**
