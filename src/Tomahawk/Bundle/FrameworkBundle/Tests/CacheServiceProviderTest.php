@@ -29,8 +29,6 @@ class CacheServiceProviderTest extends TestCase
         $cacheProvider->register($container);
 
         $this->assertInstanceOf('Tomahawk\Cache\Provider\ArrayProvider', $container->get('cache.providers.array'));
-        $this->assertInstanceOf('Tomahawk\Cache\Provider\ApcuProvider', $container->get('cache.providers.apcu'));
-        $this->assertInstanceOf('Tomahawk\Cache\Provider\XcacheProvider', $container->get('cache.providers.xcache'));
         $this->assertInstanceOf('Tomahawk\Cache\Provider\FilesystemProvider', $container->get('cache.providers.filesystem'));
     }
 
