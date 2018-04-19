@@ -16,7 +16,7 @@ interface ConfigInterface
     /**
      * @param null $key
      * @param null $default
-     * @return array|null
+     * @return mixed|null
      */
     public function get($key = null, $default = null);
 

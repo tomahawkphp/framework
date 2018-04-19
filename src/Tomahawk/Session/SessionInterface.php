@@ -15,6 +15,10 @@ use Tomahawk\Session\Bag\OldInputBagInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface as SymfonySessionInterface;
 
+/**
+ * Interface SessionInterface
+ * @package Tomahawk\Session
+ */
 interface SessionInterface extends SymfonySessionInterface
 {
     /**

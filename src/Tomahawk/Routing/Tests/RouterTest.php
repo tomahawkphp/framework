@@ -196,6 +196,41 @@ class RouterTest extends TestCase
         $this->assertEquals('class', $adminRoute->getOption('option'));
     }
 
+    public function testGroupNamespace()
+    {
+        $routeCollection = new RouteCollection();
+        $router = new Router();
+        $router->setRoutes($routeCollection);
+
+        $test = $this;
+
+        $router->group(array(
+            'domain' => 'http:/example.com',
+            'prefix' => '/admin',
+            'methods' => ['GET'],
+            'schemes' => 'https',
+            'requirements' => ['test' => "\d+"],
+            'defaults' => ['version' => 1],
+            'options' => ['option' => 'class'],
+            'namespace' => 'App\\Controllers',
+        ), function(Router $router, RouteCollection $collection) use ($test) {
+
+            $test->assertTrue($router->getInGroup());
+
+            $router->any('/', 'admin_home', 'AdminController');
+
+        });
+
+        $adminRoute = $router->getRoutes()->get('admin_home');
+
+        $this->assertEquals(array('https'), $adminRoute->getSchemes());
+        $this->assertEquals('/admin', $adminRoute->getPath());
+        $this->assertEquals(1, $adminRoute->getDefault('version'));
+        $this->assertEquals("\d+", $adminRoute->getRequirement('test'));
+        $this->assertEquals('class', $adminRoute->getOption('option'));
+        $this->assertEquals('App\\Controllers\\AdminController', $adminRoute->getDefault('_controller'));
+    }
+
     /**
      * @expectedException \RuntimeException
      */

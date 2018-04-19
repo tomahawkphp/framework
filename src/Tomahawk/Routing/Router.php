@@ -28,11 +28,18 @@ class Router
     protected $routes;
 
     /**
-     * @param RouteCollection $routes
+     * @var string
      */
-    public function __construct(RouteCollection $routes = null)
+    protected $namespace;
+
+    /**
+     * @param RouteCollection $routes
+     * @param string|null $namespace
+     */
+    public function __construct(RouteCollection $routes = null, string $namespace = null)
     {
         $this->routes = $routes ?: new RouteCollection();
+        $this->namespace = $namespace;
     }
 
     /**
@@ -187,6 +194,10 @@ class Router
             $path = $this->formatPath($path); //Symfony always stores with a starting slash
         }
 
+        if ($this->namespace && is_string($callback)) {
+            $callback = $this->namespace .'\\' . $callback;
+        }
+
         // Create a new Route class
         $route = new Route($path, array('_controller' => $callback));
         $route->setSchemes($schemes);
@@ -220,6 +231,7 @@ class Router
     public function group($options, \Closure $callback)
     {
         $prefix = null;
+        $namespace = $options['namespace'] ?? null;
 
         if ( ! (is_string($options) || is_array($options))) {
             throw new \RuntimeException('Options must either be a string or array');
@@ -233,12 +245,13 @@ class Router
             $prefix = $options['prefix'];
         }
 
+
         $subCollection = new RouteCollection();
 
-        $subRouter = new self();
+        $subRouter = new self($subCollection, $namespace);
         $subRouter
             ->setInGroup(true)
-            ->setRoutes($subCollection);
+        ;
 
         $callback($subRouter, $subCollection);
 

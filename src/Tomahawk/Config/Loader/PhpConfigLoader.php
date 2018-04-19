@@ -13,6 +13,10 @@ namespace Tomahawk\Config\Loader;
 
 use Symfony\Component\Config\Loader\FileLoader;
 
+/**
+ * Class PhpConfigLoader
+ * @package Tomahawk\Config\Loader
+ */
 class PhpConfigLoader extends FileLoader
 {
     /**
@@ -21,7 +25,6 @@ class PhpConfigLoader extends FileLoader
     public function load($resource, $type = null)
     {
         $configValues = require($resource);
-
         return $configValues;
     }
 

@@ -14,6 +14,10 @@ namespace Tomahawk\Config\Loader;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class YamlConfigLoader
+ * @package Tomahawk\Config\Loader
+ */
 class YamlConfigLoader extends FileLoader
 {
     /**

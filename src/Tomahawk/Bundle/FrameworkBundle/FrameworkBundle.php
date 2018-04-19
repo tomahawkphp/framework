@@ -16,13 +16,10 @@ use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\CookieListener;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\StringResponseListener;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthenticationServiceProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CommandBusServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorServiceProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\CacheServiceProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TemplatingServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,10 +36,6 @@ class FrameworkBundle extends Bundle
         $this->container->register(new FrameworkServiceProvider());
 
         $this->container->register(new AuthenticationServiceProvider());
-
-        $this->container->register(new CacheServiceProvider());
-
-        $this->container->register(new CommandBusServiceProvider());
 
         $this->container->register(new ConfigServiceProvider());
 

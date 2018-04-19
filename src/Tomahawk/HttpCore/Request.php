@@ -12,11 +12,26 @@
 namespace Tomahawk\HttpCore;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Tomahawk\Session\SessionInterface;
 
+/**
+ * Class Request
+ * @package Tomahawk\HttpCore
+ */
 class Request extends SymfonyRequest
 {
     public function getOld($name, $default = null)
     {
-        return $this->getSession()->getOldInputBag()->get($name, $default);
+        /** @var SessionInterface $session */
+        $session = $this->getSession();
+        return $session->getOldInputBag()->get($name, $default);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Session\SessionInterface|SessionInterface
+     */
+    public function session()
+    {
+        return $this->session;
     }
 }

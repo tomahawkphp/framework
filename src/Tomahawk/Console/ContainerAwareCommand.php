@@ -15,6 +15,10 @@ use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Console\Command\Command;
 
+/**
+ * Class ContainerAwareCommand
+ * @package Tomahawk\Console
+ */
 abstract class ContainerAwareCommand extends Command implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
