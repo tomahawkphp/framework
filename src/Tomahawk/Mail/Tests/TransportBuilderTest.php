@@ -1,13 +1,15 @@
 <?php
 
-namespace Tomahawk\Bundle\SwiftmailerBundle\Tests;
+namespace Tomahawk\Mail\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Tomahawk\Bundle\SwiftmailerBundle\TransportBuilder;
+use Swift_NullTransport;
+use Swift_SendmailTransport;
+use Swift_SmtpTransport;
+use Tomahawk\Mail\TransportBuilder;
 
 class TransportBuilderTest extends TestCase
 {
-
     public function testBuildGmail()
     {
         $config = array(
@@ -16,7 +18,7 @@ class TransportBuilderTest extends TestCase
             'password'  => 'password',
         );
 
-        $this->assertInstanceOf('Swift_SmtpTransport', TransportBuilder::build($config));
+        $this->assertInstanceOf(Swift_SmtpTransport::class, TransportBuilder::build($config));
     }
 
     public function testBuildSmtp()
@@ -30,7 +32,7 @@ class TransportBuilderTest extends TestCase
             'security'  => 'ssl',
         );
 
-        $this->assertInstanceOf('Swift_SmtpTransport', TransportBuilder::build($config));
+        $this->assertInstanceOf(Swift_SmtpTransport::class, TransportBuilder::build($config));
     }
 
     public function testBuildSendMailTransport()
@@ -39,16 +41,7 @@ class TransportBuilderTest extends TestCase
             'transport' => 'sendmail',
         );
 
-        $this->assertInstanceOf('Swift_SendmailTransport', TransportBuilder::build($config));
-    }
-
-    public function testBuildMailTransport()
-    {
-        $config = array(
-            'transport' => 'mail',
-        );
-
-        $this->assertInstanceOf('Swift_MailTransport', TransportBuilder::build($config));
+        $this->assertInstanceOf(Swift_SendmailTransport::class, TransportBuilder::build($config));
     }
 
     public function testBuildNullTransport()
@@ -57,6 +50,6 @@ class TransportBuilderTest extends TestCase
             'transport' => 'null',
         );
 
-        $this->assertInstanceOf('Swift_NullTransport', TransportBuilder::build($config));
+        $this->assertInstanceOf(Swift_NullTransport::class, TransportBuilder::build($config));
     }
 }

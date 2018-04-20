@@ -9,8 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\SwiftmailerBundle;
+namespace Tomahawk\Mail;
 
+/**
+ * Class TransportBuilder
+ * @package Tomahawk\Mail
+ */
 class TransportBuilder
 {
     public static function build(array $config)
@@ -25,9 +29,6 @@ class TransportBuilder
         }
         else if ('sendmail' === $type) {
             $transport = static::buildSendMailTransport();
-        }
-        else if ('mail' === $type) {
-            $transport = static::buildMailTransport();
         }
         else {
             $transport = static::buildNullTransport();
@@ -60,11 +61,6 @@ class TransportBuilder
     public static function buildSendMailTransport()
     {
         return new \Swift_SendmailTransport();
-    }
-
-    public static function buildMailTransport()
-    {
-        return new \Swift_MailTransport();
     }
 
     public static function buildNullTransport()

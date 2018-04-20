@@ -1,16 +1,17 @@
 <?php
 
-namespace Tomahawk\Bundle\SwiftmailerBundle\Tests;
+namespace Tomahawk\Mail\Tests;
 
+use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DependencyInjection\Container;
+use Tomahawk\Mail\MailServiceProvider;
 use PHPUnit\Framework\TestCase;
-use Tomahawk\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerServiceProvider;
 
-class BundleProviderTest extends TestCase
+class MailProviderTest extends TestCase
 {
     public function testBundleProvider()
     {
-        $config = $this->getMockBuilder('Tomahawk\Config\ConfigInterface')->getMock();
+        $config = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $config->expects($this->once())
             ->method('get')
             ->with('swiftmailer')
@@ -21,7 +22,7 @@ class BundleProviderTest extends TestCase
         $container = new Container();
         $container->set('config', $config);
 
-        $provider = new SwiftmailerServiceProvider();
+        $provider = new MailServiceProvider();
         $provider->register($container);
 
         $this->assertTrue($container->has('mailer.transport'));

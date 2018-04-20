@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\SwiftmailerBundle\DependencyInjection;
+namespace Tomahawk\Mail;
 
 use Swift_Mailer;
-use Tomahawk\Bundle\SwiftmailerBundle\TransportBuilder;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 
-class SwiftmailerServiceProvider implements ServiceProviderInterface
+/**
+ * Class MailServiceProvider
+ * @package Tomahawk\Mail
+ */
+class MailServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
     {
