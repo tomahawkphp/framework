@@ -3,12 +3,13 @@
 namespace Tomahawk\Hashing\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Tomahawk\Hashing\ArgonHasher;
 use Tomahawk\Hashing\Hasher;
 use Tomahawk\Hashing\Test\Hasher as TestHasher;
 
 class HashingTest extends TestCase
 {
-    public function testHash()
+    public function testBcryptHashing()
     {
         $hasher = new Hasher();
 
@@ -17,6 +18,19 @@ class HashingTest extends TestCase
         $this->assertTrue($hasher->check('hashmebitch', $value));
         $this->assertTrue(!$hasher->needsRehash($value));
         $this->assertTrue($hasher->needsRehash($value, array('rounds' => 2)));
+    }
+
+    public function testBasicArgonHashing()
+    {
+        if (! defined('PASSWORD_ARGON2I')) {
+            $this->markTestSkipped('PHP not compiled with argon2 hashing support.');
+        }
+        $hasher = new ArgonHasher();
+        $value = $hasher->make('password');
+        $this->assertNotSame('password', $value);
+        $this->assertTrue($hasher->check('password', $value));
+        $this->assertFalse($hasher->needsRehash($value));
+        $this->assertTrue($hasher->needsRehash($value, ['threads' => 1]));
     }
 
     /**
