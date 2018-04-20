@@ -68,7 +68,7 @@ class AuthenticationServiceProvider implements ServiceProviderInterface
 
             return new AuthenticationProvider(
                 $c->get(GuardFactory::class),
-                $config->get('auth.guard.default')
+                $config->get('auth.default')
             );
         });
     }

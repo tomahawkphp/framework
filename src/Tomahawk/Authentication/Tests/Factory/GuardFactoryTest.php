@@ -96,4 +96,68 @@ class GuardFactoryTest extends TestCase
 
         $this->assertInstanceOf(TestGuard::class, $guard);
     }
+
+    /**
+     * @throws \ReflectionException
+     * @throws \Tomahawk\DependencyInjection\Exception\NotFoundException
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCustomGuardFactoryWithNoConfig()
+    {
+        $container = new Container();
+
+        $container->set(SessionInterface::class, $this->createMock(SessionInterface::class));
+        $container->set(UserProviderInterface::class, $this->createMock(UserProviderInterface::class));
+        $container->set(PasswordEncoderInterface::class, $this->createMock(PasswordEncoderInterface::class));
+
+        $configManger = $this->createMock(ConfigInterface::class);
+
+        $configManger->expects($this->once())
+            ->method('get')
+            ->with('auth.guards.user')
+            ->willReturn(null)
+        ;
+
+        $guardFactory = new GuardFactory(
+            $container,
+            $configManger,
+            []
+        );
+
+        $guardFactory->make('user');
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws \Tomahawk\DependencyInjection\Exception\NotFoundException
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCustomGuardFactoryWithNoFactory()
+    {
+        $container = new Container();
+
+        $container->set(SessionInterface::class, $this->createMock(SessionInterface::class));
+        $container->set(UserProviderInterface::class, $this->createMock(UserProviderInterface::class));
+        $container->set(PasswordEncoderInterface::class, $this->createMock(PasswordEncoderInterface::class));
+
+        $configManger = $this->createMock(ConfigInterface::class);
+
+        $configManger->expects($this->once())
+            ->method('get')
+            ->with('auth.guards.user')
+            ->willReturn([
+                'driver' => 'test',
+                'provider' => 'users',
+            ]);
+
+        $guardFactory = new GuardFactory(
+            $container,
+            $configManger,
+            []
+        );
+
+        $guard = $guardFactory->make('user');
+
+        $this->assertInstanceOf(TestGuard::class, $guard);
+    }
 }
