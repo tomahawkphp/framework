@@ -171,7 +171,7 @@ class SessionGuard implements GuardInterface
         $user = null;
 
         if ($username = $this->session->get($this->name)) {
-            $user = $this->userProvider->findUserByUsername($username);
+            $this->user = $user = $this->userProvider->findUserByUsername($username);
         }
 
         if ($user) {

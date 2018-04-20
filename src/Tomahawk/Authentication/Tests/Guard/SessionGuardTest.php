@@ -117,7 +117,6 @@ class SessionGuardTest extends TestCase
         $sessionGuard->login($user);
     }
 
-
     /**
      * @throws \ReflectionException
      */
@@ -149,6 +148,97 @@ class SessionGuardTest extends TestCase
         $this->assertTrue($sessionGuard->isLoggedIn());
         $this->assertFalse($sessionGuard->isGuest());
         $this->assertInstanceOf(UserInterface::class, $sessionGuard->getUser());
+
+        $sessionGuard->logout();
+
+        $this->assertFalse($sessionGuard->isLoggedIn());
+        $this->assertTrue($sessionGuard->isGuest());
+        $this->assertNull($sessionGuard->getUser());
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testLoadUser()
+    {
+        $user = $this->createMock(UserInterface::class);
+
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider->expects($this->once())
+            ->method('findUserByUsername')
+            ->willReturn($user)
+        ;
+
+        $session = $this->createMock(SessionInterface::class);
+        $session->expects($this->once())
+            ->method('get')
+            ->willReturn('username')
+        ;
+
+        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+
+        $sessionGuard->loadUser();
+        $this->assertTrue($sessionGuard->isLoggedIn());
+        $this->assertFalse($sessionGuard->isGuest());
+        $this->assertInstanceOf(UserInterface::class, $sessionGuard->getUser());
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testIsLoginTriggerLoadUser()
+    {
+        $user = $this->createMock(UserInterface::class);
+
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider->expects($this->once())
+            ->method('findUserByUsername')
+            ->willReturn($user)
+        ;
+
+        $session = $this->createMock(SessionInterface::class);
+        $session->expects($this->once())
+            ->method('get')
+            ->willReturn('username')
+        ;
+
+        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+
+        $this->assertTrue($sessionGuard->isLoggedIn());
+        $this->assertFalse($sessionGuard->isGuest());
+        $this->assertInstanceOf(UserInterface::class, $sessionGuard->getUser());
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testLoadUserOnNoUser()
+    {
+        $user = $this->createMock(UserInterface::class);
+        $user->expects($this->never())
+            ->method('getUsername')
+        ;
+
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider->expects($this->never())
+            ->method('findUserByUsername')
+        ;
+
+        $session = $this->createMock(SessionInterface::class);
+        $session->expects($this->once())
+            ->method('get')
+            ->willReturn(null)
+        ;
+
+        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+
+        $this->assertNull($sessionGuard->loadUser());
     }
 
 }

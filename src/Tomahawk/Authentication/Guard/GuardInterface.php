@@ -1,4 +1,5 @@
 <?php
+
 namespace Tomahawk\Authentication\Guard;
 
 use Tomahawk\Authentication\Exception\BadCredentialsException;
