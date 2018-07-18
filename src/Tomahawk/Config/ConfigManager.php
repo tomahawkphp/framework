@@ -14,6 +14,10 @@ namespace Tomahawk\Config;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
+/**
+ * Class ConfigManager
+ * @package Tomahawk\Config
+ */
 class ConfigManager implements ConfigInterface
 {
     /**
@@ -91,6 +95,7 @@ class ConfigManager implements ConfigInterface
      * Load config files
      *
      * @param bool|false $force
+     * @throws \Exception
      */
     public function load($force = false)
     {
