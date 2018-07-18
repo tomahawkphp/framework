@@ -38,6 +38,7 @@ class EloquentUserProvider implements UserProviderInterface
     {
         /** @var UserInterface|null $result */
         $result = $this->createClass()
+            ->newQuery()
             ->where($this->username, '=', $username)
         ;
 
