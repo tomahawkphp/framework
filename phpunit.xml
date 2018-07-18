@@ -9,7 +9,6 @@
          beStrictAboutTestsThatDoNotTestAnything="false"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false"
 >
     <testsuites>
         <testsuite name="Tomahawk Test Suite">
@@ -25,6 +24,8 @@
                 <directory>./vendor</directory>
                 <directory>./src/Tomahawk/Authentication/Test</directory>
                 <directory>./src/Tomahawk/Authentication/Resources</directory>
+                <directory>./src/Tomahawk/Cache/Test</directory>
+                <directory>./src/Tomahawk/*/Resources</directory>
                 <directory>./src/Tomahawk/*/*/Resources</directory>
                 <directory>./src/Tomahawk/Bundle/*/Resources</directory>
                 <directory>./src/Tomahawk/Bundle/DoctrineBundle/Command/Proxy</directory>
