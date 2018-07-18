@@ -8,6 +8,7 @@ use Tomahawk\Authentication\Guard\SessionGuard;
 use Tomahawk\Authentication\User\Credentials;
 use Tomahawk\Authentication\User\UserInterface;
 use Tomahawk\Authentication\User\UserProviderInterface;
+use Tomahawk\Hashing\HasherInterface;
 use Tomahawk\Session\SessionInterface;
 
 class SessionGuardTest extends TestCase
@@ -27,9 +28,9 @@ class SessionGuardTest extends TestCase
 
 
         $session = $this->createMock(SessionInterface::class);
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+        $hasher = $this->createMock(HasherInterface::class);
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
         $sessionGuard->authorize(new Credentials('username', 'password'));
     }
 
@@ -49,9 +50,9 @@ class SessionGuardTest extends TestCase
 
 
         $session = $this->createMock(SessionInterface::class);
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+        $hasher = $this->createMock(HasherInterface::class);
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
         $sessionGuard->authorize(new Credentials('username', 'password'));
     }
 
@@ -75,13 +76,13 @@ class SessionGuardTest extends TestCase
             ->method('set')
         ;
 
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
-        $passwordEncoder->expects($this->once())
-            ->method('isPasswordValid')
+        $hasher = $this->createMock(HasherInterface::class);
+        $hasher->expects($this->once())
+            ->method('check')
             ->willReturn(true)
         ;
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
 
         $user = $sessionGuard->authorize(new Credentials('username', 'password'));
 
@@ -110,9 +111,9 @@ class SessionGuardTest extends TestCase
 
         $session = $this->createMock(SessionInterface::class);
 
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+        $hasher = $this->createMock(HasherInterface::class);
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
 
         $sessionGuard->login($user);
     }
@@ -139,9 +140,9 @@ class SessionGuardTest extends TestCase
             ->method('set')
         ;
 
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+        $hasher = $this->createMock(HasherInterface::class);
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
 
         $sessionGuard->login($user);
         $this->assertInstanceOf(UserInterface::class, $user);
@@ -175,9 +176,9 @@ class SessionGuardTest extends TestCase
             ->willReturn('username')
         ;
 
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+        $hasher = $this->createMock(HasherInterface::class);
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
 
         $sessionGuard->loadUser();
         $this->assertTrue($sessionGuard->isLoggedIn());
@@ -204,9 +205,9 @@ class SessionGuardTest extends TestCase
             ->willReturn('username')
         ;
 
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+        $hasher = $this->createMock(HasherInterface::class);
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
 
         $this->assertTrue($sessionGuard->isLoggedIn());
         $this->assertFalse($sessionGuard->isGuest());
@@ -234,9 +235,9 @@ class SessionGuardTest extends TestCase
             ->willReturn(null)
         ;
 
-        $passwordEncoder = $this->createMock(PasswordEncoderInterface::class);
+        $hasher = $this->createMock(HasherInterface::class);
 
-        $sessionGuard = new SessionGuard('default', $session, $userProvider, $passwordEncoder);
+        $sessionGuard = new SessionGuard('default', $session, $userProvider, $hasher);
 
         $this->assertNull($sessionGuard->loadUser());
     }

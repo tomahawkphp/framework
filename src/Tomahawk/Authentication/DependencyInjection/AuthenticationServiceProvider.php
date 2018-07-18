@@ -39,6 +39,7 @@ class AuthenticationServiceProvider implements ServiceProviderInterface
 
             return new GuardFactory(
                 $c,
+                $c->get(UserProviderFactory::class),
                 $c->get(ConfigInterface::class),
                 $customGuards
             );

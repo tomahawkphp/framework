@@ -55,16 +55,4 @@ final class User implements UserInterface
     {
         return $this->password;
     }
-
-    /**
-     * Get users salt
-     *
-     * This can return null if password was encoded without a salt
-     *
-     * @return string|null
-     */
-    public function getSalt()
-    {
-        return null;
-    }
 }

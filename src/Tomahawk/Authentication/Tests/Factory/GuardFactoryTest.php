@@ -3,8 +3,8 @@
 namespace Tomahawk\Authentication\Tests\Factory;
 
 use PHPUnit\Framework\TestCase;
-use Tomahawk\Authentication\Encoder\PasswordEncoderInterface;
 use Tomahawk\Authentication\Factory\GuardFactory;
+use Tomahawk\Authentication\Factory\UserProviderFactory;
 use Tomahawk\Authentication\Test\Factory\TestGuardFactory;
 use Tomahawk\Authentication\Guard\SessionGuard;
 use Tomahawk\Authentication\Test\Guard\TestGuard;
@@ -12,6 +12,7 @@ use Tomahawk\Authentication\User\UserProviderInterface;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DependencyInjection\Container;
 use Tomahawk\Session\SessionInterface;
+use Tomahawk\Hashing\HasherInterface;
 
 /**
  * Class GuardFactoryTest
@@ -27,9 +28,16 @@ class GuardFactoryTest extends TestCase
     {
         $container = new Container();
 
+        $userProviderFactory = $this->createMock(UserProviderFactory::class);
+
+        $userProviderFactory
+            ->method('make')
+            ->willReturn($this->createMock(UserProviderInterface::class))
+        ;
+
         $container->set(SessionInterface::class, $this->createMock(SessionInterface::class));
         $container->set(UserProviderInterface::class, $this->createMock(UserProviderInterface::class));
-        $container->set(PasswordEncoderInterface::class, $this->createMock(PasswordEncoderInterface::class));
+        $container->set(HasherInterface::class, $this->createMock(HasherInterface::class));
 
         $configManger = $this->createMock(ConfigInterface::class);
 
@@ -43,6 +51,7 @@ class GuardFactoryTest extends TestCase
 
         $guardFactory = new GuardFactory(
             $container,
+            $userProviderFactory,
             $configManger,
             []
         );
@@ -58,11 +67,18 @@ class GuardFactoryTest extends TestCase
      */
     public function testCustomGuardFactory()
     {
+        $userProviderFactory = $this->createMock(UserProviderFactory::class);
+
+        $userProviderFactory
+            ->method('make')
+            ->willReturn($this->createMock(UserProviderInterface::class))
+        ;
+
         $container = new Container();
 
         $container->set(SessionInterface::class, $this->createMock(SessionInterface::class));
         $container->set(UserProviderInterface::class, $this->createMock(UserProviderInterface::class));
-        $container->set(PasswordEncoderInterface::class, $this->createMock(PasswordEncoderInterface::class));
+        $container->set(HasherInterface::class, $this->createMock(HasherInterface::class));
 
         $container->set(TestGuardFactory::class, new TestGuardFactory());
         $container->tag(TestGuardFactory::class, 'authentication.guard.factory');
@@ -88,6 +104,7 @@ class GuardFactoryTest extends TestCase
 
         $guardFactory = new GuardFactory(
             $container,
+            $userProviderFactory,
             $configManger,
             $customGuards
         );
@@ -104,11 +121,13 @@ class GuardFactoryTest extends TestCase
      */
     public function testCustomGuardFactoryWithNoConfig()
     {
+        $userProviderFactory = $this->createMock(UserProviderFactory::class);
+
         $container = new Container();
 
         $container->set(SessionInterface::class, $this->createMock(SessionInterface::class));
         $container->set(UserProviderInterface::class, $this->createMock(UserProviderInterface::class));
-        $container->set(PasswordEncoderInterface::class, $this->createMock(PasswordEncoderInterface::class));
+        $container->set(HasherInterface::class, $this->createMock(HasherInterface::class));
 
         $configManger = $this->createMock(ConfigInterface::class);
 
@@ -120,6 +139,7 @@ class GuardFactoryTest extends TestCase
 
         $guardFactory = new GuardFactory(
             $container,
+            $userProviderFactory,
             $configManger,
             []
         );
@@ -134,11 +154,13 @@ class GuardFactoryTest extends TestCase
      */
     public function testCustomGuardFactoryWithNoFactory()
     {
+        $userProviderFactory = $this->createMock(UserProviderFactory::class);
+
         $container = new Container();
 
         $container->set(SessionInterface::class, $this->createMock(SessionInterface::class));
         $container->set(UserProviderInterface::class, $this->createMock(UserProviderInterface::class));
-        $container->set(PasswordEncoderInterface::class, $this->createMock(PasswordEncoderInterface::class));
+        $container->set(HasherInterface::class, $this->createMock(HasherInterface::class));
 
         $configManger = $this->createMock(ConfigInterface::class);
 
@@ -152,6 +174,7 @@ class GuardFactoryTest extends TestCase
 
         $guardFactory = new GuardFactory(
             $container,
+            $userProviderFactory,
             $configManger,
             []
         );

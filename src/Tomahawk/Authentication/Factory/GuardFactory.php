@@ -4,11 +4,10 @@ namespace Tomahawk\Authentication\Factory;
 
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
-use Tomahawk\Authentication\Encoder\PasswordEncoderInterface;
 use Tomahawk\Authentication\Guard\GuardInterface;
 use Tomahawk\Authentication\Guard\SessionGuard;
-use Tomahawk\Authentication\User\UserProviderInterface;
 use Tomahawk\Config\ConfigInterface;
+use Tomahawk\Hashing\HasherInterface;
 use Tomahawk\Session\SessionInterface;
 
 /**
@@ -21,6 +20,11 @@ class GuardFactory
      * @var ContainerInterface
      */
     protected $container;
+
+    /**
+     * @var UserProviderFactory
+     */
+    protected $userProviderFactory;
 
     /**
      * @var array
@@ -44,11 +48,13 @@ class GuardFactory
 
     public function __construct(
         ContainerInterface $container,
+        UserProviderFactory $userProviderFactory,
         ConfigInterface $config,
         array $customCreators = []
     )
     {
         $this->container = $container;
+        $this->userProviderFactory = $userProviderFactory;
         $this->config = $config;
         $this->customCreators = $customCreators;
     }
@@ -107,14 +113,14 @@ class GuardFactory
      */
     protected function createSessionDriver(string $name, array $config)
     {
-        //$userProviderDriver = $config['provider'];
-        //$userProvider = $this->
+        $userProviderDriver = $config['provider'];
+        $userProvider = $this->userProviderFactory->make($userProviderDriver);
 
         $sessionGuard = new SessionGuard(
             $name,
             $this->container->get(SessionInterface::class),
-            $this->container->get(UserProviderInterface::class),
-            $this->container->get(PasswordEncoderInterface::class)
+            $userProvider,
+            $this->container->get(HasherInterface::class)
         );
 
         return $this->createdGuards[$name] = $sessionGuard;

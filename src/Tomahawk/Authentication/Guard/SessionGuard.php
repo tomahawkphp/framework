@@ -2,12 +2,12 @@
 
 namespace Tomahawk\Authentication\Guard;
 
-use Tomahawk\Authentication\Encoder\PasswordEncoderInterface;
 use Tomahawk\Authentication\Exception\BadCredentialsException;
 use Tomahawk\Authentication\Exception\UserNotFoundException;
 use Tomahawk\Authentication\User\CredentialsInterface;
 use Tomahawk\Authentication\User\UserInterface;
 use Tomahawk\Authentication\User\UserProviderInterface;
+use Tomahawk\Hashing\HasherInterface;
 use Tomahawk\Session\SessionInterface;
 
 /**
@@ -42,28 +42,28 @@ class SessionGuard implements GuardInterface
     protected $loggedIn;
 
     /**
-     * @var PasswordEncoderInterface
+     * @var HasherInterface
      */
-    protected $passwordEncoder;
+    protected $hasher;
 
     /**
      * SessionGuard constructor.
      * @param string $name
      * @param SessionInterface $session
      * @param UserProviderInterface $userProvider
-     * @param PasswordEncoderInterface $passwordEncoder
+     * @param HasherInterface $hasher
      */
     public function __construct(
         string $name,
         SessionInterface $session,
         UserProviderInterface $userProvider,
-        PasswordEncoderInterface $passwordEncoder
+        HasherInterface $hasher
     )
     {
         $this->name = $name;
         $this->session = $session;
         $this->userProvider = $userProvider;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -139,7 +139,7 @@ class SessionGuard implements GuardInterface
         }
 
         // Check if password is valid
-        if ( ! $this->passwordEncoder->isPasswordValid($user->getPassword(), $credentials->getPassword(), $user->getSalt())) {
+        if ( ! $this->hasher->check($user->getPassword(), $credentials->getPassword())) {
             throw new BadCredentialsException(sprintf('Password for user "%s" was incorrect', $credentials->getUsername()));
         }
 

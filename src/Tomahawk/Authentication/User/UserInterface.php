@@ -31,13 +31,4 @@ interface UserInterface
      * @return string
      */
     public function getPassword();
-
-    /**
-     * Get users salt
-     *
-     * This can return null if password was encoded without a salt
-     *
-     * @return string
-     */
-    public function getSalt();
 }
