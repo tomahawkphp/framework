@@ -46,7 +46,7 @@ class FrameworkBundle extends Bundle
         $this->container->register(new SessionServiceProvider());
 
         if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
-            Request::setTrustedProxies($trustedProxies);
+            Request::setTrustedProxies($trustedProxies, Request::HEADER_X_FORWARDED_FOR);
         }
 
         if ($this->getConfig()->get('kernel.http_method_override')) {
