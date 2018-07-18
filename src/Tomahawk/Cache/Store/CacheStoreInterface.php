@@ -9,11 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Cache\Provider;
+namespace Tomahawk\Cache\Store;
 
 use Tomahawk\Cache\CacheInterface;
 
-interface CacheProviderInterface extends CacheInterface
+/**
+ * Interface CacheStoreInterface
+ * @package Tomahawk\Cache\Driver
+ */
+interface CacheStoreInterface extends CacheInterface
 {
     /**
      * @return string

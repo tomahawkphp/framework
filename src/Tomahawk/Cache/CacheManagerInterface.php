@@ -11,13 +11,15 @@
 
 namespace Tomahawk\Cache;
 
-use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
-
 /**
- * Interface CacheInterface
+ * Interface CacheManagerInterface
  * @package Tomahawk\Cache
  */
-interface CacheInterface extends PsrCacheInterface
+interface CacheManagerInterface extends CacheInterface
 {
-
+    /**
+     * @param string $name
+     * @return CacheInterface
+     */
+    public function driver(string $name);
 }

@@ -1,60 +1,11 @@
 <?php
 
-/*
- * This file is part of the TomahawkPHP package.
- *
- * (c) Tom Ellis
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Tomahawk\Cache\Test\Store;
 
-namespace Tomahawk\Cache;
+use Tomahawk\Cache\Store\CacheStoreInterface;
 
-use Tomahawk\Cache\Factory\StoreFactory;
-
-/**
- * Class CacheManager
- * @package Tomahawk\Cache
- */
-class CacheManager implements CacheManagerInterface
+class TestStore implements CacheStoreInterface
 {
-    /**
-     * @var StoreFactory
-     */
-    protected $storeFactory;
-
-    /**
-     * @var CacheInterface[]
-     */
-    protected $drivers = [];
-
-    /**
-     * @var string
-     */
-    protected $default;
-
-    public function __construct(StoreFactory $storeFactory, string $default)
-    {
-        $this->storeFactory = $storeFactory;
-        $this->default = $default;
-    }
-
-    /**
-     * Deletes multiple cache items in a single operation.
-     *
-     * @param iterable $keys A list of string-based keys to be deleted.
-     *
-     * @return bool True if the items were successfully removed. False if there was an error.
-     *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if $keys is neither an array nor a Traversable,
-     *   or if any of the $keys are not a legal value.
-     */
-    public function deleteMultiple($keys)
-    {
-        return $this->driver()->deleteMultiple($keys);
-    }
 
     /**
      * Fetches a value from the cache.
@@ -69,7 +20,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function get($key, $default = null)
     {
-        return $this->driver()->get($key, $default);
+        // TODO: Implement get() method.
     }
 
     /**
@@ -88,7 +39,22 @@ class CacheManager implements CacheManagerInterface
      */
     public function set($key, $value, $ttl = null)
     {
-        return $this->driver()->set($key, $value, $ttl);
+        // TODO: Implement set() method.
+    }
+
+    /**
+     * Delete an item from the cache by its unique key.
+     *
+     * @param string $key The unique cache key of the item to delete.
+     *
+     * @return bool True if the item was successfully removed. False if there was an error.
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *   MUST be thrown if the $key string is not a legal value.
+     */
+    public function delete($key)
+    {
+        // TODO: Implement delete() method.
     }
 
     /**
@@ -98,7 +64,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function clear()
     {
-        return $this->driver()->clear();
+        // TODO: Implement clear() method.
     }
 
     /**
@@ -115,22 +81,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function getMultiple($keys, $default = null)
     {
-        return $this->driver()->getMultiple($keys, $default);
-    }
-
-    /**
-     * Delete an item from the cache by its unique key.
-     *
-     * @param string $key The unique cache key of the item to delete.
-     *
-     * @return bool True if the item was successfully removed. False if there was an error.
-     *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if the $key string is not a legal value.
-     */
-    public function delete($key)
-    {
-        return $this->driver()->delete($key);
+        // TODO: Implement getMultiple() method.
     }
 
     /**
@@ -149,7 +100,23 @@ class CacheManager implements CacheManagerInterface
      */
     public function setMultiple($values, $ttl = null)
     {
-        return $this->driver()->setMultiple($values, $ttl);
+        // TODO: Implement setMultiple() method.
+    }
+
+    /**
+     * Deletes multiple cache items in a single operation.
+     *
+     * @param iterable $keys A list of string-based keys to be deleted.
+     *
+     * @return bool True if the items were successfully removed. False if there was an error.
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *   MUST be thrown if $keys is neither an array nor a Traversable,
+     *   or if any of the $keys are not a legal value.
+     */
+    public function deleteMultiple($keys)
+    {
+        // TODO: Implement deleteMultiple() method.
     }
 
     /**
@@ -169,21 +136,14 @@ class CacheManager implements CacheManagerInterface
      */
     public function has($key)
     {
-        return $this->driver()->has($key);
+        // TODO: Implement has() method.
     }
 
     /**
-     * @param string $name
-     * @return CacheInterface
+     * @return string
      */
-    public function driver(string $name = null)
+    public function getName()
     {
-        $name = $name ?? $this->default;
-
-        if (isset($this->drivers[$name])) {
-            return $this->drivers[$name];
-        }
-
-        return $this->drivers[$name] = $this->storeFactory->make($name);
+        // TODO: Implement getName() method.
     }
 }
