@@ -6,20 +6,17 @@ use Tomahawk\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TestCommand extends Command
+class TestCallCommand extends Command
 {
+    public $input;
+    public $output;
+
     protected function configure()
     {
         $this
-            ->setName('foo:bar1')
-            ->setDescription('The foo:bar1 command')
-            ->setAliases(array('afoobar1'))
+            ->setName('foo:testcall')
+            ->setDescription('The foo:testcall command')
         ;
-    }
-
-    public function handle()
-    {
-        $this->output->writeln('execute called');
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -27,4 +24,9 @@ class TestCommand extends Command
         $output->writeln('interact called');
     }
 
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln('execute called');
+        return $this->call('foo:bar1');
+    }
 }

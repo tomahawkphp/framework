@@ -12,11 +12,8 @@ use Tomahawk\HttpKernel\Bundle\Bundle;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Tomahawk\HttpKernel\KernelInterface;
 use PHPUnit\Framework\TestCase;
-use Tomahawk\HttpKernel\TestKernel;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Tomahawk\Console\Application;
-use Tomahawk\Console\Test\Commands\ACommand;
-use Tomahawk\Console\Test\Commands\BCommand;
 
 /**
  * Application.

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 
-class ACommand extends Command implements ContainerAwareInterface
+class InteractCommand extends Command implements ContainerAwareInterface
 {
     public $input;
     public $output;

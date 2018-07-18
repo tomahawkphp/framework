@@ -13,7 +13,6 @@ namespace Tomahawk\Console;
 
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * Class ContainerAwareCommand
