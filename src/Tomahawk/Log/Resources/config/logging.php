@@ -13,13 +13,13 @@ return [
         ],
 
         'single' => [
-            'driver' => 'single_file',
+            'driver' => 'single',
             'path' => 'logs/laravel.log',
             'level' => 'debug',
         ],
 
         'daily' => [
-            'driver' => 'daily_file',
+            'driver' => 'daily',
             'path' => 'logs/laravel.log',
             'level' => 'debug',
             'days' => 7,

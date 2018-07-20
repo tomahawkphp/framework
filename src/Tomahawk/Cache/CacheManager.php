@@ -173,7 +173,7 @@ class CacheManager implements CacheManagerInterface
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      * @return CacheInterface
      */
     public function driver(string $name = null)

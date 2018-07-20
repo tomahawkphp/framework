@@ -18,8 +18,8 @@ namespace Tomahawk\Cache;
 interface CacheManagerInterface extends CacheInterface
 {
     /**
-     * @param string $name
+     * @param string|null $name
      * @return CacheInterface
      */
-    public function driver(string $name);
+    public function driver(string $name = null);
 }
