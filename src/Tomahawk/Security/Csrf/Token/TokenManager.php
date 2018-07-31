@@ -9,11 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\CSRFBundle\Token;
+namespace Tomahawk\Security\Csrf\Token;
 
 use Tomahawk\Common\Str;
 use Tomahawk\Session\SessionInterface;
 
+/**
+ * Class TokenManager
+ *
+ * @package Tomahawk\Security\Csrf\Token
+ */
 class TokenManager implements TokenManagerInterface
 {
     /**

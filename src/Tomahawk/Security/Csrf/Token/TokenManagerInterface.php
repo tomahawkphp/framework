@@ -9,8 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\CSRFBundle\Token;
+namespace Tomahawk\Security\Csrf\Token;
 
+/**
+ * Interface TokenManagerInterface
+ *
+ * @package Tomahawk\Security\Csrf\Token
+ */
 interface TokenManagerInterface
 {
     /**

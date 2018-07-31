@@ -1,9 +1,9 @@
 <?php
 
-namespace Tomahawk\Bundle\CSRFBundle\Test;
+namespace Tomahawk\Security\Csrf\Test;
 
-use Tomahawk\Bundle\CSRFBundle\Token\TokenManager;
-use Tomahawk\Bundle\CSRFBundle\Validation\CSRFToken;
+use Tomahawk\Security\Csrf\Token\TokenManagerInterface;
+use Tomahawk\Security\Csrf\Validation\CSRFToken;
 use PHPUnit\Framework\TestCase;
 use Tomahawk\Validation\Validator;
 
@@ -41,7 +41,7 @@ class CSRFTokenValidationTest extends TestCase
 
     protected function getTokenManager()
     {
-        $tokenManager = $this->getMockBuilder('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface')->getMock();
+        $tokenManager = $this->getMockBuilder(TokenManagerInterface::class)->getMock();
 
         $tokenManager->expects($this->any())
             ->method('getToken')

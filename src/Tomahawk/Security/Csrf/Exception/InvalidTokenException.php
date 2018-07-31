@@ -9,8 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\CSRFBundle\Exception;
+namespace Tomahawk\Security\Csrf\Exception;
 
-class TokenNotFoundException extends \Exception
+/**
+ * Class InvalidTokenException
+ *
+ * @package Tomahawk\Security\Csrf\Exception
+ */
+class InvalidTokenException extends \Exception
 {
 }

@@ -9,15 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\CSRFBundle\EventListener;
+namespace Tomahawk\Security\Csrf\EventListener;
 
-use Tomahawk\Bundle\CSRFBundle\Exception\InvalidTokenException;
-use Tomahawk\Bundle\CSRFBundle\Exception\TokenNotFoundException;
-use Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface;
+use Tomahawk\Security\Csrf\Exception\InvalidTokenException;
+use Tomahawk\Security\Csrf\Exception\TokenNotFoundException;
+use Tomahawk\Security\Csrf\Token\TokenManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
+/**
+ * Class TokenListener
+ *
+ * @package Tomahawk\Security\Csrf\EventListener
+ */
 class TokenListener implements EventSubscriberInterface
 {
     /**
@@ -60,6 +65,9 @@ class TokenListener implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return array(

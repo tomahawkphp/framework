@@ -1,10 +1,10 @@
 <?php
 
-namespace Tomahawk\Bundle\CSRFBundle\Test;
+namespace Tomahawk\Security\Csrf\Test;
 
 use Symfony\Component\HttpKernel\KernelEvents;
 use PHPUnit\Framework\TestCase;
-use Tomahawk\Bundle\CSRFBundle\EventListener\TokenListener;
+use Tomahawk\Security\Csrf\EventListener\TokenListener;
 
 class TokenListenerTest extends TestCase
 {
@@ -20,8 +20,8 @@ class TokenListenerTest extends TestCase
     }
 
     /**
-     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\InvalidTokenException
-     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\TokenNotFoundException
+     * @throws \Tomahawk\Security\Csrf\Exception\InvalidTokenException
+     * @throws \Tomahawk\Security\Csrf\Exception\TokenNotFoundException
      */
     public function testTokenListenerExitsWhenProtectionIsNotRequired()
     {
@@ -35,8 +35,8 @@ class TokenListenerTest extends TestCase
     }
 
     /**
-     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\InvalidTokenException
-     * @throws \Tomahawk\Bundle\CSRFBundle\Exception\TokenNotFoundException
+     * @throws \Tomahawk\Security\Csrf\Exception\InvalidTokenException
+     * @throws \Tomahawk\Security\Csrf\Exception\TokenNotFoundException
      */
     public function testTokenListenerExitsWhenProtectionIsNotRequiredAndFilterIsTrue()
     {
@@ -50,7 +50,7 @@ class TokenListenerTest extends TestCase
     }
 
     /**
-     * @expectedException \Tomahawk\Bundle\CSRFBundle\Exception\TokenNotFoundException
+     * @expectedException \Tomahawk\Security\Csrf\Exception\TokenNotFoundException
      */
     public function testTokenListenerThrowsExceptionOnNoToken()
     {
@@ -64,7 +64,7 @@ class TokenListenerTest extends TestCase
     }
 
     /**
-     * @expectedException \Tomahawk\Bundle\CSRFBundle\Exception\InvalidTokenException
+     * @expectedException \Tomahawk\Security\Csrf\Exception\InvalidTokenException
      */
     public function testTokenListenerThrowsExceptionOnInvalidToken()
     {
@@ -90,7 +90,7 @@ class TokenListenerTest extends TestCase
 
     protected function getTokenManager()
     {
-        $mock = $this->getMockBuilder('Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface')->getMock();
+        $mock = $this->getMockBuilder('Tomahawk\Security\Csrf\Token\TokenManagerInterface')->getMock();
 
         $mock->expects($this->any())
             ->method('getTokenName')

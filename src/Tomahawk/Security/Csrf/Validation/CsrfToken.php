@@ -9,19 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\CSRFBundle\Validation;
+namespace Tomahawk\Security\Csrf\Validation;
 
-use Tomahawk\Bundle\CSRFBundle\Token\TokenManagerInterface;
+use Tomahawk\Security\Csrf\Token\TokenManagerInterface;
 use Tomahawk\Validation\Constraints\Constraint;
 use Tomahawk\Validation\Validator;
 
-class CSRFToken extends Constraint
+/**
+ * Class CsrfToken
+ *
+ * @package Tomahawk\Security\Csrf\Validation
+ */
+class CsrfToken extends Constraint
 {
     /**
      * @var TokenManagerInterface
      */
     protected $tokenManager;
 
+    /**
+     * @var string
+     */
     protected $message = 'Invalid security token';
 
     /**
@@ -38,21 +46,27 @@ class CSRFToken extends Constraint
         parent::__construct($config);
     }
 
+    /**
+     * @param Validator $validator
+     * @param $attribute
+     * @param $value
+     * @return bool
+     */
     public function validate(Validator $validator, $attribute, $value)
     {
         $actualToken = $this->tokenManager->getToken();
         $valid = true;
 
         // Check if token is set
-        if (!$value) {
+        if ( ! $value) {
             $valid = false;
         }
         // Check if token is valid
-        else if ($value !== $actualToken) {
+        elseif ($value !== $actualToken) {
             $valid = false;
         }
 
-        if (!$valid) {
+        if ( ! $valid) {
             $this->fail($attribute, $validator);
             return false;
         }

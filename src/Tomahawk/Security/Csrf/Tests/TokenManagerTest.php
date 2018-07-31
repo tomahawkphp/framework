@@ -1,9 +1,9 @@
 <?php
 
-namespace Tomahawk\Bundle\CSRFBundle\Test;
+namespace Tomahawk\Security\Csrf\Test;
 
 use PHPUnit\Framework\TestCase;
-use Tomahawk\Bundle\CSRFBundle\Token\TokenManager;
+use Tomahawk\Security\Csrf\Token\TokenManager;
 
 class TokenManagerTest extends TestCase
 {
