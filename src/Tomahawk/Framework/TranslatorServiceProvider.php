@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
+namespace Tomahawk\Framework;
 
 use Symfony\Component\Translation\Formatter\MessageFormatter;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Symfony\Component\Finder\Finder;
@@ -19,13 +20,18 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader as TransPhpFileLoader;
 use Symfony\Component\Translation\Translator;
 
+/**
+ * Class TranslatorServiceProvider
+ *
+ * @package Tomahawk\Framework
+ */
 class TranslatorServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
     {
-        $container->set('Symfony\Component\Translation\TranslatorInterface', function(ContainerInterface $c) {
+        $container->set(TranslatorInterface::class, function(ContainerInterface $c) {
 
-            $config = $c['config'];
+            $config = $c->get('config');
             $locale = $config->get('translation.locale');
             $fallbackLocale = $config->get('translation.fallback_locale');
             $translationDirs = $config->get('translation.translation_dirs');
@@ -62,6 +68,6 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             return $translator;
         });
 
-        $container->addAlias('translator', 'Symfony\Component\Translation\TranslatorInterface');
+        $container->addAlias('translator', TranslatorInterface::class);
     }
 }

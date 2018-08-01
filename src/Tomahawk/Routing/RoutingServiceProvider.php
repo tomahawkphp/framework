@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
+namespace Tomahawk\Routing;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Tomahawk\DependencyInjection\EventsProviderInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Config\FileLocator;
@@ -24,7 +26,12 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Tomahawk\Routing\Matcher\RedirectableUrlMatcher;
 
-class RoutingServiceProvider implements ServiceProviderInterface
+/**
+ * Class RoutingServiceProvider
+ *
+ * @package Tomahawk\Routing
+ */
+class RoutingServiceProvider implements ServiceProviderInterface, EventsProviderInterface
 {
     public function register(ContainerInterface $container)
     {
@@ -92,5 +99,15 @@ class RoutingServiceProvider implements ServiceProviderInterface
         }));
 
         $container->set('route_logger', null);
+    }
+
+    /**
+     * @param ContainerInterface $container An Container instance
+     * @param EventDispatcherInterface $eventDispatcher
+     * @return
+     */
+    public function subscribe(ContainerInterface $container, EventDispatcherInterface $eventDispatcher)
+    {
+        $eventDispatcher->addSubscriber($container->get('route_listener'));
     }
 }

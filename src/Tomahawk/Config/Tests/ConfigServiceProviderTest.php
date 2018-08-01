@@ -1,15 +1,15 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Tests;
+namespace Tomahawk\Config\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider as ConfigProvider;
+use Tomahawk\Config\ConfigServiceProvider as ConfigProvider;
 
 class ConfigServiceProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider
+     * @covers \Tomahawk\Config\ConfigServiceProvider
      */
     public function testProvider()
     {

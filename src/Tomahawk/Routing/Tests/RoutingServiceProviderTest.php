@@ -1,15 +1,15 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Tests;
+namespace Tomahawk\Routing\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingServiceProvider as RoutingProvider;
+use Tomahawk\Routing\RoutingServiceProvider as RoutingProvider;
 
 class RoutingServiceProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingServiceProvider
+     * @covers \Tomahawk\Routing\RoutingServiceProvider
      */
     public function testProvider()
     {
@@ -79,7 +79,7 @@ class RoutingServiceProviderTest extends TestCase
         $kernel->expects($this->any())
             ->method('getRoutePaths')
             ->will($this->returnValue(array(
-                __DIR__ .'/Resources/bundleroutes/routes.php'
+                __DIR__ .'/Resources/routing/routes.php'
             )));
 
         return $kernel;

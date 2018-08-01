@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
+namespace Tomahawk\Config;
 
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\Config\Loader\PhpConfigLoader;
 use Tomahawk\Config\Loader\YamlConfigLoader;
-use Tomahawk\Config\ConfigManager;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\FileLocator;
 use Tomahawk\HttpKernel\KernelInterface;
 
+/**
+ * Class ConfigServiceProvider
+ *
+ * @package Tomahawk\Config
+ */
 class ConfigServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)

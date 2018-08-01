@@ -1,31 +1,31 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Tests;
+namespace Tomahawk\Framework\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorServiceProvider as TranslatorProvider;
+use Tomahawk\Framework\TranslatorServiceProvider as TranslatorProvider;
 
 class TranslatorServiceProviderTest extends TestCase
 {
     /**
-     * @covers \Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorServiceProvider
+     * @covers \Tomahawk\Framework\TranslatorServiceProvider
      */
     public function testProvider()
     {
-        $tranlationsDir = array(
+        $tranlationsDir = [
             __DIR__ . '/Resources/translations',
-        );
+        ];
 
         $config = $this->getConfig();
         $config
             ->method('get')
-            ->will($this->returnValueMap(array(
-                array('translation.locale', null, 'en'),
-                array('translation.fallback_locale', null, 'en'),
-                array('translation.translation_dirs', null, $tranlationsDir),
-                array('translation.cache', null, false),
-            )));
+            ->will($this->returnValueMap([
+                ['translation.locale', null, 'en'],
+                ['translation.fallback_locale', null, 'en'],
+                ['translation.translation_dirs', null, $tranlationsDir],
+                ['translation.cache', null, false],
+            ]));
 
         $container = new Container();
         $container->set('config', $config);
