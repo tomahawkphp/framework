@@ -3,17 +3,17 @@
 namespace Tomahawk\Security\Csrf\Test;
 
 use Tomahawk\Security\Csrf\Token\TokenManagerInterface;
-use Tomahawk\Security\Csrf\Validation\CSRFToken;
+use Tomahawk\Security\Csrf\Validation\CsrfToken;
 use PHPUnit\Framework\TestCase;
 use Tomahawk\Validation\Validator;
 
-class CSRFTokenValidationTest extends TestCase
+class CsrfTokenValidationTest extends TestCase
 {
     public function testConstraint()
     {
         $validator = new Validator();
         $validator->add('token', array(
-            new CSRFToken($this->getTokenManager())
+            new CsrfToken($this->getTokenManager())
         ));
 
         $input = array(
