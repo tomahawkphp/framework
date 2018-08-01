@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\TemplatingBundle\DependencyInjection;
+namespace Tomahawk\Templating;
 
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;

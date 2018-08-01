@@ -1,25 +1,20 @@
 <?php
 
-/*
- * This file is part of the TomahawkPHP package.
- *
- * (c) Tom Ellis
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Tomahawk\Bundle\FrameworkBundle\DependencyInjection;
+namespace Tomahawk\Session;
 
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
-use Tomahawk\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
+/**
+ * Class SessionServiceProvider
+ *
+ * @package Tomahawk\Session
+ */
 class SessionServiceProvider implements ServiceProviderInterface
 {
     public function register(ContainerInterface $container)
@@ -81,7 +76,7 @@ class SessionServiceProvider implements ServiceProviderInterface
             return new NativeSessionStorage($session_settings, $pdoSessionHandler);
         });
 
-        $container->set('Tomahawk\Session\SessionInterface', function(ContainerInterface $c) {
+        $container->set(SessionInterface::class, function(ContainerInterface $c) {
             $session = $c['config']->get('session.driver','array');
             if ( ! $c->has('session.storage.' .$session)) {
                 throw new \Exception(sprintf('Session storage %d does not exist or has not been set.', $session));
@@ -89,7 +84,7 @@ class SessionServiceProvider implements ServiceProviderInterface
             return new Session($c['session.storage.' .$session]);
         });
 
-        $container->addAlias('session', 'Tomahawk\Session\SessionInterface');
+        $container->addAlias('session', SessionInterface::class);
         $container->addAlias('session.storage.filesystem', 'session.storage.file');
     }
 }
