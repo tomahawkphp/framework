@@ -1,36 +1,16 @@
 <?php
 
-namespace Tomahawk\Bundle\GeneratorBundle\Tests;
+namespace Tomahawk\Generator\Tests;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tomahawk\Bundle\GeneratorBundle\Command\GenerateControllerCommand;
+use Tomahawk\Generator\Command\GenerateControllerCommand;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use PHPUnit\Framework\TestCase;
 
 class ControllerCommandTest extends TestCase
 {
-    public function testCommandWhenBundleIsNotSet()
-    {
-        $command = new GenerateControllerCommand();
-        $commandTester = $this->getCommandTester($command, $this->getGenerator());
-
-        $error = false;
-        try
-        {
-            $commandTester->execute(array('command' => $command->getName(), 'bundle' => 'Foo', 'controller' => 'FooBar'));
-        }
-        catch(\InvalidArgumentException $e)
-        {
-            $error = true;
-
-            $this->assertRegExp('/Bundle "Foo" does not exist/', $e->getMessage());
-        }
-
-        $this->assertTrue($error);
-    }
-
     public function testCommandWithNoActions()
     {
         $command = new GenerateControllerCommand();
@@ -38,7 +18,6 @@ class ControllerCommandTest extends TestCase
 
         $commandTester->execute(array(
             'command'    => $command->getName(),
-            'bundle'     => 'FooBundle',
             'controller' => 'User',
         ));
     }
@@ -50,7 +29,6 @@ class ControllerCommandTest extends TestCase
 
         $commandTester->execute(array(
             'command'    => $command->getName(),
-            'bundle'     => 'FooBundle',
             'controller' => 'User',
             '--actions'    => array('getUser'),
         ));
@@ -63,7 +41,6 @@ class ControllerCommandTest extends TestCase
 
         $commandTester->execute(array(
             'command'    => $command->getName(),
-            'bundle'     => 'FooBundle',
             'controller' => 'User',
             '--actions'    => array(
                 'getUser:{foo}'
@@ -78,7 +55,6 @@ class ControllerCommandTest extends TestCase
 
         $commandTester->execute(array(
             'command'    => $command->getName(),
-            'bundle'     => 'FooBundle',
             'controller' => 'User',
             '--actions'  => array(''),
         ));
@@ -86,7 +62,7 @@ class ControllerCommandTest extends TestCase
 
     protected function getGenerator()
     {
-        $generator = $this->getMockBuilder('Tomahawk\Bundle\GeneratorBundle\Generator\ControllerGenerator')
+        $generator = $this->getMockBuilder('Tomahawk\Generator\ControllerGenerator')
             ->disableOriginalConstructor()
             ->getMock();
 

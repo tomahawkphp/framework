@@ -1,48 +1,27 @@
 <?php
 
-namespace Tomahawk\Bundle\GeneratorBundle\Tests;
+namespace Tomahawk\Generator\Tests\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tomahawk\Bundle\GeneratorBundle\Command\GenerateModelCommand;
+use Tomahawk\Generator\Command\GenerateModelCommand;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use PHPUnit\Framework\TestCase;
 
 class ModelCommandTest extends TestCase
 {
-
-    public function testCommandThrowsExceptionWhenBundleDoesntExist()
-    {
-        $command = new GenerateModelCommand();
-        $commandTester = $this->getCommandTester($command, $this->getGenerator());
-
-        $error = false;
-        try
-        {
-            $commandTester->execute(array('command' => $command->getName(), 'bundle' => 'Foo', 'model' => 'FooBar'));
-        }
-        catch(\InvalidArgumentException $e)
-        {
-            $error = true;
-
-            $this->assertRegExp('/Bundle "Foo" does not exist/', $e->getMessage());
-        }
-
-        $this->assertTrue($error, 'Exception should be thrown when bundle does not exist');
-    }
-
     public function testCommand()
     {
         $command = new GenerateModelCommand();
         $commandTester = $this->getCommandTester($command, $this->getGenerator());
 
-        $commandTester->execute(array('command' => $command->getName(), 'bundle' => 'FooBundle', 'model' => 'User'));
+        $commandTester->execute(array('command' => $command->getName(), 'model' => 'User'));
     }
 
     protected function getGenerator()
     {
-        $generator = $this->getMockBuilder('Tomahawk\Bundle\GeneratorBundle\Generator\ModelGenerator')
+        $generator = $this->getMockBuilder('Tomahawk\Generator\ModelGenerator')
             ->disableOriginalConstructor()
             ->getMock();
 

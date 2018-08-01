@@ -9,14 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\GeneratorBundle\Command;
+namespace Tomahawk\Generator\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\DependencyInjection\ContainerAwareTrait;
-use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\HttpKernel\Kernel;
 
+/**
+ * Class GenerateCommand
+ *
+ * @package Tomahawk\Generator\Command
+ */
 abstract class GenerateCommand extends Command implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

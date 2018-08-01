@@ -1,10 +1,8 @@
 <?php
 
-namespace Tomahawk\Bundle\GeneratorBundle\Generator;
+namespace Tomahawk\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Tomahawk\Generator\Generator;
-use Tomahawk\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Generates a model.
@@ -26,21 +24,23 @@ class ModelGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate(BundleInterface $bundle, $model, $modelDir = 'Entity')
+    /**
+     * @param string $directory
+     * @param string $namespace
+     * @param string $model
+     */
+    public function generate(string $directory, string $namespace, string $model)
     {
-        $dir = $bundle->getPath();
+        $modelFile = $directory.'/'.$model.'.php';
 
-        $modelFile = $dir.'/'.$modelDir.'/'.$model.'.php';
         if (file_exists($modelFile)) {
             throw new \RuntimeException(sprintf('Model "%s" already exists', $model));
         }
 
-        $parameters = array(
-            'namespace'  => $bundle->getNamespace(),
-            'bundle'     => $bundle->getName(),
-            'model'      => $model,
-            'model_dir'  => $modelDir,
-        );
+        $parameters = [
+            'namespace' => $namespace,
+            'model' => $model,
+        ];
 
         $this->renderFile('model/Model.php.twig', $modelFile, $parameters);
     }

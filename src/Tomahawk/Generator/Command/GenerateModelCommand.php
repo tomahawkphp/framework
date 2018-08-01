@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\GeneratorBundle\Command;
+namespace Tomahawk\Generator\Command;
 
 use Symfony\Component\Console\Input\InputOption;
-use Tomahawk\Bundle\GeneratorBundle\Generator\ModelGenerator;
+use Tomahawk\Generator\ModelGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,13 +29,13 @@ class GenerateModelCommand extends GenerateCommand
     {
         $this->setName('generate:model')
             ->setDescription('Generate Model.')
-            ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
             ->addArgument('model', InputArgument::REQUIRED, 'Name of model to create')
-            ->addOption('model-dir', 'md', InputOption::VALUE_OPTIONAL, 'Name of model directory to create',  'Entity')
+            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'Model directory',  'App')
+            ->addOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Class Namespace',  'App')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command creates a new model for a given bundle.
 
-<info>php app/hatchet %command.name% UserBundle User --model-dir="Entity"</info>
+<info>php app/hatchet %command.name% User</info>
 EOT
         );
 
@@ -49,14 +49,12 @@ EOT
         $modelGenerator = $this->getGenerator();
 
         $model = $input->getArgument('model');
-        $bundleName = $input->getArgument('bundle');
-        $modelDir = $input->getOption('model-dir');
+        $directory = $input->getOption('dir');
+        $namespace = $input->getOption('namespace');
 
-        $bundle = $this->getKernel()->getBundle($bundleName);
+        $modelGenerator->generate($directory, $namespace, $model);
 
-        $modelGenerator->generate($bundle, $model, $modelDir);
-
-        $io->writeln(sprintf('Generated new model class to "<info>%s</info>"', $bundle->getPath() . '/'.$modelDir.'/' . $model . '.php'));
+        $io->writeln(sprintf('Generated new model class to "<info>%s</info>"', $directory . '/'.$model . '.php'));
 
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundle\GeneratorBundle\Tests;
+namespace Tomahawk\Generator\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;

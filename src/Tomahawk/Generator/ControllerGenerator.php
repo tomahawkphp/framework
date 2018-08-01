@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\GeneratorBundle\Generator;
+namespace Tomahawk\Generator;
 
-use Tomahawk\Generator\Generator;
 use Tomahawk\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -41,22 +40,25 @@ class ControllerGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate(BundleInterface $bundle, $controller, array $actions = array())
+    /**
+     * @param string $directory
+     * @param string $namespace
+     * @param string $controller
+     * @param array $actions
+     */
+    public function generate(string $directory, string $namespace, string $controller, array $actions = [])
     {
-        $dir = $bundle->getPath();
-
-        $controllerFile = $dir.'/Controller/'.$controller.'Controller.php';
+        $controllerFile = $directory.'/'.$controller.'.php';
 
         if (file_exists($controllerFile)) {
             throw new \RuntimeException(sprintf('Controller "%s" already exists', $controller));
         }
 
-        $parameters = array(
-            'namespace'  => $bundle->getNamespace(),
-            'bundle'     => $bundle->getName(),
+        $parameters = [
+            'namespace' => $namespace,
             'controller' => $controller,
             'actions'    => $actions
-        );
+        ];
 
         $this->renderFile('controller/Controller.php.twig', $controllerFile, $parameters);
     }

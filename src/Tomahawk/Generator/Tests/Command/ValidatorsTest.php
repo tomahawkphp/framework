@@ -1,9 +1,9 @@
 <?php
 
-namespace Tomahawk\Bundle\GeneratorBundle\Tests;
+namespace Tomahawk\Generator\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
-use Tomahawk\Bundle\GeneratorBundle\Command\Validators;
+use Tomahawk\Generator\Command\Validators;
 
 class ValidatorsTest extends TestCase
 {

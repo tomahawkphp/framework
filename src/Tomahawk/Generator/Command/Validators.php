@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\GeneratorBundle\Command;
+namespace Tomahawk\Generator\Command;
 
 /**
  * Validator functions.

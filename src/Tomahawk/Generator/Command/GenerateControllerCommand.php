@@ -9,40 +9,48 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\GeneratorBundle\Command;
+namespace Tomahawk\Generator\Command;
 
 use Symfony\Component\Console\Input\InputOption;
-use Tomahawk\Bundle\GeneratorBundle\Generator\ControllerGenerator;
+use Tomahawk\Generator\ControllerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class GenerateControllerCommand
+ *
+ * @package Tomahawk\Generator\Command
+ */
 class GenerateControllerCommand extends GenerateCommand
 {
-
+    /**
+     * @var
+     */
     protected $resourcesDirectory;
 
     protected function configure()
     {
         $this->setName('generate:controller')
             ->setDescription('Generate Controller.')
-            ->addArgument('bundle', InputArgument::REQUIRED, 'Name of bundle')
             ->addArgument('controller', InputArgument::REQUIRED, 'Name of controller to create')
-            ->addOption('actions', '', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller')
+            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'Model directory',  'App')
+            ->addOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Class Namespace',  'App')
+            ->addOption('actions', 'a', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command creates a new controller for a given bundle.
 
 Running:
-<info>php app/hatchet %command.name% MyBundle Admin</info>
+<info>php app/hatchet %command.name% Admin</info>
 
-Would create a controller named <info>AdminController</info> for the bundle <info>MyBundle</info>
+Would create a controller named <info>AdminController</info>
 
 You can also optionally specify actions for the controller
 
-<info>php app/hatchet %command.name% MyBundle Admin --actions="find view:{id}"</info>
+<info>php app/hatchet %command.name% Admin --actions="find view:{id}"</info>
 
-<info>php app/hatchet %command.name% MyBundle Admin --actions="find" --actions="view:{id}"</info>
+<info>php app/hatchet %command.name% Admin --actions="find" --actions="view:{id}"</info>
 EOT
         );
 
@@ -54,9 +62,8 @@ EOT
         $io = new SymfonyStyle($input, $output);
 
         $controller = $input->getArgument('controller');
-        $bundleName = $input->getArgument('bundle');
-
-        $bundle = $this->getKernel()->getBundle($bundleName);
+        $directory = $input->getOption('dir');
+        $namespace = $input->getOption('namespace');
 
         $generator = $this->getGenerator();
 
@@ -64,9 +71,9 @@ EOT
 
         $actions = $this->parseActions($actions);
 
-        $generator->generate($bundle, $controller, $actions);
+        $generator->generate($directory, $namespace, $controller, $actions);
 
-        $io->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $bundle->getPath() . '/Controller/' . $controller . 'Controller.php'));
+        $io->writeln(sprintf('Generated new controller class to "<info>%s</info>"', $directory . $controller . 'Controller.php'));
 
     }
 
