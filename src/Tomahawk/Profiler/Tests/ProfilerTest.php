@@ -1,13 +1,11 @@
 <?php
 
-namespace Tomahawk\Bundle\WebProfilerBundle\Tests;
+namespace Tomahawk\Profiler\Tests;
 
 use Doctrine\DBAL\Logging\DebugStack;
-use Tomahawk\Bundle\WebProfilerBundle\Test\MockPdo;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
-use Tomahawk\Bundle\WebProfilerBundle\Profiler;
+use Tomahawk\Profiler\Profiler;
 
 class ProfilerTest extends TestCase
 {
@@ -23,7 +21,7 @@ class ProfilerTest extends TestCase
         $this->startTime = time();
     }
 
-    public function testBundleEnabled()
+    public function testEnabled()
     {
         $engine = $this->getTemplatingEngineMock();
 
@@ -34,7 +32,7 @@ class ProfilerTest extends TestCase
         $this->assertTrue($profiler->enabled());
     }
 
-    public function testBundleDisabled()
+    public function testDisabled()
     {
         $engine = $this->getTemplatingEngineMock();
 
@@ -45,7 +43,7 @@ class ProfilerTest extends TestCase
         $this->assertTrue($profiler->disabled());
     }
 
-    public function testProfilerDisabledDoesntRender()
+    public function testProfilerDisabledDoesNotRender()
     {
         $engine = $this->getTemplatingEngineMock();
 
@@ -60,7 +58,7 @@ class ProfilerTest extends TestCase
     {
         $engine = $this->getTemplatingEngineMock();
 
-        $profiler = new Profiler($engine, null, 'dir', $this->startTime);
+        $profiler = new Profiler($engine, 'dir', $this->startTime);
 
         $debugStack = $this->getDebugStack();
 

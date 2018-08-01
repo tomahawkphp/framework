@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundle\WebProfilerBundle\Tests;
+namespace Tomahawk\Profiler\Tests;
 
 use Doctrine\DBAL\Logging\DebugStack;
 use Tomahawk\HttpKernel\KernelInterface;
@@ -8,16 +8,13 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Tomahawk\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tomahawk\DependencyInjection\Container;
-use Tomahawk\HttpKernel\HttpKernel;
-use Tomahawk\Routing\Router;
+use Tomahawk\Profiler\ProfilerServiceProvider;
 
-class WebProfilerBundleTest extends TestCase
+class ProfilerServiceProviderTest extends TestCase
 {
     protected $container;
 
@@ -28,17 +25,13 @@ class WebProfilerBundleTest extends TestCase
         $eventDispatcher = $this->container['event_dispatcher'];
         $event = new FilterResponseEvent($httpKernel, new Request(), HttpKernelInterface::MASTER_REQUEST, new Response());
 
-        $webBundle = new WebProfilerBundle();
-        $webBundle->setContainer($this->container);
-        $webBundle->boot();
-        $webBundle->registerEvents($eventDispatcher);
+        $provider = new ProfilerServiceProvider();
+        $provider->register($this->container);
+        $provider->subscribe($this->container, $eventDispatcher);
 
         $eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
-
-        $webBundle->shutdown();
-
     }
 
     public function testBundleWithBodyInResponse()
@@ -50,16 +43,13 @@ class WebProfilerBundleTest extends TestCase
         $response = new Response('<html><body></body></html>');
         $event = new FilterResponseEvent($httpKernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
 
-        $webBundle = new WebProfilerBundle();
-        $webBundle->setContainer($this->container);
-        $webBundle->boot();
-        $webBundle->registerEvents($eventDispatcher);
+        $provider = new ProfilerServiceProvider();
+        $provider->register($this->container);
+        $provider->subscribe($this->container, $eventDispatcher);
 
         $eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
-
-        $webBundle->shutdown();
 
     }
 

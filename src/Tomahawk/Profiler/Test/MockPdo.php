@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundle\WebProfilerBundle\Test;
+namespace Tomahawk\Profiler\Test;
 
 class MockPdo extends \PDO
 {

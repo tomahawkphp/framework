@@ -1,11 +1,11 @@
 <?php
 
-namespace Tomahawk\Bundle\WebProfilerBundle\EventListener;
+namespace Tomahawk\Profiler\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tomahawk\Bundle\WebProfilerBundle\Profiler;
+use Tomahawk\Profiler\Profiler;
 use Tomahawk\DependencyInjection\ContainerInterface;
 
 class InjectWebProfilerListener implements EventSubscriberInterface
@@ -25,19 +25,19 @@ class InjectWebProfilerListener implements EventSubscriberInterface
         if ($response = $event->getResponse()) {
             $content = $response->getContent();
 
-            /** @var Profiler $webProfiler */
-            $webProfiler = $this->container->get('web_profiler');
+            /** @var Profiler $profiler */
+            $profiler = $this->container->get('profiler');
 
-            $webProfiler->setRequest($event->getRequest());
+            $profiler->setRequest($event->getRequest());
 
             // Check if we have the query stack from doctrine
             $debugStack = $this->container->has('doctrine.query_stack') ? $this->container->get('doctrine.query_stack') : null;
 
             if ($debugStack) {
-                $webProfiler->addDoctrineQueries($debugStack);
+                $profiler->addDoctrineQueries($debugStack);
             }
 
-            $renderedContent = $webProfiler->render();
+            $renderedContent = $profiler->render();
 
             $pos = strripos($content, '</body>');
 

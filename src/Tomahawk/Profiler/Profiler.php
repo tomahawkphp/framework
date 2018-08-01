@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\WebProfilerBundle;
+namespace Tomahawk\Profiler;
 
 use Tomahawk\HttpKernel\Kernel;
 use Doctrine\DBAL\Logging\DebugStack;
