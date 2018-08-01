@@ -2,6 +2,9 @@
 
 namespace Tomahawk\Session;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\EventListener\SessionListener;
+use Tomahawk\DependencyInjection\EventsProviderInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
@@ -15,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
  *
  * @package Tomahawk\Session
  */
-class SessionServiceProvider implements ServiceProviderInterface
+class SessionServiceProvider implements ServiceProviderInterface, EventsProviderInterface
 {
     public function register(ContainerInterface $container)
     {
@@ -86,5 +89,15 @@ class SessionServiceProvider implements ServiceProviderInterface
 
         $container->addAlias('session', SessionInterface::class);
         $container->addAlias('session.storage.filesystem', 'session.storage.file');
+    }
+
+    /**
+     * @param ContainerInterface $container An Container instance
+     * @param EventDispatcherInterface $eventDispatcher
+     * @return
+     */
+    public function subscribe(ContainerInterface $container, EventDispatcherInterface $eventDispatcher)
+    {
+        $eventDispatcher->addSubscriber(new SessionListener($container));
     }
 }

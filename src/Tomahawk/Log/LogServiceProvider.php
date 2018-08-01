@@ -2,6 +2,9 @@
 
 namespace Tomahawk\Log;
 
+use Psr\Log\LoggerInterface;
+use Tomahawk\Cache\Factory\StoreFactory;
+use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
 use Tomahawk\DependencyInjection\ServiceProviderInterface;
 
@@ -22,6 +25,16 @@ class LogServiceProvider implements ServiceProviderInterface
      */
     public function register(ContainerInterface $container)
     {
-        // TODO: Implement register() method.
+        $container->set(LogManagerInterface::class, function(ContainerInterface $c) {
+            /** @var ConfigInterface $config */
+            $config = $c->get(ConfigInterface::class);
+            return new LogManager(
+                $c->get(StoreFactory::class),
+                $config->get('logging.default')
+            );
+        });
+
+        $container->addAlias('logger', LogManagerInterface::class);
+        $container->addAlias(LoggerInterface::class, LogManagerInterface::class);
     }
 }

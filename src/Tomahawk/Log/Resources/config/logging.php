@@ -1,9 +1,8 @@
 <?php
 
-use Monolog\Handler\StreamHandler;
-
 return [
-    'driver' => 'main',
+
+    'default' => 'main',
 
     'channels' => [
 
@@ -33,12 +32,9 @@ return [
             'level' => 'critical',
         ],
 
-        'stderr' => [
-            'driver' => 'monolog',
-            'handler' => StreamHandler::class,
-            'with' => [
-                'stream' => 'php://stderr',
-            ],
+        'stream' => [
+            'driver' => 'stream',
+            'stream' => 'php://stderr',
         ],
 
         'syslog' => [

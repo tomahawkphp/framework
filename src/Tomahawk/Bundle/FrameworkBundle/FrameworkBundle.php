@@ -15,11 +15,6 @@ use Tomahawk\HttpKernel\Bundle\Bundle;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\CookieListener;
 use Tomahawk\Bundle\FrameworkBundle\EventListener\StringResponseListener;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\AuthenticationServiceProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\ConfigServiceProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\RoutingServiceProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\SessionServiceProvider;
-use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\TranslatorServiceProvider;
 use Tomahawk\Bundle\FrameworkBundle\DependencyInjection\FrameworkServiceProvider;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,16 +29,6 @@ class FrameworkBundle extends Bundle
         ErrorHandler::register(null, false)->throwAt(0, true);
 
         $this->container->register(new FrameworkServiceProvider());
-
-        $this->container->register(new AuthenticationServiceProvider());
-
-        $this->container->register(new ConfigServiceProvider());
-
-        $this->container->register(new TranslatorServiceProvider());
-
-        $this->container->register(new RoutingServiceProvider());
-
-        $this->container->register(new SessionServiceProvider());
 
         if ($trustedProxies = $this->getConfig()->get('kernel.trusted_proxies')) {
             Request::setTrustedProxies($trustedProxies, Request::HEADER_X_FORWARDED_FOR);

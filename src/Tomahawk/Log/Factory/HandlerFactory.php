@@ -4,12 +4,15 @@ namespace Tomahawk\Log\Factory;
 
 use InvalidArgumentException;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\HandlerInterface;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogHandler;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
-use Monolog\Logger;
 
 /**
  * Class HandlerFactory
@@ -82,7 +85,7 @@ class HandlerFactory
         $config = $this->getConfig($name);
 
         if (is_null($config)) {
-            throw new InvalidArgumentException("Cache driver [{$name}] is not defined.");
+            throw new InvalidArgumentException("Log config [{$name}] is not defined.");
         }
 
         if (isset($this->customDrivers[$config['driver']])) {
@@ -92,15 +95,41 @@ class HandlerFactory
         $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
 
         if (method_exists($this, $driverMethod)) {
-            return $this->{$driverMethod}($name, $config);
+            return $this->{$driverMethod}($config);
         }
 
-        throw new InvalidArgumentException("Cache driver [{$name}] is not defined.");
+        throw new InvalidArgumentException("Log driver [{$config['driver']}] is not defined.");
     }
 
-    protected function createSingleDriver(string $name, array $config)
+    /**
+     * Create an aggregate log driver instance.
+     *
+     * @param  array  $config
+     * @return \Psr\Log\LoggerInterface
+     */
+    protected function createStackDriver(array $config)
     {
-        return new Logger($this->parseChannel($config), [
+        $handlers = [];
+
+        foreach ($config['channels'] as $channel) {
+            $handlers[] = $this->createDriver($channel)->getHandlers();
+        }
+
+        /*$handlers = collect($config['channels'])->flatMap(function ($channel) {
+            return $this->createDriver($channel)->getHandlers();
+        })->all();*/
+
+        return new Logger($this->parseLoggerName($config), $handlers);
+    }
+
+    /**
+     * @param array $config
+     * @return Logger
+     * @throws \Exception
+     */
+    protected function createSingleDriver(array $config)
+    {
+        return new Logger($this->parseLoggerName($config), [
             $this->prepareHandler(
                 new StreamHandler(
                     $config['path'], $this->parseLevel($config),
@@ -108,6 +137,98 @@ class HandlerFactory
                 )
             ),
         ]);
+    }
+
+    /**
+     * @param array $config
+     * @return Logger
+     * @throws \Exception
+     */
+    protected function createDailyDriver(array $config)
+    {
+        return new Logger($this->parseLoggerName($config), [
+            $this->prepareHandler(
+                new RotatingFileHandler(
+                    $config['path'], $config['days'] ?? 7, $this->parseLevel($config),
+                    $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
+                )
+            ),
+        ]);
+    }
+
+    /**
+     * Create an instance of the syslog log driver.
+     *
+     * @param  array  $config
+     * @return \Psr\Log\LoggerInterface
+     */
+    protected function createSyslogDriver(array $config)
+    {
+        return new Logger($this->parseLoggerName($config), [
+            $this->prepareHandler(
+                new SyslogHandler(
+                    $this->config->get('app.name'), $config['facility'] ?? LOG_USER, $this->parseLevel($config)
+                )
+            ),
+        ]);
+    }
+
+    /**
+     * Create an instance of the "error log" log driver.
+     *
+     * @param  array  $config
+     * @return \Psr\Log\LoggerInterface
+     */
+    protected function createErrorlogDriver(array $config)
+    {
+        return new Logger($this->parseLoggerName($config), [
+            $this->prepareHandler(
+                new ErrorLogHandler(
+                    $config['type'] ?? ErrorLogHandler::OPERATING_SYSTEM, $this->parseLevel($config)
+                )
+            ),
+        ]);
+    }
+
+    /**
+     * Create an instance of the stream log driver.
+     *
+     * @param  array $config
+     * @return \Psr\Log\LoggerInterface
+     * @throws \Exception
+     */
+    protected function createStreamDriver(array $config)
+    {
+        return new Logger($this->parseLoggerName($config), [
+            $this->prepareHandler(
+                new StreamHandler($config['stream'], $this->parseLevel($config))
+            ),
+        ]);
+    }
+
+    /**
+     * Create an instance of any handler available in Monolog.
+     *
+     * @param  array  $config
+     * @return \Psr\Log\LoggerInterface
+     *
+     * @throws \InvalidArgumentException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function createMonologDriver(array $config)
+    {
+        if (! is_a($config['handler'], HandlerInterface::class, true)) {
+            throw new InvalidArgumentException(
+                $config['handler'].' must be an instance of '.HandlerInterface::class
+            );
+        }
+
+        $with = array_merge($config['with'] ?? [], $config['handler_with'] ?? []);
+
+        return new Logger($this->parseLoggerName($config), [
+            $this->prepareHandler(
+            $this->app->make($config['handler'], $with), $config
+        )]);
     }
 
     /**
@@ -134,6 +255,8 @@ class HandlerFactory
         if ( ! isset($config['formatter'])) {
             $handler->setFormatter($this->formatter());
         } elseif ($config['formatter'] !== 'default') {
+
+            // @TODO - Create formatter factory?
             //$handler->setFormatter($this->container->get($config['formatter'], $config['formatter_with'] ?? []));
         }
 
@@ -159,7 +282,18 @@ class HandlerFactory
      */
     protected function getConfig(string $name)
     {
-        return $this->config->get("logging.handler.{$name}");
+        return $this->config->get("logging.channels.{$name}");
+    }
+
+    /**
+     * Parse Logger Name
+     *
+     * @param array $config
+     * @return int|mixed
+     */
+    private function parseLoggerName(array $config)
+    {
+        return $config['name'] ?? 'app';
     }
 
     /**
