@@ -11,6 +11,7 @@
 
 namespace Tomahawk\Bridge\Eloquent\Command;
 
+use Illuminate\Database\DatabaseManager;
 use Tomahawk\Console\ContainerAwareCommand;
 use Tomahawk\DependencyInjection\ContainerInterface;
 
@@ -51,5 +52,13 @@ abstract class BaseCommand extends ContainerAwareCommand
     protected function usingRealPath()
     {
         return $this->input->hasOption('realpath') && $this->input->getOption('realpath');
+    }
+
+    /**
+     * @return DatabaseManager
+     */
+    protected function getDatabaseManager()
+    {
+        return $this->container->get(DatabaseManager::class);
     }
 }

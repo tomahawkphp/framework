@@ -3,6 +3,7 @@
 namespace Tomahawk\Bridge\Eloquent\DependencyInjection;
 
 use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\DatabaseManager;
 use Tomahawk\Config\ConfigInterface;
 use Tomahawk\DependencyInjection\BootableProviderInterface;
 use Tomahawk\DependencyInjection\ContainerInterface;
@@ -35,6 +36,10 @@ class EloquentServiceProvider implements ServiceProviderInterface, BootableProvi
      */
     public function register(ContainerInterface $container)
     {
+        $container->set(DatabaseManager::class, function(ContainerInterface $c) {
+            return $c->get(Manager::class)->getDatabaseManager();
+        });
+
         $container->set(Manager::class, function(ContainerInterface $c) {
 
             /** @var ConfigInterface $config */
