@@ -9,16 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\FrameworkBundle\Command;
+namespace Tomahawk\Cache\Command;
 
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
 use Tomahawk\DependencyInjection\ContainerAwareTrait;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class CacheClearCommand
+ *
+ * @package Tomahawk\Cache\Command
+ */
 class CacheClearCommand extends Command implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
@@ -27,7 +32,8 @@ class CacheClearCommand extends Command implements ContainerAwareInterface
     {
         $this
             ->setName('cache:clear')
-            ->setDescription('Clear application cache.');
+            ->setDescription('Clear application cache.')
+        ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)

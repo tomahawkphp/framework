@@ -1,10 +1,10 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Tests\Command;
+namespace Tomahawk\Config\Tests\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tomahawk\Bundle\FrameworkBundle\Command\ConfigCompileCommand;
+use Tomahawk\Config\Command\ConfigCompileCommand;
 use Tomahawk\Console\Application;
 use Tomahawk\HttpKernel\TestKernel;
 use PHPUnit\Framework\TestCase;

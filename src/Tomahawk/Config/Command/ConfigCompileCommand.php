@@ -1,6 +1,6 @@
 <?php
 
-namespace Tomahawk\Bundle\FrameworkBundle\Command;
+namespace Tomahawk\Config\Command;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Command\Command;
@@ -9,6 +9,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * Class ConfigCompileCommand
+ *
+ * @package Tomahawk\Config\Command
+ */
 class ConfigCompileCommand extends Command implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

@@ -9,17 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Tomahawk\Bundle\FrameworkBundle\Command;
+namespace Tomahawk\Routing\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 use Tomahawk\DependencyInjection\ContainerAwareInterface;
 use Tomahawk\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class RoutingCommand
+ *
+ * @package Tomahawk\Routing\Command
+ */
 class RoutingCommand extends Command implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
